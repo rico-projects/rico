@@ -1,6 +1,5 @@
 <p align="right">
 ![Supported by Karakun](metadata/supported-karakun.png?raw=true "Supported by Karakun")
-<a href="http://www.canoo.com"><img src="http://www.guigarage.com/wordpress/wp-content/uploads/2016/08/canoo_support.png"/></a>
 </p>
 
 # Rico
