@@ -1,5 +1,5 @@
 <p align="right">
-<a href="http://www.karakun.com" target="_blank"><img width="50% src="metadata/supported-karakun.png?raw=true" alt="Supported by Karakun"/></a>
+<a href="http://www.karakun.com" target="_blank"><img width="50%" src="metadata/supported-karakun.png?raw=true" alt="Supported by Karakun"/></a>
 </p>
 
 # Rico
