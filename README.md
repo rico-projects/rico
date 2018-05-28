@@ -1,6 +1,5 @@
 <p align="right">
-![Supported by Karakun]( "Supported by Karakun")
-<a href="http://www.karakun.com" target="_blank"><img src="metadata/supported-karakun.png?raw=true" alt="Supported by Karakun"/></a>
+<a href="http://www.karakun.com" target="_blank"><img width="50% src="metadata/supported-karakun.png?raw=true" alt="Supported by Karakun"/></a>
 </p>
 
 # Rico
