@@ -2,7 +2,7 @@
 <a href="http://www.karakun.com" target="_blank"><img src="metadata/supported-karakun-small.png?raw=true" alt="Supported by Karakun"/></a>
 </p>
 
-# Rico [![Travis Build](https://travis-ci.org/rico-project/rico.svg?branch=master)](https://travis-ci.org/rico-project/rico)
+# Rico [![Build Status](https://travis-ci.org/rico-project/rico.svg?branch=master)](https://travis-ci.org/rico-project/rico)
 This repository contains all Java related sources of Rico. Clients for other languages will be provided in seperate repositories (JavaScript, AngularJS, Polymer and Android).
 
 ## 🆕🐥🐶 First Timers Support
