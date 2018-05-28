@@ -1,0 +1,2 @@
+dev.rico.internal.logging.bridges.RemoteLoggerFactory
+dev.rico.internal.logging.bridges.SimpleRicoLoggerFactory

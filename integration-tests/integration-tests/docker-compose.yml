@@ -1,0 +1,14 @@
+version: '2'
+services:
+
+  tomee-integration:
+    image: rico-integration-tests-tomee
+    build: ./docker-base/tomee-integration/
+    ports:
+      - "8082:8080"
+
+  wildfly-integration:
+    image: rico-integration-tests-wildfly
+    build: ./docker-base/wildfly-integration/
+    ports:
+      - "8083:8080"

@@ -1,0 +1,203 @@
+/*
+ * Copyright 2015-2018 Canoo Engineering AG.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import java.text.SimpleDateFormat
+
+buildscript {
+
+    repositories {
+        jcenter()
+        mavenCentral()
+        maven {
+            url 'https://plugins.gradle.org/m2/'
+        }
+    }
+
+    dependencies {
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2'
+        classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
+        classpath 'org.kordamp.gradle:stats-gradle-plugin:0.2.2'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.0'
+        classpath 'net.nemerosa:versioning:2.6.1'
+        classpath 'com.bmuschko:gradle-nexus-plugin:2.3.1'
+        classpath 'com.adarshr:gradle-test-logger-plugin:1.1.2'
+        classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.1'
+    }
+}
+
+if (project.hasProperty('sonarToken')) {
+    System.setProperty("sonar.login", project.getProperty("sonarToken"))
+}
+
+apply plugin: 'net.nemerosa.versioning'
+apply plugin: 'org.sonarqube'
+apply plugin: 'jacoco'
+apply plugin: 'com.github.kt3k.coveralls'
+
+Date buildTimeAndDate = new Date()
+ext {
+    buildDate = new SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
+    buildTime = new SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
+    buildRevision = versioning.info.commit
+    projectsWithCoverage = []
+    baseJaCocoDir = "${buildDir}/reports/jacoco/test/"
+    jacocoMergeExecFile = "${baseJaCocoDir}jacocoTestReport.exec"
+    jacocoMergeReportHTMLFile = "${baseJaCocoDir}/html/"
+    jacocoMergeReportXMLFile = "${baseJaCocoDir}/jacocoTestReport.xml"
+    depProjects = []
+    infoFilePatterns = '**/build.properties'
+}
+
+allprojects {
+    apply plugin: 'base'
+    apply plugin: 'idea'
+    apply plugin: 'com.github.ben-manes.versions'
+    apply plugin: 'com.adarshr.test-logger'
+
+    repositories {
+        jcenter()
+        mavenLocal()
+    }
+
+    tasks.withType(Javadoc) {
+        options.addStringOption('Xdoclint:none', '-quiet')
+    }
+}
+
+jacoco {
+    toolVersion = jacocoVersion
+}
+
+subprojects { subprj ->
+    apply plugin: 'java'
+    apply plugin: 'org.kordamp.gradle.stats'
+    apply from: rootProject.file('gradle/code-quality.gradle')
+
+    subprj.tasks.withType(JavaCompile) {
+        sourceCompatibility = subprj.sourceCompatibility
+        targetCompatibility = subprj.targetCompatibility
+    }
+
+    test.useTestNG()
+
+    if (!subprj.publishJars.toBoolean()) {
+        sonarqube {
+            sonarqube {
+                skipProject = true
+            }
+        }
+    } else {
+        subprj.apply from: rootProject.file('gradle/publishing.gradle')
+        subprj.apply from: rootProject.file('gradle/code-coverage.gradle')
+
+        sonarqube {
+            sonarqube {
+                properties {
+                    property "sonar.exclusions", "**/*Exception.java"
+                }
+            }
+        }
+
+        javadoc {
+            excludes = ['**/*.html', 'META-INF/**', 'dev/rico/internal/**']
+
+            options.use = true
+            options.splitIndex = true
+            options.encoding = 'UTF-8'
+            options.author = true
+            options.version = true
+            options.windowTitle = "$project.name $project.version API"
+            options.docTitle = "$project.name $project.version API"
+            options.links = ['http://docs.oracle.com/javase/8/docs/api/',
+                             'http://docs.oracle.com/javase/8/javafx/api/']
+
+            if (subprj.file('src/main/javadoc/overview.html').exists()) {
+                options.overview = file('src/main/javadoc/overview.html')
+            }
+            doLast {
+                copy {
+                    from file('src/main/javadoc')
+                    into javadoc.destinationDir
+                    include '**/doc-files/*'
+                }
+            }
+        }
+
+        task sourcesJar(type: Jar) {
+            group 'Build'
+            description 'An archive of the source code'
+            classifier 'sources'
+            from sourceSets.main.allSource
+        }
+
+        task javadocJar(type: Jar) {
+            group 'Build'
+            description 'An archive of the javadoc'
+            classifier 'javadoc'
+            from javadoc.destinationDir
+        }
+
+        jar.finalizedBy sourcesJar
+        jar.finalizedBy javadocJar
+
+        artifacts {
+            sourcesJar
+            javadocJar
+        }
+
+        dependencies {
+            compile "org.slf4j:slf4j-api:$slf4jVersion"
+            testCompile "org.testng:testng:$testngVersion"
+            testCompile 'org.hamcrest:java-hamcrest:2.0.0.0'
+            testCompile "org.jmockit:jmockit:$jmockitVersion"
+        }
+    }
+}
+
+evaluationDependsOnChildren()
+
+subprojects {
+    task allDeps(type: DependencyReportTask) {}
+}
+
+coveralls {
+    sourceDirs = files(projectsWithCoverage.sourceSets.main.allSource.srcDirs).files.absolutePath
+}
+
+task jacocoRootMerge(type: org.gradle.testing.jacoco.tasks.JacocoMerge) {
+    dependsOn = projectsWithCoverage.test
+    dependsOn = projectsWithCoverage.jacocoTestReport
+    executionData = files(projectsWithCoverage.jacocoTestReport.executionData)
+    destinationFile = file(jacocoMergeExecFile)
+}
+
+task jacocoRootMergeReport(dependsOn: jacocoRootMerge, type: JacocoReport) {
+    group = 'Reporting'
+    description = 'Aggregate Jacoco coverage reports.'
+
+    additionalSourceDirs = files(projectsWithCoverage.sourceSets.main.allSource.srcDirs)
+    sourceDirectories = files(projectsWithCoverage .sourceSets.main.allSource.srcDirs)
+    classDirectories = files(projectsWithCoverage.sourceSets.main.output)
+    executionData = files(jacocoRootMerge.destinationFile)
+
+    reports {
+        html.enabled = true
+        xml.enabled = true
+        html.destination = file(jacocoMergeReportHTMLFile)
+        xml.destination = file(jacocoMergeReportXMLFile)
+    }
+}

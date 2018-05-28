@@ -1,0 +1,7 @@
+dev.rico.internal.client.http.HttpClientProvider
+dev.rico.internal.client.json.JsonProvider
+dev.rico.internal.client.session.ClientSessionStoreProvider
+dev.rico.internal.client.http.cookie.CookieHandlerProvider
+dev.rico.internal.client.context.ContextManagerServiceProvider
+dev.rico.internal.client.concurrent.SchedulerProvider
+dev.rico.internal.client.concurrent.ProcessChainProvider

@@ -1,0 +1,50 @@
+/*
+ * Copyright 2018 Karakun AG.
+ * Copyright 2015-2018 Canoo Engineering AG.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package dev.rico.internal.server.remoting.config;
+
+import dev.rico.internal.server.bootstrap.ConfigurationProviderAdapter;
+import org.apiguardian.api.API;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+@API(since = "0.x", status = INTERNAL)
+public class RemotingDefaultValueProvider extends ConfigurationProviderAdapter {
+
+    @Override
+    public Map<String, String> getStringProperties() {
+        HashMap<String, String> ret = new HashMap<>();
+
+        ret.put(RemotingConfiguration.SERVLET_MAPPING, RemotingConfiguration.SERVLET_MAPPING_DEFAULT_VALUE);
+        ret.put(RemotingConfiguration.INTERRUPT_SERVLET_MAPPING, RemotingConfiguration.INTERRUPT_SERVLET_MAPPING_DEFAULT_VALUE);
+        ret.put(RemotingConfiguration.EVENTBUS_TYPE, RemotingConfiguration.EVENTBUS_TYPE_DEFAULT_VALUE);
+        return ret;
+    }
+
+    @Override
+    public Map<String, Long> getLongProperties() {
+        return Collections.singletonMap(RemotingConfiguration.MAX_POLL_TIME, RemotingConfiguration.MAX_POLL_TIME_DEFAULT_VALUE);
+    }
+
+    @Override
+    public Map<String, Boolean> getBooleanProperties() {
+        return Collections.singletonMap(RemotingConfiguration.GARBAGE_COLLECTION_ACTIVE, RemotingConfiguration.USE_GC_DEFAULT_VALUE);
+    }
+}

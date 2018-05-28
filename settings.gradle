@@ -1,0 +1,60 @@
+rootProject.name = 'rico'
+
+include 'base/rico-core'
+include 'base/rico-client'
+include 'base/rico-client-swing'
+include 'base/rico-client-javafx'
+include 'base/rico-server'
+include 'base/rico-server-javaee'
+include 'base/rico-server-spring'
+
+include 'remoting/rico-remoting-common'
+include 'remoting/rico-remoting-client'
+include 'remoting/rico-remoting-client-javafx'
+include 'remoting/rico-remoting-server'
+include 'remoting/rico-remoting-server-javaee'
+include 'remoting/rico-remoting-server-spring'
+include 'remoting/rico-remoting-server-spring-test'
+include 'remoting/rico-distributed-eventbus'
+include 'remoting/rico-remoting-bean-validation'
+
+include 'metrics/rico-metrics'
+include 'metrics/rico-metrics-server'
+include 'metrics/rico-metrics-server-spring'
+include 'metrics/rico-metrics-server-javaee'
+
+include 'security/rico-security-common'
+include 'security/rico-security-client'
+include 'security/rico-security-server'
+include 'security/rico-security-server-javaee'
+include 'security/rico-security-server-spring'
+
+include 'incubation/rico-logger'
+include 'incubation/rico-logger-widget-common'
+include 'incubation/rico-logger-widget-client-javafx'
+include 'incubation/rico-logger-widget-server'
+include 'incubation/rico-bean-validation-rest'
+include 'incubation/rico-data'
+include 'incubation/rico-data-jpa'
+include 'incubation/rico-data-audit'
+include 'incubation/rico-crud'
+include 'incubation/rico-crud-jpa'
+include 'incubation/rico-projector-common'
+include 'incubation/rico-projector-client'
+include 'incubation/rico-projector-server'
+
+include 'integration-tests/integration-common'
+include 'integration-tests/integration-server'
+include 'integration-tests/integration-tests-jee'
+include 'integration-tests/integration-tests'
+
+rootProject.children.each { project ->
+    int slash = project.name.lastIndexOf('/')
+    String fileBaseName = project.name[(slash + 1)..-1]
+    String projectDirName = project.name
+    project.name = fileBaseName
+    project.projectDir = new File(settingsDir, projectDirName)
+    project.buildFileName = "${fileBaseName}.gradle"
+    assert project.projectDir.isDirectory()
+    assert project.buildFile.isFile()
+}
