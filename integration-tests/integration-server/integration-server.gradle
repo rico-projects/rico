@@ -1,4 +1,5 @@
 /*
+ * Copyright 2018 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,20 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-ext.depProjects = [
-        ':rico-core',
-        ':rico-client',
-        ':rico-server',
-        ':rico-server-javaee',
-        ':rico-server-spring',
-        ':rico-remoting-common',
-        ':rico-remoting-server',
-        ':rico-remoting-server-javaee',
-        ':rico-remoting-server-spring',
-        ':rico-remoting-client',
-        ':rico-spring-controller-tester'
-]
 
 dependencies {
     compile project(':rico-remoting-server')

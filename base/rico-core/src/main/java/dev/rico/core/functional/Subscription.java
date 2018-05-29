@@ -30,11 +30,13 @@ import static org.apiguardian.api.API.Status.MAINTAINED;
  *
  * <blockquote>
  * <pre>
+ *     {@code
  *     //Add a change handler to a property
  *     Subscription subscription = myProperty.onChange(e -> System.out.println("value changed"));
  *
  *     //Remove the change handler
  *     subscription.unsubscribe();
+ *     }
  * </pre>
  * </blockquote>
  *

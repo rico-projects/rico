@@ -28,7 +28,7 @@ import static org.apiguardian.api.API.Status.MAINTAINED;
  * This interface extends the default {@link List} interface and adds the possibility to observe the list.
  * By adding a {@link ListChangeListener} (see {@link #onChanged(ListChangeListener)}) all mutations of the list can be observed.
  * In addition this class provides some convenience methods.
- * <p>
+ *
  * The {@link ObservableList} interface is part of the remoting model API. Since the lifecylce of models will be
  * managed by the remoting layer the API don't provide a public implementation for this interface. When defining models
  * a developer only need to use the interface like it is already descriped in the {@link Property}

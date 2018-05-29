@@ -39,13 +39,11 @@ public final class Assert {
 
     /**
      * Checks that the specified {@code value} is null and throws {@link java.lang.NullPointerException} with a customized error message if it is.
-     *
-     * @param value        the value to be checked.
+     * @param value the value to be checked.
      * @param argumentName the name of the argument to be used in the error message.
+     * @param <T> type of the value
      * @return the {@code value}.
-     * @throws java.lang.NullPointerException if {@code value} is null.
      */
-
     public static <T> T requireNonNull(final T value, final String argumentName) {
         Objects.requireNonNull(argumentName, String.format(NOT_NULL_MSG_FORMAT, "argumentName"));
         return Objects.requireNonNull(value, String.format(NOT_NULL_MSG_FORMAT, argumentName));
@@ -96,14 +94,12 @@ public final class Assert {
     /**
      * Checks whether the specified {@code collection} contains null values, throws {@link IllegalStateException} with a customized error message if it has.
      *
-     * @param collection   the collection to be checked.
+     * @param collection the collection to be checked.
      * @param argumentName the name of the argument to be used in the error message.
+     * @param <T> content type of the list
+     * @param <L> type of the list
      * @return the {@code collection}.
-     * @throws java.lang.NullPointerException  if {@code collection} is null.
-     * @throws java.lang.IllegalStateException if {@code collection} contains null values.
-     * @see #requireNonNull(Object, String)
      */
-
     public static <T, L extends List<T>> L requireNonNullEntries(final L collection, final String argumentName) {
         requireNonNull(collection, argumentName);
         final String msg = String.format(NOT_NULL_ENTRIES_MSG_FORMAT, argumentName);

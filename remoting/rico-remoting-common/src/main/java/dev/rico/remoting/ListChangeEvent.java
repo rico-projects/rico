@@ -41,7 +41,7 @@ public interface ListChangeEvent<E> {
     /**
      * Returns a list of changes of this event
      *
-     * @return
+     * @return the list
      */
     List<Change<E>> getChanges();
 
@@ -59,7 +59,7 @@ public interface ListChangeEvent<E> {
         /**
          * Returns a list that contains all elements that were removed from the list.
          *
-         * @return
+         * @return the list
          */
         List<S> getRemovedElements();
 
