@@ -18,13 +18,3 @@ dependencies {
     compile "org.slf4j:slf4j-api:$slf4jVersion"
     compile "org.apiguardian:apiguardian-api:$apiguardianVersion"
 }
-
-processResources {
-    filesMatching(infoFilePatterns) {
-        expand(
-                'version' : project.version,
-                'buildDate' : buildDate,
-                'buildTime' : buildTime
-        )
-    }
-}

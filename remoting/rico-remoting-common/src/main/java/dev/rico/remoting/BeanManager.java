@@ -25,47 +25,47 @@ import java.util.List;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
 /**
- * <p>The {@link BeanManager} defined the low level API of the remoting to create synchronized models. A model
+ * The {@link BeanManager} defined the low level API of the remoting to create synchronized models. A model
  * instance that is created by using the bean manager will automatically synchronized between the client and server.
  * <br>
  * <center><img src="doc-files/sync.png" alt="model is synchronized between client and server"></center>
- * </p>
- * <p>In the remoting architecture an application is normally defined by several MVC groups with a server side
+ *
+ * In the remoting architecture an application is normally defined by several MVC groups with a server side
  * controller, a client side view and a synchronized presentation model. The {@link BeanManager}
  * defines the basic mechanism to handle synchronized models and can be used in the MVC group to mutate the defined model
  * or as a standalone API to create any kind of synchronized model.
  * <br>
  * <center><img src="doc-files/mvc-sync.png" alt="model is synchronized between client view and server controller"></center>
- * </p>
- * <p>When using the MVC API of the remoting the lifecycle of the model is defined by the MVC group and the model
+ *
+ * When using the MVC API of the remoting the lifecycle of the model is defined by the MVC group and the model
  * will automatically be removed when the MVC group is removed. If the {@link BeanManager} is used as
- * standalone API the developer must handle the lifecycle of the models and removePresentationModel them by using the {@link BeanManager}</p>
- * <p>All synchronized models must follow some specific rules that are described in the {@link RemotingBean} annotation</p>
+ * standalone API the developer must handle the lifecycle of the models and removePresentationModel them by using the {@link BeanManager}
  *
- * <p>By using the default Spring or JavaEE implementation of the remoting the {@link BeanManager}
- * will be provided as a managed bean and can be injected wherever the container allows injection.</p>
+ * All synchronized models must follow some specific rules that are described in the {@link RemotingBean} annotation
  *
- * <p>To create a new model the {@link BeanManager} provides the {@link #create(Class)} method that is
+ * By using the default Spring or JavaEE implementation of the remoting the {@link BeanManager}
+ * will be provided as a managed bean and can be injected wherever the container allows injection.
+ *
+ * To create a new model the {@link BeanManager} provides the {@link #create(Class)} method that is
  * defined as a factory method for any kind of model. A model should never be instantiated by hand because in that case
  * the model won't be synchronized between client and server. Here is an example how a model can be created:
  * <blockquote>
  * <pre>
- *     MyModel model = beanManager.create(MyModel.class);
+ *     {@code MyModel model = beanManager.create(MyModel.class); }
  * </pre>
  * </blockquote>
- * </p>
- * <p>The {@link BeanManager} provides several methods to observe the creation and deletion of models.
+ *
+ * The {@link BeanManager} provides several methods to observe the creation and deletion of models.
  * One example is the {@link #onAdded(Class, BeanAddedListener)} method. All the methods are
  * for using lambdas and therefore a handler can be easily added with only one line if code:
  * <blockquote>
  * <pre>
- *     beanManager.onAdded(MyModel.class, model -> System.out.println("Model of type MyModel added"));
+ *     {@code beanManager.onAdded(MyModel.class, model -> System.out.println("Model of type MyModel added")); }
  * </pre>
  * </blockquote>
  * There are no method to removePresentationModel registered handler from the {@link BeanManager}. Here the remoting layer
  * implement an approach by using the Subscription Pattern: Each hander registration returns a {@link Subscription}
  * instance that provides the {@link Subscription#unsubscribe()} method to removePresentationModel the handler.
- * </p>
  *
  * @author Hendrik Ebbers
  */

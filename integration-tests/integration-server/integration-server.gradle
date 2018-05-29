@@ -14,20 +14,6 @@
  * limitations under the License.
  */
 
-ext.depProjects = [
-        ':rico-core',
-        ':rico-client',
-        ':rico-server',
-        ':rico-server-javaee',
-        ':rico-server-spring',
-        ':rico-remoting-common',
-        ':rico-remoting-server',
-        ':rico-remoting-server-javaee',
-        ':rico-remoting-server-spring',
-        ':rico-remoting-client',
-        ':rico-spring-controller-tester'
-]
-
 dependencies {
     compile project(':rico-remoting-server')
     compile project(':integration-common')

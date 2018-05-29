@@ -14,15 +14,6 @@
  * limitations under the License.
  */
 
-ext.depProjects = [
-    ':rico-core',
-    ':rico-remoting-common',
-    ':rico-client',
-    ':rico-remoting-client'
-]
-
-apply from: rootProject.file('gradle/code-coverage.gradle')
-
 dependencies {
     testCompile project(':rico-remoting-client')
     testCompile "org.testng:testng:$testngVersion"
