@@ -17,7 +17,6 @@
 
 dependencies {
     testCompile project(':rico-remoting-client')
-    testCompile 'org.testcontainers:testcontainers:1.7.3'
     testCompile "org.slf4j:slf4j-simple:$slf4jVersion"
     testCompile project(':integration-common')
 }
@@ -39,4 +38,4 @@ task copyWar(dependsOn: [':integration-tests-jee:war']) {
     }
 }
 
-compileTestJava.dependsOn(copyWar)
+test.dependsOn copyWar
