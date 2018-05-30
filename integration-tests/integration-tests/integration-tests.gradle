@@ -17,7 +17,7 @@
 
 dependencies {
     testCompile project(':rico-remoting-client')
-    testCompile "org.testng:testng:$testngVersion"
+    testCompile 'org.testcontainers:testcontainers:1.7.3'
     testCompile "org.slf4j:slf4j-simple:$slf4jVersion"
     testCompile project(':integration-common')
 }
@@ -25,27 +25,18 @@ dependencies {
 task copyWar(dependsOn: [':integration-tests-jee:war']) {
     doLast {
         copy {
-            into file("docker-base/payara-integration")
+            into file("resources/docker-base/payara-integration")
             from(file("../integration-tests-jee/build/libs/integration-tests.war"))
         }
         copy {
-            into file("docker-base/tomee-integration")
+            into file("resources/docker-base/tomee-integration")
             from(file("../integration-tests-jee/build/libs/integration-tests.war"))
         }
         copy {
-            into file("docker-base/wildfly-integration")
+            into file("resources/docker-base/wildfly-integration")
             from(file("../integration-tests-jee/build/libs/integration-tests.war"))
         }
     }
 }
 
-task dockerComposeDown(type: Exec) {
-    commandLine "docker-compose", "kill"
-}
-
-task dockerComposeUp(type: Exec) {
-    commandLine "docker-compose", "up", "-d", "--build", "--force-recreate"
-}
-dockerComposeUp.dependsOn(copyWar)
-test.dependsOn dockerComposeUp
-test.finalizedBy(dockerComposeDown)
+compileTestJava.dependsOn(copyWar)

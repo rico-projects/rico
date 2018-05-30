@@ -17,20 +17,32 @@
 package dev.rico.integrationtests;
 
 import dev.rico.client.Client;
-import dev.rico.core.http.HttpClient;
 import dev.rico.client.remoting.ClientContext;
 import dev.rico.client.remoting.ClientContextFactory;
 import dev.rico.client.remoting.ControllerProxy;
 import dev.rico.client.remoting.Param;
+import dev.rico.docker.DockerCompose;
+import dev.rico.docker.Wait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.Map;
+import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 public class AbstractIntegrationTest {
+
+
+    private final static Logger LOG = LoggerFactory.getLogger(AbstractIntegrationTest.class);
 
     private int bootTimeoutInMinutes = 3;
 
@@ -38,29 +50,15 @@ public class AbstractIntegrationTest {
 
     public final static String ENDPOINTS_DATAPROVIDER = "endpoints";
 
-    protected void waitUntilServerIsUp(String host, long time, TimeUnit timeUnit) throws TimeoutException {
-        long startTime = System.currentTimeMillis();
-        long waitMillis = timeUnit.toMillis(time);
-        boolean connected = false;
-        while (!connected) {
-            if(System.currentTimeMillis() > startTime + waitMillis) {
-                throw new TimeoutException("Server " + host + " is still down after " + waitMillis + " ms");
-            }
-            HttpClient httpClient = Client.getService(HttpClient.class);
-            try {
-                httpClient.request(host + "/rest/health").withoutContent().withoutResult().execute().get();
-                connected = true;
-            } catch (Exception e) {
-                // do nothing since server is not up at the moment...
-            }
-            //Check server state again in 10 sec
-            if(!connected) {
-                try {
-                    Thread.sleep(10_000);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+    private final DockerCompose dockerCompose;
+
+    public AbstractIntegrationTest() {
+        try {
+            final URL dockerComposeURL = AbstractIntegrationTest.class.getClassLoader().getResource("docker-compose.yml");
+            final Path dockerComposeFile = Paths.get(dockerComposeURL.toURI());
+            dockerCompose = new DockerCompose(dockerComposeFile);
+        } catch (Exception e) {
+            throw new RuntimeException("Can not create Docker environment!", e);
         }
     }
 
@@ -76,17 +74,16 @@ public class AbstractIntegrationTest {
         Client.init(new IntegrationTestToolkit());
         Client.getClientConfiguration().getCookieStore().removeAll();
         try {
-            waitUntilServerIsUp(endpoint, bootTimeoutInMinutes, TimeUnit.MINUTES);
             ClientContext clientContext = Client.getService(ClientContextFactory.class).create(Client.getClientConfiguration(), new URI(endpoint + "/remoting"));
             long timeOutTime = System.currentTimeMillis() + Duration.ofMinutes(timeoutInMinutes).toMillis();
-            while(System.currentTimeMillis() < timeOutTime && clientContext.getClientId() ==  null){
-                try{
+            while (System.currentTimeMillis() < timeOutTime && clientContext.getClientId() == null) {
+                try {
                     clientContext.connect().get(10, TimeUnit.SECONDS);
-                }catch(Exception ex){
+                } catch (Exception ex) {
                     // do nothing since server is not up at the moment...
                 }
             }
-            if(clientContext.getClientId() == null){
+            if (clientContext.getClientId() == null) {
                 throw new Exception("Client context not created....");
             }
 
@@ -126,6 +123,23 @@ public class AbstractIntegrationTest {
         } catch (Exception e) {
             //do nothing
         }
+    }
+
+    @BeforeClass
+    protected void startDockerContainers() {
+        final Executor executor = Client.getClientConfiguration().getBackgroundExecutor();
+        try {
+            dockerCompose.start(2, TimeUnit.MINUTES,
+                    Wait.forHttp(executor, new URI("http://localhost:8082/integration-tests/rest/health"), 200),
+                    Wait.forHttp(executor, new URI("http://localhost:8083/integration-tests/rest/health"), 200));
+        } catch (URISyntaxException e) {
+            throw new RuntimeException("Error", e);
+        }
+    }
+
+    @AfterClass
+    protected void stopDockerContainers() {
+        dockerCompose.kill();
     }
 
     @DataProvider(name = ENDPOINTS_DATAPROVIDER, parallel = false)
