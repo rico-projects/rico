@@ -2,6 +2,9 @@ package dev.rico.docker;
 
 import dev.rico.client.Client;
 import dev.rico.core.http.HttpClient;
+import dev.rico.integrationtests.AbstractIntegrationTest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.util.concurrent.CompletableFuture;
@@ -13,8 +16,12 @@ import java.util.concurrent.TimeoutException;
 @FunctionalInterface
 public interface Wait {
 
-    public static Wait forHttp(final Executor executor, final URI uri, final int httpStatus) {
-        return (time, timeUnit) -> {
+    Logger LOG = LoggerFactory.getLogger(Wait.class);
+
+    long sleeptImeInMillis = 1_000;
+
+    static Wait forHttp(final URI uri, final int httpStatus) {
+        return (executor, time, timeUnit) -> {
             final CompletableFuture<Void> completableFuture = new CompletableFuture<>();
             final Runnable task = () -> {
                 try {
@@ -28,8 +35,8 @@ public interface Wait {
                                 completableFuture.complete(null);
                             }
                         } catch (Exception e) {
-                            System.out.println("No server");
-                            Thread.sleep(1_000);
+                            LOG.trace("Endpoint not reachable. Will try again in " + sleeptImeInMillis + " ms");
+                            Thread.sleep(sleeptImeInMillis);
                         }
                     }
                 } catch (Exception e) {
@@ -47,5 +54,5 @@ public interface Wait {
         };
     }
 
-    void waitFor(long time, TimeUnit timeUnit) throws TimeoutException;
+    void waitFor(Executor executor, long time, TimeUnit timeUnit) throws TimeoutException;
 }

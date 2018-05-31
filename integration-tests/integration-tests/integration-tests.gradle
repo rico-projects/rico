@@ -24,15 +24,15 @@ dependencies {
 task copyWar(dependsOn: [':integration-tests-jee:war']) {
     doLast {
         copy {
-            into file("resources/docker-base/payara-integration")
+            into file("src/test/resources/docker-base/payara-integration")
             from(file("../integration-tests-jee/build/libs/integration-tests.war"))
         }
         copy {
-            into file("resources/docker-base/tomee-integration")
+            into file("src/test/resources/docker-base/tomee-integration")
             from(file("../integration-tests-jee/build/libs/integration-tests.war"))
         }
         copy {
-            into file("resources/docker-base/wildfly-integration")
+            into file("src/test/resources/docker-base/wildfly-integration")
             from(file("../integration-tests-jee/build/libs/integration-tests.war"))
         }
     }

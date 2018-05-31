@@ -23,43 +23,81 @@ import dev.rico.client.remoting.ControllerProxy;
 import dev.rico.client.remoting.Param;
 import dev.rico.docker.DockerCompose;
 import dev.rico.docker.Wait;
+import dev.rico.internal.core.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.DataProvider;
+import org.testng.annotations.*;
 
+import java.lang.reflect.Method;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
+import static dev.rico.integrationtests.AbstractIntegrationTest.INTEGRATION_TESTS_TEST_GROUP;
+import static dev.rico.internal.core.http.HttpStatus.HTTP_OK;
+
+@Test(groups = INTEGRATION_TESTS_TEST_GROUP)
 public class AbstractIntegrationTest {
 
-
     private final static Logger LOG = LoggerFactory.getLogger(AbstractIntegrationTest.class);
-
-    private int bootTimeoutInMinutes = 3;
 
     private int timeoutInMinutes = 3;
 
     public final static String ENDPOINTS_DATAPROVIDER = "endpoints";
 
+    public final static String INTEGRATION_TESTS_TEST_GROUP = "INTEGRATION-TESTS";
+
     private final DockerCompose dockerCompose;
 
+    private final List<IntegrationEndpoint> endpoints;
+
     public AbstractIntegrationTest() {
+        endpoints = Arrays.asList(IntegrationEndpoint.values());
         try {
             final URL dockerComposeURL = AbstractIntegrationTest.class.getClassLoader().getResource("docker-compose.yml");
             final Path dockerComposeFile = Paths.get(dockerComposeURL.toURI());
-            dockerCompose = new DockerCompose(dockerComposeFile);
+            dockerCompose = new DockerCompose(Client.getClientConfiguration().getBackgroundExecutor(), dockerComposeFile);
         } catch (Exception e) {
             throw new RuntimeException("Can not create Docker environment!", e);
         }
+    }
+
+    @BeforeGroups(INTEGRATION_TESTS_TEST_GROUP)
+    protected void startDockerContainers() {
+        final Executor executor = Client.getClientConfiguration().getBackgroundExecutor();
+        final Wait[] waits = endpoints.stream()
+                .map(e -> Wait.forHttp(e.getHeathEndpoint(), HTTP_OK))
+                .collect(Collectors.toList())
+                .toArray(new Wait[]{});
+        dockerCompose.start(2, TimeUnit.MINUTES, waits);
+    }
+
+    @AfterGroups(INTEGRATION_TESTS_TEST_GROUP)
+    protected void stopDockerContainers() {
+        dockerCompose.kill();
+    }
+
+    @BeforeMethod
+    public void onTest(final Method method, final Object[] data) {
+        Assert.requireNonNull(method, "method");
+        Assert.requireNonNull(data, "data");
+        LOG.info("Starting test " + method.getDeclaringClass().getSimpleName() +"." + method.getName() + " for " + data[0]);
+    }
+
+    @DataProvider(name = ENDPOINTS_DATAPROVIDER, parallel = false)
+    public Object[][] getEndpoints() {
+        return endpoints.stream()
+                .map(e -> new String[]{e.getName(), e.getEndpoint().toString()})
+                .collect(Collectors.toList())
+                .toArray(new String[][]{});
     }
 
     protected <T> ControllerProxy<T> createController(ClientContext clientContext, String controllerName) {
@@ -123,32 +161,5 @@ public class AbstractIntegrationTest {
         } catch (Exception e) {
             //do nothing
         }
-    }
-
-    @BeforeClass
-    protected void startDockerContainers() {
-        final Executor executor = Client.getClientConfiguration().getBackgroundExecutor();
-        try {
-            dockerCompose.start(2, TimeUnit.MINUTES,
-                    Wait.forHttp(executor, new URI("http://localhost:8082/integration-tests/rest/health"), 200),
-                    Wait.forHttp(executor, new URI("http://localhost:8083/integration-tests/rest/health"), 200));
-        } catch (URISyntaxException e) {
-            throw new RuntimeException("Error", e);
-        }
-    }
-
-    @AfterClass
-    protected void stopDockerContainers() {
-        dockerCompose.kill();
-    }
-
-    @DataProvider(name = ENDPOINTS_DATAPROVIDER, parallel = false)
-    public Object[][] getEndpoints() {
-        return new String[][]{
-                //{"Payara", "http://localhost:8081/integration-tests"},
-                {"TomEE", "http://localhost:8082/integration-tests"},
-                {"Wildfly", "http://localhost:8083/integration-tests"}//,
-                //{"Spring-Boot", "http://localhost:8084/integration-tests"}
-        };
     }
 }
