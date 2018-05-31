@@ -17,51 +17,87 @@
 package dev.rico.integrationtests;
 
 import dev.rico.client.Client;
-import dev.rico.core.http.HttpClient;
 import dev.rico.client.remoting.ClientContext;
 import dev.rico.client.remoting.ClientContextFactory;
 import dev.rico.client.remoting.ControllerProxy;
 import dev.rico.client.remoting.Param;
-import org.testng.annotations.DataProvider;
+import dev.rico.docker.DockerCompose;
+import dev.rico.docker.Wait;
+import dev.rico.internal.core.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.testng.annotations.*;
 
+import java.lang.reflect.Method;
 import java.net.URI;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Duration;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.stream.Collectors;
 
+import static dev.rico.integrationtests.AbstractIntegrationTest.INTEGRATION_TESTS_TEST_GROUP;
+import static dev.rico.internal.core.http.HttpStatus.HTTP_OK;
+
+@Test(groups = INTEGRATION_TESTS_TEST_GROUP)
 public class AbstractIntegrationTest {
 
-    private int bootTimeoutInMinutes = 3;
+    private final static Logger LOG = LoggerFactory.getLogger(AbstractIntegrationTest.class);
 
     private int timeoutInMinutes = 3;
 
     public final static String ENDPOINTS_DATAPROVIDER = "endpoints";
 
-    protected void waitUntilServerIsUp(String host, long time, TimeUnit timeUnit) throws TimeoutException {
-        long startTime = System.currentTimeMillis();
-        long waitMillis = timeUnit.toMillis(time);
-        boolean connected = false;
-        while (!connected) {
-            if(System.currentTimeMillis() > startTime + waitMillis) {
-                throw new TimeoutException("Server " + host + " is still down after " + waitMillis + " ms");
-            }
-            HttpClient httpClient = Client.getService(HttpClient.class);
-            try {
-                httpClient.request(host + "/rest/health").withoutContent().withoutResult().execute().get();
-                connected = true;
-            } catch (Exception e) {
-                // do nothing since server is not up at the moment...
-            }
-            //Check server state again in 10 sec
-            if(!connected) {
-                try {
-                    Thread.sleep(10_000);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+    public final static String INTEGRATION_TESTS_TEST_GROUP = "INTEGRATION-TESTS";
+
+    private final DockerCompose dockerCompose;
+
+    private final List<IntegrationEndpoint> endpoints;
+
+    public AbstractIntegrationTest() {
+        endpoints = Arrays.asList(IntegrationEndpoint.values());
+        try {
+            final URL dockerComposeURL = AbstractIntegrationTest.class.getClassLoader().getResource("docker-compose.yml");
+            final Path dockerComposeFile = Paths.get(dockerComposeURL.toURI());
+            dockerCompose = new DockerCompose(Client.getClientConfiguration().getBackgroundExecutor(), dockerComposeFile);
+        } catch (Exception e) {
+            throw new RuntimeException("Can not create Docker environment!", e);
         }
+    }
+
+    @BeforeGroups(INTEGRATION_TESTS_TEST_GROUP)
+    protected void startDockerContainers() {
+        final Executor executor = Client.getClientConfiguration().getBackgroundExecutor();
+        final Wait[] waits = endpoints.stream()
+                .map(e -> Wait.forHttp(e.getHeathEndpoint(), HTTP_OK))
+                .collect(Collectors.toList())
+                .toArray(new Wait[]{});
+        dockerCompose.start(2, TimeUnit.MINUTES, waits);
+    }
+
+    @AfterGroups(INTEGRATION_TESTS_TEST_GROUP)
+    protected void stopDockerContainers() {
+        dockerCompose.kill();
+    }
+
+    @BeforeMethod
+    public void onTest(final Method method, final Object[] data) {
+        Assert.requireNonNull(method, "method");
+        Assert.requireNonNull(data, "data");
+        LOG.info("Starting test " + method.getDeclaringClass().getSimpleName() +"." + method.getName() + " for " + data[0]);
+    }
+
+    @DataProvider(name = ENDPOINTS_DATAPROVIDER, parallel = false)
+    public Object[][] getEndpoints() {
+        return endpoints.stream()
+                .map(e -> new String[]{e.getName(), e.getEndpoint().toString()})
+                .collect(Collectors.toList())
+                .toArray(new String[][]{});
     }
 
     protected <T> ControllerProxy<T> createController(ClientContext clientContext, String controllerName) {
@@ -76,17 +112,16 @@ public class AbstractIntegrationTest {
         Client.init(new IntegrationTestToolkit());
         Client.getClientConfiguration().getCookieStore().removeAll();
         try {
-            waitUntilServerIsUp(endpoint, bootTimeoutInMinutes, TimeUnit.MINUTES);
             ClientContext clientContext = Client.getService(ClientContextFactory.class).create(Client.getClientConfiguration(), new URI(endpoint + "/remoting"));
             long timeOutTime = System.currentTimeMillis() + Duration.ofMinutes(timeoutInMinutes).toMillis();
-            while(System.currentTimeMillis() < timeOutTime && clientContext.getClientId() ==  null){
-                try{
+            while (System.currentTimeMillis() < timeOutTime && clientContext.getClientId() == null) {
+                try {
                     clientContext.connect().get(10, TimeUnit.SECONDS);
-                }catch(Exception ex){
+                } catch (Exception ex) {
                     // do nothing since server is not up at the moment...
                 }
             }
-            if(clientContext.getClientId() == null){
+            if (clientContext.getClientId() == null) {
                 throw new Exception("Client context not created....");
             }
 
@@ -126,15 +161,5 @@ public class AbstractIntegrationTest {
         } catch (Exception e) {
             //do nothing
         }
-    }
-
-    @DataProvider(name = ENDPOINTS_DATAPROVIDER, parallel = false)
-    public Object[][] getEndpoints() {
-        return new String[][]{
-                //{"Payara", "http://localhost:8081/integration-tests"},
-                {"TomEE", "http://localhost:8082/integration-tests"},
-                {"Wildfly", "http://localhost:8083/integration-tests"}//,
-                //{"Spring-Boot", "http://localhost:8084/integration-tests"}
-        };
     }
 }
