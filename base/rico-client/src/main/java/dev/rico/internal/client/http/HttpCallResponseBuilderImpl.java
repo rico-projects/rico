@@ -43,11 +43,11 @@ public class HttpCallResponseBuilderImpl extends AbstractHttpCallResponseBuilder
 
     @Override
     protected  <R> HttpExecutor<R> createExecutor(final ResponseContentConverter<R> converter) {
-        return new HttpCallExecutorImpl<> (configuration, () -> handleRequest(converter));
+        return new ClientHttpExecutorImpl<>(configuration, () -> handleRequest(converter));
     }
 
     @Override
     protected HttpExecutor<InputStream> createExecutor() {
-        return new HttpCallExecutorImpl<> (configuration, () -> handleRequest());
+        return new ClientHttpExecutorImpl<>(configuration, () -> handleRequest());
     }
 }
