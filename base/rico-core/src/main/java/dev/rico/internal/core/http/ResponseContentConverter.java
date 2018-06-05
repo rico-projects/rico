@@ -14,24 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.core.http;
+package dev.rico.internal.core.http;
 
-import dev.rico.core.http.ByteArrayProvider;
-import org.apiguardian.api.API;
+@FunctionalInterface
+public interface ResponseContentConverter<T> {
 
-import static org.apiguardian.api.API.Status.INTERNAL;
+    T convert(byte[] rawContent) throws Exception;
 
-@API(since = "0.x", status = INTERNAL)
-public class SimpleByteArrayProvider implements ByteArrayProvider {
-
-    private final byte[] bytes;
-
-    public SimpleByteArrayProvider(byte[] bytes) {
-        this.bytes = bytes;
-    }
-
-    @Override
-    public byte[] get() {
-        return bytes;
-    }
 }

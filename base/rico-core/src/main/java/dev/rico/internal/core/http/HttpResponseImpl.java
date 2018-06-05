@@ -14,8 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.core.http;
+package dev.rico.internal.core.http;
 
+import dev.rico.core.http.HttpHeader;
+import dev.rico.core.http.HttpResponse;
 import dev.rico.internal.core.Assert;
 
 import java.util.Collections;

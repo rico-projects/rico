@@ -14,11 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.core.http;
+package dev.rico.internal.core.http;
 
-@FunctionalInterface
-public interface ResponseContentConverter<T> {
+import dev.rico.core.http.HttpURLConnectionHandler;
+import org.apiguardian.api.API;
 
-    T convert(byte[] rawContent) throws Exception;
+import java.net.HttpURLConnection;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+@API(since = "0.x", status = INTERNAL)
+public class DefaultHttpURLConnectionResponseHandler implements HttpURLConnectionHandler {
+
+    @Override
+    public void handle(HttpURLConnection response) {
+
+    }
 }

@@ -14,19 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.core.http;
+package dev.rico.internal.core.http;
 
+import dev.rico.core.http.ByteArrayProvider;
 import org.apiguardian.api.API;
-
-import java.net.HttpURLConnection;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
-public class DefaultHttpURLConnectionResponseHandler implements HttpURLConnectionHandler {
+public class SimpleByteArrayProvider implements ByteArrayProvider {
+
+    private final byte[] bytes;
+
+    public SimpleByteArrayProvider(byte[] bytes) {
+        this.bytes = bytes;
+    }
 
     @Override
-    public void handle(HttpURLConnection response) {
-
+    public byte[] get() {
+        return bytes;
     }
 }

@@ -17,19 +17,14 @@
 package dev.rico.internal.client.http;
 
 import dev.rico.core.http.*;
-import dev.rico.internal.core.Assert;
+import dev.rico.internal.core.http.AbstractHttpCallRequestBuilder;
 import dev.rico.internal.core.http.HttpClientConnection;
-import dev.rico.internal.core.http.HttpHeaderImpl;
 import dev.rico.client.ClientConfiguration;
 import com.google.gson.Gson;
 import org.apiguardian.api.API;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
-import static dev.rico.internal.core.http.HttpHeaderConstants.CONTENT_TYPE_HEADER;
-import static dev.rico.internal.core.http.HttpHeaderConstants.JSON_MIME_TYPE;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)

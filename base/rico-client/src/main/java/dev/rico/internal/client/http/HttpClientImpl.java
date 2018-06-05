@@ -18,6 +18,7 @@ package dev.rico.internal.client.http;
 
 import dev.rico.core.http.*;
 import dev.rico.internal.core.Assert;
+import dev.rico.internal.core.http.AbstractHttpClient;
 import dev.rico.internal.core.http.DefaultHttpURLConnectionFactory;
 import dev.rico.internal.core.http.HttpClientConnection;
 import dev.rico.client.ClientConfiguration;
@@ -26,8 +27,6 @@ import org.apiguardian.api.API;
 
 import java.io.IOException;
 import java.net.*;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 

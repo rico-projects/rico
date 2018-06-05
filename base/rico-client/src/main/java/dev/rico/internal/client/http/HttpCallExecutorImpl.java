@@ -16,7 +16,7 @@
  */
 package dev.rico.internal.client.http;
 
-import dev.rico.core.http.HttpProvider;
+import dev.rico.internal.core.http.HttpProvider;
 import dev.rico.internal.core.Assert;
 import dev.rico.client.ClientConfiguration;
 import dev.rico.core.http.HttpExecutor;

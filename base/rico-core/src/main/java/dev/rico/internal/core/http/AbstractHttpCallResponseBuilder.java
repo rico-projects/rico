@@ -1,10 +1,8 @@
-package dev.rico.core.http;
+package dev.rico.internal.core.http;
 
 import com.google.gson.Gson;
+import dev.rico.core.http.*;
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.core.http.ConnectionUtils;
-import dev.rico.internal.core.http.HttpClientConnection;
-import dev.rico.internal.core.http.HttpHeaderImpl;
 
 import java.io.IOException;
 import java.io.InputStream;
