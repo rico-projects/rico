@@ -18,4 +18,6 @@
 dependencies {
     compile "org.slf4j:slf4j-api:$slf4jVersion"
     compile "org.apiguardian:apiguardian-api:$apiguardianVersion"
+    compile "io.zipkin.brave:brave:5.0.0"
+    compile "io.zipkin.reporter2:zipkin-sender-okhttp3:2.6.1"
 }

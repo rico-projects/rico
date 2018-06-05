@@ -29,6 +29,4 @@ public interface ContextManager {
     Set<Context> getGlobalContexts();
 
     Set<Context> getThreadContexts();
-
-
 }

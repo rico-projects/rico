@@ -21,12 +21,33 @@ import dev.rico.metrics.types.Counter;
 import dev.rico.metrics.types.Gauge;
 import dev.rico.metrics.types.Timer;
 
+/**
+ * General service to create and access metrics.
+ */
 public interface Metrics {
 
+    /**
+     * Returns the {@link Counter} metric for the given name and {@link Context} definition or create a new one.
+     * @param name the name of the metric
+     * @param context the context of the metric
+     * @return the counter metric
+     */
     Counter getOrCreateCounter(String name, Context... context);
 
+    /**
+     * Returns the {@link Timer} metric for the given name and {@link Context} definition or create a new one.
+     * @param name the name of the metric
+     * @param context the context of the metric
+     * @return the timer metric
+     */
     Timer getOrCreateTimer(String name, Context... context);
 
+    /**
+     * Returns the {@link Gauge} metric for the given name and {@link Context} definition or create a new one.
+     * @param name the name of the metric
+     * @param context the context of the metric
+     * @return the gauge metric
+     */
     Gauge getOrCreateGauge(String name, Context... context);
 
 }
