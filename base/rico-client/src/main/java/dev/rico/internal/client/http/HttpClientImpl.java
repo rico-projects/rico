@@ -16,15 +16,11 @@
  */
 package dev.rico.internal.client.http;
 
+import dev.rico.core.http.*;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.http.DefaultHttpURLConnectionFactory;
 import dev.rico.internal.core.http.HttpClientConnection;
 import dev.rico.client.ClientConfiguration;
-import dev.rico.core.http.HttpClient;
-import dev.rico.core.http.HttpCallRequestBuilder;
-import dev.rico.core.http.HttpURLConnectionFactory;
-import dev.rico.core.http.HttpURLConnectionHandler;
-import dev.rico.core.http.RequestMethod;
 import com.google.gson.Gson;
 import org.apiguardian.api.API;
 
@@ -36,15 +32,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
-public class HttpClientImpl implements HttpClient {
-
-    private final Gson gson;
-
-    private final HttpURLConnectionFactory httpURLConnectionFactory;
-
-    private final List<HttpURLConnectionHandler> requestHandlers = new CopyOnWriteArrayList<>();
-
-    private final List<HttpURLConnectionHandler> responseHandlers = new CopyOnWriteArrayList<>();
+public class HttpClientImpl extends AbstractHttpClient {
 
     private final ClientConfiguration configuration;
 
@@ -53,29 +41,8 @@ public class HttpClientImpl implements HttpClient {
     }
 
     public HttpClientImpl(final Gson gson, final HttpURLConnectionFactory httpURLConnectionFactory, final ClientConfiguration configuration) {
-        this.gson = Assert.requireNonNull(gson, "gson");
-        this.httpURLConnectionFactory = Assert.requireNonNull(httpURLConnectionFactory, "httpURLConnectionFactory");
+        super(gson, httpURLConnectionFactory);
         this.configuration = configuration;
-    }
-
-    public void addRequestHandler(final HttpURLConnectionHandler handler) {
-        Assert.requireNonNull(handler, "handler");
-        requestHandlers.add(handler);
-    }
-
-    @Override
-    public void addResponseHandler(final HttpURLConnectionHandler handler) {
-        Assert.requireNonNull(handler, "handler");
-        responseHandlers.add(handler);
-    }
-
-    @Override
-    public HttpCallRequestBuilder request(final String url, final RequestMethod method) {
-        try {
-            return request(new URI(url), method);
-        } catch (final URISyntaxException e) {
-            throw new RuntimeException("HTTP error", e);
-        }
     }
 
     @Override
@@ -83,8 +50,8 @@ public class HttpClientImpl implements HttpClient {
         try {
             Assert.requireNonNull(url, "url");
             Assert.requireNonNull(method, "method");
-            final HttpClientConnection clientConnection = new HttpClientConnection(httpURLConnectionFactory, url, method);
-            return new HttpCallRequestBuilderImpl(clientConnection, gson, requestHandlers, responseHandlers, configuration);
+            final HttpClientConnection clientConnection = new HttpClientConnection(getHttpURLConnectionFactory(), url, method);
+            return new HttpCallRequestBuilderImpl(clientConnection, getGson(), getRequestHandlers(), getResponseHandlers(), configuration);
         } catch (final IOException e) {
             throw new RuntimeException("HTTP error", e);
         }
