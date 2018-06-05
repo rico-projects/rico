@@ -14,11 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.internal.client.http;
+package dev.rico.core.http;
 
+import dev.rico.core.http.HttpException;
+import dev.rico.core.http.HttpResponse;
+import org.apiguardian.api.API;
+
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+@API(since = "0.x", status = INTERNAL)
 @FunctionalInterface
-public interface ResponseContentConverter<T> {
+public interface HttpProvider<R> {
 
-    T convert(byte[] rawContent) throws Exception;
-
+    HttpResponse<R> get() throws HttpException;
 }

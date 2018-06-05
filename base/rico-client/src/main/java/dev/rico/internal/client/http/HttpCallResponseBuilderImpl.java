@@ -16,19 +16,13 @@
  */
 package dev.rico.internal.client.http;
 
+import dev.rico.core.http.*;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.http.ConnectionUtils;
 import dev.rico.internal.core.http.HttpClientConnection;
 import dev.rico.internal.core.http.HttpHeaderImpl;
 import dev.rico.client.ClientConfiguration;
-import dev.rico.core.functional.Promise;
-import dev.rico.core.http.ByteArrayProvider;
-import dev.rico.core.http.ConnectionException;
-import dev.rico.core.http.HttpCallResponseBuilder;
-import dev.rico.core.http.HttpException;
-import dev.rico.core.http.HttpHeader;
-import dev.rico.core.http.HttpResponse;
-import dev.rico.core.http.HttpURLConnectionHandler;
+import dev.rico.core.http.HttpExecutor;
 import com.google.gson.Gson;
 import org.apiguardian.api.API;
 
@@ -37,6 +31,7 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Function;
 
 import static dev.rico.internal.core.http.HttpHeaderConstants.ACCEPT_CHARSET_HEADER;
 import static dev.rico.internal.core.http.HttpHeaderConstants.ACCEPT_HEADER;
@@ -61,6 +56,8 @@ public class HttpCallResponseBuilderImpl implements HttpCallResponseBuilder {
 
     private final ClientConfiguration configuration;
 
+    private HttpExecutorFactory<?> httpExecutorFactory;
+
     public HttpCallResponseBuilderImpl(final HttpClientConnection connection, final ByteArrayProvider dataProvider, final Gson gson, final List<HttpURLConnectionHandler> requestHandlers, final List<HttpURLConnectionHandler> responseHandlers, final ClientConfiguration configuration) {
         this.connection = Assert.requireNonNull(connection, "connection");
         this.dataProvider = Assert.requireNonNull(dataProvider, "dataProvider");
@@ -72,21 +69,23 @@ public class HttpCallResponseBuilderImpl implements HttpCallResponseBuilder {
 
         Assert.requireNonNull(responseHandlers, "responseHandlers");
         this.responseHandlers = Collections.unmodifiableList(responseHandlers);
+
+        httpExecutorFactory = p -> new HttpCallExecutorImpl<>(configuration, p);
     }
 
     @Override
-    public Promise<HttpResponse<InputStream>, HttpException> streamBytes() {
+    public HttpExecutor<InputStream> streamBytes() {
         return createExecutor();
     }
 
     @Override
-    public Promise<HttpResponse<ByteArrayProvider>, HttpException> readBytes() {
+    public HttpExecutor<ByteArrayProvider> readBytes() {
         final ResponseContentConverter<ByteArrayProvider> converter = b -> new SimpleByteArrayProvider(b);
         return createExecutor(converter);
     }
 
     @Override
-    public Promise<HttpResponse<String>, HttpException> readString() {
+    public HttpExecutor<String> readString() {
         connection.addRequestHeader(new HttpHeaderImpl(ACCEPT_CHARSET_HEADER, CHARSET));
 
         final ResponseContentConverter<String> converter = b -> new String(b, CHARSET);
@@ -94,7 +93,7 @@ public class HttpCallResponseBuilderImpl implements HttpCallResponseBuilder {
     }
 
     @Override
-    public <R> Promise<HttpResponse<R>, HttpException> readObject(final Class<R> responseType) {
+    public <R> HttpExecutor<R> readObject(final Class<R> responseType) {
         Assert.requireNonNull(responseType, "responseType");
 
         connection.addRequestHeader(new HttpHeaderImpl(ACCEPT_CHARSET_HEADER, CHARSET));
@@ -105,13 +104,13 @@ public class HttpCallResponseBuilderImpl implements HttpCallResponseBuilder {
     }
 
     @Override
-    public Promise<HttpResponse<Void>, HttpException> withoutResult() {
+    public HttpExecutor<Void> withoutResult() {
         final ResponseContentConverter<Void> converter = b -> null;
         return createExecutor(converter);
     }
 
     @Override
-    public Promise<HttpResponse<ByteArrayProvider>, HttpException> readBytes(final String contentType) {
+    public HttpExecutor<ByteArrayProvider> readBytes(final String contentType) {
         Assert.requireNonNull(contentType, "contentType");
 
         connection.addRequestHeader(new HttpHeaderImpl(ACCEPT_HEADER, contentType));
@@ -119,19 +118,19 @@ public class HttpCallResponseBuilderImpl implements HttpCallResponseBuilder {
     }
 
     @Override
-    public Promise<HttpResponse<String>, HttpException> readString(final String contentType) {
+    public HttpExecutor<String> readString(final String contentType) {
         Assert.requireNonNull(contentType, "contentType");
 
         connection.addRequestHeader(new HttpHeaderImpl(ACCEPT_HEADER, contentType));
         return readString();
     }
 
-    private <R> Promise<HttpResponse<R>, HttpException> createExecutor(final ResponseContentConverter<R> converter) {
-        return new HttpCallExecutorImpl<>(configuration, () -> handleRequest(converter));
+    private <R> HttpExecutor<R> createExecutor(final ResponseContentConverter<R> converter) {
+        return ((HttpExecutorFactory<R>)httpExecutorFactory).apply(() -> handleRequest(converter));
     }
 
-    private Promise<HttpResponse<InputStream>, HttpException> createExecutor() {
-        return new HttpCallExecutorImpl<>(configuration, () -> handleRequest());
+    private HttpExecutor<InputStream> createExecutor() {
+        return ((HttpExecutorFactory<InputStream>)httpExecutorFactory).apply(() -> handleRequest());
     }
 
     private <R> HttpResponse<R> handleRequest(final ResponseContentConverter<R> converter) throws HttpException {

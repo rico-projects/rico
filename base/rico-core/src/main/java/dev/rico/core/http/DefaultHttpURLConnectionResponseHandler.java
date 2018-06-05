@@ -14,17 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.internal.client.http;
+package dev.rico.core.http;
 
-import dev.rico.core.http.HttpException;
-import dev.rico.core.http.HttpResponse;
 import org.apiguardian.api.API;
+
+import java.net.HttpURLConnection;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
-@FunctionalInterface
-public interface HttpProvider<R> {
+public class DefaultHttpURLConnectionResponseHandler implements HttpURLConnectionHandler {
 
-    HttpResponse<R> get() throws HttpException;
+    @Override
+    public void handle(HttpURLConnection response) {
+
+    }
 }

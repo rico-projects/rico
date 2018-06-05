@@ -14,20 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.internal.client.http;
+package dev.rico.core.http;
 
-import dev.rico.core.http.HttpURLConnectionHandler;
-import org.apiguardian.api.API;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
-import java.net.HttpURLConnection;
+public interface HttpExecutor<V> {
 
-import static org.apiguardian.api.API.Status.INTERNAL;
+    HttpExecutor<V> onDone(Consumer<HttpResponse<V>> task);
 
-@API(since = "0.x", status = INTERNAL)
-public class DefaultHttpURLConnectionResponseHandler implements HttpURLConnectionHandler {
+    HttpExecutor<V> onError(Consumer<HttpException> errorHandler);
 
-    @Override
-    public void handle(HttpURLConnection response) {
-
-    }
+    CompletableFuture<HttpResponse<V>> execute();
 }

@@ -14,16 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.core.functional;
+package dev.rico.core.http;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
+import dev.rico.core.http.ByteArrayProvider;
+import org.apiguardian.api.API;
 
-public interface Promise<V, T extends Throwable> {
+import static org.apiguardian.api.API.Status.INTERNAL;
 
-    Promise<V, T> onDone(Consumer<V> task);
+@API(since = "0.x", status = INTERNAL)
+public class SimpleByteArrayProvider implements ByteArrayProvider {
 
-    Promise<V, T> onError(Consumer<T> errorHandler);
+    private final byte[] bytes;
 
-    CompletableFuture<V> execute();
+    public SimpleByteArrayProvider(byte[] bytes) {
+        this.bytes = bytes;
+    }
+
+    @Override
+    public byte[] get() {
+        return bytes;
+    }
 }

@@ -16,7 +16,6 @@
  */
 package dev.rico.core.http;
 
-import dev.rico.core.functional.Promise;
 import org.apiguardian.api.API;
 
 import java.io.InputStream;
@@ -26,17 +25,17 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 @API(since = "0.x", status = EXPERIMENTAL)
 public interface HttpCallResponseBuilder {
 
-    Promise<HttpResponse<InputStream>, HttpException> streamBytes();
+    HttpExecutor<InputStream> streamBytes();
 
-    Promise<HttpResponse<ByteArrayProvider>, HttpException> readBytes();
+    HttpExecutor<ByteArrayProvider> readBytes();
 
-    Promise<HttpResponse<ByteArrayProvider>, HttpException> readBytes(String contentType);
+    HttpExecutor<ByteArrayProvider> readBytes(String contentType);
 
-    Promise<HttpResponse<String>, HttpException> readString();
+    HttpExecutor<String> readString();
 
-    Promise<HttpResponse<String>, HttpException> readString(String contentType);
+    HttpExecutor<String> readString(String contentType);
 
-    <R> Promise<HttpResponse<R>, HttpException> readObject(Class<R> responseType);
+    <R> HttpExecutor<R> readObject(Class<R> responseType);
 
-    Promise<HttpResponse<Void>, HttpException> withoutResult();
+    HttpExecutor<Void> withoutResult();
 }

@@ -16,9 +16,10 @@
  */
 package dev.rico.internal.client.http;
 
+import dev.rico.core.http.HttpProvider;
 import dev.rico.internal.core.Assert;
 import dev.rico.client.ClientConfiguration;
-import dev.rico.core.functional.Promise;
+import dev.rico.core.http.HttpExecutor;
 import dev.rico.core.http.BadResponseException;
 import dev.rico.core.http.HttpException;
 import dev.rico.core.http.HttpResponse;
@@ -32,7 +33,7 @@ import java.util.function.Consumer;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
-public class HttpCallExecutorImpl<R> implements Promise<HttpResponse<R>, HttpException> {
+public class HttpCallExecutorImpl<R> implements HttpExecutor<R> {
 
     private final ExecutorService executor;
 
