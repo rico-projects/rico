@@ -46,7 +46,12 @@ public class LogReporter extends AsyncReporter<Span> {
         final String tags = "{" +  tagMap.keySet()
                 .stream()
                 .map(k -> k.toString() + "=" + Optional.ofNullable(tagMap.get(k)).map(v -> v.toString()).orElse("null"))
-                .reduce("", (a, b) -> a +", " + b) + "}";
+                .reduce("", (a, b) -> {
+                    if(a == null || a.trim().isEmpty()) {
+                        return b;
+                    }
+                    return a + ", " + b;
+                }) + "}";
 
 
         LOG.info("[Trace: {}, Span: {}, Parent: {}, exportable:{}] begin: {} end: {} duration: {} tags: {}", traceId, spanId, parentId, exportable, begin, end, duration, tags);

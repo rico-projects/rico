@@ -1,5 +1,6 @@
 package dev.rico.core;
 
+import dev.rico.core.context.Context;
 import dev.rico.core.trace.Span;
 import dev.rico.core.trace.SpanType;
 import dev.rico.internal.core.tracing.LogReporter;
@@ -43,6 +44,7 @@ public class TraceTest {
 
         Executors.newSingleThreadExecutor().submit(() -> {
             final Span threadSpan = tracer.startChildSpan(mainSpan, "ThreadSpan", SpanType.LOCAL);
+            threadSpan.addContext(Context.of("Type", "InThread"));
             sleep(1_000);
             System.out.println("Ich laufe im Thread Als Child");
             sleep(300);

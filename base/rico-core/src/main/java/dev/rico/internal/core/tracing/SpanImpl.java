@@ -6,11 +6,11 @@ import dev.rico.internal.core.Assert;
 
 import java.util.Objects;
 
-public class SpanImpl implements Span{
+public class SpanImpl implements Span {
 
     private final brave.Span innerSpan;
 
-    public SpanImpl(brave.Span innerSpan) {
+    public SpanImpl(final brave.Span innerSpan) {
         this.innerSpan = Assert.requireNonNull(innerSpan, "innerSpan");
     }
 
@@ -20,20 +20,22 @@ public class SpanImpl implements Span{
     }
 
     @Override
-    public void completeExceptional(Throwable e) {
-        innerSpan.error(e);
+    public void completeExceptional(final Throwable exception) {
+        Assert.requireNonNull(exception, "exception");
+        innerSpan.error(exception);
     }
 
+    @Override
     public void addContext(final Context context) {
         Assert.requireNonNull(context, "context");
         innerSpan.tag(context.getType(), context.getValue());
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SpanImpl span = (SpanImpl) o;
+        final SpanImpl span = (SpanImpl) o;
         return Objects.equals(innerSpan, span.innerSpan);
     }
 

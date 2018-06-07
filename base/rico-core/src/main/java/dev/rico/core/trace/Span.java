@@ -1,12 +1,13 @@
 package dev.rico.core.trace;
 
-import java.time.Duration;
-import java.util.Optional;
+import dev.rico.core.context.Context;
 
 public interface Span {
 
     void complete();
 
     void completeExceptional(Throwable e);
+
+    void addContext(Context context);
 
 }

@@ -16,6 +16,9 @@
  */
 package dev.rico.core.context;
 
+import dev.rico.internal.core.Assert;
+import dev.rico.internal.core.context.ContextImpl;
+
 import java.io.Serializable;
 
 public interface Context extends Serializable {
@@ -24,4 +27,7 @@ public interface Context extends Serializable {
 
     String getValue();
 
+    static Context of(final String type, final String value) {
+        return new ContextImpl(type, value);
+    }
 }
