@@ -94,11 +94,16 @@ public class TracerImpl implements Tracer {
         });
     }
 
-    public void setIncomingContext(final long traceId, final Long spanId, final Long parentSpanId) {
+    public Span setIncomingContext(final long traceId, final Long spanId, final Long parentSpanId) {
         final TraceContext.Builder builder = TraceContext.newBuilder()
                 .traceId(traceId)
                 .spanId(Optional.ofNullable(spanId).orElse(0L))
                 .parentId(Optional.ofNullable(parentSpanId).orElse(0L));
-        innerTracer.joinSpan(builder.build());
+        //TODO: better use brave.Tracer.nextSpan(TraceContextOrSamplingFlags)
+        final brave.Span span =  innerTracer.joinSpan(builder.build());
+        final Span result = new SpanImpl(span);
+        contextMap.put(result, span);
+        currentLocalSpan.set(span);
+        return result;
     }
 }

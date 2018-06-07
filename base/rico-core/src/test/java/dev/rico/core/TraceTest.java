@@ -3,7 +3,7 @@ package dev.rico.core;
 import dev.rico.core.context.Context;
 import dev.rico.core.trace.Span;
 import dev.rico.core.trace.SpanType;
-import dev.rico.internal.core.tracing.LogReporter;
+import dev.rico.internal.core.tracing.service.LogReporter;
 import dev.rico.internal.core.tracing.TracerImpl;
 import dev.rico.internal.core.tracing.TracingBootstrap;
 

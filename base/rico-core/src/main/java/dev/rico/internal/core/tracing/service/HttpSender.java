@@ -1,4 +1,4 @@
-package dev.rico.internal.core.tracing;
+package dev.rico.internal.core.tracing.service;
 
 import dev.rico.core.http.HttpClient;
 import dev.rico.internal.core.Assert;

@@ -1,11 +1,10 @@
-package dev.rico.internal.core.tracing;
+package dev.rico.internal.core.tracing.service;
 
 import dev.rico.internal.core.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zipkin2.Span;
 import zipkin2.reporter.AsyncReporter;
-import zipkin2.reporter.Reporter;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
