@@ -14,32 +14,52 @@ public class TracerImpl implements Tracer {
 
     private brave.Tracer innerTracer;
 
-    private WeakHashMap<Span, TraceContext> contextMap;
+    private WeakHashMap<Span, brave.Span> contextMap;
+
+    private ThreadLocal<brave.Span> currentLocalSpan;
 
     public TracerImpl(final brave.Tracer innerTracer) {
         this.innerTracer = Assert.requireNonNull(innerTracer, "innerTracer");
+        currentLocalSpan = new ThreadLocal<>();
         contextMap = new WeakHashMap<>();
     }
 
     @Override
     public boolean isInSpan() {
-        return innerTracer.currentSpan() != null;
+        return currentLocalSpan.get() != null;
     }
 
     @Override
     public Span startSpan(String name, SpanType type) {
-        final brave.Span span = innerTracer.nextSpan().name(name).kind(null).start();
-        return new SpanImpl(span);
+        final brave.Span currentSpan = currentLocalSpan.get();
+        if(currentSpan != null) {
+            return startChildSpan(currentSpan.context(), name, type);
+        }
+        final brave.Span span = innerTracer.newTrace().name(name).kind(SpanUtils.convert(type));
+        span.start();
+        Span result = new SpanImpl(span);
+        contextMap.put(result, span);
+        currentLocalSpan.set(span);
+        return result;
     }
 
     @Override
     public Span startChildSpan(Span parent, String name, SpanType type) {
-        final TraceContext context = contextMap.get(parent);
-        if(context == null) {
-            throw new IllegalArgumentException("ERROR");
+        Assert.requireNonNull(parent, "parent");
+        final brave.Span currentSpan = contextMap.get(parent);
+        if(currentSpan == null) {
+             throw new IllegalStateException("No span open");
         }
-        final brave.Span span = innerTracer.newChild(context).name(name).kind(null).start();
-        return new SpanImpl(span);
+        return startChildSpan(currentSpan.context(), name, type);
+    }
+
+    private Span startChildSpan(TraceContext context, String name, SpanType type) {
+        Assert.requireNonNull(context, "context");
+        final brave.Span span = innerTracer.newChild(context).name(name).kind(SpanUtils.convert(type)).start();
+        Span result = new SpanImpl(span);
+        contextMap.put(result, span);
+        currentLocalSpan.set(span);
+        return result;
     }
 
     @Override
@@ -52,14 +72,22 @@ public class TracerImpl implements Tracer {
     public <T> T runInSpan(final String name, final Supplier<T> task) {
         Assert.requireNonBlank(name, "name");
         Assert.requireNonNull(task, "task");
-        final ScopedSpan span = innerTracer.startScopedSpan(name);
+        final Span span = startSpan(name, SpanType.LOCAL);
         try {
             return task.get();
         } catch (Throwable e) {
-            span.error(e);
+            span.completeExceptional(e);
             throw e;
         } finally {
-            span.finish();
+            span.complete();
         }
+    }
+
+    @Override
+    public void runInSpan(String name, Runnable task) {
+        runInSpan(name, () -> {
+            task.run();
+            return null;
+        });
     }
 }

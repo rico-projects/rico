@@ -10,35 +10,39 @@ import zipkin2.reporter.Sender;
 import java.io.Closeable;
 import java.io.IOException;
 
-public class TracingImpl implements Closeable {
+public class TracingBootstrap implements Closeable {
 
     private final Tracing tracing;
 
     private final AsyncReporter<Span> reporter;
 
-    private final Sender sender;
+    private final Tracer innerTracer;
 
-    private final Tracer tracer;
+    public TracingBootstrap(final String appName, final Sender sender) {
+        this(appName, AsyncReporter.create(Assert.requireNonNull(sender, "sender")));
+    }
 
-    public TracingImpl(final String appName, final Sender sender) {
+    public TracingBootstrap(final String appName, final AsyncReporter<Span> reporter) {
         Assert.requireNonBlank(appName, "appName");
-        this.sender = Assert.requireNonNull(sender, "sender");
-        this.reporter = AsyncReporter.create(sender);
+        this.reporter = Assert.requireNonNull(reporter, "reporter");
         this.tracing = Tracing.newBuilder()
                 .localServiceName(appName)
                 .spanReporter(reporter).build();
 
-        tracer = tracing.tracer();
+        innerTracer = tracing.tracer();
     }
 
-    public Tracer getTracer() {
-        return tracer;
+    public Tracer getInnerTracer() {
+        return innerTracer;
+    }
+
+    public TracerImpl getTracer() {
+        return new TracerImpl(innerTracer);
     }
 
     @Override
     public void close() throws IOException {
         tracing.close();
         reporter.close();
-        sender.close();
     }
 }

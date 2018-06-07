@@ -13,4 +13,6 @@ public interface Tracer {
     Span getCurrentSpan();
 
     <T> T runInSpan(String name, Supplier<T> task);
+
+    void runInSpan(String name, Runnable task);
 }

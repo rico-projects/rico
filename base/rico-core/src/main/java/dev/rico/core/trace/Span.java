@@ -6,4 +6,7 @@ import java.util.Optional;
 public interface Span {
 
     void complete();
+
+    void completeExceptional(Throwable e);
+
 }

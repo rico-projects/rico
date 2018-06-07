@@ -39,6 +39,7 @@ allprojects { proj ->
         testCompile "org.testng:testng:$testngVersion"
         testCompile "org.hamcrest:java-hamcrest:$hamcrestVersion"
         testCompile "org.jmockit:jmockit:$jmockitVersion"
+        testCompile "org.slf4j:slf4j-simple:$slf4jVersion"
     }
 
     proj.tasks.withType(JavaCompile) {
