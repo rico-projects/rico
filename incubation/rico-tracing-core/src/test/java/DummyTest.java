@@ -14,9 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import org.testng.annotations.Test;
 
-dependencies {
-    compile "org.slf4j:slf4j-api:$slf4jVersion"
-    compile "org.apiguardian:apiguardian-api:$apiguardianVersion"
-    compile "com.google.code.gson:gson:$gsonVersion"
+public class DummyTest {
+
+    @Test
+    public void test() {
+        
+    }
+
 }

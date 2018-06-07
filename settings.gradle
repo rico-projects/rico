@@ -46,6 +46,8 @@ include 'security/rico-security-server'
 include 'security/rico-security-server-javaee'
 include 'security/rico-security-server-spring'
 
+include 'incubation/rico-tracing-core'
+include 'incubation/rico-tracing-server'
 include 'incubation/rico-logger'
 include 'incubation/rico-logger-widget-common'
 include 'incubation/rico-logger-widget-client-javafx'

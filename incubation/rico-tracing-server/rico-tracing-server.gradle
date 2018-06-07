@@ -16,7 +16,8 @@
  */
 
 dependencies {
-    compile "org.slf4j:slf4j-api:$slf4jVersion"
-    compile "org.apiguardian:apiguardian-api:$apiguardianVersion"
-    compile "com.google.code.gson:gson:$gsonVersion"
+    compile project(':rico-server')
+    compile project(':rico-tracing-core')
+    compile "io.zipkin.brave:brave-instrumentation-servlet:5.0.0"
+    compileOnly "javax.servlet:javax.servlet-api:$servletApiVersion"
 }
