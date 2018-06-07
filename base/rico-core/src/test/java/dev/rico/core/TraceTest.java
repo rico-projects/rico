@@ -17,6 +17,10 @@ public class TraceTest {
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         final LogReporter reporter = new LogReporter();
         final ContextManager contextManager = new ContextManagerImpl();
+
+        contextManager.addGlobalContext("App", "TestApp");
+        contextManager.addThreadContext("Thread", "MainThread");
+
         final TracingBootstrap bootstrap = new TracingBootstrap("Test-App", reporter, contextManager);
         final TracerImpl tracer = bootstrap.getTracer();
 
