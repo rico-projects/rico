@@ -1,6 +1,7 @@
 package dev.rico.internal.core.tracing;
 
 import brave.propagation.TraceContext;
+import dev.rico.core.context.ContextManager;
 import dev.rico.core.trace.Span;
 import dev.rico.core.trace.SpanType;
 import dev.rico.core.trace.Tracer;
@@ -18,8 +19,11 @@ public class TracerImpl implements Tracer {
 
     private final ThreadLocal<brave.Span> currentLocalSpan;
 
-    public TracerImpl(final brave.Tracer innerTracer) {
+    private final ContextManager contextManager;
+
+    public TracerImpl(final brave.Tracer innerTracer, final ContextManager contextManager) {
         this.innerTracer = Assert.requireNonNull(innerTracer, "innerTracer");
+        this.contextManager = Assert.requireNonNull(contextManager, "contextManager");
         currentLocalSpan = new ThreadLocal<>();
         contextMap = new WeakHashMap<>();
     }
@@ -38,10 +42,7 @@ public class TracerImpl implements Tracer {
         }
         final brave.Span span = innerTracer.newTrace().name(name).kind(SpanUtils.convert(type));
         span.start();
-        Span result = new SpanImpl(span);
-        contextMap.put(result, span);
-        currentLocalSpan.set(span);
-        return result;
+        return prepairSpan(span);
     }
 
     @Override
@@ -58,10 +59,8 @@ public class TracerImpl implements Tracer {
         Assert.requireNonNull(context, "context");
         Assert.requireNonBlank(name, "name");
         final brave.Span span = innerTracer.newChild(context).name(name).kind(SpanUtils.convert(type)).start();
-        final Span result = new SpanImpl(span);
-        contextMap.put(result, span);
-        currentLocalSpan.set(span);
-        return result;
+        span.start();
+        return prepairSpan(span);
     }
 
     @Override
@@ -101,9 +100,16 @@ public class TracerImpl implements Tracer {
                 .parentId(Optional.ofNullable(parentSpanId).orElse(0L));
         //TODO: better use brave.Tracer.nextSpan(TraceContextOrSamplingFlags)
         final brave.Span span =  innerTracer.joinSpan(builder.build());
-        final Span result = new SpanImpl(span);
-        contextMap.put(result, span);
-        currentLocalSpan.set(span);
-        return result;
+        span.start();
+        return prepairSpan(span);
+    }
+
+    private Span prepairSpan(final brave.Span braveSpan) {
+        final Span span = new SpanImpl(braveSpan);
+        contextManager.getGlobalContexts().forEach(c -> span.addContext(c));
+        contextManager.getThreadContexts().forEach(c -> span.addContext(c));
+        contextMap.put(span, braveSpan);
+        currentLocalSpan.set(braveSpan);
+        return span;
     }
 }

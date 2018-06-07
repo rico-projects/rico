@@ -1,8 +1,10 @@
 package dev.rico.core;
 
 import dev.rico.core.context.Context;
+import dev.rico.core.context.ContextManager;
 import dev.rico.core.trace.Span;
 import dev.rico.core.trace.SpanType;
+import dev.rico.internal.core.context.ContextManagerImpl;
 import dev.rico.internal.core.tracing.service.LogReporter;
 import dev.rico.internal.core.tracing.TracerImpl;
 import dev.rico.internal.core.tracing.TracingBootstrap;
@@ -14,7 +16,8 @@ public class TraceTest {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         final LogReporter reporter = new LogReporter();
-        final TracingBootstrap bootstrap = new TracingBootstrap("Test-App", reporter);
+        final ContextManager contextManager = new ContextManagerImpl();
+        final TracingBootstrap bootstrap = new TracingBootstrap("Test-App", reporter, contextManager);
         final TracerImpl tracer = bootstrap.getTracer();
 
         tracer.runInSpan("MySpan", () -> {

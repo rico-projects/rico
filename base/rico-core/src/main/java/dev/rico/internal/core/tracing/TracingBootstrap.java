@@ -2,6 +2,7 @@ package dev.rico.internal.core.tracing;
 
 import brave.Tracer;
 import brave.Tracing;
+import dev.rico.core.context.ContextManager;
 import dev.rico.internal.core.Assert;
 import zipkin2.Span;
 import zipkin2.reporter.AsyncReporter;
@@ -18,11 +19,13 @@ public class TracingBootstrap implements Closeable {
 
     private final Tracer innerTracer;
 
-    public TracingBootstrap(final String appName, final Sender sender) {
-        this(appName, AsyncReporter.create(Assert.requireNonNull(sender, "sender")));
+    private final TracerImpl tracer;
+
+    public TracingBootstrap(final String appName, final Sender sender, final ContextManager contextManager) {
+        this(appName, AsyncReporter.create(Assert.requireNonNull(sender, "sender")), contextManager);
     }
 
-    public TracingBootstrap(final String appName, final AsyncReporter<Span> reporter) {
+    public TracingBootstrap(final String appName, final AsyncReporter<Span> reporter, final ContextManager contextManager) {
         Assert.requireNonBlank(appName, "appName");
         this.reporter = Assert.requireNonNull(reporter, "reporter");
         this.tracing = Tracing.newBuilder()
@@ -30,6 +33,7 @@ public class TracingBootstrap implements Closeable {
                 .spanReporter(reporter).build();
 
         innerTracer = tracing.tracer();
+        tracer = new TracerImpl(innerTracer, contextManager);
     }
 
     public Tracer getInnerTracer() {
@@ -37,7 +41,7 @@ public class TracingBootstrap implements Closeable {
     }
 
     public TracerImpl getTracer() {
-        return new TracerImpl(innerTracer);
+        return tracer;
     }
 
     @Override
