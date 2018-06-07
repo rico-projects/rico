@@ -6,6 +6,7 @@ import dev.rico.core.trace.SpanType;
 import dev.rico.core.trace.Tracer;
 import dev.rico.internal.core.Assert;
 
+import java.util.Optional;
 import java.util.WeakHashMap;
 import java.util.function.Supplier;
 
@@ -91,5 +92,13 @@ public class TracerImpl implements Tracer {
             task.run();
             return null;
         });
+    }
+
+    public void setIncomingContext(final long traceId, final Long spanId, final Long parentSpanId) {
+        final TraceContext.Builder builder = TraceContext.newBuilder()
+                .traceId(traceId)
+                .spanId(Optional.ofNullable(spanId).orElse(0L))
+                .parentId(Optional.ofNullable(parentSpanId).orElse(0L));
+        innerTracer.joinSpan(builder.build());
     }
 }
