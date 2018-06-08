@@ -82,9 +82,9 @@ public class ClientImpl {
         initImpl(new HeadlessToolkit());
     }
 
-    private void initImpl(Toolkit toolkit) {
-        services.clear();
+    private void initImpl(final Toolkit toolkit) {
         Assert.requireNonNull(toolkit, "toolkit");
+        services.clear();
         clientConfiguration.setUiExecutor(toolkit.getUiExecutor());
         isToolkitSet.set(true);
         ContextManagerImpl.getInstance().addGlobalContext(UI_CONTEXT, toolkit.getName());
@@ -119,7 +119,7 @@ public class ClientImpl {
         return service;
     }
 
-    public static void init(Toolkit toolkit) {
+    public static void init(final Toolkit toolkit) {
         getInstance().initImpl(toolkit);
     }
 

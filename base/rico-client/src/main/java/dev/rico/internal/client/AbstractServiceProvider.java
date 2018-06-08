@@ -42,13 +42,12 @@ public abstract class AbstractServiceProvider<S> implements ServiceProvider<S> {
     protected abstract S createService(final ClientConfiguration configuration);
 
     @Override
-    public boolean isActive(ClientConfiguration configuration) {
+    public boolean isActive(final ClientConfiguration configuration) {
         return true;
     }
 
     @Override
     public final S getService(final ClientConfiguration configuration) {
-        Assert.requireNonNull(configuration, "configuration");
         creationLock.lock();
         try {
             this.service = createService(configuration);

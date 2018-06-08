@@ -49,7 +49,7 @@ import static dev.rico.internal.server.metrics.module.MetricsConfigConstants.MET
 import static dev.rico.internal.server.metrics.module.MetricsConfigConstants.METRICS_SERVLET_FILTER_NAME;
 import static dev.rico.internal.server.metrics.module.MetricsConfigConstants.METRICS_SERVLET_NAME;
 import static dev.rico.internal.server.metrics.module.MetricsConfigConstants.MODULE_NAME;
-import static dev.rico.internal.server.remoting.servlet.ServletConstants.ALL_URL_MAPPING;
+import static dev.rico.internal.server.servlet.ServletConstants.ALL_URL_MAPPING;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "1.0.0", status = INTERNAL)

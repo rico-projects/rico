@@ -41,8 +41,6 @@ public class BasicConfigurationProvider extends SimpleConfigurationProvider {
 
     public static final String ROOT_PACKAGE_FOR_CLASSPATH_SCAN = "rootPackageForClasspathScan";
 
-    public static final String MBEAN_REGISTRATION = "mBeanRegistration";
-
     public static final String PLATFORM_ACTIVE = "active";
 
     public static final String MAX_CLIENTS_PER_SESSION = "maxClientsPerSession";
@@ -76,7 +74,6 @@ public class BasicConfigurationProvider extends SimpleConfigurationProvider {
     public BasicConfigurationProvider() {
         addInt(SESSION_TIMEOUT, SESSION_TIMEOUT_DEFAULT_VALUE);
         addBoolean(USE_CROSS_SITE_ORIGIN_FILTER, USE_CROSS_SITE_ORIGIN_FILTER_DEFAULT_VALUE);
-        addBoolean(MBEAN_REGISTRATION, M_BEAN_REGISTRATION_DEFAULT_VALUE);
         addBoolean(PLATFORM_ACTIVE, ACTIVE_DEFAULT_VALUE);
         addList(ACCESS_CONTROL_ALLOW_HEADERS, ACCESS_CONTROL_ALLOW_HEADERS_DEFAULT_VALUE);
         addList(ACCESS_CONTROL_ALLOW_METHODS, ACCESS_CONTROL_ALLOW_METHODS_DEFAULT_VALUE);

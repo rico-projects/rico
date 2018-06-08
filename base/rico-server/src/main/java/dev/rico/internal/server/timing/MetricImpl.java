@@ -57,7 +57,7 @@ public class MetricImpl implements Metric {
     }
 
     @Override
-    public void stop() {
+    public synchronized void stop() {
         if(duration != null) {
             throw new IllegalStateException("Metric '" + name + "' was already stopped!");
         }

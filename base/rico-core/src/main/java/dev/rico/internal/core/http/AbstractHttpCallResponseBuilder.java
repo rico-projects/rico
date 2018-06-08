@@ -97,9 +97,9 @@ public abstract class AbstractHttpCallResponseBuilder implements HttpCallRespons
             final InputStream inputStream = response.getContent();
             final R content = converter.convert(ConnectionUtils.readContent(inputStream));
             return new HttpResponseImpl<>(response.getHeaders(), response.getStatusCode(), content, response.getContentSize());
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new ConnectionException("No response from server", e);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new HttpException("Can not handle response", e);
         }
     }
@@ -126,9 +126,9 @@ public abstract class AbstractHttpCallResponseBuilder implements HttpCallRespons
             final List<HttpHeader> headers = connection.getResponseHeaders();
             final int responseCode = connection.readResponseCode();
             return new HttpResponseImpl<>(headers, responseCode, connection.getContentStream(), connection.getContentSize());
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new ConnectionException("No response from server", e);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new HttpException("Can not handle response", e);
         }
     }

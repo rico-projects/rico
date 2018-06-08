@@ -38,7 +38,7 @@ public class HttpCallRequestBuilderImpl extends AbstractHttpCallRequestBuilder {
     }
 
     @Override
-    protected HttpCallResponseBuilder createResponseBuilder(HttpClientConnection connection, ByteArrayProvider dataProvider, Gson gson, List<HttpURLConnectionInterceptor> requestChainHandlers) {
+    protected HttpCallResponseBuilder createResponseBuilder(final HttpClientConnection connection, final ByteArrayProvider dataProvider, final Gson gson, final List<HttpURLConnectionInterceptor> requestChainHandlers) {
         return new HttpCallResponseBuilderImpl(connection, dataProvider, gson, requestChainHandlers, configuration);
     }
 }

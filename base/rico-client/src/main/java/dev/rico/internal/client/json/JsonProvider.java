@@ -16,11 +16,9 @@
  */
 package dev.rico.internal.client.json;
 
-import dev.rico.core.Configuration;
 import dev.rico.internal.client.AbstractServiceProvider;
 import dev.rico.client.ClientConfiguration;
 import com.google.gson.Gson;
-import dev.rico.internal.client.ClientConstants;
 import org.apiguardian.api.API;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
@@ -33,7 +31,7 @@ public class JsonProvider extends AbstractServiceProvider<Gson> {
     }
 
     @Override
-    protected Gson createService(ClientConfiguration configuration) {
+    protected Gson createService(final ClientConfiguration configuration) {
         return new Gson();
     }
 }

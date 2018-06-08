@@ -46,7 +46,7 @@ public class ClientScopeImpl implements Scope {
     public Object get(final String name, final ObjectFactory<?> objectFactory) {
         Assert.requireNonBlank(name, "name");
         Assert.requireNonNull(objectFactory, "objectFactory");
-        Map<String, Object> localStore = getLocalStore();
+        final Map<String, Object> localStore = getLocalStore();
         if (!localStore.containsKey(name)) {
             localStore.put(name, objectFactory.getObject());
         }
@@ -69,7 +69,7 @@ public class ClientScopeImpl implements Scope {
     }
 
     private Map<String, Object> getLocalStore() {
-        ClientSession session = getClientSession();
+        final ClientSession session = getClientSession();
         if(session == null) {
             throw new IllegalStateException("No client session found!");
         }

@@ -32,39 +32,39 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 public abstract class AbstractSpringManagedBeanFactory implements ManagedBeanFactory {
 
     @Override
-    public void init(ServletContext servletContext) {
+    public void init(final ServletContext servletContext) {
         init();
     }
 
     protected void init() {
-        ApplicationContext context = getContext();
-        DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) context.getAutowireCapableBeanFactory();
+        final ApplicationContext context = getContext();
+        final DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) context.getAutowireCapableBeanFactory();
         beanFactory.addBeanPostProcessor(SpringPreInjector.getInstance());
     }
 
     @Override
-    public <T> T createDependentInstance(Class<T> cls) {
+    public <T> T createDependentInstance(final Class<T> cls) {
         Assert.requireNonNull(cls, "cls");
-        ApplicationContext context = getContext();
-        AutowireCapableBeanFactory beanFactory = context.getAutowireCapableBeanFactory();
+        final ApplicationContext context = getContext();
+        final AutowireCapableBeanFactory beanFactory = context.getAutowireCapableBeanFactory();
         return beanFactory.createBean(cls);
     }
 
     @Override
-    public <T> T createDependentInstance(Class<T> cls, PostConstructInterceptor<T> interceptor) {
+    public <T> T createDependentInstance(final Class<T> cls, final PostConstructInterceptor<T> interceptor) {
         Assert.requireNonNull(cls, "cls");
         Assert.requireNonNull(interceptor, "interceptor");
-        ApplicationContext context = getContext();
-        AutowireCapableBeanFactory beanFactory = context.getAutowireCapableBeanFactory();
+        final ApplicationContext context = getContext();
+        final AutowireCapableBeanFactory beanFactory = context.getAutowireCapableBeanFactory();
         SpringPreInjector.getInstance().prepare(cls, interceptor);
         return beanFactory.createBean(cls);
     }
 
     @Override
-    public <T> void destroyDependentInstance(T instance, Class<T> cls) {
+    public <T> void destroyDependentInstance(final T instance, final Class<T> cls) {
         Assert.requireNonNull(instance, "instance");
         Assert.requireNonNull(cls, "cls");
-        ApplicationContext context = getContext();
+        final ApplicationContext context = getContext();
         context.getAutowireCapableBeanFactory().destroyBean(instance);
     }
 

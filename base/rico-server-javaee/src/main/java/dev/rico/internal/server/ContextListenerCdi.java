@@ -41,10 +41,10 @@ public class ContextListenerCdi implements ClientSessionListener {
     }
 
     @Override
-    public void sessionDestroyed(ClientSession clientSession) {
+    public void sessionDestroyed(final ClientSession clientSession) {
         Assert.requireNonNull(clientSession, "clientSession");
-        BeanManager bm = BeanManagerProvider.getInstance().getBeanManager();
-        ClientScopeContext clientContext = (ClientScopeContext) bm.getContext(ClientScoped.class);
+        final BeanManager bm = BeanManagerProvider.getInstance().getBeanManager();
+        final ClientScopeContext clientContext = (ClientScopeContext) bm.getContext(ClientScoped.class);
         clientContext.destroy();
     }
 }

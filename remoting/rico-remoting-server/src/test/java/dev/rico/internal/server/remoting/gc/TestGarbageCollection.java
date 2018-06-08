@@ -17,7 +17,7 @@
 package dev.rico.internal.server.remoting.gc;
 
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.server.remoting.config.ServerConfiguration;
+import dev.rico.internal.server.config.ServerConfiguration;
 import dev.rico.internal.server.remoting.config.RemotingConfiguration;
 import org.testng.annotations.Test;
 

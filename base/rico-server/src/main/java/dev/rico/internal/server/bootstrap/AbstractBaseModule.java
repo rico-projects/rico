@@ -40,7 +40,7 @@ public abstract class AbstractBaseModule implements ServerModule {
     }
 
     @Override
-    public boolean shouldBoot(Configuration configuration) {
+    public boolean shouldBoot(final Configuration configuration) {
         return Assert.requireNonNull(configuration, "configuration").getBooleanProperty(getActivePropertyName(), true);
     }
 

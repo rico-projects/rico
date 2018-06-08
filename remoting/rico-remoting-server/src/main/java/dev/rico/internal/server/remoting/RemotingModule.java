@@ -46,8 +46,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceLoader;
 
-import static dev.rico.internal.server.remoting.servlet.ServletConstants.REMOTING_SERVLET_NAME;
 import static dev.rico.internal.server.remoting.servlet.ServletConstants.INTERRUPT_SERVLET_NAME;
+import static dev.rico.internal.server.remoting.servlet.ServletConstants.REMOTING_SERVLET_NAME;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @ModuleDefinition(order = 101)

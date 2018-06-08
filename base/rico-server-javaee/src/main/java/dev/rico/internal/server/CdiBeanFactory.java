@@ -20,7 +20,7 @@ import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.context.ContextManagerImpl;
 import dev.rico.internal.server.bootstrap.PlatformBootstrap;
 import dev.rico.internal.server.client.ClientSessionProvider;
-import dev.rico.internal.server.remoting.servlet.ServerTimingFilter;
+import dev.rico.internal.server.servlet.ServerTimingFilter;
 import dev.rico.core.context.ContextManager;
 import dev.rico.server.client.ClientSession;
 import dev.rico.server.ClientScoped;

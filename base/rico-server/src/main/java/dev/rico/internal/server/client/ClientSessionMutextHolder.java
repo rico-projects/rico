@@ -17,7 +17,7 @@
 package dev.rico.internal.server.client;
 
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.server.remoting.servlet.Mutex;
+import dev.rico.internal.server.servlet.Mutex;
 import dev.rico.server.client.ClientSession;
 import dev.rico.server.client.ClientSessionListener;
 import org.apiguardian.api.API;

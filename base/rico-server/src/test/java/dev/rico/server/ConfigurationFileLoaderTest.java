@@ -16,8 +16,8 @@
  */
 package dev.rico.server;
 
-import dev.rico.internal.server.remoting.config.ConfigurationFileLoader;
-import dev.rico.internal.server.remoting.config.ServerConfiguration;
+import dev.rico.internal.server.config.ConfigurationFileLoader;
+import dev.rico.internal.server.config.ServerConfiguration;
 import org.testng.annotations.Test;
 
 import static dev.rico.internal.server.bootstrap.BasicConfigurationProvider.ROOT_PACKAGE_FOR_CLASSPATH_SCAN;

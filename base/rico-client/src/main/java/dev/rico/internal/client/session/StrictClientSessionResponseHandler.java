@@ -38,12 +38,13 @@ public class StrictClientSessionResponseHandler implements HttpURLConnectionInte
     }
 
     @Override
-    public void handle(final HttpURLConnection connection, RequestChain chain)  throws IOException {
+    public void handle(final HttpURLConnection connection, final RequestChain chain)  throws IOException {
         Assert.requireNonNull(connection, "connection");
         Assert.requireNonNull(chain, "chain");
         final HttpURLConnection response = chain.call();
+        Assert.requireNonNull(response, "response");
         if(this.url.equals(response.getURL())) {
-            String clientIdInHeader = response.getHeaderField(RicoConstants.CLIENT_ID_HTTP_HEADER_NAME);
+            final String clientIdInHeader = response.getHeaderField(RicoConstants.CLIENT_ID_HTTP_HEADER_NAME);
             if (clientIdInHeader == null) {
                 throw new RuntimeException("No client id found in response");
             }

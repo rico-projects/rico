@@ -95,7 +95,7 @@ public class ContextManagerImpl implements ContextManager {
     }
 
     @Override
-    public Subscription addThreadContext(final String type, String value) {
+    public Subscription addThreadContext(final String type, final String value) {
         Assert.requireNonNull(type, "type");
         final Set<Context> set = getOrCreateThreadContexts();
         final Context context = new ContextImpl(type, value);

@@ -55,7 +55,7 @@ import dev.rico.internal.server.remoting.model.ServerControllerActionCallBean;
 import dev.rico.internal.server.remoting.model.ServerEventDispatcher;
 import dev.rico.internal.server.remoting.model.ServerPlatformBeanRepository;
 import dev.rico.internal.server.remoting.model.ServerPresentationModelBuilderFactory;
-import dev.rico.internal.server.remoting.servlet.ServerTimingFilter;
+import dev.rico.internal.server.servlet.ServerTimingFilter;
 import dev.rico.remoting.BeanManager;
 import dev.rico.server.client.ClientSession;
 import dev.rico.server.spi.components.ManagedBeanFactory;

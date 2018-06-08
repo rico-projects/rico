@@ -161,7 +161,7 @@ public class ConnectionUtils {
                 return true;
             }
             return false;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             return false;
         }
     }

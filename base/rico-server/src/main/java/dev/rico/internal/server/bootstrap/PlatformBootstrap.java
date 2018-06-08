@@ -21,8 +21,7 @@ import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.SimpleThreadFactory;
 import dev.rico.internal.core.ansi.PlatformLogo;
 import dev.rico.internal.core.context.ContextManagerImpl;
-import dev.rico.internal.server.remoting.config.ServerConfiguration;
-import dev.rico.internal.server.remoting.mbean.MBeanRegistry;
+import dev.rico.internal.server.config.ServerConfiguration;
 import dev.rico.internal.server.scanner.DefaultClasspathScanner;
 import dev.rico.server.spi.ModuleDefinition;
 import dev.rico.server.spi.ModuleInitializationException;
@@ -43,7 +42,6 @@ import java.util.Set;
 
 import static dev.rico.internal.core.RicoConstants.APPLICATION_CONTEXT;
 import static dev.rico.internal.core.RicoConstants.APPLICATION_NAME_PROPERTY;
-import static dev.rico.internal.server.bootstrap.BasicConfigurationProvider.MBEAN_REGISTRATION;
 import static dev.rico.internal.server.bootstrap.BasicConfigurationProvider.PLATFORM_ACTIVE;
 import static dev.rico.internal.server.bootstrap.BasicConfigurationProvider.ROOT_PACKAGE_FOR_CLASSPATH_SCAN;
 import static org.apiguardian.api.API.Status.INTERNAL;
@@ -70,8 +68,6 @@ public class PlatformBootstrap {
 
                 servletContext.setAttribute(CONFIGURATION_ATTRIBUTE_NAME, configuration);
                 configuration.log();
-
-                MBeanRegistry.getInstance().setMbeanSupport(configuration.getBooleanProperty(MBEAN_REGISTRATION));
 
                 final ExtendedThreadFactory threadFactory = new SimpleThreadFactory();
                 final ManagedBeanFactory beanFactory = getBeanFactory(servletContext);
