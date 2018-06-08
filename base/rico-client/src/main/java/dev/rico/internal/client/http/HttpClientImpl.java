@@ -50,7 +50,7 @@ public class HttpClientImpl extends AbstractHttpClient {
             Assert.requireNonNull(url, "url");
             Assert.requireNonNull(method, "method");
             final HttpClientConnection clientConnection = new HttpClientConnection(getHttpURLConnectionFactory(), url, method);
-            return new HttpCallRequestBuilderImpl(clientConnection, getGson(), getRequestHandlers(), getResponseHandlers(), configuration);
+            return new HttpCallRequestBuilderImpl(clientConnection, getGson(), getRequestChainHandlers(), configuration);
         } catch (final IOException e) {
             throw new RuntimeException("HTTP error", e);
         }

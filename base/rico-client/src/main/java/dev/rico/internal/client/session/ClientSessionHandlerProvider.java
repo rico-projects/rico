@@ -14,17 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.core.http.spi;
+package dev.rico.internal.client.session;
 
+import dev.rico.client.Client;
+import dev.rico.client.session.ClientSessionStore;
 import dev.rico.core.Configuration;
-import dev.rico.core.http.HttpURLConnectionHandler;
+import dev.rico.core.http.HttpURLConnectionInterceptor;
+import dev.rico.core.http.spi.RequestHandlerProvider;
 import org.apiguardian.api.API;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
-@API(since = "0.x", status = EXPERIMENTAL)
-@FunctionalInterface
-public interface ResponseHandlerProvider {
-
-    HttpURLConnectionHandler getHandler(Configuration configuration);
+@API(since = "0.x", status = INTERNAL)
+public class ClientSessionHandlerProvider implements RequestHandlerProvider {
+    @Override
+    public HttpURLConnectionInterceptor getHandler(Configuration configuration) {
+        return new ClientSessionHandler(Client.getService(ClientSessionStore.class));
+    }
 }

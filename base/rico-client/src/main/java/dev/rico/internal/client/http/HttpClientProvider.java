@@ -23,7 +23,6 @@ import dev.rico.client.ClientConfiguration;
 import dev.rico.core.http.HttpClient;
 import dev.rico.core.http.HttpURLConnectionFactory;
 import dev.rico.core.http.spi.RequestHandlerProvider;
-import dev.rico.core.http.spi.ResponseHandlerProvider;
 import com.google.gson.Gson;
 import org.apiguardian.api.API;
 
@@ -48,14 +47,9 @@ public class HttpClientProvider extends AbstractServiceProvider<HttpClient> {
         final ServiceLoader<RequestHandlerProvider> requestLoader = ServiceLoader.load(RequestHandlerProvider.class);
         final Iterator<RequestHandlerProvider> requestIterator = requestLoader.iterator();
         while (requestIterator.hasNext()) {
-            client.addRequestHandler(requestIterator.next().getHandler(configuration));
+            client.addRequestChainHandler(requestIterator.next().getHandler(configuration));
         }
 
-        final ServiceLoader<ResponseHandlerProvider> responseLoader = ServiceLoader.load(ResponseHandlerProvider.class);
-        final Iterator<ResponseHandlerProvider> responseIterator = responseLoader.iterator();
-        while (responseIterator.hasNext()) {
-            client.addResponseHandler(responseIterator.next().getHandler(configuration));
-        }
         return client;
     }
 }

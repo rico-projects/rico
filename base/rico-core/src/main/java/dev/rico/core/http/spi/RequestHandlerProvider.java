@@ -17,7 +17,7 @@
 package dev.rico.core.http.spi;
 
 import dev.rico.core.Configuration;
-import dev.rico.core.http.HttpURLConnectionHandler;
+import dev.rico.core.http.HttpURLConnectionInterceptor;
 import org.apiguardian.api.API;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
@@ -26,5 +26,5 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 @FunctionalInterface
 public interface RequestHandlerProvider {
 
-    HttpURLConnectionHandler getHandler(Configuration configuration);
+    HttpURLConnectionInterceptor getHandler(Configuration configuration);
 }

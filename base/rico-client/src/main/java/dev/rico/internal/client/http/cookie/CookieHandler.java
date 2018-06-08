@@ -16,31 +16,35 @@
  */
 package dev.rico.internal.client.http.cookie;
 
+import dev.rico.core.http.RequestChain;
 import dev.rico.internal.core.Assert;
-import dev.rico.core.http.HttpURLConnectionHandler;
+import dev.rico.core.http.HttpURLConnectionInterceptor;
 import org.apiguardian.api.API;
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
-public class CookieResponseHandler implements HttpURLConnectionHandler {
+public class CookieHandler implements HttpURLConnectionInterceptor {
 
     private final HttpClientCookieHandler clientCookieHandler;
 
-    public CookieResponseHandler(final HttpClientCookieHandler clientCookieHandler) {
+    public CookieHandler(final HttpClientCookieHandler clientCookieHandler) {
         this.clientCookieHandler = Assert.requireNonNull(clientCookieHandler, "clientCookieHandler");
     }
 
     @Override
-    public void handle(final HttpURLConnection connection) {
+    public void handle(final HttpURLConnection connection, final RequestChain chain) throws IOException {
         Assert.requireNonNull(connection, "connection");
         try {
-            clientCookieHandler.updateCookiesFromResponse(connection);
-        } catch (final URISyntaxException e) {
-            throw new RuntimeException("Can not read cookies from response", e);
+            clientCookieHandler.setRequestCookies(connection);
+            HttpURLConnection response = chain.call();
+            clientCookieHandler.updateCookiesFromResponse(response);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException("Can not set cookies", e);
         }
     }
 }

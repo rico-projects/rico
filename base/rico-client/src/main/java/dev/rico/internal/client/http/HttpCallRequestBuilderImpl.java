@@ -32,13 +32,13 @@ public class HttpCallRequestBuilderImpl extends AbstractHttpCallRequestBuilder {
 
     private final ClientConfiguration configuration;
 
-    public HttpCallRequestBuilderImpl(final HttpClientConnection connection, final Gson gson, final List<HttpURLConnectionHandler> requestHandlers, final List<HttpURLConnectionHandler> responseHandlers, ClientConfiguration configuration) {
-        super(connection, gson, requestHandlers, responseHandlers);
+    public HttpCallRequestBuilderImpl(final HttpClientConnection connection, final Gson gson, final List<HttpURLConnectionInterceptor> requestChainHandlers, ClientConfiguration configuration) {
+        super(connection, gson, requestChainHandlers);
         this.configuration = configuration;
     }
 
     @Override
-    protected HttpCallResponseBuilder createResponseBuilder(HttpClientConnection connection, ByteArrayProvider dataProvider, Gson gson, List<HttpURLConnectionHandler> requestHandlers, List<HttpURLConnectionHandler> responseHandlers) {
-        return new HttpCallResponseBuilderImpl(connection, dataProvider, gson, requestHandlers, responseHandlers, configuration);
+    protected HttpCallResponseBuilder createResponseBuilder(HttpClientConnection connection, ByteArrayProvider dataProvider, Gson gson, List<HttpURLConnectionInterceptor> requestChainHandlers) {
+        return new HttpCallResponseBuilderImpl(connection, dataProvider, gson, requestChainHandlers, configuration);
     }
 }

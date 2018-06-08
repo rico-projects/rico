@@ -4,10 +4,8 @@ import com.google.gson.Gson;
 import dev.rico.core.http.ByteArrayProvider;
 import dev.rico.core.http.HttpCallRequestBuilder;
 import dev.rico.core.http.HttpCallResponseBuilder;
-import dev.rico.core.http.HttpURLConnectionHandler;
+import dev.rico.core.http.HttpURLConnectionInterceptor;
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.core.http.HttpClientConnection;
-import dev.rico.internal.core.http.HttpHeaderImpl;
 
 import java.util.Collections;
 import java.util.List;
@@ -22,22 +20,17 @@ public abstract class AbstractHttpCallRequestBuilder implements HttpCallRequestB
 
     private final Gson gson;
 
-    private final List<HttpURLConnectionHandler> requestHandlers;
-
-    private final List<HttpURLConnectionHandler> responseHandlers;
+    private final List<HttpURLConnectionInterceptor> requestChainHandlers;
 
     private final AtomicBoolean done = new AtomicBoolean(false);
 
-    public AbstractHttpCallRequestBuilder(final HttpClientConnection connection, final Gson gson, final List<HttpURLConnectionHandler> requestHandlers, final List<HttpURLConnectionHandler> responseHandlers) {
+    public AbstractHttpCallRequestBuilder(final HttpClientConnection connection, final Gson gson, final List<HttpURLConnectionInterceptor> requestChainHandlers) {
         this.connection = Assert.requireNonNull(connection, "connection");
         this.gson = Assert.requireNonNull(gson, "gson");
 
 
-        Assert.requireNonNull(requestHandlers, "requestHandlers");
-        this.requestHandlers = Collections.unmodifiableList(requestHandlers);
-
-        Assert.requireNonNull(responseHandlers, "responseHandlers");
-        this.responseHandlers = Collections.unmodifiableList(responseHandlers);
+        Assert.requireNonNull(requestChainHandlers, "requestChainHandlers");
+        this.requestChainHandlers = Collections.unmodifiableList(requestChainHandlers);
     }
 
     @Override
@@ -69,9 +62,9 @@ public abstract class AbstractHttpCallRequestBuilder implements HttpCallRequestB
             throw new RuntimeException("Request already defined!");
         }
         done.set(true);
-        return createResponseBuilder(connection, dataProvider, gson, requestHandlers, responseHandlers);
+        return createResponseBuilder(connection, dataProvider, gson, requestChainHandlers);
     }
 
-    protected abstract HttpCallResponseBuilder createResponseBuilder(final HttpClientConnection connection, final ByteArrayProvider dataProvider, final Gson gson, final List<HttpURLConnectionHandler> requestHandlers, final List<HttpURLConnectionHandler> responseHandlers);
+    protected abstract HttpCallResponseBuilder createResponseBuilder(final HttpClientConnection connection, final ByteArrayProvider dataProvider, final Gson gson, final List<HttpURLConnectionInterceptor> requestChainHandlers);
 }
 

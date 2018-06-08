@@ -16,27 +16,32 @@
  */
 package dev.rico.internal.client.session;
 
+import dev.rico.core.http.RequestChain;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.RicoConstants;
-import dev.rico.core.http.HttpURLConnectionHandler;
+import dev.rico.core.http.HttpURLConnectionInterceptor;
 import org.apiguardian.api.API;
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
-public class StrictClientSessionResponseHandler implements HttpURLConnectionHandler {
+public class StrictClientSessionResponseHandler implements HttpURLConnectionInterceptor {
 
     private final URI url;
 
     public StrictClientSessionResponseHandler(final URI url) {
         this.url = Assert.requireNonNull(url, "url");
     }
+
     @Override
-    public void handle(final HttpURLConnection response) {
-        Assert.requireNonNull(response, "response");
+    public void handle(final HttpURLConnection connection, RequestChain chain)  throws IOException {
+        Assert.requireNonNull(connection, "connection");
+        Assert.requireNonNull(chain, "chain");
+        final HttpURLConnection response = chain.call();
         if(this.url.equals(response.getURL())) {
             String clientIdInHeader = response.getHeaderField(RicoConstants.CLIENT_ID_HTTP_HEADER_NAME);
             if (clientIdInHeader == null) {

@@ -3,13 +3,9 @@ package dev.rico.internal.core.http;
 import com.google.gson.Gson;
 import dev.rico.core.http.*;
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.core.http.DefaultHttpURLConnectionFactory;
-import dev.rico.internal.core.http.HttpClientConnection;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -19,9 +15,7 @@ public abstract class AbstractHttpClient implements HttpClient {
 
     private final HttpURLConnectionFactory httpURLConnectionFactory;
 
-    private final List<HttpURLConnectionHandler> requestHandlers = new CopyOnWriteArrayList<>();
-
-    private final List<HttpURLConnectionHandler> responseHandlers = new CopyOnWriteArrayList<>();
+    private final List<HttpURLConnectionInterceptor> requestChainHandlers = new CopyOnWriteArrayList<>();
 
     public AbstractHttpClient(final Gson gson) {
         this(gson, new DefaultHttpURLConnectionFactory());
@@ -32,16 +26,11 @@ public abstract class AbstractHttpClient implements HttpClient {
         this.httpURLConnectionFactory = Assert.requireNonNull(httpURLConnectionFactory, "httpURLConnectionFactory");
     }
 
-    public void addRequestHandler(final HttpURLConnectionHandler handler) {
+    public void addRequestChainHandler(final HttpURLConnectionInterceptor handler) {
         Assert.requireNonNull(handler, "handler");
-        requestHandlers.add(handler);
+        requestChainHandlers.add(handler);
     }
 
-    @Override
-    public void addResponseHandler(final HttpURLConnectionHandler handler) {
-        Assert.requireNonNull(handler, "handler");
-        responseHandlers.add(handler);
-    }
 
     @Override
     public HttpCallRequestBuilder request(final String url, final RequestMethod method) {
@@ -60,12 +49,8 @@ public abstract class AbstractHttpClient implements HttpClient {
         return httpURLConnectionFactory;
     }
 
-    protected List<HttpURLConnectionHandler> getRequestHandlers() {
-        return requestHandlers;
-    }
-
-    protected List<HttpURLConnectionHandler> getResponseHandlers() {
-        return responseHandlers;
+    protected List<HttpURLConnectionInterceptor> getRequestChainHandlers() {
+        return requestChainHandlers;
     }
 }
 

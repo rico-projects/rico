@@ -36,8 +36,8 @@ public class HttpCallResponseBuilderImpl extends AbstractHttpCallResponseBuilder
 
     private final ClientConfiguration configuration;
 
-    public HttpCallResponseBuilderImpl(final HttpClientConnection connection, final ByteArrayProvider dataProvider, final Gson gson, final List<HttpURLConnectionHandler> requestHandlers, final List<HttpURLConnectionHandler> responseHandlers, final ClientConfiguration configuration) {
-        super(connection, dataProvider, gson, requestHandlers, responseHandlers);
+    public HttpCallResponseBuilderImpl(final HttpClientConnection connection, final ByteArrayProvider dataProvider, final Gson gson, final List<HttpURLConnectionInterceptor> requestChainHandlers, final ClientConfiguration configuration) {
+        super(connection, dataProvider, gson, requestChainHandlers);
         this.configuration = Assert.requireNonNull(configuration, "configuration");
     }
 

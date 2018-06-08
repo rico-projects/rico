@@ -22,22 +22,17 @@ public abstract class AbstractHttpCallResponseBuilder implements HttpCallRespons
 
     private final AtomicBoolean handled = new AtomicBoolean(false);
 
-    private final List<HttpURLConnectionHandler> requestHandlers;
-
-    private final List<HttpURLConnectionHandler> responseHandlers;
+    private final List<HttpURLConnectionInterceptor> requestChainHandlers;
 
     private final ByteArrayProvider dataProvider;
 
-    public AbstractHttpCallResponseBuilder(final HttpClientConnection connection, final ByteArrayProvider dataProvider, final Gson gson, final List<HttpURLConnectionHandler> requestHandlers, final List<HttpURLConnectionHandler> responseHandlers) {
+    public AbstractHttpCallResponseBuilder(final HttpClientConnection connection, final ByteArrayProvider dataProvider, final Gson gson, final List<HttpURLConnectionInterceptor> requestChainHandlers) {
         this.connection = Assert.requireNonNull(connection, "connection");
         this.dataProvider = Assert.requireNonNull(dataProvider, "dataProvider");
         this.gson = Assert.requireNonNull(gson, "gson");
 
-        Assert.requireNonNull(requestHandlers, "requestHandlers");
-        this.requestHandlers = Collections.unmodifiableList(requestHandlers);
-
-        Assert.requireNonNull(responseHandlers, "responseHandlers");
-        this.responseHandlers = Collections.unmodifiableList(responseHandlers);
+        Assert.requireNonNull(requestChainHandlers, "requestChainHandlers");
+        this.requestChainHandlers = Collections.unmodifiableList(requestChainHandlers);
     }
 
     @Override
@@ -115,23 +110,33 @@ public abstract class AbstractHttpCallResponseBuilder implements HttpCallRespons
         }
         handled.set(true);
 
-        requestHandlers.forEach(h -> h.handle(connection.getConnection()));
-        final byte[] rawBytes = dataProvider.get();
         try {
-            connection.writeRequestContent(rawBytes);
-        } catch (final IOException e) {
-            throw new ConnectionException("Can not connect to server", e);
-        }
+            final RequestChain innerChain = () -> {
+                final byte[] rawBytes = dataProvider.get();
+                connection.writeRequestContent(rawBytes);
+                connection.readResponseCode();
+                return connection.getConnection();
+            };
+            RequestChain currentChain = innerChain;
+            for (final HttpURLConnectionInterceptor interceptor : requestChainHandlers) {
+                currentChain = wrapInChain(interceptor, currentChain);
+            }
+            currentChain.call();
 
-        try {
-            int responseCode = connection.readResponseCode();
-            responseHandlers.forEach(h -> h.handle(connection.getConnection()));
             final List<HttpHeader> headers = connection.getResponseHeaders();
+            final int responseCode = connection.readResponseCode();
             return new HttpResponseImpl<>(headers, responseCode, connection.getContentStream(), connection.getContentSize());
         } catch (IOException e) {
             throw new ConnectionException("No response from server", e);
         } catch (Exception e) {
             throw new HttpException("Can not handle response", e);
         }
+    }
+
+    private RequestChain wrapInChain(final HttpURLConnectionInterceptor interceptor, final RequestChain chain) {
+        return () -> {
+            interceptor.handle(connection.getConnection(), chain);
+            return connection.getConnection();
+        };
     }
 }

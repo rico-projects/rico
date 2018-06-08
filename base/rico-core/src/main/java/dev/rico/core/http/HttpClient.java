@@ -30,7 +30,7 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 public interface HttpClient {
 
     @Deprecated
-    void addResponseHandler(HttpURLConnectionHandler handler);
+    void addRequestChainHandler(HttpURLConnectionInterceptor handler);
 
     @Deprecated
     default HttpCallRequestBuilder request(final URI url) {

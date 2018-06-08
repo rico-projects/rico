@@ -25,7 +25,7 @@ import dev.rico.internal.remoting.codec.OptimizedJsonCodec;
 import dev.rico.client.ClientConfiguration;
 import dev.rico.client.session.ClientSessionStore;
 import dev.rico.core.http.HttpClient;
-import dev.rico.core.http.HttpURLConnectionHandler;
+import dev.rico.core.http.HttpURLConnectionInterceptor;
 import dev.rico.client.remoting.ClientContext;
 import dev.rico.client.remoting.ClientContextFactory;
 import dev.rico.client.remoting.ClientInitializationException;
@@ -59,8 +59,8 @@ public class ClientContextFactoryImpl implements ClientContextFactory {
     public ClientContext create(final ClientConfiguration clientConfiguration, final URI endpoint) {
         Assert.requireNonNull(clientConfiguration, "clientConfiguration");
         final HttpClient httpClient = Client.getService(HttpClient.class);
-        final HttpURLConnectionHandler clientSessionCheckResponseHandler = new StrictClientSessionResponseHandler(endpoint);
-        httpClient.addResponseHandler(clientSessionCheckResponseHandler);
+        final HttpURLConnectionInterceptor clientSessionCheckResponseHandler = new StrictClientSessionResponseHandler(endpoint);
+        httpClient.addRequestChainHandler(clientSessionCheckResponseHandler);
         final Function<ClientModelStore, AbstractClientConnector> connectionProvider = s -> {
             return new HttpClientConnector(endpoint, clientConfiguration, s, OptimizedJsonCodec.getInstance(), e -> {}, httpClient);
         };
