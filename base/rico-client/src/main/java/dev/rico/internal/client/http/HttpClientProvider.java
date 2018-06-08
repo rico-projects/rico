@@ -17,6 +17,7 @@
 package dev.rico.internal.client.http;
 
 import dev.rico.client.Client;
+import dev.rico.core.spi.DependsOn;
 import dev.rico.internal.client.AbstractServiceProvider;
 import dev.rico.client.ClientConfiguration;
 import dev.rico.core.http.HttpClient;
@@ -32,6 +33,7 @@ import java.util.ServiceLoader;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
+@DependsOn(Gson.class)
 public class HttpClientProvider extends AbstractServiceProvider<HttpClient> {
 
     public HttpClientProvider() {

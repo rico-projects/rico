@@ -16,9 +16,9 @@
  */
 package dev.rico.internal.client;
 
-import dev.rico.client.Client;
 import dev.rico.client.ClientConfiguration;
 import dev.rico.client.Toolkit;
+import dev.rico.core.spi.DependsOn;
 import dev.rico.client.spi.ServiceProvider;
 import dev.rico.internal.client.config.ConfigurationFileLoader;
 import dev.rico.internal.core.Assert;
@@ -28,6 +28,7 @@ import dev.rico.internal.core.context.ContextManagerImpl;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 import static dev.rico.internal.client.ClientConstants.UI_CONTEXT;
 import static dev.rico.internal.core.RicoConstants.APPLICATION_CONTEXT;
@@ -55,10 +56,11 @@ public class ClientImpl {
 
         final ServiceLoader<ServiceProvider> loader = ServiceLoader.load(ServiceProvider.class);
         final Iterator<ServiceProvider> iterator = loader.iterator();
+
         while (iterator.hasNext()) {
-            ServiceProvider provider = iterator.next();
+            final ServiceProvider provider = iterator.next();
             if(provider.isActive(clientConfiguration)) {
-                Class serviceClass = provider.getServiceType();
+                final Class serviceClass = provider.getServiceType();
                 Assert.requireNonNull(serviceClass, "serviceClass");
                 if (providers.containsKey(serviceClass)) {
                     throw new RuntimeException("Can not register more than 1 implementation for service type " + serviceClass);
@@ -66,6 +68,17 @@ public class ClientImpl {
                 providers.put(serviceClass, provider);
             }
         }
+
+        final List<Class> unresolvedServices = providers.values().stream()
+                .map(p -> Optional.ofNullable(p.getClass().getAnnotation(DependsOn.class)))
+                .map(o -> o.map(a -> a.value()).orElse(new Class[0]))
+                .flatMap(cls -> Arrays.asList(cls).stream())
+                .filter(c -> !providers.keySet().contains(c))
+                .collect(Collectors.toList());
+        if(!unresolvedServices.isEmpty()) {
+            throw new RuntimeException("No provider found for the follwoing needed services:" + Arrays.toString(unresolvedServices.toArray()));
+        }
+
         initImpl(new HeadlessToolkit());
     }
 

@@ -16,6 +16,8 @@
  */
 package dev.rico.internal.client.security;
 
+import com.google.gson.Gson;
+import dev.rico.core.spi.DependsOn;
 import dev.rico.internal.client.AbstractServiceProvider;
 import dev.rico.internal.core.Assert;
 import dev.rico.client.ClientConfiguration;
@@ -25,6 +27,7 @@ import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.19.0", status = INTERNAL)
+@DependsOn(Gson.class)
 public class KeycloakSecurityProvider extends AbstractServiceProvider<Security> {
 
     public KeycloakSecurityProvider() {
