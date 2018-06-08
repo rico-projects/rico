@@ -5,6 +5,7 @@ import dev.rico.internal.core.Assert;
 import dev.rico.tracing.Span;
 
 import java.util.Objects;
+import java.util.Optional;
 
 public class SpanImpl implements Span {
 
@@ -12,6 +13,21 @@ public class SpanImpl implements Span {
 
     public SpanImpl(final brave.Span innerSpan) {
         this.innerSpan = Assert.requireNonNull(innerSpan, "innerSpan");
+    }
+
+    @Override
+    public String getTraceId() {
+        return innerSpan.context().traceIdString();
+    }
+
+    @Override
+    public String getSpanId() {
+        return innerSpan.context().spanId() + "";
+    }
+
+    @Override
+    public Optional<String> getParentSpanId() {
+        return Optional.ofNullable(innerSpan.context().parentId()).map(l -> l + "");
     }
 
     @Override
