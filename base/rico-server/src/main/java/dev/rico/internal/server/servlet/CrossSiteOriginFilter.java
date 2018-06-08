@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.internal.server.remoting.servlet;
+package dev.rico.internal.server.servlet;
 
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.RicoConstants;
@@ -90,7 +90,7 @@ public class CrossSiteOriginFilter implements Filter {
 
     public String getAsCommaSeparatedList(final List<String> headers) {
         Assert.requireNonNull(headers, "headers");
-        StringBuilder values = new StringBuilder("");
+        final StringBuilder values = new StringBuilder("");
         if (headers.size() > 0) {
             for (int i = 0; i < headers.size(); i++) {
                 values.append(headers.get(i));

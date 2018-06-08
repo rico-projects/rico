@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.internal.server.remoting.servlet;
+package dev.rico.internal.server.servlet;
 
 import dev.rico.internal.server.timing.ServerTimingImpl;
 import dev.rico.server.timing.Metric;

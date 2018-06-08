@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.internal.server.remoting.config;
+package dev.rico.internal.server.config;
 
 import dev.rico.internal.core.Assert;
 import dev.rico.server.spi.ConfigurationProvider;

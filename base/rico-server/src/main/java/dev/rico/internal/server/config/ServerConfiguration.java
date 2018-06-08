@@ -14,35 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.internal.server.remoting.servlet;
+package dev.rico.internal.server.config;
 
-import dev.rico.internal.core.Assert;
+import dev.rico.internal.core.SimpleConfiguration;
 import org.apiguardian.api.API;
 
-import java.io.Serializable;
-import java.util.concurrent.Callable;
+import java.util.Properties;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
-public class Mutex implements Serializable {
+public final class ServerConfiguration extends SimpleConfiguration {
 
-    public <T> T sync(final Callable<T> callable) throws Exception {
-        Assert.requireNonNull(callable, "callable");
-        synchronized (this) {
-            return callable.call();
-        }
+    public ServerConfiguration() {
+        this(new Properties());
     }
 
-    public void sync(final Runnable runnable) throws Exception {
-        Assert.requireNonNull(runnable, "runnable");
-        sync(new Callable<Void>() {
-            @Override
-            public Void call() throws Exception {
-                runnable.run();
-                return null;
-            }
-        });
+    public ServerConfiguration(final Properties internalProperties) {
+        super(internalProperties);
     }
-
 }
+
+
