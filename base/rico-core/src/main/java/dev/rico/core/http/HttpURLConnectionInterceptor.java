@@ -18,6 +18,7 @@ package dev.rico.core.http;
 
 import org.apiguardian.api.API;
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
 
@@ -29,8 +30,8 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
  */
 @API(since = "0.x", status = EXPERIMENTAL)
 @FunctionalInterface
-public interface HttpURLConnectionHandler {
+public interface HttpURLConnectionInterceptor {
 
-    void handle(HttpURLConnection connection);
+    void handle(HttpURLConnection connection, RequestChain requestChain) throws IOException;
 
 }
