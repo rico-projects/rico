@@ -16,6 +16,7 @@
  */
 package dev.rico.internal.client.security;
 
+import dev.rico.client.concurrent.BackgroundExecutor;
 import dev.rico.core.Configuration;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.context.ContextManagerImpl;
@@ -89,15 +90,14 @@ public class KeycloakSecurity implements Security {
 
     private final AtomicReference<Subscription> userContextSubscription;
 
-    public KeycloakSecurity(final ClientConfiguration configuration) {
+    public KeycloakSecurity(final ClientConfiguration configuration, final BackgroundExecutor backgroundExecutor) {
         Assert.requireNonNull(configuration, "configuration");
         this.defaultAppName = configuration.getProperty(APPLICATION_PROPERTY_NAME);
         this.authEndpoint = configuration.getProperty(AUTH_ENDPOINT_PROPERTY_NAME, AUTH_ENDPOINT_PROPERTY_DEFAULT_VALUE);
         Assert.requireNonBlank(authEndpoint, "authEndpoint");
         this.defaultRealmName = configuration.getProperty(REALM_PROPERTY_NAME);
         this.directConnect = configuration.getBooleanProperty(DIRECT_CONNECTION_PROPERTY_NAME, DIRECT_CONNECTION_PROPERTY_DEFAULT_VALUE);
-        this.executor = configuration.getBackgroundExecutor();
-        Assert.requireNonNull(executor, "executor");
+        this.executor = Assert.requireNonNull(backgroundExecutor, "backgroundExecutor");
         this.authorized = new AtomicBoolean(false);
         this.accessToken = new AtomicReference<>(null);
         userContextSubscription = new AtomicReference<>();

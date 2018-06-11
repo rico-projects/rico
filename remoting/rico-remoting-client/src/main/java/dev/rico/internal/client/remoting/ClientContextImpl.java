@@ -16,6 +16,8 @@
  */
 package dev.rico.internal.client.remoting;
 
+import dev.rico.client.Client;
+import dev.rico.client.concurrent.BackgroundExecutor;
 import dev.rico.internal.client.remoting.legacy.ClientModelStore;
 import dev.rico.internal.client.remoting.legacy.DefaultModelSynchronizer;
 import dev.rico.internal.client.remoting.legacy.ModelSynchronizer;
@@ -126,8 +128,8 @@ public class ClientContextImpl implements ClientContext {
     @Override
     public synchronized CompletableFuture<Void> disconnect() {
         final CompletableFuture<Void> result = new CompletableFuture<>();
-
-        clientConfiguration.getBackgroundExecutor().execute(() -> {
+        final BackgroundExecutor backgroundExecutor = Client.getService(BackgroundExecutor.class);
+        backgroundExecutor.execute(() -> {
             commandHandler.invokeCommand(new DestroyContextCommand()).handle((Void aVoid, Throwable throwable) -> {
 
                 clientConnector.disconnect();
@@ -148,8 +150,8 @@ public class ClientContextImpl implements ClientContext {
 
         final CompletableFuture<Void> result = new CompletableFuture<>();
         clientConnector.connect();
-
-        clientConfiguration.getBackgroundExecutor().execute(() -> {
+        final BackgroundExecutor backgroundExecutor = Client.getService(BackgroundExecutor.class);
+        backgroundExecutor.execute(() -> {
             commandHandler.invokeCommand(new CreateContextCommand()).handle((Void aVoid, Throwable throwable) -> {
                 if (throwable != null) {
                     result.completeExceptionally(new ClientInitializationException("Can't call init action!", throwable));

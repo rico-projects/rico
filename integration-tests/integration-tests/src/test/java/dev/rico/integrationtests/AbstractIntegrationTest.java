@@ -17,6 +17,7 @@
 package dev.rico.integrationtests;
 
 import dev.rico.client.Client;
+import dev.rico.client.concurrent.BackgroundExecutor;
 import dev.rico.client.remoting.ClientContext;
 import dev.rico.client.remoting.ClientContextFactory;
 import dev.rico.client.remoting.ControllerProxy;
@@ -26,7 +27,11 @@ import dev.rico.docker.Wait;
 import dev.rico.internal.core.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterGroups;
+import org.testng.annotations.BeforeGroups;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 import java.net.URI;
@@ -37,7 +42,6 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -64,7 +68,8 @@ public class AbstractIntegrationTest {
         try {
             final URL dockerComposeURL = AbstractIntegrationTest.class.getClassLoader().getResource("docker-compose.yml");
             final Path dockerComposeFile = Paths.get(dockerComposeURL.toURI());
-            dockerCompose = new DockerCompose(Client.getClientConfiguration().getBackgroundExecutor(), dockerComposeFile);
+            final BackgroundExecutor backgroundExecutor = Client.getService(BackgroundExecutor.class);
+            dockerCompose = new DockerCompose(backgroundExecutor, dockerComposeFile);
         } catch (Exception e) {
             throw new RuntimeException("Can not create Docker environment!", e);
         }
@@ -72,7 +77,6 @@ public class AbstractIntegrationTest {
 
     @BeforeGroups(INTEGRATION_TESTS_TEST_GROUP)
     protected void startDockerContainers() {
-        final Executor executor = Client.getClientConfiguration().getBackgroundExecutor();
         final Wait[] waits = endpoints.stream()
                 .map(e -> Wait.forHttp(e.getHeathEndpoint(), HTTP_OK))
                 .collect(Collectors.toList())

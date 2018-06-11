@@ -16,6 +16,8 @@
  */
 package dev.rico.internal.client.security;
 
+import dev.rico.client.Client;
+import dev.rico.client.concurrent.BackgroundExecutor;
 import dev.rico.internal.client.AbstractServiceProvider;
 import dev.rico.internal.core.Assert;
 import dev.rico.client.ClientConfiguration;
@@ -34,6 +36,7 @@ public class KeycloakSecurityProvider extends AbstractServiceProvider<Security> 
     @Override
     protected Security createService(final ClientConfiguration configuration) {
         Assert.requireNonNull(configuration, "configuration");
-        return new KeycloakSecurity(configuration);
+        final BackgroundExecutor backgroundExecutor = Client.getService(BackgroundExecutor.class);
+        return new KeycloakSecurity(configuration, backgroundExecutor);
     }
 }

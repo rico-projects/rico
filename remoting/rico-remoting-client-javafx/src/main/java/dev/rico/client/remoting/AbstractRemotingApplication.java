@@ -16,6 +16,8 @@
  */
 package dev.rico.client.remoting;
 
+import dev.rico.client.concurrent.BackgroundExecutor;
+import dev.rico.client.concurrent.UiExecutor;
 import dev.rico.internal.core.Assert;
 import dev.rico.client.Client;
 import dev.rico.client.FxToolkit;
@@ -101,7 +103,7 @@ public abstract class AbstractRemotingApplication extends Application {
         applicationInit();
 
         Client.getClientConfiguration().setUncaughtExceptionHandler((Thread thread, Throwable exception) -> {
-            Client.getClientConfiguration().getUiExecutor().execute(() -> {
+            Client.getService(UiExecutor.class).execute(() -> {
                 Assert.requireNonNull(thread, "thread");
                 Assert.requireNonNull(exception, "exception");
 
@@ -193,8 +195,8 @@ public abstract class AbstractRemotingApplication extends Application {
     protected final CompletableFuture<Void> reconnect(final Stage primaryStage) {
         Assert.requireNonNull(primaryStage, "primaryStage");
         final CompletableFuture<Void> result = new CompletableFuture<>();
-
-        Client.getClientConfiguration().getBackgroundExecutor().execute(() -> {
+        final BackgroundExecutor backgroundExecutor = Client.getService(BackgroundExecutor.class);
+        backgroundExecutor.execute(() -> {
             try {
                 disconnect().get(1_000, TimeUnit.MILLISECONDS);
             } catch (Exception e) {

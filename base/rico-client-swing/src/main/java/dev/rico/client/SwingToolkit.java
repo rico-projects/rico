@@ -16,10 +16,11 @@
  */
 package dev.rico.client;
 
+import dev.rico.client.concurrent.UiExecutor;
+import dev.rico.internal.core.Assert;
 import org.apiguardian.api.API;
 
 import javax.swing.*;
-import java.util.concurrent.Executor;
 
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
@@ -29,13 +30,8 @@ public class SwingToolkit implements Toolkit {
     private final static String NAME = "Swing Toolkit";
 
     @Override
-    public Executor getUiExecutor() {
-        return new Executor() {
-            @Override
-            public void execute(final Runnable command) {
-                SwingUtilities.invokeLater(command);
-            }
-        };
+    public UiExecutor getUiExecutor() {
+        return task -> SwingUtilities.invokeLater(Assert.requireNonNull(task, "task"));
     }
 
     @Override

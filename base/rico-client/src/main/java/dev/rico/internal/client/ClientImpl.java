@@ -16,16 +16,20 @@
  */
 package dev.rico.internal.client;
 
-import dev.rico.client.Client;
 import dev.rico.client.ClientConfiguration;
 import dev.rico.client.Toolkit;
+import dev.rico.client.concurrent.UiExecutor;
 import dev.rico.client.spi.ServiceProvider;
 import dev.rico.internal.client.config.ConfigurationFileLoader;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.ansi.PlatformLogo;
 import dev.rico.internal.core.context.ContextManagerImpl;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.ServiceLoader;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -45,6 +49,8 @@ public class ClientImpl {
     private final ClientConfiguration clientConfiguration;
 
     private AtomicBoolean isToolkitSet =  new AtomicBoolean(false);
+
+    private Toolkit toolkit;
 
     private ClientImpl() {
         PlatformLogo.printLogo();
@@ -69,10 +75,17 @@ public class ClientImpl {
         initImpl(new HeadlessToolkit());
     }
 
-    private void initImpl(Toolkit toolkit) {
+    public static UiExecutor getUiExecutor() {
+        return getInstance().getUiExecutorImpl();
+    }
+
+    private UiExecutor getUiExecutorImpl() {
+        return toolkit.getUiExecutor();
+    }
+
+    private void initImpl(final Toolkit toolkit) {
+        this.toolkit = Assert.requireNonNull(toolkit, "toolkit");
         services.clear();
-        Assert.requireNonNull(toolkit, "toolkit");
-        clientConfiguration.setUiExecutor(toolkit.getUiExecutor());
         isToolkitSet.set(true);
         ContextManagerImpl.getInstance().addGlobalContext(UI_CONTEXT, toolkit.getName());
     }

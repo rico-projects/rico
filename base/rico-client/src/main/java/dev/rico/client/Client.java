@@ -16,28 +16,11 @@
  */
 package dev.rico.client;
 
-import dev.rico.internal.client.ClientConstants;
 import dev.rico.internal.client.ClientImpl;
-import dev.rico.internal.client.HeadlessToolkit;
-import dev.rico.internal.client.config.ConfigurationFileLoader;
-import dev.rico.internal.core.Assert;
-import dev.rico.internal.core.ansi.PlatformLogo;
-import dev.rico.internal.core.context.ContextManagerImpl;
-import dev.rico.client.spi.ServiceProvider;
 import org.apiguardian.api.API;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.ServiceLoader;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
 
-import static dev.rico.internal.client.ClientConstants.UI_CONTEXT;
-import static dev.rico.internal.core.RicoConstants.APPLICATION_CONTEXT;
-import static dev.rico.internal.core.RicoConstants.APPLICATION_NAME_DEFAULT;
-import static dev.rico.internal.core.RicoConstants.APPLICATION_NAME_PROPERTY;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 @API(since = "0.19.0", status = EXPERIMENTAL)

@@ -16,9 +16,11 @@
  */
 package dev.rico.internal.client.concurrent;
 
-import dev.rico.internal.core.Assert;
 import dev.rico.client.ClientConfiguration;
+import dev.rico.client.concurrent.BackgroundExecutor;
 import dev.rico.client.concurrent.ProcessChain;
+import dev.rico.client.concurrent.UiExecutor;
+import dev.rico.internal.core.Assert;
 import javafx.concurrent.Task;
 
 import java.util.ArrayList;
@@ -37,13 +39,13 @@ public class ProcessChainImpl<T> implements ProcessChain<T> {
 
     private final Executor backgroundExecutor;
 
-    private final Executor uiExecutor;
+    private final UiExecutor uiExecutor;
 
     private final Consumer<Throwable> exceptionConsumer;
 
     private final Runnable finalRunnable;
 
-    private ProcessChainImpl(final Executor backgroundExecutor, final Executor uiExecutor, final List<ProcessDescription<?, ?>> processes, final Consumer<Throwable> exceptionConsumer, final Runnable finalRunnable) {
+    private ProcessChainImpl(final Executor backgroundExecutor, final UiExecutor uiExecutor, final List<ProcessDescription<?, ?>> processes, final Consumer<Throwable> exceptionConsumer, final Runnable finalRunnable) {
         this.backgroundExecutor = Assert.requireNonNull(backgroundExecutor, "backgroundExecutor");
         this.uiExecutor = Assert.requireNonNull(uiExecutor, "uiExecutor");
         Assert.requireNonNull(processes, "processes");
@@ -52,10 +54,10 @@ public class ProcessChainImpl<T> implements ProcessChain<T> {
         this.finalRunnable = finalRunnable;
     }
 
-    public ProcessChainImpl(final ClientConfiguration clientConfiguration) {
+    public ProcessChainImpl(final UiExecutor uiExecutor, final BackgroundExecutor backgroundExecutor, final ClientConfiguration clientConfiguration) {
         Assert.requireNonNull(clientConfiguration, "clientConfiguration");
-        this.backgroundExecutor = clientConfiguration.getBackgroundExecutor();
-        this.uiExecutor = clientConfiguration.getUiExecutor();
+        this.backgroundExecutor = Assert.requireNonNull(backgroundExecutor, "backgroundExecutor");
+        this.uiExecutor = Assert.requireNonNull(uiExecutor, "uiExecutor");
         this.processes = new ArrayList<>();
         this.exceptionConsumer = null;
         this.finalRunnable = null;
