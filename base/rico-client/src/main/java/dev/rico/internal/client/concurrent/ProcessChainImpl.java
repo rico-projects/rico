@@ -21,11 +21,11 @@ import dev.rico.client.concurrent.BackgroundExecutor;
 import dev.rico.client.concurrent.ProcessChain;
 import dev.rico.client.concurrent.UiExecutor;
 import dev.rico.internal.core.Assert;
-import javafx.concurrent.Task;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
@@ -37,7 +37,7 @@ public class ProcessChainImpl<T> implements ProcessChain<T> {
 
     private final List<ProcessDescription<?, ?>> processes;
 
-    private final Executor backgroundExecutor;
+    private final BackgroundExecutor backgroundExecutor;
 
     private final UiExecutor uiExecutor;
 
@@ -45,7 +45,7 @@ public class ProcessChainImpl<T> implements ProcessChain<T> {
 
     private final Runnable finalRunnable;
 
-    private ProcessChainImpl(final Executor backgroundExecutor, final UiExecutor uiExecutor, final List<ProcessDescription<?, ?>> processes, final Consumer<Throwable> exceptionConsumer, final Runnable finalRunnable) {
+    private ProcessChainImpl(final BackgroundExecutor backgroundExecutor, final UiExecutor uiExecutor, final List<ProcessDescription<?, ?>> processes, final Consumer<Throwable> exceptionConsumer, final Runnable finalRunnable) {
         this.backgroundExecutor = Assert.requireNonNull(backgroundExecutor, "backgroundExecutor");
         this.uiExecutor = Assert.requireNonNull(uiExecutor, "uiExecutor");
         Assert.requireNonNull(processes, "processes");
@@ -156,11 +156,11 @@ public class ProcessChainImpl<T> implements ProcessChain<T> {
     }
 
     @Override
-    public Task<T> run() {
-        final Task<T> task = new Task<T>() {
+    public Callable<T> run() {
+        final Callable<T> task = new Callable<T>() {
 
             @Override
-            protected T call() throws Exception {
+            public T call() throws Exception {
                 try {
                     Object lastResult = null;
                     for (final ProcessDescription<?, ?> processDescription : processes) {
@@ -190,7 +190,7 @@ public class ProcessChainImpl<T> implements ProcessChain<T> {
             }
 
         };
-        backgroundExecutor.execute(task);
+        backgroundExecutor.submit(task);
         return task;
     }
 }

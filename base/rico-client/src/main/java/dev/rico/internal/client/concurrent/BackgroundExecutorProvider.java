@@ -16,7 +16,8 @@ public class BackgroundExecutorProvider extends AbstractServiceProvider<Backgrou
 
     @Override
     protected BackgroundExecutor createService(final ClientConfiguration configuration) {
-        final ExecutorService executorService = Executors.newCachedThreadPool(new SimpleThreadFactory());
+        final Thread.UncaughtExceptionHandler exceptionHandler = configuration.getUncaughtExceptionHandler();
+        final ExecutorService executorService = Executors.newCachedThreadPool(new SimpleThreadFactory(exceptionHandler));
         return new BackgroundExecutorImpl(executorService);
     }
 }
