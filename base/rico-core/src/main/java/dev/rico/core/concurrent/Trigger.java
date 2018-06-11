@@ -34,5 +34,5 @@ public interface Trigger {
 
     Trigger IN_1_S = t -> Optional.of(LocalDateTime.now().plus(1, SECONDS));
 
-    Optional<LocalDateTime> nextExecutionTime(TaskResult taskResult);
+    Optional<LocalDateTime> nextExecutionTime(ScheduledTaskResult scheduledTaskResult);
 }

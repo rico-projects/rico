@@ -88,7 +88,7 @@ public class SchedulerImpl implements Scheduler {
             final LocalDateTime startTime = LocalDateTime.now();
             task.run();
             final LocalDateTime endTime = LocalDateTime.now();
-            final LocalDateTime nextTime = trigger.nextExecutionTime(new TaskResultImpl(scheduledStartTime, startTime, endTime))
+            final LocalDateTime nextTime = trigger.nextExecutionTime(new ScheduledTaskResultImpl(scheduledStartTime, startTime, endTime))
                     .orElse(null);
             if(nextTime == null) {
                 completableFuture.complete(null);
