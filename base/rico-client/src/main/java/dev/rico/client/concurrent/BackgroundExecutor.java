@@ -1,6 +1,6 @@
 package dev.rico.client.concurrent;
 
-import dev.rico.core.concurrent.Task;
+import dev.rico.internal.client.concurrent.TaskHelper;
 import dev.rico.internal.core.Assert;
 
 import java.util.List;
@@ -24,6 +24,14 @@ public interface BackgroundExecutor extends Executor {
         return submit(task, null);
     }
 
-    List<Task> getAllTasks();
+    List<BackgroundTask> getAllTasks();
+
+    static void setCurrentTaskName(final String name) {
+        TaskHelper.getInstance().setTaskName(name);
+    }
+
+    static void setCurrentDescription(final String description) {
+        TaskHelper.getInstance().setTaskDescription(description);
+    }
 
 }
