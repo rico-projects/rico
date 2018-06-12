@@ -19,28 +19,6 @@ import java.util.concurrent.Executors;
 public class TraceTest {
 
     public static void main(String[] args) throws Exception {
-//        final LogReporter reporter = new LogReporter();
-//
-//        final HttpSender sender = new HttpSender(new URI("http://127.0.0.1:9411/api/v2/spans"), Client.getService(HttpClient.class));
-//        sender.setHttpResultCallback(new Callback<Void>() {
-//            @Override
-//            public void onSuccess(Void value) {
-//                System.out.println("juhu");
-//            }
-//
-//            @Override
-//            public void onError(Throwable t) {
-//                t.printStackTrace();
-//            }
-//        });
-//
-//        final ContextManager contextManager = Client.getService(ContextManager.class);
-//        contextManager.addGlobalContext("App", "TestApp");
-//        contextManager.addThreadContext("Thread", "MainThread");
-//
-//        final TracingBootstrap bootstrap = new TracingBootstrap("Test-App", sender, contextManager);
-//        final TracerImpl tracer = bootstrap.getTracer();
-
         final Tracer tracer = Client.getService(Tracer.class);
 
         tracer.runInSpan("MySpan", () -> {
