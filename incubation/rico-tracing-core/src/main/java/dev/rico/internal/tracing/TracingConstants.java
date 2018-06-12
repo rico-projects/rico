@@ -11,4 +11,16 @@ public interface TracingConstants {
     String SAMPLED_HEADER = "X-B3-Sampled";
 
     String DEBUG_HEADER = "X-B3-Flags";
+
+    String REPORTER_TYPE_CONFIG_PROPERTY = "tracing.reporter";
+
+    String REPORTER_TYPE_NONE = "none";
+
+    String REPORTER_TYPE_LOG = "log";
+
+    String REPORTER_TYPE_CONSOLE = "console";
+
+    String REPORTER_TYPE_HTTP = "http";
+
+    String REPORTER_TYPE_HTTP_ENDPOINT_PROPERTY = "tracing.reporter.http.endpoint";
 }

@@ -6,11 +6,34 @@ import dev.rico.core.http.HttpURLConnectionInterceptor;
 import dev.rico.core.http.spi.RequestHandlerProvider;
 import dev.rico.tracing.Tracer;
 
-public class HttpTracingHandlerProvider implements RequestHandlerProvider {
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Supplier;
+
+public class HttpTracingHandlerProvider implements RequestHandlerProvider, Supplier<Tracer> {
+
+    private Tracer tracer;
+
+    private final Lock tracerCreationLock = new ReentrantLock();
 
     @Override
     public HttpURLConnectionInterceptor getHandler(final Configuration configuration) {
-        final Tracer tracer = Client.getService(Tracer.class);
-        return new HttpTracingHandler(tracer);
+        return new HttpTracingHandler(this);
+    }
+
+    @Override
+    public Tracer get() {
+        if(tracer == null) {
+            tracerCreationLock.lock();
+            try {
+                if (tracer == null) {
+                    tracer = Client.getService(Tracer.class);
+                }
+            } finally {
+                tracerCreationLock.unlock();
+            }
+        }
+        return tracer;
     }
 }

@@ -12,6 +12,7 @@ import dev.rico.tracing.Tracer;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.util.function.Supplier;
 
 import static dev.rico.internal.tracing.TracingConstants.PARENT_SPAN_ID_HEADER;
 import static dev.rico.internal.tracing.TracingConstants.SPAN_ID_HEADER;
@@ -19,10 +20,10 @@ import static dev.rico.internal.tracing.TracingConstants.TRACE_ID_HEADER;
 
 public class HttpTracingHandler implements HttpURLConnectionInterceptor {
 
-    private final Tracer tracer;
+    private final Supplier<Tracer> tracerSupplier;
 
-    public HttpTracingHandler(final Tracer tracer) {
-        this.tracer = Assert.requireNonNull(tracer, "tracer");
+    public HttpTracingHandler(final Supplier<Tracer> tracerSupplier) {
+        this.tracerSupplier = Assert.requireNonNull(tracerSupplier, "tracerSupplier");
     }
 
     @Override
@@ -32,6 +33,9 @@ public class HttpTracingHandler implements HttpURLConnectionInterceptor {
 
         //TODO: get name based on URI
         final String name = "/example/123";
+
+        final Tracer tracer = tracerSupplier.get();
+        Assert.requireNonNull(tracer, "tracer");
 
         final Span span = tracer.startSpan(name, SpanType.CLIENT);
         request.setRequestProperty(TRACE_ID_HEADER, span.getTraceId());

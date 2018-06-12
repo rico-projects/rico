@@ -22,7 +22,7 @@ public class TracingBootstrap implements Closeable {
     private final TracerImpl tracer;
 
     public TracingBootstrap(final String appName, final Sender sender, final ContextManager contextManager) {
-        this(appName, AsyncReporter.create(Assert.requireNonNull(sender, "sender")), contextManager);
+        this(appName, createReporter(sender), contextManager);
     }
 
     public TracingBootstrap(final String appName, final AsyncReporter<Span> reporter, final ContextManager contextManager) {
@@ -48,5 +48,11 @@ public class TracingBootstrap implements Closeable {
     public void close() throws IOException {
         tracing.close();
         reporter.close();
+    }
+
+    private static AsyncReporter<Span> createReporter(final Sender sender) {
+        Assert.requireNonNull(sender, "sender");
+        AsyncReporter.Builder builder = AsyncReporter.builder(sender).messageMaxBytes(500);
+        return builder.build();
     }
 }
