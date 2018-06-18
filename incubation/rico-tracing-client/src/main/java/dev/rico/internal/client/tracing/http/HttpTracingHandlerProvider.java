@@ -19,7 +19,7 @@ public class HttpTracingHandlerProvider implements RequestHandlerProvider, Suppl
 
     @Override
     public HttpURLConnectionInterceptor getHandler(final Configuration configuration) {
-        return new HttpTracingHandler(this);
+        return new HttpTracingHandler(this, configuration);
     }
 
     @Override

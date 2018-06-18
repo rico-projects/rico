@@ -62,6 +62,8 @@ public class TraceTest {
         System.out.println("Und der papa macht weiter");
         sleep(300);
         mainSpan.complete();
+
+        sleep(5_000);
     }
 
     public static void sleep(long ms) {
