@@ -81,7 +81,7 @@ public class AbstractIntegrationTest {
                 .map(e -> Wait.forHttp(e.getHeathEndpoint(), HTTP_OK))
                 .collect(Collectors.toList())
                 .toArray(new Wait[]{});
-        dockerCompose.start(2, TimeUnit.MINUTES, waits);
+        dockerCompose.start(timeoutInMinutes, TimeUnit.MINUTES, waits);
     }
 
     @AfterGroups(INTEGRATION_TESTS_TEST_GROUP)
@@ -106,7 +106,7 @@ public class AbstractIntegrationTest {
 
     protected <T> ControllerProxy<T> createController(ClientContext clientContext, String controllerName) {
         try {
-            return (ControllerProxy<T>) clientContext.createController(controllerName).get(2, TimeUnit.MINUTES);
+            return (ControllerProxy<T>) clientContext.createController(controllerName).get(timeoutInMinutes, TimeUnit.MINUTES);
         } catch (Exception e) {
             throw new RuntimeException("Can not create controller " + controllerName, e);
         }
@@ -120,7 +120,7 @@ public class AbstractIntegrationTest {
             long timeOutTime = System.currentTimeMillis() + Duration.ofMinutes(timeoutInMinutes).toMillis();
             while (System.currentTimeMillis() < timeOutTime && clientContext.getClientId() == null) {
                 try {
-                    clientContext.connect().get(10, TimeUnit.SECONDS);
+                    clientContext.connect().get(timeoutInMinutes, TimeUnit.MINUTES);
                 } catch (Exception ex) {
                     // do nothing since server is not up at the moment...
                 }
@@ -161,7 +161,7 @@ public class AbstractIntegrationTest {
 
     protected void disconnect(ClientContext clientContext, String endpoint) {
         try {
-            clientContext.disconnect().get(10, TimeUnit.SECONDS);
+            clientContext.disconnect().get(timeoutInMinutes, TimeUnit.MINUTES);
         } catch (Exception e) {
             //do nothing
         }
