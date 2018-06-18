@@ -24,7 +24,7 @@ import dev.rico.internal.projection.form.concrete.StringFormFieldBean;
 import dev.rico.internal.projection.metadata.AbstractKeyValueBean;
 import dev.rico.internal.projection.metadata.KeyValue;
 import dev.rico.internal.server.projection.update.UpdateHandler;
-import dev.rico.remoting.BeanManager;
+import dev.rico.server.remoting.BeanManager;
 import dev.rico.remoting.ValueChangeListener;
 
 import java.util.ArrayList;

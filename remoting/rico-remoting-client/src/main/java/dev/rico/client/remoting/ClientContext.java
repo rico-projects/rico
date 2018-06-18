@@ -34,13 +34,6 @@ import static org.apiguardian.api.API.Status.MAINTAINED;
 public interface ClientContext extends ControllerFactory {
 
     /**
-     * Returns the {@link BeanManager} that is bound to the client context
-     * @return the bean manager
-     */
-    @Deprecated
-    BeanManager getBeanManager();
-
-    /**
      * Disconnects the client context. The method doesn't block. To verify that the connection has been closed
      * {@link CompletableFuture#get()} can be called.
      * @return a {@link CompletableFuture} that defines the disconnect task.

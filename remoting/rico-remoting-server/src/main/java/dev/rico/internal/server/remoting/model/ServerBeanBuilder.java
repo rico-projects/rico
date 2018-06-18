@@ -19,45 +19,42 @@ package dev.rico.internal.server.remoting.model;
 import dev.rico.internal.remoting.*;
 import dev.rico.internal.remoting.repo.BeanRepository;
 import dev.rico.internal.remoting.repo.ClassRepository;
-import dev.rico.remoting.ListChangeEvent;
-import dev.rico.remoting.ListChangeListener;
-import dev.rico.remoting.ObservableList;
-import dev.rico.remoting.ValueChangeEvent;
 import dev.rico.internal.remoting.collections.ObservableArrayList;
 import dev.rico.internal.remoting.repo.PropertyInfo;
-import dev.rico.remoting.Property;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.server.remoting.gc.GarbageCollector;
 import org.apiguardian.api.API;
 
+import java.util.UUID;
+
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
-public class ServerBeanBuilderImpl extends AbstractBeanBuilder {
+public class ServerBeanBuilder extends BeanBuilder {
 
     private final GarbageCollector garbageCollector;
 
-    public ServerBeanBuilderImpl(final ClassRepository classRepository, final BeanRepository beanRepository, final GarbageCollector garbageCollector) {
+    public ServerBeanBuilder(final ClassRepository classRepository, final BeanRepository beanRepository, final GarbageCollector garbageCollector) {
         super(classRepository, beanRepository);
         this.garbageCollector = Assert.requireNonNull(garbageCollector, "garbageCollector");
     }
 
     public <T> T createRootModel(Class<T> beanClass) {
-        T bean = super.create(beanClass);
-        garbageCollector.onBeanCreated(bean, true);
-        return bean;
+        return create(beanClass, true);
     }
 
-    @Override
-    public <T> T create(Class<T> beanClass) {
-        T bean = super.create(beanClass);
-        garbageCollector.onBeanCreated(bean, false);
-        return bean;
+    public <T> T createSubModel(Class<T> beanClass) {
+        return create(beanClass, false);
     }
 
-    @Override
-    protected String getIdPrefix() {
-        return "SERVER";
+    private <T> T create(Class<T> beanClass, boolean rootBean) {
+        final String instanceId = UUID.randomUUID().toString();
+        final T bean = createInstanceForClass(beanClass, instanceId, UpdateSource.SELF);
+        garbageCollector.onBeanCreated(bean, rootBean);
+
+        //TODO: Send command to client
+
+        return bean;
     }
 
     @Override

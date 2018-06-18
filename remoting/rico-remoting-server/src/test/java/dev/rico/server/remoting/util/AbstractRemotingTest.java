@@ -27,8 +27,9 @@ import dev.rico.internal.server.remoting.gc.GarbageCollectionCallback;
 import dev.rico.internal.server.remoting.gc.GarbageCollector;
 import dev.rico.internal.server.remoting.gc.Instance;
 import dev.rico.internal.server.remoting.legacy.ServerModelStore;
-import dev.rico.internal.server.remoting.model.ServerBeanBuilderImpl;
-import dev.rico.remoting.BeanManager;
+import dev.rico.internal.server.remoting.model.BeanManagerImpl;
+import dev.rico.internal.server.remoting.model.ServerBeanBuilder;
+import dev.rico.server.remoting.BeanManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +68,7 @@ public abstract class AbstractRemotingTest {
 
             }
         });
-        final AbstractBeanBuilder beanBuilder = new ServerBeanBuilderImpl(classRepository, beanRepository, listMapper, builderFactory, dispatcher, garbageCollector);
+        final BeanBuilder beanBuilder = new ServerBeanBuilder(classRepository, beanRepository, listMapper, builderFactory, dispatcher, garbageCollector);
         return new BeanManagerImpl(beanRepository, beanBuilder);
     }
 
@@ -86,7 +87,7 @@ public abstract class AbstractRemotingTest {
 
             }
         });
-        final AbstractBeanBuilder beanBuilder = new ServerBeanBuilderImpl(classRepository, beanRepository, listMapper, builderFactory, dispatcher, garbageCollector);
+        final BeanBuilder beanBuilder = new ServerBeanBuilder(classRepository, beanRepository, listMapper, builderFactory, dispatcher, garbageCollector);
         return new BeanManagerImpl(beanRepository, beanBuilder);
     }
 }

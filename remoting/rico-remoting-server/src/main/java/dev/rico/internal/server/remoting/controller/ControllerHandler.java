@@ -24,7 +24,7 @@ import dev.rico.internal.remoting.communication.converters.Converters;
 import dev.rico.internal.server.beans.PostConstructInterceptor;
 import dev.rico.internal.server.remoting.error.ActionErrorHandler;
 import dev.rico.core.functional.Subscription;
-import dev.rico.internal.server.remoting.model.ServerBeanBuilderImpl;
+import dev.rico.internal.server.remoting.model.ServerBeanBuilder;
 import dev.rico.server.remoting.Param;
 import dev.rico.server.remoting.ParentController;
 import dev.rico.server.remoting.PostChildCreated;
@@ -76,7 +76,7 @@ public class ControllerHandler {
 
     private final ManagedBeanFactory beanFactory;
 
-    private final ServerBeanBuilderImpl beanBuilder;
+    private final ServerBeanBuilder beanBuilder;
 
     private final ControllerRepository controllerRepository;
 
@@ -86,7 +86,7 @@ public class ControllerHandler {
 
     private final ActionErrorHandler actionErrorHandler;
 
-    public ControllerHandler(final ManagedBeanFactory beanFactory, final ServerBeanBuilderImpl beanBuilder, final BeanRepository beanRepository, final ControllerRepository controllerRepository, final Converters converters) {
+    public ControllerHandler(final ManagedBeanFactory beanFactory, final ServerBeanBuilder beanBuilder, final BeanRepository beanRepository, final ControllerRepository controllerRepository, final Converters converters) {
         this.beanFactory = Assert.requireNonNull(beanFactory, "beanFactory");
         this.beanBuilder = Assert.requireNonNull(beanBuilder, "beanBuilder");
         this.controllerRepository = Assert.requireNonNull(controllerRepository, "controllerRepository");

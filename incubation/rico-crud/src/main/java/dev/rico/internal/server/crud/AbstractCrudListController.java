@@ -22,7 +22,7 @@ import dev.rico.server.data.DataWithId;
 import dev.rico.internal.server.data.mapping.BeanConverter;
 import dev.rico.internal.server.data.mapping.BeanMapperImpl;
 import dev.rico.core.functional.Subscription;
-import dev.rico.remoting.BeanManager;
+import dev.rico.server.remoting.BeanManager;
 import dev.rico.remoting.ObservableList;
 import dev.rico.server.remoting.event.RemotingEventBus;
 

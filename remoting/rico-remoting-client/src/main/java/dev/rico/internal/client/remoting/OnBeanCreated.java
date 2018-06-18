@@ -1,16 +1,16 @@
 package dev.rico.internal.client.remoting;
 
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.remoting.AbstractBeanBuilder;
+import dev.rico.internal.remoting.BeanBuilder;
 import dev.rico.internal.remoting.UpdateSource;
 import dev.rico.internal.remoting.communication.commands.BeanCreatedCommand;
 import dev.rico.internal.remoting.communication.handler.CommandHandler;
 
 public class OnBeanCreated implements CommandHandler<BeanCreatedCommand> {
 
-    private final AbstractBeanBuilder beanBuilder;
+    private final BeanBuilder beanBuilder;
 
-    public OnBeanCreated(final AbstractBeanBuilder beanBuilder) {
+    public OnBeanCreated(final BeanBuilder beanBuilder) {
         this.beanBuilder = Assert.requireNonNull(beanBuilder, "beanBuilder");
     }
 

@@ -17,7 +17,7 @@
 package dev.rico.internal.server.remoting.test;
 
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.remoting.BeanManagerImpl;
+import dev.rico.internal.server.remoting.model.BeanManagerImpl;
 import dev.rico.internal.server.remoting.binding.PropertyBinderImpl;
 import dev.rico.internal.server.client.ClientSessionLifecycleHandlerImpl;
 import dev.rico.internal.server.remoting.context.ClientSessionExecutorImpl;
@@ -25,7 +25,7 @@ import dev.rico.internal.server.remoting.context.ServerRemotingContext;
 import dev.rico.internal.server.remoting.context.ServerRemotingContextProvider;
 import dev.rico.internal.server.remoting.event.DefaultRemotingEventBus;
 import dev.rico.internal.server.ClientScopeImpl;
-import dev.rico.remoting.BeanManager;
+import dev.rico.server.remoting.BeanManager;
 import dev.rico.server.remoting.ClientSessionExecutor;
 import dev.rico.server.remoting.RemotingContext;
 import dev.rico.server.remoting.binding.PropertyBinder;

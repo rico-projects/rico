@@ -16,33 +16,28 @@
  */
 package dev.rico.internal.server.remoting.model;
 
+import dev.rico.internal.remoting.RemotingUtils;
+import dev.rico.internal.remoting.repo.BeanRepository;
+import dev.rico.server.remoting.BeanManager;
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.remoting.BeanRepositoryImpl;
-import dev.rico.internal.remoting.EventDispatcher;
-import dev.rico.internal.remoting.legacy.core.ModelStore;
-import dev.rico.internal.server.remoting.gc.GarbageCollector;
 import org.apiguardian.api.API;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
-public class ServerBeanRepositoryImpl extends BeanRepositoryImpl implements ServerBeanRepository{
+public class BeanManagerImpl implements BeanManager {
 
-    final GarbageCollector garbageCollector;
+    protected final BeanRepository beanRepository;
+    private final ServerBeanBuilder beanBuilder;
 
-    public ServerBeanRepositoryImpl(final ModelStore modelStore, final EventDispatcher dispatcher, final GarbageCollector garbageCollector) {
-        super(modelStore, dispatcher);
-        this.garbageCollector = Assert.requireNonNull(garbageCollector, "garbageCollector");
+    public BeanManagerImpl(final BeanRepository beanRepository, final ServerBeanBuilder beanBuilder) {
+        this.beanRepository = Assert.requireNonNull(beanRepository, "beanRepository");
+        this.beanBuilder = Assert.requireNonNull(beanBuilder, "beanBuilder");
     }
 
     @Override
-    public <T> void delete(T bean) {
-        super.delete(bean);
-        garbageCollector.onBeanRemoved(bean);
-    }
-
-    @Override
-    public <T> void onGarbageCollectionRejection(T bean) {
-        super.delete(bean);
+    public <T> T create(final Class<T> beanClass) {
+        RemotingUtils.assertIsRemotingBean(beanClass);
+        return beanBuilder.createSubModel(beanClass);
     }
 }

@@ -14,8 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.internal.remoting;
+package dev.rico.internal.remoting.communication.converters;
 
+import dev.rico.internal.remoting.repo.BeanRepository;
 import dev.rico.remoting.converter.Converter;
 import dev.rico.remoting.converter.ConverterFactory;
 import dev.rico.internal.core.Assert;

@@ -27,7 +27,6 @@ import dev.rico.internal.server.remoting.legacy.Slot;
 import dev.rico.server.remoting.util.AbstractRemotingTest;
 import dev.rico.server.remoting.util.ListReferenceModel;
 import dev.rico.server.remoting.util.SimpleTestModel;
-import dev.rico.remoting.BeanManager;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;

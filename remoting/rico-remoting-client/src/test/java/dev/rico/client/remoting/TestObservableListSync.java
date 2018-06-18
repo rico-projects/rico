@@ -26,7 +26,7 @@ import dev.rico.internal.remoting.RemotingConstants;
 import dev.rico.internal.remoting.communication.converters.BeanConverterFactory;
 import dev.rico.internal.remoting.legacy.LegacyConstants;
 import dev.rico.internal.remoting.legacy.core.PresentationModel;
-import dev.rico.remoting.BeanManager;
+import dev.rico.server.remoting.BeanManager;
 import mockit.Mocked;
 import org.testng.annotations.Test;
 

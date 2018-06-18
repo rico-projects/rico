@@ -18,7 +18,7 @@ package dev.rico.integrationtests.server.qualifier;
 
 import dev.rico.integrationtests.qualifier.QualifierTestBean;
 import dev.rico.integrationtests.qualifier.QualifierTestSubBean;
-import dev.rico.remoting.BeanManager;
+import dev.rico.server.remoting.BeanManager;
 import dev.rico.core.functional.Binding;
 import dev.rico.server.remoting.RemotingAction;
 import dev.rico.server.remoting.RemotingController;

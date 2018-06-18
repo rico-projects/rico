@@ -1,11 +1,10 @@
 package dev.rico.sample;
 
-import dev.rico.remoting.BeanManager;
+import dev.rico.server.remoting.BeanManager;
 import dev.rico.server.remoting.ClientSessionExecutor;
 import dev.rico.server.remoting.RemotingContext;
 import dev.rico.server.remoting.RemotingController;
 import dev.rico.server.remoting.RemotingModel;
-import org.springframework.beans.BeanMetadataAttribute;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;

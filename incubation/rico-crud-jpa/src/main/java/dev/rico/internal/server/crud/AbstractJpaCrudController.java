@@ -23,7 +23,7 @@ import dev.rico.server.data.EntityService;
 import dev.rico.internal.server.data.event.PersistenceListener;
 import dev.rico.internal.server.data.event.PersistenceContextImpl;
 import dev.rico.internal.server.data.mapping.BeanConverter;
-import dev.rico.remoting.BeanManager;
+import dev.rico.server.remoting.BeanManager;
 import dev.rico.server.remoting.ClientSessionExecutor;
 import dev.rico.server.remoting.RemotingContext;
 

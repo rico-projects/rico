@@ -24,7 +24,7 @@ import dev.rico.client.remoting.util.SingleReferenceModel;
 import dev.rico.internal.client.remoting.legacy.ClientModelStore;
 import dev.rico.internal.remoting.repo.BeanRepository;
 import dev.rico.core.functional.Subscription;
-import dev.rico.remoting.BeanManager;
+import dev.rico.server.remoting.BeanManager;
 import dev.rico.remoting.ValueChangeEvent;
 import dev.rico.remoting.ValueChangeListener;
 import mockit.Mocked;

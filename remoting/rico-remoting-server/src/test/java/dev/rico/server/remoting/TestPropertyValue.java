@@ -27,7 +27,6 @@ import dev.rico.server.remoting.util.PrimitiveDataTypesModel;
 import dev.rico.server.remoting.util.SimpleAnnotatedTestModel;
 import dev.rico.server.remoting.util.SimpleTestModel;
 import dev.rico.server.remoting.util.SingleReferenceModel;
-import dev.rico.remoting.BeanManager;
 import org.testng.annotations.Test;
 
 import java.util.Calendar;

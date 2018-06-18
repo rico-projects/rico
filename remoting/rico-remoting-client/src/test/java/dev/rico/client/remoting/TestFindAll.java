@@ -20,7 +20,7 @@ import dev.rico.client.remoting.util.AbstractRemotingTest;
 import dev.rico.client.remoting.util.SimpleAnnotatedTestModel;
 import dev.rico.client.remoting.util.SimpleTestModel;
 import dev.rico.internal.client.remoting.legacy.ClientModelStore;
-import dev.rico.remoting.BeanManager;
+import dev.rico.server.remoting.BeanManager;
 import mockit.Mocked;
 import org.testng.annotations.Test;
 

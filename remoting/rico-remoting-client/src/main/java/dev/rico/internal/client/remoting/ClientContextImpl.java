@@ -28,7 +28,6 @@ import dev.rico.internal.remoting.communication.commands.CreateContextCommand;
 import dev.rico.internal.remoting.communication.commands.DestroyContextCommand;
 import dev.rico.client.ClientConfiguration;
 import dev.rico.client.session.ClientSessionStore;
-import dev.rico.remoting.BeanManager;
 import dev.rico.remoting.RemotingException;
 import dev.rico.client.remoting.ClientContext;
 import dev.rico.client.remoting.ClientInitializationException;
@@ -58,9 +57,6 @@ public class ClientContextImpl implements ClientContext {
 
     private final ClientModelStore modelStore;
 
-    @Deprecated
-    private  final BeanManager clientBeanManager;
-
     private final ControllerProxyFactory controllerProxyFactory;
 
     private final RicoCommandHandler commandHandler;
@@ -89,7 +85,6 @@ public class ClientContextImpl implements ClientContext {
 
         this.commandHandler = new RicoCommandHandler(clientConnector);
         this.controllerProxyFactory = new ControllerProxyFactory(commandHandler, clientConnector, modelStore, beanRepository, dispatcher, converters);
-        this.clientBeanManager = new BeanManagerImpl(beanRepository, new ClientBeanBuilderImpl(classRepository, beanRepository, new ListMapperImpl(modelStore, classRepository, beanRepository, builderFactory, dispatcher), builderFactory, dispatcher));
     }
 
     protected RicoCommandHandler getCommandHandler() {
@@ -110,11 +105,6 @@ public class ClientContextImpl implements ClientContext {
             }
             return controllerProxy;
         });
-    }
-
-    @Override
-    public synchronized BeanManager getBeanManager() {
-        return clientBeanManager;
     }
 
     @Override

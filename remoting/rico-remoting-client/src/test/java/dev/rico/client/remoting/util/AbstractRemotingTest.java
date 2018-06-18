@@ -16,7 +16,6 @@
  */
 package dev.rico.client.remoting.util;
 
-import dev.rico.internal.client.remoting.ClientBeanBuilderImpl;
 import dev.rico.internal.client.remoting.legacy.ClientModelStore;
 import dev.rico.internal.client.remoting.legacy.DefaultModelSynchronizer;
 import dev.rico.internal.client.remoting.legacy.ModelSynchronizer;
@@ -28,7 +27,8 @@ import dev.rico.internal.remoting.repo.BeanRepository;
 import dev.rico.internal.remoting.repo.ClassRepository;
 import dev.rico.internal.server.remoting.legacy.ServerConnector;
 import dev.rico.internal.server.remoting.legacy.ServerModelStore;
-import dev.rico.remoting.BeanManager;
+import dev.rico.internal.server.remoting.model.BeanManagerImpl;
+import dev.rico.server.remoting.BeanManager;
 
 import java.util.ArrayList;
 
@@ -100,7 +100,7 @@ public abstract class AbstractRemotingTest {
         final PresentationModelBuilderFactory builderFactory = new ClientPresentationModelBuilderFactory(clientModelStore);
         final ClassRepository classRepository = new ClassRepository(clientModelStore, converters, builderFactory);
         final ListMapper listMapper = new ListMapperImpl(clientModelStore, classRepository, beanRepository, builderFactory, dispatcher);
-        final AbstractBeanBuilder beanBuilder = new ClientBeanBuilderImpl(classRepository, beanRepository, listMapper, builderFactory, dispatcher);
+        final BeanBuilder beanBuilder = new BeanBuilder(classRepository, beanRepository);
         return new BeanManagerImpl(beanRepository, beanBuilder);
     }
 

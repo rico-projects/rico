@@ -17,7 +17,7 @@
 package dev.rico.internal.server.remoting.context;
 
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.remoting.BeanManagerImpl;
+import dev.rico.internal.server.remoting.model.BeanManagerImpl;
 import dev.rico.internal.remoting.repo.ClassRepository;
 import dev.rico.internal.remoting.communication.commands.*;
 import dev.rico.internal.remoting.communication.converters.Converters;
@@ -28,10 +28,10 @@ import dev.rico.internal.server.remoting.controller.ControllerRepository;
 import dev.rico.internal.server.remoting.gc.GarbageCollectionCallback;
 import dev.rico.internal.server.remoting.gc.GarbageCollector;
 import dev.rico.internal.server.remoting.gc.Instance;
-import dev.rico.internal.server.remoting.model.ServerBeanBuilderImpl;
+import dev.rico.internal.server.remoting.model.ServerBeanBuilder;
 import dev.rico.internal.server.remoting.model.ServerBeanRepository;
 import dev.rico.internal.server.remoting.servlet.ServerTimingFilter;
-import dev.rico.remoting.BeanManager;
+import dev.rico.server.remoting.BeanManager;
 import dev.rico.server.client.ClientSession;
 import dev.rico.server.spi.components.ManagedBeanFactory;
 import dev.rico.server.timing.Metric;
@@ -114,7 +114,7 @@ public class ServerRemotingContext {
 
         //Init BeanManager
         final ClassRepository classRepository = new ClassRepository(converters);
-        final ServerBeanBuilderImpl beanBuilder = new ServerBeanBuilderImpl(classRepository, beanRepository, garbageCollector);
+        final ServerBeanBuilder beanBuilder = new ServerBeanBuilder(classRepository, beanRepository, garbageCollector);
         beanManager = new BeanManagerImpl(beanRepository, beanBuilder);
 
 

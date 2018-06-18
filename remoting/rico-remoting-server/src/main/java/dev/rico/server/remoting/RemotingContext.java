@@ -16,7 +16,6 @@
  */
 package dev.rico.server.remoting;
 
-import dev.rico.remoting.BeanManager;
 import dev.rico.server.remoting.binding.PropertyBinder;
 import dev.rico.server.remoting.event.RemotingEventBus;
 import dev.rico.server.client.ClientSession;

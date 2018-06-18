@@ -43,7 +43,7 @@ import dev.rico.internal.remoting.legacy.LegacyConstants;
 import dev.rico.internal.remoting.legacy.core.Attribute;
 import dev.rico.internal.remoting.legacy.core.PresentationModel;
 import dev.rico.internal.remoting.repo.BeanRepository;
-import dev.rico.remoting.BeanManager;
+import dev.rico.server.remoting.BeanManager;
 import mockit.Mocked;
 import org.hamcrest.Matchers;
 import org.testng.annotations.Test;

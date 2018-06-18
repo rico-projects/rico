@@ -16,9 +16,9 @@
  */
 package dev.rico.internal.server.remoting;
 
-import dev.rico.internal.remoting.BeanManagerImpl;
+import dev.rico.internal.server.remoting.model.BeanManagerImpl;
 import dev.rico.internal.server.remoting.context.ServerRemotingContext;
-import dev.rico.remoting.BeanManager;
+import dev.rico.server.remoting.BeanManager;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.server.bootstrap.PlatformBootstrap;
 import dev.rico.internal.server.remoting.context.ServerRemotingContextProvider;

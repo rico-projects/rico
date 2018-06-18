@@ -14,13 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.remoting;
+package dev.rico.server.remoting;
 
 import dev.rico.internal.remoting.BeanAddedListener;
 import dev.rico.core.functional.Subscription;
+import dev.rico.remoting.RemotingBean;
 import org.apiguardian.api.API;
-
-import java.util.List;
 
 import static org.apiguardian.api.API.Status.MAINTAINED;
 

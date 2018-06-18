@@ -18,7 +18,7 @@ package dev.rico.integrationtests.server.beans;
 
 import dev.rico.integrationtests.bean.BeanTestBean;
 import dev.rico.integrationtests.bean.BeanTestConstants;
-import dev.rico.remoting.BeanManager;
+import dev.rico.server.remoting.BeanManager;
 import dev.rico.server.remoting.RemotingController;
 import dev.rico.server.remoting.RemotingModel;
 import dev.rico.server.remoting.RemotingContext;
