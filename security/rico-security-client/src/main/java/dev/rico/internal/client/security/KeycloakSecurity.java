@@ -16,17 +16,17 @@
  */
 package dev.rico.internal.client.security;
 
+import com.google.gson.Gson;
+import dev.rico.client.Client;
+import dev.rico.client.ClientConfiguration;
 import dev.rico.client.concurrent.BackgroundExecutor;
+import dev.rico.client.security.Security;
 import dev.rico.core.Configuration;
+import dev.rico.core.functional.Subscription;
+import dev.rico.core.http.RequestMethod;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.context.ContextManagerImpl;
 import dev.rico.internal.core.http.HttpClientConnection;
-import dev.rico.client.ClientConfiguration;
-import dev.rico.client.Client;
-import dev.rico.client.security.Security;
-import dev.rico.core.functional.Subscription;
-import dev.rico.core.http.RequestMethod;
-import com.google.gson.Gson;
 import org.apiguardian.api.API;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +36,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -48,15 +47,15 @@ import static dev.rico.internal.core.http.HttpHeaderConstants.CONTENT_TYPE_HEADE
 import static dev.rico.internal.core.http.HttpHeaderConstants.FORM_MIME_TYPE;
 import static dev.rico.internal.core.http.HttpHeaderConstants.TEXT_MIME_TYPE;
 import static dev.rico.internal.core.http.HttpStatus.SC_HTTP_UNAUTHORIZED;
+import static dev.rico.internal.security.SecurityConstants.APPLICATION_NAME_HEADER;
 import static dev.rico.internal.security.SecurityConstants.APPLICATION_PROPERTY_NAME;
 import static dev.rico.internal.security.SecurityConstants.AUTH_ENDPOINT_PROPERTY_DEFAULT_VALUE;
 import static dev.rico.internal.security.SecurityConstants.AUTH_ENDPOINT_PROPERTY_NAME;
 import static dev.rico.internal.security.SecurityConstants.DIRECT_CONNECTION_PROPERTY_DEFAULT_VALUE;
 import static dev.rico.internal.security.SecurityConstants.DIRECT_CONNECTION_PROPERTY_NAME;
+import static dev.rico.internal.security.SecurityConstants.REALM_NAME_HEADER;
 import static dev.rico.internal.security.SecurityConstants.REALM_PROPERTY_NAME;
 import static dev.rico.internal.security.SecurityConstants.USER_CONTEXT;
-import static dev.rico.internal.security.SecurityConstants.APPLICATION_NAME_HEADER;
-import static dev.rico.internal.security.SecurityConstants.REALM_NAME_HEADER;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.19.0", status = INTERNAL)
@@ -74,7 +73,7 @@ public class KeycloakSecurity implements Security {
 
     private final String defaultAppName;
 
-    private final ExecutorService executor;
+    private final BackgroundExecutor executor;
 
     private final boolean directConnect;
 
