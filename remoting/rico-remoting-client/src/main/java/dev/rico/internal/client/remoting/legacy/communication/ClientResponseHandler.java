@@ -108,7 +108,7 @@ public class ClientResponseHandler {
             return;
         }
 
-        if (attribute.getValue() == null && serverCommand.getNewValue() == null || (attribute.getValue() != null && serverCommand.getNewValue() != null && attribute.getValue().equals(serverCommand.getNewValue()))) {
+        if (Objects.equals(attribute.getValue(), serverCommand.getNewValue())) {
             return;
         }
 
