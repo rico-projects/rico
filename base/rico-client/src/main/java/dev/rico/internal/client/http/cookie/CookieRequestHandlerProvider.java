@@ -18,7 +18,7 @@ package dev.rico.internal.client.http.cookie;
 
 import dev.rico.client.Client;
 import dev.rico.core.Configuration;
-import dev.rico.core.http.HttpURLConnectionHandler;
+import dev.rico.core.http.HttpURLConnectionInterceptor;
 import dev.rico.core.http.spi.RequestHandlerProvider;
 import org.apiguardian.api.API;
 
@@ -28,7 +28,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 public class CookieRequestHandlerProvider implements RequestHandlerProvider {
 
     @Override
-    public HttpURLConnectionHandler getHandler(Configuration configuration) {
-        return new CookieRequestHandler(Client.getService(HttpClientCookieHandler.class));
+    public HttpURLConnectionInterceptor getHandler(Configuration configuration) {
+        return new CookieHandler(Client.getService(HttpClientCookieHandler.class));
     }
 }

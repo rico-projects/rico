@@ -17,8 +17,8 @@
 package dev.rico.internal.server;
 
 import dev.rico.internal.server.bootstrap.PlatformBootstrap;
-import dev.rico.internal.server.remoting.config.ConfigurationFileLoader;
-import dev.rico.internal.server.remoting.config.ServerConfiguration;
+import dev.rico.internal.server.config.ConfigurationFileLoader;
+import dev.rico.internal.server.config.ServerConfiguration;
 import org.apiguardian.api.API;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

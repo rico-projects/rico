@@ -43,7 +43,7 @@ public class PlatformVersion {
     public static String getBuildTime() {
         try {
             return getBuildProperties().getProperty(BUILD_TIME_PROPERTY_NAME, UNKNOWN_VALUE);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             LOG.error("Can not get build info", e);
             return UNKNOWN_VALUE;
         }
@@ -52,7 +52,7 @@ public class PlatformVersion {
     public static String getBuildDate() {
         try {
             return getBuildProperties().getProperty(BUILD_DATE_PROPERTY_NAME, UNKNOWN_VALUE);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             LOG.error("Can not get build info", e);
             return UNKNOWN_VALUE;
         }
@@ -61,7 +61,7 @@ public class PlatformVersion {
     public static String getVersion() {
         try {
             return getBuildProperties().getProperty(VERSION_PROPERTY_NAME, UNKNOWN_VALUE);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             LOG.error("Can not get build info", e);
             return UNKNOWN_VALUE;
         }

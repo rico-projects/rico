@@ -16,6 +16,7 @@
  */
 package dev.rico.internal.client.remoting;
 
+import dev.rico.core.Configuration;
 import dev.rico.internal.client.AbstractServiceProvider;
 import dev.rico.client.ClientConfiguration;
 import dev.rico.client.remoting.ClientContextFactory;

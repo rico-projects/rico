@@ -17,7 +17,7 @@
 package dev.rico.internal.server.bootstrap.modules;
 
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.server.remoting.servlet.HttpSessionTimeoutListener;
+import dev.rico.internal.server.servlet.HttpSessionTimeoutListener;
 import dev.rico.internal.server.bootstrap.AbstractBaseModule;
 import dev.rico.server.spi.ModuleDefinition;
 import dev.rico.server.spi.ModuleInitializationException;

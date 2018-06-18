@@ -51,7 +51,7 @@ public class SpringPreInjector extends InstantiationAwareBeanPostProcessorAdapte
     @Override
     public boolean postProcessAfterInstantiation(final Object bean, final String beanName) throws BeansException {
         Assert.requireNonNull(bean, "bean");
-        Class controllerClass = currentControllerClass.get();
+        final Class controllerClass = currentControllerClass.get();
         if (controllerClass != null && controllerClass.isAssignableFrom(bean.getClass())) {
             PostConstructInterceptor modelInjector = currentInterceptor.get();
             if (modelInjector != null) {

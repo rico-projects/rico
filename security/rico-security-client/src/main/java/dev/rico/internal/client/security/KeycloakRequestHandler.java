@@ -16,12 +16,14 @@
  */
 package dev.rico.internal.client.security;
 
+import dev.rico.core.http.RequestChain;
 import dev.rico.internal.core.Assert;
-import dev.rico.core.http.HttpURLConnectionHandler;
+import dev.rico.core.http.HttpURLConnectionInterceptor;
 import org.apiguardian.api.API;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
 
 import static dev.rico.internal.security.SecurityConstants.APPLICATION_NAME_HEADER;
@@ -32,13 +34,15 @@ import static dev.rico.internal.security.SecurityConstants.REALM_NAME_HEADER;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.19.0", status = INTERNAL)
-public class KeycloakRequestHandler implements HttpURLConnectionHandler {
+public class KeycloakRequestHandler implements HttpURLConnectionInterceptor {
 
     private static final Logger LOG = LoggerFactory.getLogger(KeycloakRequestHandler.class);
 
     @Override
-    public void handle(final HttpURLConnection connection) {
+    public void handle(final HttpURLConnection connection, RequestChain chain) throws IOException {
         Assert.requireNonNull(connection, "connection");
+        Assert.requireNonNull(chain, "chain");
+
         KeycloakAuthentificationManager.getInstance().getAuthFor(connection.getURL()).ifPresent(auth -> {
 
             //No redirect, can not be handled in Java
@@ -62,7 +66,7 @@ public class KeycloakRequestHandler implements HttpURLConnectionHandler {
                 connection.setRequestProperty(APPLICATION_NAME_HEADER, appName);
             }
         });
-
+        chain.call();
 
     }
 }

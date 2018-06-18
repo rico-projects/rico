@@ -16,8 +16,8 @@
  */
 package dev.rico.server;
 
-import dev.rico.internal.server.remoting.config.ServerConfiguration;
-import dev.rico.internal.server.remoting.servlet.CrossSiteOriginFilter;
+import dev.rico.internal.server.config.ServerConfiguration;
+import dev.rico.internal.server.servlet.CrossSiteOriginFilter;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;

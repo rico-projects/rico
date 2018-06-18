@@ -18,6 +18,8 @@ package dev.rico.internal.server.remoting.config;
 
 import dev.rico.core.Configuration;
 import dev.rico.internal.core.Assert;
+import dev.rico.internal.server.config.ConfigurationFileLoader;
+import dev.rico.internal.server.config.ServerConfiguration;
 import dev.rico.internal.server.remoting.event.DefaultEventBusProvider;
 import org.apiguardian.api.API;
 
@@ -27,7 +29,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 /**
  * This class defines the configuration of the remoting. Normally the configuration is created based
- * on defaults and a property file (see {@link dev.rico.internal.server.remoting.config.ConfigurationFileLoader}).
+ * on defaults and a property file (see {@link ConfigurationFileLoader}).
  */
 @API(since = "0.x", status = INTERNAL)
 public class RemotingConfiguration implements Serializable {

@@ -17,13 +17,14 @@
 package dev.rico.internal.client.http;
 
 import dev.rico.client.Client;
+import dev.rico.core.spi.DependsOn;
 import dev.rico.internal.client.AbstractServiceProvider;
 import dev.rico.client.ClientConfiguration;
 import dev.rico.core.http.HttpClient;
 import dev.rico.core.http.HttpURLConnectionFactory;
 import dev.rico.core.http.spi.RequestHandlerProvider;
-import dev.rico.core.http.spi.ResponseHandlerProvider;
 import com.google.gson.Gson;
+import dev.rico.internal.core.Assert;
 import org.apiguardian.api.API;
 
 import java.util.Iterator;
@@ -32,6 +33,7 @@ import java.util.ServiceLoader;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
+@DependsOn(Gson.class)
 public class HttpClientProvider extends AbstractServiceProvider<HttpClient> {
 
     public HttpClientProvider() {
@@ -39,21 +41,17 @@ public class HttpClientProvider extends AbstractServiceProvider<HttpClient> {
     }
 
     @Override
-    protected HttpClient createService(ClientConfiguration configuration) {
+    protected HttpClient createService(final ClientConfiguration configuration) {
+        Assert.requireNonNull(configuration, "configuration");
         final HttpURLConnectionFactory connectionFactory = configuration.getHttpURLConnectionFactory();
         final HttpClientImpl client = new HttpClientImpl(Client.getService(Gson.class), connectionFactory, configuration);
 
         final ServiceLoader<RequestHandlerProvider> requestLoader = ServiceLoader.load(RequestHandlerProvider.class);
         final Iterator<RequestHandlerProvider> requestIterator = requestLoader.iterator();
         while (requestIterator.hasNext()) {
-            client.addRequestHandler(requestIterator.next().getHandler(configuration));
+            client.addRequestChainHandler(requestIterator.next().getHandler(configuration));
         }
 
-        final ServiceLoader<ResponseHandlerProvider> responseLoader = ServiceLoader.load(ResponseHandlerProvider.class);
-        final Iterator<ResponseHandlerProvider> responseIterator = responseLoader.iterator();
-        while (responseIterator.hasNext()) {
-            client.addResponseHandler(responseIterator.next().getHandler(configuration));
-        }
         return client;
     }
 }

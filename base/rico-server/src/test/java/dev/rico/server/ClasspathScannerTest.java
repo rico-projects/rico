@@ -16,8 +16,8 @@
  */
 package dev.rico.server;
 
-import dev.rico.internal.server.remoting.config.ConfigurationFileLoader;
-import dev.rico.internal.server.remoting.config.ServerConfiguration;
+import dev.rico.internal.server.config.ConfigurationFileLoader;
+import dev.rico.internal.server.config.ServerConfiguration;
 import dev.rico.server.scanner.documented.DocumentAnnotatedClass;
 import dev.rico.server.util.AnnotatedClassForClasspathScan;
 import dev.rico.server.util.AnnotationForClasspathScanTest;

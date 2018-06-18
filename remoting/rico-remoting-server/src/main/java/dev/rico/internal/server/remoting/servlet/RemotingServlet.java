@@ -17,6 +17,7 @@
 package dev.rico.internal.server.remoting.servlet;
 
 import dev.rico.internal.server.remoting.context.RemotingCommunicationHandler;
+import dev.rico.internal.server.servlet.ServerTimingFilter;
 import dev.rico.server.timing.Metric;
 import org.apiguardian.api.API;
 

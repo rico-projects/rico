@@ -17,7 +17,7 @@
 package dev.rico.internal.client.security;
 
 import dev.rico.core.Configuration;
-import dev.rico.core.http.HttpURLConnectionHandler;
+import dev.rico.core.http.HttpURLConnectionInterceptor;
 import dev.rico.core.http.spi.RequestHandlerProvider;
 import org.apiguardian.api.API;
 
@@ -27,7 +27,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 public class KeycloakSecurityRequestHandlerProvider implements RequestHandlerProvider {
 
     @Override
-    public HttpURLConnectionHandler getHandler(final Configuration configuration) {
+    public HttpURLConnectionInterceptor getHandler(final Configuration configuration) {
         return new KeycloakRequestHandler();
     }
 }

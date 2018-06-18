@@ -128,7 +128,6 @@ public class ProcessChainImpl<T> implements ProcessChain<T> {
         return new ProcessChainImpl<V>(backgroundExecutor, uiExecutor, processes, exceptionConsumer, finalRunnable);
     }
 
-
     @Override
     public ProcessChain<T> onException(final Consumer<Throwable> exceptionConsumer) {
         return new ProcessChainImpl<T>(backgroundExecutor, uiExecutor, processes, exceptionConsumer, finalRunnable);

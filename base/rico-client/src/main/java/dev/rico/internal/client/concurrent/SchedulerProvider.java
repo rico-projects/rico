@@ -31,6 +31,7 @@ public class SchedulerProvider extends AbstractServiceProvider<Scheduler> {
 
     @Override
     protected Scheduler createService(final ClientConfiguration configuration) {
+        Assert.requireNonNull(configuration, "configuration");
         final Executor backgroundExecutor = configuration.getBackgroundExecutor();
         Assert.requireNonNull(backgroundExecutor, "backgroundExecutor");
         return new SchedulerImpl(backgroundExecutor);

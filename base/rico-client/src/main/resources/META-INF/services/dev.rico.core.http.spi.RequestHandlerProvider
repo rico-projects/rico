@@ -1,2 +1,2 @@
 dev.rico.internal.client.http.cookie.CookieRequestHandlerProvider
-dev.rico.internal.client.session.ClientSessionRequestHandlerProvider
+dev.rico.internal.client.session.ClientSessionHandlerProvider

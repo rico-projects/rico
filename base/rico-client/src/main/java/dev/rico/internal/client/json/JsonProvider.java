@@ -31,7 +31,7 @@ public class JsonProvider extends AbstractServiceProvider<Gson> {
     }
 
     @Override
-    protected Gson createService(ClientConfiguration configuration) {
+    protected Gson createService(final ClientConfiguration configuration) {
         return new Gson();
     }
 }
