@@ -16,9 +16,11 @@
  */
 package dev.rico.core.http;
 
-import dev.rico.internal.core.Assert;
+import dev.rico.internal.core.http.EmptyInputStream;
 import org.apiguardian.api.API;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
 import static dev.rico.internal.core.http.HttpHeaderConstants.CHARSET;
@@ -35,23 +37,36 @@ public interface HttpCallRequestBuilder {
         return withContent(content, RAW_MIME_TYPE);
     }
 
-    HttpCallResponseBuilder withContent(byte[] content, String contentType);
+    default HttpCallResponseBuilder withContent(final byte[] content, final String contentType) {
+        if(content == null || content.length == 0) {
+            return withContent(new EmptyInputStream(), contentType);
+        } else {
+            return withContent(new ByteArrayInputStream(content), contentType);
+        }
+    }
+
 
     default HttpCallResponseBuilder withContent(final String content) {
         return withContent(content, TEXT_MIME_TYPE);
     }
 
     default HttpCallResponseBuilder withContent(final String content, final String contentType) {
-        Assert.requireNonNull(content, "content");
-        withHeader( "charset", CHARSET);
-        try {
-            return withContent(content.getBytes(CHARSET), contentType);
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("Encoding error", e);
+        if(content == null || content.isEmpty()) {
+            return withContent(new EmptyInputStream(), contentType);
+        } else {
+            withHeader("charset", CHARSET);
+            try {
+                return withContent(content.getBytes(CHARSET), contentType);
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException("Encoding error", e);
+            }
         }
+
     }
 
     <I> HttpCallResponseBuilder withContent(I content);
+
+    HttpCallResponseBuilder withContent(final InputStream stream, final String contentType);
 
     HttpCallResponseBuilder withoutContent();
 }

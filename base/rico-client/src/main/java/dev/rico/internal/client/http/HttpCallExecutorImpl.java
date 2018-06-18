@@ -28,7 +28,6 @@ import dev.rico.internal.core.Assert;
 import org.apiguardian.api.API;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
@@ -36,7 +35,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class HttpCallExecutorImpl<R> implements Promise<HttpResponse<R>, HttpException> {
 
-    private final ExecutorService executor;
+    private final BackgroundExecutor executor;
 
     private final HttpProvider<R> provider;
 

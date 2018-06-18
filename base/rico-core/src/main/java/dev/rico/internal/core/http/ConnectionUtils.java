@@ -71,11 +71,7 @@ public class ConnectionUtils {
     public static byte[] readContent(final InputStream inputStream) throws IOException {
         Assert.requireNonNull(inputStream, "inputStream");
         final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        final byte[] buffer = new byte[1024];
-        int len;
-        while ((len = inputStream.read(buffer)) > 0) {
-            byteArrayOutputStream.write(buffer, 0, len);
-        }
+        copy(inputStream, byteArrayOutputStream);
         return byteArrayOutputStream.toByteArray();
     }
 
@@ -165,4 +161,23 @@ public class ConnectionUtils {
             return false;
         }
     }
+
+    public static long copy(final InputStream inputStream, final OutputStream outputStream) throws IOException {
+        return copy(inputStream, outputStream, 1024);
+    }
+
+    public static long copy(final InputStream inputStream, final OutputStream outputStream, final int bufferSize) throws IOException {
+        Assert.requireNonNull(inputStream, "inputStream");
+        Assert.requireNonNull(outputStream, "outputStream");
+
+        final byte[] buffer = new byte[bufferSize];
+        long finalLength = 0;
+        int len;
+        while ((len = inputStream.read(buffer)) > 0) {
+            outputStream.write(buffer, 0, len);
+            finalLength = finalLength  + len;
+        }
+        return finalLength;
+    }
+
 }
