@@ -30,7 +30,7 @@ public class ClientSessionExecutorImplTest {
         try {
             ClientSessionExecutor executor = new ClientSessionExecutorImpl(Executors.newSingleThreadExecutor());
         } catch (Exception e) {
-            Assert.fail("Can not create executor", e);
+            Assert.fail("Can not createList executor", e);
         }
     }
 

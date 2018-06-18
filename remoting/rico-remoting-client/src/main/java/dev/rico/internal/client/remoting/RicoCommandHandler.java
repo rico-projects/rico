@@ -17,7 +17,6 @@
 package dev.rico.internal.client.remoting;
 
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.client.remoting.legacy.communication.AbstractClientConnector;
 import dev.rico.internal.client.remoting.legacy.communication.OnFinishedHandler;
 import dev.rico.internal.remoting.legacy.communication.Command;
 import org.apiguardian.api.API;

@@ -23,7 +23,7 @@ import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 /**
- * A component that can be use to create bindings between properties (see {@link Property}). All
+ * A component that can be use to createList bindings between properties (see {@link Property}). All
  * properties that are bound to the same qualifier (see {@link Qualifier}) will be
  * automatically updated once one of the properties change its value.
  *

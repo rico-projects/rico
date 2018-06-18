@@ -26,9 +26,9 @@ import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
 /**
- * This class can be used to create a unidirectional or bidirectional binding between a JavaFX property and a
- * remoting property. Normally a developer don't need to create new instances of this class since it's part of a
- * fluent API. To create bindings see {@link FXBinder}
+ * This class can be used to createList a unidirectional or bidirectional binding between a JavaFX property and a
+ * remoting property. Normally a developer don't need to createList new instances of this class since it's part of a
+ * fluent API. To createList bindings see {@link FXBinder}
  * @param <S> datatype of the JavaFX property
  */
 @API(since = "0.x", status = MAINTAINED)

@@ -16,24 +16,39 @@
  */
 package dev.rico.internal.server.remoting.model;
 
-import dev.rico.internal.remoting.BeanRepository;
+import dev.rico.internal.core.Assert;
+import dev.rico.internal.remoting.UpdateSource;
+import dev.rico.internal.remoting.repo.BeanRepository;
 import dev.rico.internal.server.remoting.gc.GarbageCollector;
 import org.apiguardian.api.API;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
-/**
- * Interface that defines the {@link BeanRepository} for the server.
- */
 @API(since = "0.x", status = INTERNAL)
-public interface ServerBeanRepository extends BeanRepository {
+public class ServerBeanRepository extends BeanRepository {
 
-    /**
-     * Method should be called if a bean get rejected by the remoting garbage collection. This means
-     * that the bean isn't referenced anymore by another bean and can be removed. Implementations shoudl removePresentationModel
-     * the bean from the model / remoting layer. For more information see {@link GarbageCollector}
-     * @param rejectedBean the rejected bean
-     * @param <T> type of the bean.
-     */
-    <T> void onGarbageCollectionRejection(T rejectedBean);
+    final GarbageCollector garbageCollector;
+
+    public ServerBeanRepository(final GarbageCollector garbageCollector) {
+        this.garbageCollector = Assert.requireNonNull(garbageCollector, "garbageCollector");
+    }
+
+    @Override
+    public void registerBean(String id, Object bean, UpdateSource source) {
+        super.registerBean(id, bean, source);
+
+        //TODO: Send command to client
+    }
+
+    @Override
+    public <T> void delete(T bean) {
+        super.delete(bean);
+        garbageCollector.onBeanRemoved(bean);
+
+        //TODO: Send command to client
+    }
+
+    public <T> void onGarbageCollectionRejection(T bean) {
+        delete(bean);
+    }
 }

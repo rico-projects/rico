@@ -16,19 +16,11 @@
  */
 package dev.rico.internal.client.remoting;
 
-import dev.rico.internal.core.Assert;
-import dev.rico.internal.remoting.AbstractBeanBuilder;
-import dev.rico.internal.remoting.BeanRepository;
-import dev.rico.internal.remoting.ClassRepository;
-import dev.rico.internal.remoting.EventDispatcher;
-import dev.rico.internal.remoting.ListMapper;
-import dev.rico.internal.remoting.PresentationModelBuilderFactory;
-import dev.rico.internal.remoting.PropertyImpl;
+import dev.rico.internal.remoting.*;
 import dev.rico.internal.remoting.collections.ObservableArrayList;
-import dev.rico.internal.remoting.info.PropertyInfo;
-import dev.rico.internal.remoting.legacy.core.Attribute;
-import dev.rico.internal.remoting.legacy.core.PresentationModel;
-import dev.rico.remoting.ListChangeEvent;
+import dev.rico.internal.remoting.repo.BeanRepository;
+import dev.rico.internal.remoting.repo.ClassRepository;
+import dev.rico.internal.remoting.repo.PropertyInfo;
 import dev.rico.remoting.ObservableList;
 import dev.rico.remoting.Property;
 import org.apiguardian.api.API;
@@ -38,23 +30,13 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class ClientBeanBuilderImpl extends AbstractBeanBuilder {
 
-    public ClientBeanBuilderImpl(final ClassRepository classRepository, final BeanRepository beanRepository, final ListMapper listMapper, final PresentationModelBuilderFactory builderFactory, final EventDispatcher dispatcher) {
-        super(classRepository, beanRepository, listMapper, builderFactory, dispatcher);
+    public ClientBeanBuilderImpl(final ClassRepository classRepository, final BeanRepository beanRepository) {
+        super(classRepository, beanRepository);
     }
 
-    protected ObservableList create(final PropertyInfo observableListInfo, final PresentationModel model, final ListMapper listMapper) {
-        Assert.requireNonNull(model, "model");
-        Assert.requireNonNull(listMapper, "listMapper");
-        return new ObservableArrayList() {
-            @Override
-            protected void notifyInternalListeners(ListChangeEvent event) {
-                listMapper.processEvent(observableListInfo, model.getId(), event);
-            }
-        };
+    @Override
+    protected String getIdPrefix() {
+        return "CLIENT";
     }
 
-
-    protected Property create(final Attribute attribute, final PropertyInfo propertyInfo) {
-        return new PropertyImpl<>(attribute, propertyInfo);
-    }
 }

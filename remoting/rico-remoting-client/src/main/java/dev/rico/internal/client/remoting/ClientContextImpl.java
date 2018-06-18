@@ -19,19 +19,13 @@ package dev.rico.internal.client.remoting;
 import dev.rico.internal.client.remoting.legacy.ClientModelStore;
 import dev.rico.internal.client.remoting.legacy.DefaultModelSynchronizer;
 import dev.rico.internal.client.remoting.legacy.ModelSynchronizer;
-import dev.rico.internal.client.remoting.legacy.communication.AbstractClientConnector;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.remoting.BeanManagerImpl;
-import dev.rico.internal.remoting.BeanRepository;
-import dev.rico.internal.remoting.BeanRepositoryImpl;
-import dev.rico.internal.remoting.ClassRepository;
-import dev.rico.internal.remoting.ClassRepositoryImpl;
-import dev.rico.internal.remoting.Converters;
-import dev.rico.internal.remoting.EventDispatcher;
-import dev.rico.internal.remoting.PresentationModelBuilderFactory;
-import dev.rico.internal.remoting.collections.ListMapperImpl;
-import dev.rico.internal.remoting.commands.CreateContextCommand;
-import dev.rico.internal.remoting.commands.DestroyContextCommand;
+import dev.rico.internal.remoting.repo.BeanRepository;
+import dev.rico.internal.remoting.repo.ClassRepository;
+import dev.rico.internal.remoting.communication.converters.Converters;
+import dev.rico.internal.remoting.communication.commands.CreateContextCommand;
+import dev.rico.internal.remoting.communication.commands.DestroyContextCommand;
 import dev.rico.client.ClientConfiguration;
 import dev.rico.client.session.ClientSessionStore;
 import dev.rico.remoting.BeanManager;
@@ -88,10 +82,10 @@ public class ClientContextImpl implements ClientContext {
         this.clientConnector = connectorProvider.apply(modelStore);
 
         final EventDispatcher dispatcher = new ClientEventDispatcher(modelStore);
-        final BeanRepository beanRepository = new BeanRepositoryImpl(modelStore, dispatcher);
+        final BeanRepository beanRepository = new BeanRepository(modelStore, dispatcher);
         final Converters converters = new Converters(beanRepository);
         final PresentationModelBuilderFactory builderFactory = new ClientPresentationModelBuilderFactory(modelStore);
-        final ClassRepository classRepository = new ClassRepositoryImpl(modelStore, converters, builderFactory);
+        final ClassRepository classRepository = new ClassRepository(modelStore, converters, builderFactory);
 
         this.commandHandler = new RicoCommandHandler(clientConnector);
         this.controllerProxyFactory = new ControllerProxyFactory(commandHandler, clientConnector, modelStore, beanRepository, dispatcher, converters);

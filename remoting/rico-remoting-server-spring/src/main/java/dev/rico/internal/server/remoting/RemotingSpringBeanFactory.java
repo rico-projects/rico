@@ -59,7 +59,7 @@ public class RemotingSpringBeanFactory {
     }
 
     /**
-     * Method to create a spring managed {@link BeanManagerImpl} instance in client scope.
+     * Method to createList a spring managed {@link BeanManagerImpl} instance in client scope.
      *
      * @return the instance
      */
@@ -71,7 +71,7 @@ public class RemotingSpringBeanFactory {
     }
 
     /**
-     * Method to create a spring managed {@link RemotingEventBus} instance in singleton scope.
+     * Method to createList a spring managed {@link RemotingEventBus} instance in singleton scope.
      *
      * @return the instance
      */

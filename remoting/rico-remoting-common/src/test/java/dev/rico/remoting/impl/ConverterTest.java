@@ -16,7 +16,7 @@
  */
 package dev.rico.remoting.impl;
 
-import dev.rico.internal.remoting.Converters;
+import dev.rico.internal.remoting.communication.converters.Converters;
 import dev.rico.remoting.converter.Converter;
 import dev.rico.remoting.converter.ValueConverterException;
 import org.testng.annotations.Test;

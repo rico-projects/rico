@@ -90,4 +90,5 @@ public abstract class AbstractProperty<T> implements Property<T> {
         final AbstractProperty<?> that = (AbstractProperty<?>) o;
         return Objects.equals(get(), that.get());
     }
+
 }

@@ -16,12 +16,10 @@
  */
 package dev.rico.internal.remoting;
 
+import dev.rico.internal.remoting.repo.BeanRepository;
 import dev.rico.remoting.BeanManager;
-import dev.rico.core.functional.Subscription;
 import dev.rico.internal.core.Assert;
 import org.apiguardian.api.API;
-
-import java.util.List;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
@@ -29,9 +27,9 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 public class BeanManagerImpl implements BeanManager {
 
     protected final BeanRepository beanRepository;
-    private final BeanBuilder beanBuilder;
+    private final AbstractBeanBuilder beanBuilder;
 
-    public BeanManagerImpl(final BeanRepository beanRepository, final BeanBuilder beanBuilder) {
+    public BeanManagerImpl(final BeanRepository beanRepository, final AbstractBeanBuilder beanBuilder) {
         this.beanRepository = Assert.requireNonNull(beanRepository, "beanRepository");
         this.beanBuilder = Assert.requireNonNull(beanBuilder, "beanBuilder");
     }
@@ -40,17 +38,5 @@ public class BeanManagerImpl implements BeanManager {
     public <T> T create(final Class<T> beanClass) {
         RemotingUtils.assertIsRemotingBean(beanClass);
         return beanBuilder.create(beanClass);
-    }
-
-    @Override
-    public <T> List<T> findAll(final Class<T> beanClass) {
-        RemotingUtils.assertIsRemotingBean(beanClass);
-        return beanRepository.findAll(beanClass);
-    }
-
-    @Override
-    public <T> Subscription onAdded(final Class<T> beanClass, final BeanAddedListener<? super T> listener) {
-        RemotingUtils.assertIsRemotingBean(beanClass);
-        return beanRepository.addOnAddedListener(beanClass, listener);
     }
 }

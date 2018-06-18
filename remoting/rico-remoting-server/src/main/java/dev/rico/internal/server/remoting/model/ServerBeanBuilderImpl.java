@@ -16,35 +16,29 @@
  */
 package dev.rico.internal.server.remoting.model;
 
+import dev.rico.internal.remoting.*;
+import dev.rico.internal.remoting.repo.BeanRepository;
+import dev.rico.internal.remoting.repo.ClassRepository;
 import dev.rico.remoting.ListChangeEvent;
 import dev.rico.remoting.ListChangeListener;
 import dev.rico.remoting.ObservableList;
 import dev.rico.remoting.ValueChangeEvent;
-import dev.rico.internal.remoting.AbstractBeanBuilder;
-import dev.rico.internal.remoting.PresentationModelBuilderFactory;
-import dev.rico.internal.remoting.PropertyImpl;
 import dev.rico.internal.remoting.collections.ObservableArrayList;
-import dev.rico.internal.remoting.BeanRepository;
-import dev.rico.internal.remoting.ClassRepository;
-import dev.rico.internal.remoting.EventDispatcher;
-import dev.rico.internal.remoting.ListMapper;
-import dev.rico.internal.remoting.info.PropertyInfo;
+import dev.rico.internal.remoting.repo.PropertyInfo;
 import dev.rico.remoting.Property;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.server.remoting.gc.GarbageCollector;
-import dev.rico.internal.remoting.legacy.core.Attribute;
-import dev.rico.internal.remoting.legacy.core.PresentationModel;
 import org.apiguardian.api.API;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
-public class ServerBeanBuilderImpl extends AbstractBeanBuilder implements ServerBeanBuilder {
+public class ServerBeanBuilderImpl extends AbstractBeanBuilder {
 
     private final GarbageCollector garbageCollector;
 
-    public ServerBeanBuilderImpl(final ClassRepository classRepository, final BeanRepository beanRepository, final ListMapper listMapper, final PresentationModelBuilderFactory builderFactory, final EventDispatcher dispatcher, final GarbageCollector garbageCollector) {
-        super(classRepository, beanRepository, listMapper, builderFactory, dispatcher);
+    public ServerBeanBuilderImpl(final ClassRepository classRepository, final BeanRepository beanRepository, final GarbageCollector garbageCollector) {
+        super(classRepository, beanRepository);
         this.garbageCollector = Assert.requireNonNull(garbageCollector, "garbageCollector");
     }
 
@@ -61,49 +55,35 @@ public class ServerBeanBuilderImpl extends AbstractBeanBuilder implements Server
         return bean;
     }
 
-    protected <T> ObservableList<T> create(final PropertyInfo observableListInfo, final PresentationModel model, final ListMapper listMapper) {
-        Assert.requireNonNull(model, "model");
-        Assert.requireNonNull(listMapper, "listMapper");
-        final ObservableList<T> list = new ObservableArrayList<T>() {
-            @Override
-            protected void notifyInternalListeners(ListChangeEvent<T> event) {
-                listMapper.processEvent(observableListInfo, model.getId(), event);
-            }
-        };
+    @Override
+    protected String getIdPrefix() {
+        return "SERVER";
+    }
 
-        list.onChanged(new ListChangeListener<T>() {
-            @Override
-            public void listChanged(ListChangeEvent<? extends T> event) {
-                for(ListChangeEvent.Change<? extends T> c : event.getChanges()) {
-                    if(c.isAdded()) {
-                        for(Object added : list.subList(c.getFrom(), c.getTo())) {
-                            garbageCollector.onAddedToList(list, added);
-                        }
-                    }
-                    if(c.isRemoved()) {
-                        for(Object removed : c.getRemovedElements()) {
-                            garbageCollector.onRemovedFromList(list, removed);
-                        }
-                    }
-                    if(c.isReplaced()) {
-                        //??? TODO
-                    }
+    @Override
+    protected ObservableArrayList createList(String beanId, PropertyInfo observableListInfo) {
+        final ObservableArrayList<?> list = super.createList(beanId, observableListInfo);
+        list.onInternalChanged(e -> {
+            e.getChanges().forEach(c -> {
+                if(c.isAdded()) {
+                    list.subList(c.getFrom(), c.getTo()).forEach(i -> garbageCollector.onAddedToList(list, i));
                 }
-            }
+                if(c.isRemoved()) {
+                    c.getRemovedElements().forEach(i -> garbageCollector.onRemovedFromList(list, i));
+                }
+                if(c.isReplaced()) {
+                    //??? TODO
+                }
+            });
         });
-
         return list;
     }
 
-    protected <T> Property<T> create(final Attribute attribute, final PropertyInfo propertyInfo) {
-        return new PropertyImpl<T>(attribute, propertyInfo) {
-
-            @Override
-            protected void notifyInternalListeners(ValueChangeEvent event) {
-                super.notifyInternalListeners(event);
-                garbageCollector.onPropertyValueChanged(event.getSource(), event.getOldValue(), event.getNewValue());
-            }
-        };
+    @Override
+    protected PropertyImpl createProperty(String beanId, PropertyInfo propertyInfo) {
+        final PropertyImpl property = super.createProperty(beanId, propertyInfo);
+        property.onInternalChanged(e -> garbageCollector.onPropertyValueChanged(e.getSource(), e.getOldValue(), e.getNewValue()));
+        return property;
     }
 }
 

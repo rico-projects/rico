@@ -77,7 +77,7 @@ public abstract class SpringTestNGControllerTest extends AbstractTestNGSpringCon
         try {
             return ClientTestFactory.createController(clientContext, controllerName);
         } catch (Exception e) {
-            throw new ControllerTestException("Can't create controller proxy", e);
+            throw new ControllerTestException("Can't createList controller proxy", e);
         }
     }
 }

@@ -17,11 +17,10 @@
 package dev.rico.internal.client.remoting;
 
 import dev.rico.internal.client.remoting.legacy.ClientModelStore;
-import dev.rico.internal.client.remoting.legacy.communication.AbstractClientConnector;
 import dev.rico.client.Client;
 import dev.rico.internal.client.session.StrictClientSessionResponseHandler;
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.remoting.codec.OptimizedJsonCodec;
+import dev.rico.internal.remoting.communication.codec.Codec;
 import dev.rico.client.ClientConfiguration;
 import dev.rico.client.session.ClientSessionStore;
 import dev.rico.core.http.HttpClient;
@@ -38,7 +37,7 @@ import java.util.function.Function;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 /**
- * Factory to create a {@link ClientContext}. Normally you will create a {@link ClientContext} at the bootstrap of your
+ * Factory to createList a {@link ClientContext}. Normally you will createList a {@link ClientContext} at the bootstrap of your
  * client by using the {@link #create(ClientConfiguration, URI)} method and use this context as a singleton in your client.
  * The {@link ClientContext} defines the connection between the client and the remoting server endpoint.
  */
@@ -62,7 +61,7 @@ public class ClientContextFactoryImpl implements ClientContextFactory {
         final HttpURLConnectionHandler clientSessionCheckResponseHandler = new StrictClientSessionResponseHandler(endpoint);
         httpClient.addResponseHandler(clientSessionCheckResponseHandler);
         final Function<ClientModelStore, AbstractClientConnector> connectionProvider = s -> {
-            return new HttpClientConnector(endpoint, clientConfiguration, s, OptimizedJsonCodec.getInstance(), e -> {}, httpClient);
+            return new HttpClientConnector(endpoint, clientConfiguration, s, Codec.getInstance(), e -> {}, httpClient);
         };
 
 

@@ -21,7 +21,6 @@ import dev.rico.internal.client.remoting.legacy.ClientModelStore;
 import dev.rico.internal.client.remoting.legacy.ClientPresentationModel;
 import dev.rico.internal.client.remoting.legacy.DefaultModelSynchronizer;
 import dev.rico.internal.client.remoting.legacy.ModelSynchronizer;
-import dev.rico.internal.client.remoting.legacy.communication.AbstractClientConnector;
 import dev.rico.internal.client.remoting.legacy.communication.AttributeChangeListener;
 import dev.rico.internal.client.remoting.legacy.communication.CommandBatcher;
 import dev.rico.internal.client.remoting.legacy.communication.OnFinishedHandler;

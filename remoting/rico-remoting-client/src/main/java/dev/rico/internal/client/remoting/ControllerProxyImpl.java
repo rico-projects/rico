@@ -16,13 +16,11 @@
  */
 package dev.rico.internal.client.remoting;
 
-import dev.rico.internal.client.remoting.legacy.communication.AbstractClientConnector;
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.remoting.Converters;
-import dev.rico.internal.remoting.InternalAttributesBean;
+import dev.rico.internal.remoting.communication.converters.Converters;
 import dev.rico.internal.remoting.MappingException;
-import dev.rico.internal.remoting.commands.CallActionCommand;
-import dev.rico.internal.remoting.commands.DestroyControllerCommand;
+import dev.rico.internal.remoting.communication.commands.CallActionCommand;
+import dev.rico.internal.remoting.communication.commands.DestroyControllerCommand;
 import dev.rico.client.remoting.ControllerActionException;
 import dev.rico.client.remoting.ControllerInitalizationException;
 import dev.rico.client.remoting.ControllerProxy;

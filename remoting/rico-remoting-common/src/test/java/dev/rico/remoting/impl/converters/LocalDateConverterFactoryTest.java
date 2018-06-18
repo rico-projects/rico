@@ -24,13 +24,13 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.TimeZone;
 
-import dev.rico.internal.remoting.converters.ValueFieldTypes;
+import dev.rico.internal.remoting.repo.BeanRepository;
+import dev.rico.internal.remoting.communication.converters.ValueFieldTypes;
 import org.testng.annotations.Test;
 
 import dev.rico.remoting.converter.Converter;
 import dev.rico.remoting.converter.ValueConverterException;
-import dev.rico.internal.remoting.Converters;
-import dev.rico.internal.remoting.BeanRepository;
+import dev.rico.internal.remoting.communication.converters.Converters;
 
 import mockit.Mocked;
 

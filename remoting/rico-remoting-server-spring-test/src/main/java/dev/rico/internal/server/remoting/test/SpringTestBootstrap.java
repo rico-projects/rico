@@ -55,7 +55,7 @@ public class SpringTestBootstrap {
         try {
             return new TestConfiguration(context, httpSession);
         } catch (Exception e) {
-            throw new RuntimeException("Can not create test configuration", e);
+            throw new RuntimeException("Can not createList test configuration", e);
         }
     }
 
@@ -74,7 +74,7 @@ public class SpringTestBootstrap {
     }
 
     /**
-     * Method to create a spring managed {@link BeanManagerImpl} instance in client scope.
+     * Method to createList a spring managed {@link BeanManagerImpl} instance in client scope.
      *
      * @return the instance
      */
@@ -142,7 +142,7 @@ public class SpringTestBootstrap {
     }
 
     /**
-     * Method to create a spring managed {@link RemotingEventBus} instance in singleton scope.
+     * Method to createList a spring managed {@link RemotingEventBus} instance in singleton scope.
      *
      * @return the instance
      */

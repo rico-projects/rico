@@ -16,7 +16,7 @@
  */
 package dev.rico.internal.server.remoting.legacy;
 
-import dev.rico.internal.remoting.codec.OptimizedJsonCodec;
+import dev.rico.internal.remoting.communication.codec.Codec;
 import dev.rico.internal.remoting.legacy.communication.ChangeAttributeMetadataCommand;
 import dev.rico.internal.remoting.legacy.communication.CreatePresentationModelCommand;
 import dev.rico.internal.remoting.legacy.communication.PresentationModelDeletedCommand;
@@ -37,7 +37,7 @@ public class LegacyFactoryTest {
 
         final ServerModelStore modelStore = new ServerModelStore();
         final ServerConnector serverConnector = new ServerConnector();
-        serverConnector.setCodec(OptimizedJsonCodec.getInstance());
+        serverConnector.setCodec(Codec.getInstance());
         serverConnector.setServerModelStore(modelStore);
         final DefaultServerDolphin serverInstance = new DefaultServerDolphin(modelStore, serverConnector);
         serverInstance.getServerConnector().registerDefaultActions();
@@ -47,7 +47,7 @@ public class LegacyFactoryTest {
         assertNotNull(serverInstance.getServerConnector());
         assertNotNull(serverInstance.getModelStore());
         assertNotNull(serverInstance.getServerConnector().getCodec());
-        assertEquals(OptimizedJsonCodec.class, serverInstance.getServerConnector().getCodec().getClass());
+        assertEquals(Codec.class, serverInstance.getServerConnector().getCodec().getClass());
 
         assertEquals(serverInstance.getServerConnector().getRegistry().getActions().size(), 4);
         assertTrue(serverInstance.getServerConnector().getRegistry().getActions().containsKey(ValueChangedCommand.class));

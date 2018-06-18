@@ -17,7 +17,7 @@
 package dev.rico.server.remoting;
 
 import dev.rico.internal.remoting.RemotingConstants;
-import dev.rico.internal.remoting.converters.BeanConverterFactory;
+import dev.rico.internal.remoting.communication.converters.BeanConverterFactory;
 import dev.rico.internal.remoting.legacy.LegacyConstants;
 import dev.rico.internal.remoting.legacy.core.PresentationModel;
 import dev.rico.internal.server.remoting.legacy.DTO;

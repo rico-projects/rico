@@ -18,23 +18,9 @@ package dev.rico.internal.server.remoting.context;
 
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.remoting.BeanManagerImpl;
-import dev.rico.internal.remoting.ClassRepository;
-import dev.rico.internal.remoting.ClassRepositoryImpl;
-import dev.rico.internal.remoting.Converters;
-import dev.rico.internal.remoting.EventDispatcher;
-import dev.rico.internal.remoting.InternalAttributesBean;
-import dev.rico.internal.remoting.ListMapper;
-import dev.rico.internal.remoting.PresentationModelBuilderFactory;
-import dev.rico.internal.remoting.codec.OptimizedJsonCodec;
-import dev.rico.internal.remoting.collections.ListMapperImpl;
-import dev.rico.internal.remoting.commands.CallActionCommand;
-import dev.rico.internal.remoting.commands.CreateContextCommand;
-import dev.rico.internal.remoting.commands.CreateControllerCommand;
-import dev.rico.internal.remoting.commands.DestroyContextCommand;
-import dev.rico.internal.remoting.commands.DestroyControllerCommand;
-import dev.rico.internal.remoting.legacy.commands.InterruptLongPollCommand;
-import dev.rico.internal.remoting.legacy.commands.StartLongPollCommand;
-import dev.rico.internal.remoting.legacy.communication.Command;
+import dev.rico.internal.remoting.repo.ClassRepository;
+import dev.rico.internal.remoting.communication.commands.*;
+import dev.rico.internal.remoting.communication.converters.Converters;
 import dev.rico.internal.server.client.ClientSessionProvider;
 import dev.rico.internal.server.remoting.config.RemotingConfiguration;
 import dev.rico.internal.server.remoting.controller.ControllerHandler;
@@ -42,19 +28,8 @@ import dev.rico.internal.server.remoting.controller.ControllerRepository;
 import dev.rico.internal.server.remoting.gc.GarbageCollectionCallback;
 import dev.rico.internal.server.remoting.gc.GarbageCollector;
 import dev.rico.internal.server.remoting.gc.Instance;
-import dev.rico.internal.server.remoting.legacy.ServerConnector;
-import dev.rico.internal.server.remoting.legacy.ServerModelStore;
-import dev.rico.internal.server.remoting.legacy.action.AbstractServerAction;
-import dev.rico.internal.server.remoting.legacy.communication.ActionRegistry;
-import dev.rico.internal.server.remoting.legacy.communication.CommandHandler;
-import dev.rico.internal.server.remoting.model.ServerBeanBuilder;
 import dev.rico.internal.server.remoting.model.ServerBeanBuilderImpl;
 import dev.rico.internal.server.remoting.model.ServerBeanRepository;
-import dev.rico.internal.server.remoting.model.ServerBeanRepositoryImpl;
-import dev.rico.internal.server.remoting.model.ServerControllerActionCallBean;
-import dev.rico.internal.server.remoting.model.ServerEventDispatcher;
-import dev.rico.internal.server.remoting.model.ServerPlatformBeanRepository;
-import dev.rico.internal.server.remoting.model.ServerPresentationModelBuilderFactory;
 import dev.rico.internal.server.remoting.servlet.ServerTimingFilter;
 import dev.rico.remoting.BeanManager;
 import dev.rico.server.client.ClientSession;
@@ -86,21 +61,11 @@ public class ServerRemotingContext {
 
     private final RemotingConfiguration configuration;
 
-    private final ServerModelStore serverModelStore;
-
-    private final ServerConnector serverConnector;
-
-    private final ServerBeanRepository beanRepository;
-
     private final Converters converters;
 
     private final BeanManager beanManager;
 
     private final ControllerHandler controllerHandler;
-
-    private final EventDispatcher dispatcher;
-
-    private ServerPlatformBeanRepository platformBeanRepository;
 
     private final Consumer<ServerRemotingContext> onDestroyCallback;
 
@@ -114,6 +79,8 @@ public class ServerRemotingContext {
 
     private boolean active = false;
 
+    private final ServerBeanRepository beanRepository;
+
     public ServerRemotingContext(final RemotingConfiguration configuration, ClientSession clientSession, ClientSessionProvider clientSessionProvider, ManagedBeanFactory beanFactory, ControllerRepository controllerRepository, Consumer<ServerRemotingContext> onDestroyCallback) {
         this.configuration = Assert.requireNonNull(configuration, "configuration");
         Assert.requireNonNull(beanFactory, "beanFactory");
@@ -121,13 +88,6 @@ public class ServerRemotingContext {
         this.onDestroyCallback = Assert.requireNonNull(onDestroyCallback, "onDestroyCallback");
         this.clientSession = Assert.requireNonNull(clientSession, "clientSession");
 
-        serverModelStore = new ServerModelStore();
-
-        //Init Server Connector
-        serverConnector = new ServerConnector();
-        serverConnector.setCodec(OptimizedJsonCodec.getInstance());
-        serverConnector.setServerModelStore(serverModelStore);
-        serverConnector.registerDefaultActions();
 
         //Init Garbage Collection
         garbageCollector = new GarbageCollector(configuration, new GarbageCollectionCallback() {
@@ -142,21 +102,19 @@ public class ServerRemotingContext {
         CommunicationManager manager = new CommunicationManager() {
             @Override
             public boolean hasResponseCommands() {
-                return hasResponseCommands || serverModelStore.hasResponseCommands();
+                return hasResponseCommands;
+      //          return hasResponseCommands || serverModelStore.hasResponseCommands();
             }
         };
         taskQueue = new RemotingContextTaskQueue(clientSession.getId(), clientSessionProvider, manager, configuration.getMaxPollTime(), TimeUnit.MILLISECONDS);
 
         //Init BeanRepository
-        dispatcher = new ServerEventDispatcher(serverModelStore);
-        beanRepository = new ServerBeanRepositoryImpl(serverModelStore, dispatcher, garbageCollector);
+        beanRepository = new ServerBeanRepository(garbageCollector);
         converters = new Converters(beanRepository);
 
         //Init BeanManager
-        final PresentationModelBuilderFactory builderFactory = new ServerPresentationModelBuilderFactory(serverModelStore);
-        final ClassRepository classRepository = new ClassRepositoryImpl(serverModelStore, converters, builderFactory);
-        final ListMapper listMapper = new ListMapperImpl(serverModelStore, classRepository, beanRepository, builderFactory, dispatcher);
-        final ServerBeanBuilder beanBuilder = new ServerBeanBuilderImpl(classRepository, beanRepository, listMapper, builderFactory, dispatcher, garbageCollector);
+        final ClassRepository classRepository = new ClassRepository(converters);
+        final ServerBeanBuilderImpl beanBuilder = new ServerBeanBuilderImpl(classRepository, beanRepository, garbageCollector);
         beanManager = new BeanManagerImpl(beanRepository, beanBuilder);
 
 
@@ -167,45 +125,38 @@ public class ServerRemotingContext {
         registerDefaultCommands();
     }
 
-    protected <T extends Command> void registerCommand(final ActionRegistry registry, final Class<T> commandClass, final Consumer<T> handler) {
-        Assert.requireNonNull(registry, "registry");
+    protected <T extends Command> void registerCommand(final Class<T> commandClass, final Consumer<T> handler) {
         Assert.requireNonNull(commandClass, "commandClass");
         Assert.requireNonNull(handler, "handler");
-        registry.register(commandClass, new CommandHandler() {
-            @Override
-            public void handleCommand(final Command command, final List response) {
-                LOG.trace("Handling {} for ServerRemotingContext {}", commandClass.getSimpleName(), getId());
-                handler.accept((T) command);
-            }
-        });
+//        registry.register(commandClass, new CommandHandler() {
+//            @Override
+//            public void handleCommand(final Command command, final List response) {
+//                LOG.trace("Handling {} for ServerRemotingContext {}", commandClass.getSimpleName(), getId());
+//                handler.accept((T) command);
+//            }
+//        });
     }
 
     private void registerDefaultCommands() {
-        serverConnector.register(new AbstractServerAction() {
-            @Override
-            public void registerIn(ActionRegistry registry) {
-                registerCommand(registry, CreateContextCommand.class, (c) -> onInitContext());
-                registerCommand(registry, DestroyContextCommand.class, (c) -> onDestroyContext());
-                registerCommand(registry, CreateControllerCommand.class, (createControllerCommand) -> {
-                    Assert.requireNonNull(createControllerCommand, "createControllerCommand");
-                    onCreateController(createControllerCommand.getControllerName(), createControllerCommand.getParentControllerId());
-                });
-                registerCommand(registry, DestroyControllerCommand.class, (destroyControllerCommand) -> {
-                    Assert.requireNonNull(destroyControllerCommand, "destroyControllerCommand");
-                    onDestroyController(destroyControllerCommand.getControllerId());
-                });
-                registerCommand(registry, CallActionCommand.class, (callActionCommand) -> {
-                    Assert.requireNonNull(callActionCommand, "callActionCommand");
-                    onCallControllerAction(callActionCommand.getControllerId(), callActionCommand.getActionName(), callActionCommand.getParams());
-                });
-                registerCommand(registry, StartLongPollCommand.class, (c) -> onLongPoll());
-                registerCommand(registry, InterruptLongPollCommand.class, (c) -> interrupt());
-            }
+        registerCommand(CreateContextCommand.class, (c) -> onInitContext());
+        registerCommand(DestroyContextCommand.class, (c) -> onDestroyContext());
+        registerCommand(CreateControllerCommand.class, (createControllerCommand) -> {
+            Assert.requireNonNull(createControllerCommand, "createControllerCommand");
+            onCreateController(createControllerCommand.getControllerName(), createControllerCommand.getParentControllerId());
         });
+        registerCommand(DestroyControllerCommand.class, (destroyControllerCommand) -> {
+            Assert.requireNonNull(destroyControllerCommand, "destroyControllerCommand");
+            onDestroyController(destroyControllerCommand.getControllerId());
+        });
+        registerCommand(CallActionCommand.class, (callActionCommand) -> {
+            Assert.requireNonNull(callActionCommand, "callActionCommand");
+            onCallControllerAction(callActionCommand.getControllerId(), callActionCommand.getActionName(), callActionCommand.getParams());
+        });
+        //registerCommand(registry, StartLongPollCommand.class, (c) -> onLongPoll());
+        //registerCommand(registry, InterruptLongPollCommand.class, (c) -> interrupt());
     }
 
     private void onInitContext() {
-        platformBeanRepository = new ServerPlatformBeanRepository(serverModelStore, beanRepository, dispatcher, converters);
     }
 
     private void onDestroyContext() {
@@ -221,24 +172,18 @@ public class ServerRemotingContext {
     private void onCreateController(final String controllerName, final String parentControllerId) {
         Assert.requireNonBlank(controllerName, "controllerName");
 
-        if (platformBeanRepository == null) {
-            throw new IllegalStateException("An action was called before the init-command was sent.");
-        }
-        final InternalAttributesBean bean = platformBeanRepository.getInternalAttributesBean();
+       // final InternalAttributesBean bean = platformBeanRepository.getInternalAttributesBean();
         final String controllerId = controllerHandler.createController(controllerName, parentControllerId);
 
-        bean.setControllerId(controllerId);
+        //bean.setControllerId(controllerId);
         Object model = controllerHandler.getControllerModel(controllerId);
         if (model != null) {
-            bean.setModel(model);
+          //  bean.setModel(model);
         }
     }
 
     private void onDestroyController(final String controllerId) {
         Assert.requireNonBlank(controllerId, "controllerId");
-        if (platformBeanRepository == null) {
-            throw new IllegalStateException("An action was called before the init-command was sent.");
-        }
         controllerHandler.destroyController(controllerId);
     }
 
@@ -247,20 +192,13 @@ public class ServerRemotingContext {
         Assert.requireNonBlank(actionName, "actionName");
         Assert.requireNonNull(params, "params");
 
-        //TODO: Remove this. Should bve handled by commands.
-        final ServerControllerActionCallBean bean = platformBeanRepository.getControllerActionCallBean();
-        Assert.requireNonNull(bean, "bean");
-
-        if (platformBeanRepository == null) {
-            throw new IllegalStateException("An action was called before the init-command was sent.");
-        }
-        final Metric metric = ServerTimingFilter.getCurrentTiming().start("RemotingActionCall:"+actionName, "Remote action call");
+        final Metric metric = ServerTimingFilter.getCurrentTiming().start("RemotingActionCall:" + actionName, "Remote action call");
         try {
             controllerHandler.invokeAction(controllerId, actionName, params);
         } catch (final Exception e) {
             LOG.error("Unexpected exception while invoking action {} on controller {}",
                     actionName, controllerId, e);
-            bean.setError(true);
+            //bean.setError(true);
         } finally {
             metric.stop();
         }
@@ -292,14 +230,6 @@ public class ServerRemotingContext {
         }
     }
 
-    public ServerModelStore getServerModelStore() {
-        return serverModelStore;
-    }
-
-    public ServerConnector getServerConnector() {
-        return serverConnector;
-    }
-
     public BeanManager getBeanManager() {
         return beanManager;
     }
@@ -311,9 +241,9 @@ public class ServerRemotingContext {
     public List<Command> handle(final List<Command> commands) {
         active = true;
         try {
-        final List<Command> results = new LinkedList<>();
+            final List<Command> results = new LinkedList<>();
             for (final Command command : commands) {
-                results.addAll(serverConnector.receive(command));
+               // results.addAll(serverConnector.receive(command));
                 hasResponseCommands = !results.isEmpty();
             }
             return results;

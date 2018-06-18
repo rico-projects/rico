@@ -17,14 +17,11 @@
 package dev.rico.internal.client.remoting;
 
 import dev.rico.client.remoting.ControllerProxy;
-import dev.rico.internal.remoting.Converters;
-import dev.rico.internal.remoting.InternalAttributesBean;
-import dev.rico.internal.remoting.commands.CreateControllerCommand;
-import dev.rico.internal.remoting.BeanRepository;
-import dev.rico.internal.remoting.EventDispatcher;
+import dev.rico.internal.remoting.communication.commands.CreateControllerCommand;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.client.remoting.legacy.ClientModelStore;
-import dev.rico.internal.client.remoting.legacy.communication.AbstractClientConnector;
+import dev.rico.internal.remoting.communication.converters.Converters;
+import dev.rico.internal.remoting.repo.BeanRepository;
 import org.apiguardian.api.API;
 
 import java.util.concurrent.CompletableFuture;

@@ -16,27 +16,18 @@
  */
 package dev.rico.server.remoting.util;
 
-import dev.rico.internal.remoting.BeanBuilder;
-import dev.rico.internal.remoting.BeanManagerImpl;
-import dev.rico.internal.remoting.BeanRepository;
-import dev.rico.internal.remoting.BeanRepositoryImpl;
-import dev.rico.internal.remoting.ClassRepository;
-import dev.rico.internal.remoting.ClassRepositoryImpl;
-import dev.rico.internal.remoting.Converters;
-import dev.rico.internal.remoting.EventDispatcher;
-import dev.rico.internal.remoting.ListMapper;
-import dev.rico.internal.remoting.PresentationModelBuilderFactory;
-import dev.rico.internal.remoting.collections.ListMapperImpl;
+import dev.rico.internal.remoting.*;
+import dev.rico.internal.remoting.communication.converters.Converters;
 import dev.rico.internal.remoting.legacy.communication.Command;
 import dev.rico.internal.remoting.legacy.util.DirectExecutor;
+import dev.rico.internal.remoting.repo.BeanRepository;
+import dev.rico.internal.remoting.repo.ClassRepository;
 import dev.rico.internal.server.remoting.config.RemotingConfiguration;
 import dev.rico.internal.server.remoting.gc.GarbageCollectionCallback;
 import dev.rico.internal.server.remoting.gc.GarbageCollector;
 import dev.rico.internal.server.remoting.gc.Instance;
 import dev.rico.internal.server.remoting.legacy.ServerModelStore;
 import dev.rico.internal.server.remoting.model.ServerBeanBuilderImpl;
-import dev.rico.internal.server.remoting.model.ServerEventDispatcher;
-import dev.rico.internal.server.remoting.model.ServerPresentationModelBuilderFactory;
 import dev.rico.remoting.BeanManager;
 
 import java.util.ArrayList;
@@ -61,13 +52,13 @@ public abstract class AbstractRemotingTest {
     }
 
     protected BeanRepository createBeanRepository(ServerModelStore serverModelStore, EventDispatcher dispatcher) {
-        return new BeanRepositoryImpl(serverModelStore, dispatcher);
+        return new BeanRepository(serverModelStore, dispatcher);
     }
 
     protected BeanManager createBeanManager(ServerModelStore serverModelStore, BeanRepository beanRepository, EventDispatcher dispatcher) {
         final Converters converters = new Converters(beanRepository);
         final PresentationModelBuilderFactory builderFactory = new ServerPresentationModelBuilderFactory(serverModelStore);
-        final ClassRepository classRepository = new ClassRepositoryImpl(serverModelStore, converters, builderFactory);
+        final ClassRepository classRepository = new ClassRepository(serverModelStore, converters, builderFactory);
         final ListMapper listMapper = new ListMapperImpl(serverModelStore, classRepository, beanRepository, builderFactory, dispatcher);
         final RemotingConfiguration configurationForGc = new RemotingConfiguration();
         final GarbageCollector garbageCollector = new GarbageCollector(configurationForGc, new GarbageCollectionCallback() {
@@ -76,17 +67,17 @@ public abstract class AbstractRemotingTest {
 
             }
         });
-        final BeanBuilder beanBuilder = new ServerBeanBuilderImpl(classRepository, beanRepository, listMapper, builderFactory, dispatcher, garbageCollector);
+        final AbstractBeanBuilder beanBuilder = new ServerBeanBuilderImpl(classRepository, beanRepository, listMapper, builderFactory, dispatcher, garbageCollector);
         return new BeanManagerImpl(beanRepository, beanBuilder);
     }
 
 
     protected BeanManager createBeanManager(ServerModelStore serverModelStore) {
         final EventDispatcher dispatcher = new ServerEventDispatcher(serverModelStore);
-        final BeanRepositoryImpl beanRepository = new BeanRepositoryImpl(serverModelStore, dispatcher);
+        final BeanRepository beanRepository = new BeanRepository(serverModelStore, dispatcher);
         final Converters converters = new Converters(beanRepository);
         final PresentationModelBuilderFactory builderFactory = new ServerPresentationModelBuilderFactory(serverModelStore);
-        final ClassRepository classRepository = new ClassRepositoryImpl(serverModelStore, converters, builderFactory);
+        final ClassRepository classRepository = new ClassRepository(serverModelStore, converters, builderFactory);
         final ListMapper listMapper = new ListMapperImpl(serverModelStore, classRepository, beanRepository, builderFactory, dispatcher);
         final RemotingConfiguration configurationForGc = new RemotingConfiguration();
         final GarbageCollector garbageCollector = new GarbageCollector(configurationForGc, new GarbageCollectionCallback() {
@@ -95,7 +86,7 @@ public abstract class AbstractRemotingTest {
 
             }
         });
-        final BeanBuilder beanBuilder = new ServerBeanBuilderImpl(classRepository, beanRepository, listMapper, builderFactory, dispatcher, garbageCollector);
+        final AbstractBeanBuilder beanBuilder = new ServerBeanBuilderImpl(classRepository, beanRepository, listMapper, builderFactory, dispatcher, garbageCollector);
         return new BeanManagerImpl(beanRepository, beanBuilder);
     }
 }

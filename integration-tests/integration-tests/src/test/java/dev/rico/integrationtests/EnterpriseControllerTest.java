@@ -39,7 +39,7 @@ public class EnterpriseControllerTest extends AbstractIntegrationTest {
             destroy(controller, endpoint);
             disconnect(context, endpoint);
         } catch (Exception e) {
-            Assert.fail("Can not create controller for " + containerType, e);
+            Assert.fail("Can not createList controller for " + containerType, e);
         }
     }
 
@@ -52,7 +52,7 @@ public class EnterpriseControllerTest extends AbstractIntegrationTest {
             destroy(controller, endpoint);
             disconnect(context, endpoint);
         } catch (Exception e) {
-            Assert.fail("Can not create controller for " + containerType, e);
+            Assert.fail("Can not createList controller for " + containerType, e);
         }
     }
 
@@ -67,7 +67,7 @@ public class EnterpriseControllerTest extends AbstractIntegrationTest {
             Assert.assertTrue(preDestroyProperty.get());
             disconnect(context, endpoint);
         } catch (Exception e) {
-            Assert.fail("Can not create controller for " + containerType, e);
+            Assert.fail("Can not createList controller for " + containerType, e);
         }
     }
 }

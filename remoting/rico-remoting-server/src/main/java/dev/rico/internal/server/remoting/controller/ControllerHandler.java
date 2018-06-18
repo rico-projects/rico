@@ -19,12 +19,12 @@ package dev.rico.internal.server.remoting.controller;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.ReflectionHelper;
 import dev.rico.internal.core.context.ContextManagerImpl;
-import dev.rico.internal.remoting.BeanRepository;
-import dev.rico.internal.remoting.Converters;
+import dev.rico.internal.remoting.repo.BeanRepository;
+import dev.rico.internal.remoting.communication.converters.Converters;
 import dev.rico.internal.server.beans.PostConstructInterceptor;
 import dev.rico.internal.server.remoting.error.ActionErrorHandler;
-import dev.rico.internal.server.remoting.model.ServerBeanBuilder;
 import dev.rico.core.functional.Subscription;
+import dev.rico.internal.server.remoting.model.ServerBeanBuilderImpl;
 import dev.rico.server.remoting.Param;
 import dev.rico.server.remoting.ParentController;
 import dev.rico.server.remoting.PostChildCreated;
@@ -57,7 +57,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 /**
  * This class wraps the complete controller handling.
- * It defines the methods to create or destroy controllers and to interact with them.
+ * It defines the methods to createList or destroy controllers and to interact with them.
  */
 @API(since = "0.x", status = INTERNAL)
 public class ControllerHandler {
@@ -76,7 +76,7 @@ public class ControllerHandler {
 
     private final ManagedBeanFactory beanFactory;
 
-    private final ServerBeanBuilder beanBuilder;
+    private final ServerBeanBuilderImpl beanBuilder;
 
     private final ControllerRepository controllerRepository;
 
@@ -86,7 +86,7 @@ public class ControllerHandler {
 
     private final ActionErrorHandler actionErrorHandler;
 
-    public ControllerHandler(final ManagedBeanFactory beanFactory, final ServerBeanBuilder beanBuilder, final BeanRepository beanRepository, final ControllerRepository controllerRepository, final Converters converters) {
+    public ControllerHandler(final ManagedBeanFactory beanFactory, final ServerBeanBuilderImpl beanBuilder, final BeanRepository beanRepository, final ControllerRepository controllerRepository, final Converters converters) {
         this.beanFactory = Assert.requireNonNull(beanFactory, "beanFactory");
         this.beanBuilder = Assert.requireNonNull(beanBuilder, "beanBuilder");
         this.controllerRepository = Assert.requireNonNull(controllerRepository, "controllerRepository");

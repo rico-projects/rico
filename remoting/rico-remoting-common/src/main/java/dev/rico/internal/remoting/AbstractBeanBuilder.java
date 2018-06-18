@@ -17,13 +17,16 @@
 package dev.rico.internal.remoting;
 
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.remoting.info.ClassInfo;
-import dev.rico.internal.remoting.info.PropertyInfo;
-import dev.rico.internal.remoting.legacy.core.Attribute;
-import dev.rico.internal.remoting.legacy.core.PresentationModel;
+import dev.rico.internal.remoting.collections.ObservableArrayList;
+import dev.rico.internal.remoting.repo.BeanRepository;
+import dev.rico.internal.remoting.repo.ClassInfo;
+import dev.rico.internal.remoting.repo.ClassRepository;
+import dev.rico.internal.remoting.repo.PropertyInfo;
 import dev.rico.remoting.ObservableList;
 import dev.rico.remoting.Property;
 import org.apiguardian.api.API;
+
+import java.util.UUID;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
@@ -33,113 +36,79 @@ import static org.apiguardian.api.API.Status.INTERNAL;
  * (and only public) method is {@link #create(Class)}, which expects the {@code Class} of the remoting Bean and
  * returns the generated Bean.
  * <p>
- * The generated remoting Bean will be registered in the {@link BeanRepositoryImpl}.
+ * The generated remoting Bean will be registered in the {@link BeanRepository}.
  */
 @API(since = "0.x", status = INTERNAL)
-public abstract class AbstractBeanBuilder implements BeanBuilder {
+public abstract class AbstractBeanBuilder {
 
     private final ClassRepository classRepository;
-    private final BeanRepository beanRepository;
-    private final ListMapper listMapper;
-    private final PresentationModelBuilderFactory builderFactory;
 
-    public AbstractBeanBuilder(final ClassRepository classRepository, final BeanRepository beanRepository, final ListMapper listMapper, final PresentationModelBuilderFactory builderFactory, final EventDispatcher dispatcher) {
+    private final BeanRepository beanRepository;
+
+    public AbstractBeanBuilder(final ClassRepository classRepository, final BeanRepository beanRepository) {
         this.classRepository = Assert.requireNonNull(classRepository, "classRepository");
         this.beanRepository = Assert.requireNonNull(beanRepository, "beanRepository");
-        this.listMapper = listMapper;
-        this.builderFactory = Assert.requireNonNull(builderFactory, "builderFactory");
-
-        dispatcher.addAddedHandler(new RemotingEventHandler() {
-            @Override
-            public void onEvent(final PresentationModel model) {
-                Assert.requireNonNull(model, "model");
-                final ClassInfo classInfo = classRepository.getClassInfo(model.getPresentationModelType());
-
-                Assert.requireNonNull(classInfo, "classInfo");
-                final Class<?> beanClass = classInfo.getBeanClass();
-
-                createInstanceForClass(classInfo, beanClass, model, UpdateSource.OTHER);
-            }
-        });
     }
 
     public <T> T create(final Class<T> beanClass) {
-        final ClassInfo classInfo = classRepository.getOrCreateClassInfo(beanClass);
-        final PresentationModel model = buildPresentationModel(classInfo);
-
-        return createInstanceForClass(classInfo, beanClass, model, UpdateSource.SELF);
+        final String instanceId = getIdPrefix() + UUID.randomUUID().toString();
+        return createInstanceForClass(beanClass, instanceId, UpdateSource.SELF);
     }
 
-    private <T> T createInstanceForClass(final ClassInfo classInfo, final Class<T> beanClass, final PresentationModel model, final UpdateSource source) {
+    public <T> T createInstanceForClass(final Class<T> beanClass, final String id, final UpdateSource source) {
         Assert.requireNonNull(beanClass, "beanClass");
+        final ClassInfo classInfo = classRepository.getOrCreateClassInfo(beanClass);
         try {
             final T bean = beanClass.newInstance();
 
-            setupProperties(classInfo, bean, model);
-            setupObservableLists(classInfo, bean, model);
+            setupProperties(classInfo, bean, id);
+            setupObservableLists(classInfo, bean, id);
 
-            beanRepository.registerBean(bean, model, source);
+            beanRepository.registerBean(id, bean, source);
             return bean;
 
         } catch (Exception e) {
-            throw new RuntimeException("Cannot create bean of type " + beanClass, e);
+            throw new RuntimeException("Cannot createList bean of type " + beanClass, e);
         }
     }
 
-    private PresentationModel buildPresentationModel(final ClassInfo classInfo) {
-        try {
-            Assert.requireNonNull(classInfo, "classInfo");
-            final PresentationModelBuilder builder = builderFactory.createBuilder()
-                    .withType(classInfo.getModelType());
-            classInfo.forEachProperty(new ClassInfo.PropertyIterator() {
-                @Override
-                public void call(final PropertyInfo propertyInfo) {
-                    Assert.requireNonNull(propertyInfo, "propertyInfo");
-                    builder.withAttribute(propertyInfo.getAttributeName());
-                }
-            });
-            return builder.create();
-        } catch (Exception e) {
-            throw new RuntimeException("Cannot create presentation model for type " + classInfo.getBeanClass(), e);
-        }
-    }
-
-    private void setupProperties(final ClassInfo classInfo, final Object bean, final PresentationModel model) {
+    private void setupProperties(final ClassInfo classInfo, final Object bean, final String beanId) {
         Assert.requireNonNull(classInfo, "classInfo");
-        Assert.requireNonNull(model, "model");
-        classInfo.forEachProperty(new ClassInfo.PropertyIterator() {
-            @Override
-            public void call(final PropertyInfo propertyInfo) {
-                try {
-                    Assert.requireNonNull(propertyInfo, "propertyInfo");
-                    final Attribute attribute = model.getAttribute(propertyInfo.getAttributeName());
-                    final Property property = create(attribute, propertyInfo);
-                    propertyInfo.setPriviliged(bean, property);
-                } catch (Exception e) {
-                    throw new RuntimeException("Can not create property " + propertyInfo.getAttributeName(), e);
-                }
+        classInfo.forEachProperty(propertyInfo -> {
+            try {
+                Assert.requireNonNull(propertyInfo, "propertyInfo");
+                final Property property = createProperty(beanId, propertyInfo);
+                propertyInfo.setPriviliged(bean, property);
+            } catch (Exception e) {
+                throw new RuntimeException("Can not createList property " + propertyInfo.getAttributeName(), e);
             }
         });
     }
 
-    private void setupObservableLists(final ClassInfo classInfo, final Object bean, final PresentationModel model) {
+    private void setupObservableLists(final ClassInfo classInfo, final Object bean, final String beanId) {
         Assert.requireNonNull(classInfo, "classInfo");
-        classInfo.forEachObservableList(new ClassInfo.PropertyIterator() {
-            @Override
-            public void call(final PropertyInfo observableListInfo) {
-                try {
-                    Assert.requireNonNull(observableListInfo, "observableListInfo");
-                    final ObservableList observableList = create(observableListInfo, model, listMapper);
-                    observableListInfo.setPriviliged(bean, observableList);
-                } catch (Exception e) {
-                    throw new RuntimeException("Can not create observable list " + observableListInfo.getAttributeName(), e);
-                }
+        classInfo.forEachObservableList(observableListInfo -> {
+            try {
+                Assert.requireNonNull(observableListInfo, "observableListInfo");
+                final ObservableList observableList = createList(beanId, observableListInfo);
+                observableListInfo.setPriviliged(bean, observableList);
+            } catch (Exception e) {
+                throw new RuntimeException("Can not createList observable list " + observableListInfo.getAttributeName(), e);
             }
         });
     }
 
-    protected abstract <T> ObservableList<T> create(final PropertyInfo observableListInfo, final PresentationModel model, final ListMapper listMapper);
+    protected ObservableArrayList createList(final String beanId, final PropertyInfo observableListInfo) {
+        ObservableArrayList list = new ObservableArrayList();
+        //TODO: Define Listener to create & send sync commands
+        return list;
+    }
 
+    protected PropertyImpl createProperty(final String beanId, final PropertyInfo propertyInfo) {
+        PropertyImpl property = new PropertyImpl<>();
+        //TODO: Define Listener to create & send sync commands
+        return property;
+    }
 
-    protected abstract <T> Property<T> create(final Attribute attribute, final PropertyInfo propertyInfo);
+    protected abstract String getIdPrefix();
 }
