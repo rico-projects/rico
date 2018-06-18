@@ -42,7 +42,7 @@ public final class BeanCreatedCommand implements Command {
         return lists;
     }
 
-    public class CreatedPropertyInfo {
+    public static class CreatedPropertyInfo {
 
         private String propertyId;
 

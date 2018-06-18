@@ -2,6 +2,7 @@ package dev.rico.internal.remoting.communication.handler;
 
 import dev.rico.internal.remoting.collections.ObservableArrayList;
 import dev.rico.internal.remoting.communication.commands.ListSpliceCommand;
+import dev.rico.internal.remoting.repo.BeanRepository;
 import dev.rico.internal.remoting.repo.ClassInfo;
 import dev.rico.internal.remoting.repo.PropertyInfo;
 
@@ -10,10 +11,16 @@ import java.util.List;
 
 public class OnListSpliceCommand implements CommandHandler<ListSpliceCommand> {
 
+    private final BeanRepository beanRepository;
+
+    public OnListSpliceCommand(BeanRepository beanRepository) {
+        this.beanRepository = beanRepository;
+    }
+
     @Override
     public void onCommand(ListSpliceCommand command) throws Exception {
         final String beanId = command.getBeanId();
-        final Object bean = null; //TODO
+        final Object bean = beanRepository.getBean(beanId);
         final ClassInfo classInfo = null; //TODO
         final PropertyInfo observableListInfo = classInfo.getPropertyInfo(command.getListName());
         final ObservableArrayList list = (ObservableArrayList) observableListInfo.getPrivileged(bean);

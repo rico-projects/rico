@@ -18,7 +18,6 @@ package dev.rico.remoting.impl;
 
 import dev.rico.internal.remoting.RemotingUtils;
 import dev.rico.internal.remoting.collections.ObservableArrayList;
-import dev.rico.internal.remoting.MockedProperty;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

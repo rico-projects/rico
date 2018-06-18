@@ -18,6 +18,8 @@ package dev.rico.internal.remoting;
 
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.remoting.collections.ObservableArrayList;
+import dev.rico.internal.remoting.communication.commands.Command;
+import dev.rico.internal.remoting.communication.commands.ValueChangedCommand;
 import dev.rico.internal.remoting.repo.BeanRepository;
 import dev.rico.internal.remoting.repo.ClassInfo;
 import dev.rico.internal.remoting.repo.ClassRepository;
@@ -27,6 +29,7 @@ import dev.rico.remoting.Property;
 import org.apiguardian.api.API;
 
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
@@ -38,9 +41,12 @@ public class BeanBuilder {
 
     private final BeanRepository beanRepository;
 
-    public BeanBuilder(final ClassRepository classRepository, final BeanRepository beanRepository) {
+    private final Consumer<Command> commandHandler;
+
+    public BeanBuilder(final ClassRepository classRepository, final BeanRepository beanRepository, final Consumer<Command> commandHandler) {
         this.classRepository = Assert.requireNonNull(classRepository, "classRepository");
         this.beanRepository = Assert.requireNonNull(beanRepository, "beanRepository");
+        this.commandHandler = Assert.requireNonNull(commandHandler, "commandHandler");
     }
 
     public <T> T createInstanceForClass(final Class<T> beanClass, final String id, final UpdateSource source) {
@@ -92,8 +98,20 @@ public class BeanBuilder {
     }
 
     protected PropertyImpl createProperty(final String beanId, final PropertyInfo propertyInfo) {
-        PropertyImpl property = new PropertyImpl<>();
-        //TODO: Define Listener to create & send sync commands
+        Assert.requireNonBlank(beanId, "beanId");
+        Assert.requireNonNull(propertyInfo, "propertyInfo");
+        PropertyImpl property = new PropertyImpl() {
+            @Override
+            public void set(Object value) {
+                super.set(value);
+
+                final ValueChangedCommand changedCommand = new ValueChangedCommand();
+                changedCommand.setBeanId(beanId);
+                changedCommand.setNewValue(value);
+                changedCommand.setPropertyName(propertyInfo.getAttributeName());
+                commandHandler.accept(changedCommand);
+            }
+        };
         return property;
     }
 
