@@ -18,7 +18,6 @@ package dev.rico.internal.server.remoting.model;
 
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.remoting.UpdateSource;
-import dev.rico.internal.remoting.repo.BeanRepository;
 import dev.rico.internal.server.remoting.gc.GarbageCollector;
 import org.apiguardian.api.API;
 

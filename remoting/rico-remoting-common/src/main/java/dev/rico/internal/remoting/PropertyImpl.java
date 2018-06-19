@@ -50,4 +50,7 @@ public class PropertyImpl<T> extends AbstractProperty<T> {
         internalValue = value;
         firePropertyChanged(oldValue, internalValue);
     }
+
+    public void setWithOutSendCommand(Object newValue) {
+    }
 }

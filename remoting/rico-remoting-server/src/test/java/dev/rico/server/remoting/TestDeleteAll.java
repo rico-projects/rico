@@ -16,7 +16,6 @@
  */
 package dev.rico.server.remoting;
 
-import dev.rico.internal.remoting.repo.BeanRepository;
 import dev.rico.internal.server.remoting.legacy.ServerModelStore;
 import dev.rico.internal.server.remoting.legacy.ServerPresentationModel;
 import dev.rico.server.remoting.util.AbstractRemotingTest;

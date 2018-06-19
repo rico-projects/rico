@@ -21,7 +21,6 @@ import dev.rico.internal.remoting.communication.commands.CreateControllerCommand
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.client.remoting.legacy.ClientModelStore;
 import dev.rico.internal.remoting.communication.converters.Converters;
-import dev.rico.internal.remoting.repo.BeanRepository;
 import org.apiguardian.api.API;
 
 import java.util.concurrent.CompletableFuture;

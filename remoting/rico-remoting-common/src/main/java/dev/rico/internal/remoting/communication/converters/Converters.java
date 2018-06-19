@@ -16,7 +16,8 @@
  */
 package dev.rico.internal.remoting.communication.converters;
 
-import dev.rico.internal.remoting.repo.BeanRepository;
+import dev.rico.internal.remoting.repo.Repository;
+import dev.rico.remoting.converter.BeanRepo;
 import dev.rico.remoting.converter.Converter;
 import dev.rico.remoting.converter.ConverterFactory;
 import dev.rico.internal.core.Assert;
@@ -38,7 +39,7 @@ public class Converters {
 
     private final List<ConverterFactory> converterFactories;
 
-    public Converters(final BeanRepository beanRepository) {
+    public Converters(final BeanRepo beanRepository) {
         converterFactories = new ArrayList<>();
         ServiceLoader<ConverterFactory> loader = ServiceLoader.load(ConverterFactory.class);
         loader.reload();

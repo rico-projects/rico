@@ -22,7 +22,6 @@ import dev.rico.client.remoting.util.SimpleAnnotatedTestModel;
 import dev.rico.client.remoting.util.SimpleTestModel;
 import dev.rico.client.remoting.util.SingleReferenceModel;
 import dev.rico.internal.client.remoting.legacy.ClientModelStore;
-import dev.rico.internal.remoting.repo.BeanRepository;
 import dev.rico.core.functional.Subscription;
 import dev.rico.server.remoting.BeanManager;
 import dev.rico.remoting.ValueChangeEvent;

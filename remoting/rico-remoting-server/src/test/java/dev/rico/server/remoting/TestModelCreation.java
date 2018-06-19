@@ -32,7 +32,6 @@ import dev.rico.internal.remoting.communication.converters.StringConverterFactor
 import dev.rico.internal.remoting.legacy.LegacyConstants;
 import dev.rico.internal.remoting.legacy.core.Attribute;
 import dev.rico.internal.remoting.legacy.core.PresentationModel;
-import dev.rico.internal.remoting.repo.BeanRepository;
 import dev.rico.internal.server.remoting.legacy.ServerAttribute;
 import dev.rico.internal.server.remoting.legacy.ServerModelStore;
 import dev.rico.internal.server.remoting.legacy.ServerPresentationModel;

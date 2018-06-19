@@ -25,7 +25,6 @@ import dev.rico.client.remoting.util.SimpleTestModel;
 import dev.rico.client.remoting.util.SingleReferenceModel;
 import dev.rico.internal.client.remoting.legacy.ClientModelStore;
 import dev.rico.internal.client.remoting.legacy.ClientPresentationModel;
-import dev.rico.internal.remoting.repo.BeanRepository;
 import dev.rico.internal.remoting.legacy.core.Attribute;
 import dev.rico.internal.remoting.legacy.core.PresentationModel;
 import dev.rico.server.remoting.BeanManager;

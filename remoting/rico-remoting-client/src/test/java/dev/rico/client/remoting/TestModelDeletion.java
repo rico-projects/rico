@@ -25,7 +25,6 @@ import dev.rico.client.remoting.util.SingleReferenceModel;
 import dev.rico.internal.client.remoting.legacy.ClientModelStore;
 import dev.rico.internal.client.remoting.legacy.ClientPresentationModel;
 import dev.rico.internal.remoting.BeanDefinitionException;
-import dev.rico.internal.remoting.repo.BeanRepository;
 import dev.rico.server.remoting.BeanManager;
 import mockit.Mocked;
 import org.testng.annotations.Test;

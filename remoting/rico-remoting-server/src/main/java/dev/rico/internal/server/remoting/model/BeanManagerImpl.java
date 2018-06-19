@@ -17,7 +17,7 @@
 package dev.rico.internal.server.remoting.model;
 
 import dev.rico.internal.remoting.RemotingUtils;
-import dev.rico.internal.remoting.repo.BeanRepository;
+import dev.rico.internal.remoting.repo.Repository;
 import dev.rico.server.remoting.BeanManager;
 import dev.rico.internal.core.Assert;
 import org.apiguardian.api.API;
@@ -27,7 +27,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class BeanManagerImpl implements BeanManager {
 
-    protected final BeanRepository beanRepository;
+    protected final Repository repository;
     private final ServerBeanBuilder beanBuilder;
 
     public BeanManagerImpl(final BeanRepository beanRepository, final ServerBeanBuilder beanBuilder) {
@@ -38,6 +38,6 @@ public class BeanManagerImpl implements BeanManager {
     @Override
     public <T> T create(final Class<T> beanClass) {
         RemotingUtils.assertIsRemotingBean(beanClass);
-        return beanBuilder.createSubModel(beanClass);
+        return repository.createSubModel(beanClass);
     }
 }

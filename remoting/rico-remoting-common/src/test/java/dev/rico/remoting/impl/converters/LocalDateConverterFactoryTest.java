@@ -24,7 +24,6 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.TimeZone;
 
-import dev.rico.internal.remoting.repo.BeanRepository;
 import dev.rico.internal.remoting.communication.converters.ValueFieldTypes;
 import org.testng.annotations.Test;
 

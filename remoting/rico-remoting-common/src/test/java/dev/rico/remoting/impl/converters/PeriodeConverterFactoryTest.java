@@ -16,7 +16,6 @@
  */
 package dev.rico.remoting.impl.converters;
 
-import dev.rico.internal.remoting.repo.BeanRepository;
 import dev.rico.remoting.converter.Converter;
 import dev.rico.remoting.converter.ValueConverterException;
 import dev.rico.internal.remoting.communication.converters.Converters;

@@ -19,7 +19,6 @@ package dev.rico.internal.server.remoting.controller;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.ReflectionHelper;
 import dev.rico.internal.core.context.ContextManagerImpl;
-import dev.rico.internal.remoting.repo.BeanRepository;
 import dev.rico.internal.remoting.communication.converters.Converters;
 import dev.rico.internal.server.beans.PostConstructInterceptor;
 import dev.rico.internal.server.remoting.error.ActionErrorHandler;
@@ -156,7 +155,7 @@ public class ControllerHandler {
 
         final Object model = models.remove(id);
         if (model != null) {
-            beanRepository.delete(model);
+            beanBuilder.deleteBean(model);
         }
     }
 

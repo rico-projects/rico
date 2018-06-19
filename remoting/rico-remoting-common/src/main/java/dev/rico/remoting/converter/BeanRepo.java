@@ -41,6 +41,6 @@ public interface BeanRepo {
      * @param bean the bean
      * @return the id
      */
-    String getRemotingId(Object bean);
+    String getBeanId(Object bean);
 
 }

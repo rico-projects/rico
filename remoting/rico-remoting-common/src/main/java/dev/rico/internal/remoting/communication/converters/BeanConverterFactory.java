@@ -81,7 +81,7 @@ public class BeanConverterFactory implements ConverterFactory {
         @Override
         public String convertToRemoting(final Object value) throws ValueConverterException {
             try {
-                return beanRepository.getRemotingId(value);
+                return beanRepository.getBeanId(value);
             } catch (Exception e) {
                 throw new ValueConverterException("Can not convert from remoting bean", e);
             }
