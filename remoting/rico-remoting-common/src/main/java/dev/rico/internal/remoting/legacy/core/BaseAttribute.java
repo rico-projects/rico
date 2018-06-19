@@ -18,6 +18,8 @@ package dev.rico.internal.remoting.legacy.core;
 
 import org.apiguardian.api.API;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 import static org.apiguardian.api.API.Status.DEPRECATED;
 
 /**
@@ -26,7 +28,7 @@ import static org.apiguardian.api.API.Status.DEPRECATED;
 @API(since = "0.x", status = DEPRECATED)
 public abstract class BaseAttribute extends AbstractObservable implements Attribute {
 
-    private static long instanceCount = 0;
+    private static AtomicLong instanceCount = new AtomicLong();
 
     private final String propertyName;
 
@@ -43,7 +45,7 @@ public abstract class BaseAttribute extends AbstractObservable implements Attrib
     }
 
     public BaseAttribute(String propertyName, Object value, String qualifier) {
-        this.id = (instanceCount++) + getOrigin();
+        this.id = instanceCount.incrementAndGet() + getOrigin();
         this.propertyName = propertyName;
         this.value = value;
         this.qualifier = qualifier;
