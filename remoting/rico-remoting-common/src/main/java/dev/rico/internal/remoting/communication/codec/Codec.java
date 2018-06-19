@@ -53,11 +53,11 @@ public final class Codec {
         GSON = new GsonBuilder().serializeNulls().create();
 
         //TODO: add all commands
-        addTranscoder(new CreateContextCommandEncoder());
-        addTranscoder(new CreateControllerCommandEncoder());
-        addTranscoder(new CallActionCommandEncoder());
-        addTranscoder(new DestroyControllerCommandEncoder());
-        addTranscoder(new DestroyContextCommandEncoder());
+        addTranscoder(new CreateContextCommandTranscoder());
+        addTranscoder(new CreateControllerCommandTranscoder());
+        addTranscoder(new CallActionCommandTranscoder());
+        addTranscoder(new DestroyControllerCommandTranscoder());
+        addTranscoder(new DestroyContextCommandTranscoder());
 
     }
 

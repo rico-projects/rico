@@ -24,10 +24,10 @@ import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
-public class DestroyContextCommandEncoder extends AbstractCommandTranscoder<DestroyContextCommand> {
+public class DestroyContextCommandTranscoder extends AbstractCommandTranscoder<DestroyContextCommand> {
 
 
-    public DestroyContextCommandEncoder() {
+    public DestroyContextCommandTranscoder() {
         super(CommandConstants.DESTROY_CONTEXT_COMMAND_ID, DestroyContextCommand.class);
     }
 

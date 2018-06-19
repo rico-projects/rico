@@ -70,10 +70,6 @@ public class ServerRepository extends Repository {
         return property;
     }
 
-    public void onGarbageCollectionRejection(Object bean) {
-        deleteBean(bean);
-    }
-
     @Override
     public <T> void deleteBean(T bean) {
         final String beanId = getBeanId(bean);

@@ -24,9 +24,9 @@ import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
-public class CreateContextCommandEncoder extends AbstractCommandTranscoder<CreateContextCommand> {
+public class CreateContextCommandTranscoder extends AbstractCommandTranscoder<CreateContextCommand> {
 
-    public CreateContextCommandEncoder() {
+    public CreateContextCommandTranscoder() {
         super(CommandConstants.CREATE_CONTEXT_COMMAND_ID, CreateContextCommand.class);
     }
 

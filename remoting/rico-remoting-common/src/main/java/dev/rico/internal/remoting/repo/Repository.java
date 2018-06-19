@@ -229,4 +229,8 @@ public class Repository implements BeanRepo {
     protected Consumer<Command> getCommandHandler() {
         return commandHandler;
     }
+
+    public Converter getConverter(final Class<?> clazz) {
+        return converters.getConverter(clazz);
+    }
 }

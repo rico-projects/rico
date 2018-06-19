@@ -16,6 +16,7 @@
  */
 package dev.rico.remoting.impl.converters;
 
+import dev.rico.internal.remoting.repo.Repository;
 import dev.rico.remoting.converter.Converter;
 import dev.rico.remoting.converter.ValueConverterException;
 import dev.rico.internal.remoting.communication.converters.Converters;
@@ -32,7 +33,7 @@ import static org.testng.Assert.fail;
 public class PeriodeConverterFactoryTest {
 
     @Test
-    public void testFactoryFieldType(@Mocked BeanRepository beanRepository) {
+    public void testFactoryFieldType(@Mocked Repository beanRepository) {
         //Given
         Converters converters = new Converters(beanRepository);
 
@@ -44,7 +45,7 @@ public class PeriodeConverterFactoryTest {
     }
 
     @Test
-    public void testConverterCreation(@Mocked BeanRepository beanRepository) {
+    public void testConverterCreation(@Mocked Repository beanRepository) {
         //Given
         Converters converters = new Converters(beanRepository);
 
@@ -56,7 +57,7 @@ public class PeriodeConverterFactoryTest {
     }
 
     @Test
-    public void testBasicConversions(@Mocked BeanRepository beanRepository) {
+    public void testBasicConversions(@Mocked Repository beanRepository) {
         //Given
         Converters converters = new Converters(beanRepository);
 
@@ -72,7 +73,7 @@ public class PeriodeConverterFactoryTest {
     }
 
     @Test
-    public void testNullValues(@Mocked BeanRepository beanRepository) {
+    public void testNullValues(@Mocked Repository beanRepository) {
         //Given
         Converters converters = new Converters(beanRepository);
 
@@ -89,7 +90,7 @@ public class PeriodeConverterFactoryTest {
     }
 
     @Test(expectedExceptions = ClassCastException.class)
-    public void testWrongValues(@Mocked BeanRepository beanRepository) throws ValueConverterException{
+    public void testWrongValues(@Mocked Repository beanRepository) throws ValueConverterException{
         //Given
         Converters converters = new Converters(beanRepository);
 
@@ -101,7 +102,7 @@ public class PeriodeConverterFactoryTest {
     }
 
     @Test(expectedExceptions = ClassCastException.class)
-    public void testWrongBeanValues(@Mocked BeanRepository beanRepository) throws ValueConverterException{
+    public void testWrongBeanValues(@Mocked Repository beanRepository) throws ValueConverterException{
         //Given
         Converters converters = new Converters(beanRepository);
 

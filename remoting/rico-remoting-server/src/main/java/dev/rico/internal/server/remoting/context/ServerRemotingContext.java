@@ -27,8 +27,7 @@ import dev.rico.internal.server.remoting.controller.ControllerRepository;
 import dev.rico.internal.server.remoting.gc.GarbageCollectionCallback;
 import dev.rico.internal.server.remoting.gc.GarbageCollector;
 import dev.rico.internal.server.remoting.gc.Instance;
-import dev.rico.internal.server.remoting.model.ServerBeanBuilder;
-import dev.rico.internal.server.remoting.model.ServerBeanRepository;
+import dev.rico.internal.server.remoting.model.ServerRepository;
 import dev.rico.internal.server.remoting.servlet.ServerTimingFilter;
 import dev.rico.server.remoting.BeanManager;
 import dev.rico.server.client.ClientSession;
@@ -60,8 +59,6 @@ public class ServerRemotingContext {
 
     private final RemotingConfiguration configuration;
 
-    private final Converters converters;
-
     private final BeanManager beanManager;
 
     private final ControllerHandler controllerHandler;
@@ -78,7 +75,7 @@ public class ServerRemotingContext {
 
     private boolean active = false;
 
-    private final ServerBeanRepository beanRepository;
+    private final ServerRepository beanRepository;
 
     public ServerRemotingContext(final RemotingConfiguration configuration, ClientSession clientSession, ClientSessionProvider clientSessionProvider, ManagedBeanFactory beanFactory, ControllerRepository controllerRepository, Consumer<ServerRemotingContext> onDestroyCallback) {
         this.configuration = Assert.requireNonNull(configuration, "configuration");
@@ -87,13 +84,14 @@ public class ServerRemotingContext {
         this.onDestroyCallback = Assert.requireNonNull(onDestroyCallback, "onDestroyCallback");
         this.clientSession = Assert.requireNonNull(clientSession, "clientSession");
 
+        beanRepository = new ServerRepository(null);
 
         //Init Garbage Collection
         garbageCollector = new GarbageCollector(configuration, new GarbageCollectionCallback() {
             @Override
             public void onReject(Set<Instance> instances) {
                 for (Instance instance : instances) {
-                    beanRepository.onGarbageCollectionRejection(instance.getBean());
+                    beanRepository.deleteBean(instance.getBean());
                 }
             }
         });
@@ -107,18 +105,12 @@ public class ServerRemotingContext {
         };
         taskQueue = new RemotingContextTaskQueue(clientSession.getId(), clientSessionProvider, manager, configuration.getMaxPollTime(), TimeUnit.MILLISECONDS);
 
-        //Init BeanRepository
-        beanRepository = new ServerBeanRepository(garbageCollector);
-        converters = new Converters(beanRepository);
 
-        //Init BeanManager
-        final ClassRepository classRepository = new ClassRepository(converters);
-        final ServerBeanBuilder beanBuilder = new ServerBeanBuilder(classRepository, beanRepository, garbageCollector);
-        beanManager = new BeanManagerImpl(beanRepository, beanBuilder);
+        beanManager = new BeanManagerImpl(beanRepository);
 
 
         //Init ControllerHandler
-        controllerHandler = new ControllerHandler(beanFactory, beanBuilder, beanRepository, controllerRepository, converters);
+        controllerHandler = new ControllerHandler(beanFactory, beanRepository, controllerRepository);
 
         //Register commands
         registerDefaultCommands();

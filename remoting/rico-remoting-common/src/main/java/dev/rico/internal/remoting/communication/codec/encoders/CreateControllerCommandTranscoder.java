@@ -26,9 +26,9 @@ import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
-public class CreateControllerCommandEncoder extends AbstractCommandTranscoder<CreateControllerCommand> {
+public class CreateControllerCommandTranscoder extends AbstractCommandTranscoder<CreateControllerCommand> {
 
-    public CreateControllerCommandEncoder() {
+    public CreateControllerCommandTranscoder() {
         super(CommandConstants.CREATE_CONTROLLER_COMMAND_ID, CreateControllerCommand.class);
     }
 

@@ -27,17 +27,19 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class BeanManagerImpl implements BeanManager {
 
-    protected final Repository repository;
-    private final ServerBeanBuilder beanBuilder;
+    protected final ServerRepository repository;
 
-    public BeanManagerImpl(final BeanRepository beanRepository, final ServerBeanBuilder beanBuilder) {
-        this.beanRepository = Assert.requireNonNull(beanRepository, "beanRepository");
-        this.beanBuilder = Assert.requireNonNull(beanBuilder, "beanBuilder");
+    public BeanManagerImpl(final ServerRepository repository) {
+        this.repository = Assert.requireNonNull(repository, "repository");
     }
 
     @Override
     public <T> T create(final Class<T> beanClass) {
         RemotingUtils.assertIsRemotingBean(beanClass);
-        return repository.createSubModel(beanClass);
+        try {
+            return repository.createSubModel(beanClass);
+        } catch (Exception e) {
+            throw new RuntimeException("Error while creating remoting bean", e);
+        }
     }
 }

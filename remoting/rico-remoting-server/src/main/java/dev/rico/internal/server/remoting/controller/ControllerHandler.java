@@ -23,7 +23,7 @@ import dev.rico.internal.remoting.communication.converters.Converters;
 import dev.rico.internal.server.beans.PostConstructInterceptor;
 import dev.rico.internal.server.remoting.error.ActionErrorHandler;
 import dev.rico.core.functional.Subscription;
-import dev.rico.internal.server.remoting.model.ServerBeanBuilder;
+import dev.rico.internal.server.remoting.model.ServerRepository;
 import dev.rico.server.remoting.Param;
 import dev.rico.server.remoting.ParentController;
 import dev.rico.server.remoting.PostChildCreated;
@@ -75,22 +75,16 @@ public class ControllerHandler {
 
     private final ManagedBeanFactory beanFactory;
 
-    private final ServerBeanBuilder beanBuilder;
-
     private final ControllerRepository controllerRepository;
 
-    private final BeanRepository beanRepository;
-
-    private final Converters converters;
+    private final ServerRepository serverRepository;
 
     private final ActionErrorHandler actionErrorHandler;
 
-    public ControllerHandler(final ManagedBeanFactory beanFactory, final ServerBeanBuilder beanBuilder, final BeanRepository beanRepository, final ControllerRepository controllerRepository, final Converters converters) {
+    public ControllerHandler(final ManagedBeanFactory beanFactory, final ServerRepository serverRepository, final ControllerRepository controllerRepository) {
         this.beanFactory = Assert.requireNonNull(beanFactory, "beanFactory");
-        this.beanBuilder = Assert.requireNonNull(beanBuilder, "beanBuilder");
+        this.serverRepository = Assert.requireNonNull(serverRepository, "serverRepository");
         this.controllerRepository = Assert.requireNonNull(controllerRepository, "controllerRepository");
-        this.beanRepository = Assert.requireNonNull(beanRepository, "beanRepository");
-        this.converters = Assert.requireNonNull(converters, "converters");
         this.actionErrorHandler = new ActionErrorHandler();
     }
 
@@ -110,7 +104,11 @@ public class ControllerHandler {
         final Object instance = beanFactory.createDependentInstance(controllerClass, new PostConstructInterceptor() {
             @Override
             public void intercept(final Object controller) {
-                attachModel(id, controller);
+                try {
+                    attachModel(id, controller);
+                } catch (Exception e) {
+                    throw new RuntimeException("Can not attach model to controller", e);
+                }
                 if(parentControllerId != null) {
                     attachParent(id, controller, parentControllerId);
                 }
@@ -155,7 +153,7 @@ public class ControllerHandler {
 
         final Object model = models.remove(id);
         if (model != null) {
-            beanBuilder.deleteBean(model);
+            serverRepository.deleteBean(model);
         }
     }
 
@@ -193,7 +191,7 @@ public class ControllerHandler {
         }
     }
 
-    private void attachModel(final String controllerId, final Object controller) {
+    private void attachModel(final String controllerId, final Object controller) throws Exception {
         Assert.requireNonNull(controllerId, "controllerId");
         Assert.requireNonNull(controller, "controller");
 
@@ -211,7 +209,7 @@ public class ControllerHandler {
         }
 
         if (modelField != null) {
-            final Object model = beanBuilder.createRootModel(modelField.getType());
+            final Object model = serverRepository.createRootModel(modelField.getType());
             ReflectionHelper.setPrivileged(modelField, controller, model);
             models.put(controllerId, model);
         }
@@ -331,7 +329,7 @@ public class ControllerHandler {
             final Class<?> type = method.getParameters()[i].getType();
             if(value != null) {
                 LOG.trace("Param check of value {} with type {} for param with type {}", value, value.getClass(), type);
-                args.add(converters.getConverter(type).convertFromRemoting(value));
+                args.add(serverRepository.getConverter(type).convertFromRemoting(value));
             } else {
                 if(type.isPrimitive()) {
                     throw new IllegalArgumentException("Can not use 'null' for primitive type of parameter '" + paramName + "'");

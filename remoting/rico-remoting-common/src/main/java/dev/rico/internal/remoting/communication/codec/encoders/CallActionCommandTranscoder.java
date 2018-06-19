@@ -30,9 +30,9 @@ import java.util.Map;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
-public class CallActionCommandEncoder extends AbstractCommandTranscoder<CallActionCommand> {
+public class CallActionCommandTranscoder extends AbstractCommandTranscoder<CallActionCommand> {
 
-    public CallActionCommandEncoder() {
+    public CallActionCommandTranscoder() {
         super(CommandConstants.CALL_ACTION_COMMAND_ID, CallActionCommand.class);
     }
 
