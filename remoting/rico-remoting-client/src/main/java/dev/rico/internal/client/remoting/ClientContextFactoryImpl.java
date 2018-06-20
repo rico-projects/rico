@@ -16,6 +16,8 @@
  */
 package dev.rico.internal.client.remoting;
 
+import dev.rico.client.concurrent.BackgroundExecutor;
+import dev.rico.client.concurrent.UiExecutor;
 import dev.rico.internal.client.remoting.legacy.ClientModelStore;
 import dev.rico.internal.client.remoting.legacy.communication.AbstractClientConnector;
 import dev.rico.client.Client;
@@ -61,8 +63,10 @@ public class ClientContextFactoryImpl implements ClientContextFactory {
         final HttpClient httpClient = Client.getService(HttpClient.class);
         final HttpURLConnectionHandler clientSessionCheckResponseHandler = new StrictClientSessionResponseHandler(endpoint);
         httpClient.addResponseHandler(clientSessionCheckResponseHandler);
+        final UiExecutor uiExecutor = Client.getService(UiExecutor.class);
+        final BackgroundExecutor backgroundExecutor = Client.getService(BackgroundExecutor.class);
         final Function<ClientModelStore, AbstractClientConnector> connectionProvider = s -> {
-            return new HttpClientConnector(endpoint, clientConfiguration, s, OptimizedJsonCodec.getInstance(), e -> {}, httpClient);
+            return new HttpClientConnector(endpoint, uiExecutor, backgroundExecutor, s, OptimizedJsonCodec.getInstance(), e -> {}, httpClient);
         };
 
 

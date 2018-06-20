@@ -16,20 +16,16 @@
  */
 package dev.rico.internal.client;
 
-import dev.rico.internal.core.SimpleThreadFactory;
+import dev.rico.client.ClientConfiguration;
+import dev.rico.core.http.HttpURLConnectionFactory;
+import dev.rico.internal.core.SimpleConfiguration;
 import dev.rico.internal.core.SimpleUncaughtExceptionHandler;
 import dev.rico.internal.core.http.DefaultHttpURLConnectionFactory;
-import dev.rico.client.ClientConfiguration;
-import dev.rico.internal.core.SimpleConfiguration;
-import dev.rico.core.http.HttpURLConnectionFactory;
 import org.apiguardian.api.API;
 
 import java.net.CookieManager;
 import java.net.CookieStore;
 import java.util.Properties;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
@@ -41,7 +37,6 @@ public class DefaultClientConfiguration extends SimpleConfiguration implements C
         setUncaughtExceptionHandler(new SimpleUncaughtExceptionHandler());
         setUiUncaughtExceptionHandler(new SimpleUncaughtExceptionHandler());
 
-        setBackgroundExecutor(Executors.newCachedThreadPool(new SimpleThreadFactory()));
         setCookieStore(new CookieManager().getCookieStore());
         setHttpURLConnectionFactory(new DefaultHttpURLConnectionFactory());
     }
@@ -65,15 +60,6 @@ public class DefaultClientConfiguration extends SimpleConfiguration implements C
         getInternalProperties().put(key, value);
     }
 
-    @Override
-    public Executor getUiExecutor() {
-        return getObjectProperty(ClientConstants.UI_EXECUTOR);
-    }
-
-    @Override
-    public ExecutorService getBackgroundExecutor() {
-        return getObjectProperty(ClientConstants.BACKGROUND_EXECUTOR);
-    }
 
     @Override
     public Thread.UncaughtExceptionHandler getUncaughtExceptionHandler() {
@@ -95,15 +81,6 @@ public class DefaultClientConfiguration extends SimpleConfiguration implements C
         return getObjectProperty(ClientConstants.CONNECTION_FACTORY);
     }
 
-    @Override
-    public void setUiExecutor(final Executor executor) {
-        setObjectProperty(ClientConstants.UI_EXECUTOR, executor);
-    }
-
-    @Override
-    public void setBackgroundExecutor(final ExecutorService service) {
-        setObjectProperty(ClientConstants.BACKGROUND_EXECUTOR, service);
-    }
 
     @Override
     public void setUncaughtExceptionHandler(final Thread.UncaughtExceptionHandler uncaughtExceptionHandler) {

@@ -16,6 +16,8 @@
  */
 package dev.rico.client.remoting.impl;
 
+import dev.rico.client.concurrent.BackgroundExecutor;
+import dev.rico.client.concurrent.UiExecutor;
 import dev.rico.internal.client.remoting.HttpClientConnector;
 import dev.rico.internal.client.remoting.legacy.ClientModelStore;
 import dev.rico.internal.client.remoting.legacy.DefaultModelSynchronizer;
@@ -97,8 +99,11 @@ public class TestHttpClientConnector {
             }
         });
 
+        final UiExecutor uiExecutor = Client.getService(UiExecutor.class);
+        final BackgroundExecutor backgroundExecutor = Client.getService(BackgroundExecutor.class);
+
         final ClientModelStore clientModelStore = new ClientModelStore(new DefaultModelSynchronizer(() -> null));
-        final HttpClientConnector connector = new HttpClientConnector(getDummyURL(), Client.getClientConfiguration(), clientModelStore, new JsonCodec(), new SimpleExceptionHandler(), Client.getService(HttpClient.class));
+        final HttpClientConnector connector = new HttpClientConnector(getDummyURL(), uiExecutor, backgroundExecutor, clientModelStore, new JsonCodec(), new SimpleExceptionHandler(), Client.getService(HttpClient.class));
 
         final CreatePresentationModelCommand command = new CreatePresentationModelCommand();
         command.setPmId("p1");
@@ -143,7 +148,11 @@ public class TestHttpClientConnector {
 
         final ClientModelStore clientModelStore = new ClientModelStore(new DefaultModelSynchronizer(() -> null));
 
-        final HttpClientConnector connector = new HttpClientConnector(getDummyURL(), Client.getClientConfiguration(), clientModelStore, new JsonCodec(), new SimpleExceptionHandler(), new HttpClientImpl(new Gson(), Client.getClientConfiguration()));
+        final UiExecutor uiExecutor = Client.getService(UiExecutor.class);
+        final BackgroundExecutor backgroundExecutor = Client.getService(BackgroundExecutor.class);
+
+
+        final HttpClientConnector connector = new HttpClientConnector(getDummyURL(), uiExecutor, backgroundExecutor, clientModelStore, new JsonCodec(), new SimpleExceptionHandler(), new HttpClientImpl(new Gson(), Client.getClientConfiguration()));
 
         final List<Command> commands = new ArrayList<>();
         commands.add(new CreateContextCommand());

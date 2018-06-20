@@ -16,11 +16,11 @@
  */
 package dev.rico.internal.client.concurrent;
 
-import dev.rico.core.concurrent.TaskResult;
+import dev.rico.core.concurrent.ScheduledTaskResult;
 
 import java.time.LocalDateTime;
 
-public class TaskResultImpl implements TaskResult{
+public class ScheduledTaskResultImpl implements ScheduledTaskResult {
 
     private final LocalDateTime lastScheduledStartTime;
 
@@ -28,7 +28,7 @@ public class TaskResultImpl implements TaskResult{
 
     private final LocalDateTime lastCompletionTime;
 
-    public TaskResultImpl(final LocalDateTime lastScheduledStartTime, final LocalDateTime lastStartTime, final LocalDateTime lastCompletionTime) {
+    public ScheduledTaskResultImpl(final LocalDateTime lastScheduledStartTime, final LocalDateTime lastStartTime, final LocalDateTime lastCompletionTime) {
         this.lastScheduledStartTime = lastScheduledStartTime;
         this.lastStartTime = lastStartTime;
         this.lastCompletionTime = lastCompletionTime;

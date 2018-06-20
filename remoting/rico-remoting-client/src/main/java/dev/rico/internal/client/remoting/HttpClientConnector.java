@@ -16,6 +16,11 @@
  */
 package dev.rico.internal.client.remoting;
 
+import dev.rico.client.concurrent.BackgroundExecutor;
+import dev.rico.client.concurrent.UiExecutor;
+import dev.rico.client.remoting.RemotingExceptionHandler;
+import dev.rico.core.http.HttpClient;
+import dev.rico.core.http.RequestMethod;
 import dev.rico.internal.client.remoting.legacy.ClientModelStore;
 import dev.rico.internal.client.remoting.legacy.communication.AbstractClientConnector;
 import dev.rico.internal.client.remoting.legacy.communication.BlindCommandBatcher;
@@ -24,11 +29,7 @@ import dev.rico.internal.core.http.HttpHeaderConstants;
 import dev.rico.internal.remoting.commands.DestroyContextCommand;
 import dev.rico.internal.remoting.legacy.communication.Codec;
 import dev.rico.internal.remoting.legacy.communication.Command;
-import dev.rico.client.ClientConfiguration;
-import dev.rico.core.http.HttpClient;
-import dev.rico.core.http.RequestMethod;
 import dev.rico.remoting.RemotingException;
-import dev.rico.client.remoting.RemotingExceptionHandler;
 import org.apiguardian.api.API;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,8 +57,8 @@ public class HttpClientConnector extends AbstractClientConnector {
 
     private final AtomicBoolean disconnecting = new AtomicBoolean(false);
 
-    public HttpClientConnector(final URI servletUrl, final ClientConfiguration configuration, final ClientModelStore clientModelStore, final Codec codec, final RemotingExceptionHandler onException, final HttpClient client) {
-        super(clientModelStore, Assert.requireNonNull(configuration, "configuration").getUiExecutor(), new BlindCommandBatcher(), onException, configuration.getBackgroundExecutor());
+    public HttpClientConnector(final URI servletUrl, final UiExecutor uiExecutor, final BackgroundExecutor backgroundExecutor, final ClientModelStore clientModelStore, final Codec codec, final RemotingExceptionHandler onException, final HttpClient client) {
+        super(clientModelStore, uiExecutor, new BlindCommandBatcher(), onException, backgroundExecutor);
         this.servletUrl = Assert.requireNonNull(servletUrl, "servletUrl");
         this.codec = Assert.requireNonNull(codec, "codec");
         this.client = Assert.requireNonNull(client, "client");

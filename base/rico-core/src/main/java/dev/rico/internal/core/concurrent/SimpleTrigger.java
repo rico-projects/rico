@@ -17,7 +17,7 @@
 package dev.rico.internal.core.concurrent;
 
 import dev.rico.internal.core.Assert;
-import dev.rico.core.concurrent.TaskResult;
+import dev.rico.core.concurrent.ScheduledTaskResult;
 import dev.rico.core.concurrent.Trigger;
 
 import java.time.Duration;
@@ -41,9 +41,9 @@ public class SimpleTrigger implements Trigger {
     }
 
     @Override
-    public Optional<LocalDateTime> nextExecutionTime(final TaskResult taskResult) {
+    public Optional<LocalDateTime> nextExecutionTime(final ScheduledTaskResult scheduledTaskResult) {
         if (supplier.get()) {
-            return innerTrigger.nextExecutionTime(taskResult);
+            return innerTrigger.nextExecutionTime(scheduledTaskResult);
         } else {
             return Optional.empty();
         }

@@ -22,18 +22,11 @@ import org.apiguardian.api.API;
 
 import java.net.CookieStore;
 import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
 
-import static dev.rico.internal.core.RicoConstants.RICO;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 @API(since = "0.19.0", status = EXPERIMENTAL)
 public interface ClientConfiguration extends Configuration {
-
-    Executor getUiExecutor();
-
-    ExecutorService getBackgroundExecutor();
 
     Thread.UncaughtExceptionHandler getUncaughtExceptionHandler();
 
@@ -44,10 +37,6 @@ public interface ClientConfiguration extends Configuration {
     HttpURLConnectionFactory getHttpURLConnectionFactory();
 
     void setCookieStore(CookieStore cookieStore);
-
-    void setUiExecutor(Executor executor);
-
-    void setBackgroundExecutor(ExecutorService service);
 
     void setUncaughtExceptionHandler(Thread.UncaughtExceptionHandler uncaughtExceptionHandler);
 
