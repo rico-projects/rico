@@ -63,7 +63,7 @@ public class PropertyImpl<T> extends AbstractProperty<T> {
                        firePropertyChanged(oldValue, newValue);
                     }
                 } catch (final Exception e) {
-                    throw new MappingException("Error in property change handling for property: " + attribute.getPropertyName() + " in attribute with name: " + propertyInfo.getAttributeName() + " and Id: " + attribute.getId(), e);
+                    throw new MappingException("Error in property change handling for property: " + attribute.getPropertyName() + " in attribute with name: " + propertyInfo.getAttributeName() + " and Id: " + attribute.getId() + " - old value: " + evt.getOldValue() +" new value: " + evt.getNewValue() + " current property value: " + get(), e);
                 }
             }
         });

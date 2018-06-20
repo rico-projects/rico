@@ -27,6 +27,7 @@ import org.apiguardian.api.API;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
+import java.util.Objects;
 
 import static org.apiguardian.api.API.Status.DEPRECATED;
 
@@ -45,7 +46,7 @@ public class AttributeChangeListener implements PropertyChangeListener {
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals(Attribute.VALUE_NAME)) {
-            if (evt.getOldValue() == null && evt.getNewValue() == null || evt.getOldValue() != null && evt.getNewValue() != null && evt.getOldValue().equals(evt.getNewValue())) {
+            if (Objects.equals(evt.getOldValue(), evt.getNewValue())) {
                 return;
             }
 
