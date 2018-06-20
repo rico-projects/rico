@@ -64,11 +64,6 @@ include 'integration-tests/integration-server'
 include 'integration-tests/integration-tests-jee'
 include 'integration-tests/integration-tests'
 
-
-include 'sample/sample-common'
-include 'sample/sample-client-javafx'
-include 'sample/sample-server-spring'
-
 rootProject.children.each { project ->
     int slash = project.name.lastIndexOf('/')
     String fileBaseName = project.name[(slash + 1)..-1]
