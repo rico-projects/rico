@@ -14,25 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.internal.remoting.communication.commands;
+package dev.rico.internal.remoting.communication.commands.impl;
 
-import dev.rico.internal.core.Assert;
+import dev.rico.internal.remoting.communication.commands.AbstractCommand;
 import org.apiguardian.api.API;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
-public final class DestroyControllerCommand implements Command {
+public final class CreateContextCommand extends AbstractCommand {
 
-    private String controllerId;
-
-    public String getControllerId() {
-        return controllerId;
+    public CreateContextCommand() {
     }
 
-    public void setControllerId(final String controllerId) {
-        Assert.requireNonBlank(controllerId, "controllerId");
-        this.controllerId = controllerId;
+    public CreateContextCommand(String uniqueIdentifier) {
+        super(uniqueIdentifier);
     }
+
 }
-

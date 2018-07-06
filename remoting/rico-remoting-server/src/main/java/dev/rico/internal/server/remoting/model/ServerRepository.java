@@ -3,9 +3,10 @@ package dev.rico.internal.server.remoting.model;
 import dev.rico.internal.remoting.PropertyImpl;
 import dev.rico.internal.remoting.UpdateSource;
 import dev.rico.internal.remoting.collections.ObservableArrayList;
-import dev.rico.internal.remoting.communication.commands.BeanCreatedCommand;
-import dev.rico.internal.remoting.communication.commands.BeanRemovedCommand;
 import dev.rico.internal.remoting.communication.commands.Command;
+import dev.rico.internal.remoting.communication.commands.impl.CreateBeanCommand;
+import dev.rico.internal.remoting.communication.commands.impl.CreateBeanTypeCommand;
+import dev.rico.internal.remoting.communication.commands.impl.DeleteBeanCommand;
 import dev.rico.internal.remoting.repo.ClassInfo;
 import dev.rico.internal.remoting.repo.PropertyInfo;
 import dev.rico.internal.remoting.repo.Repository;
@@ -31,16 +32,21 @@ public class ServerRepository extends Repository {
     }
 
     private <T> T create(Class<T> beanClass, boolean rootBean) throws Exception {
+        if(!containsClassInfoForClass(beanClass)) {
+            final ClassInfo newClassInfo = ClassInfo.create(beanClass, getConverters());
+            addClassInfo(newClassInfo);
+            CreateBeanTypeCommand command = new CreateBeanTypeCommand();
+            //TODO: fill command based on class info...
+            getCommandHandler().accept(command);
+        }
         final String instanceId = UUID.randomUUID().toString();
-        final ClassInfo classInfo = getOrCreateClassInfo(beanClass);
+        final ClassInfo classInfo = getClassInfo(beanClass);
         final T bean = createBean(classInfo, instanceId, UpdateSource.SELF);
         garbageCollector.onBeanCreated(bean, rootBean);
-
-        BeanCreatedCommand command = new BeanCreatedCommand();
+        CreateBeanCommand command = new CreateBeanCommand();
         command.setBeanId(instanceId);
-        command.setBeanType(bean.getClass().toString());
+        command.setClassId(bean.getClass().toString());
         getCommandHandler().accept(command);
-
         return bean;
     }
 
@@ -71,11 +77,11 @@ public class ServerRepository extends Repository {
     }
 
     @Override
-    public <T> void deleteBean(T bean) {
+    public <T> void deleteBean(T bean) throws Exception {
         final String beanId = getBeanId(bean);
         super.deleteBean(bean);
 
-        BeanRemovedCommand command = new BeanRemovedCommand();
+        DeleteBeanCommand command = new DeleteBeanCommand();
         command.setBeanId(beanId);
         getCommandHandler().accept(command);
     }

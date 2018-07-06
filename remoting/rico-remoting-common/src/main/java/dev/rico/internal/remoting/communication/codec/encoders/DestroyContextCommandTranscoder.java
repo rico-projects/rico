@@ -17,7 +17,7 @@
 package dev.rico.internal.remoting.communication.codec.encoders;
 
 import dev.rico.internal.remoting.communication.commands.CommandConstants;
-import dev.rico.internal.remoting.communication.commands.DestroyContextCommand;
+import dev.rico.internal.remoting.communication.commands.impl.DestroyContextCommand;
 import com.google.gson.JsonObject;
 import org.apiguardian.api.API;
 

@@ -17,7 +17,7 @@
 package dev.rico.internal.client.remoting;
 
 import dev.rico.client.remoting.ControllerProxy;
-import dev.rico.internal.remoting.communication.commands.CreateControllerCommand;
+import dev.rico.internal.remoting.communication.commands.impl.CreateControllerCommand;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.client.remoting.legacy.ClientModelStore;
 import dev.rico.internal.remoting.communication.converters.Converters;

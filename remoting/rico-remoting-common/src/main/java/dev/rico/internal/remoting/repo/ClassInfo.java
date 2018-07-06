@@ -16,30 +16,35 @@
  */
 package dev.rico.internal.remoting.repo;
 
+import dev.rico.internal.core.Assert;
+import dev.rico.internal.core.ReflectionHelper;
 import dev.rico.internal.remoting.RemotingUtils;
+import dev.rico.internal.remoting.communication.converters.Converters;
+import dev.rico.remoting.ObservableList;
+import dev.rico.remoting.Property;
+import dev.rico.remoting.converter.Converter;
 import org.apiguardian.api.API;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.lang.reflect.Field;
+import java.util.*;
 import java.util.function.Consumer;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
 public class ClassInfo {
+
     private final Class<?> beanClass;
 
-    private final String modelType;
+    private final String id;
 
     private final Map<String, PropertyInfo> propertyInfoMap;
 
     private final Map<String, PropertyInfo> observableListInfoMap;
 
-    public ClassInfo(final Class<?> beanClass, final Collection<PropertyInfo> propertyInfos, final Collection<PropertyInfo> observableListInfos) {
+    public ClassInfo(final String id, final Class<?> beanClass, final Collection<PropertyInfo> propertyInfos, final Collection<PropertyInfo> observableListInfos) {
         this.beanClass = beanClass;
-        modelType = RemotingUtils.getPresentationModelTypeForClass(beanClass);
+        this.id = id;
 
         final Map<String, PropertyInfo> localPropertyInfoMap = new HashMap<>();
         for (final PropertyInfo propertyInfo : propertyInfos) {
@@ -58,8 +63,8 @@ public class ClassInfo {
         return beanClass;
     }
 
-    public String getModelType() {
-        return modelType;
+    public String getId() {
+        return id;
     }
 
     public PropertyInfo getPropertyInfo(final String attributeName) {
@@ -80,5 +85,36 @@ public class ClassInfo {
         for (final PropertyInfo observableListInfo : observableListInfoMap.values()) {
             propertyInfoConsumer.accept(observableListInfo);
         }
+    }
+
+    public static ClassInfo create(final String id, final Class<?> beanClass, final Converters converters) {
+        Assert.requireNonNull(converters, "converters");
+
+        final List<PropertyInfo> propertyInfos = new ArrayList<>();
+        final List<PropertyInfo> observableListInfos = new ArrayList<>();
+
+        for (Field field : ReflectionHelper.getInheritedDeclaredFields(beanClass)) {
+            PropertyType type = null;
+            if (Property.class.isAssignableFrom(field.getType())) {
+                type = PropertyType.PROPERTY;
+            } else if (ObservableList.class.isAssignableFrom(field.getType())) {
+                type = PropertyType.OBSERVABLE_LIST;
+            }
+            final Class<?> parameterType = ReflectionHelper.getTypeParameter(field);
+            if (type != null && parameterType != null) {
+                final Converter converter = converters.getConverter(parameterType);
+                final PropertyInfo propertyInfo = new PropertyInfo(converter, field);
+                if (type == PropertyType.PROPERTY) {
+                    propertyInfos.add(propertyInfo);
+                } else {
+                    observableListInfos.add(propertyInfo);
+                }
+            }
+        }
+        return new ClassInfo(id, beanClass, propertyInfos, observableListInfos);
+    }
+
+    public static ClassInfo create(final Class<?> beanClass, final Converters converters) {
+        return create(RemotingUtils.getPresentationModelTypeForClass(beanClass), beanClass, converters);
     }
 }

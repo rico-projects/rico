@@ -12,7 +12,7 @@ public interface CommandConstants {
     String VALUE_CHANGED_COMMAND_ID = "V";
     String LIST_SPLICE_COMMAND_ID = "S";
 
-    String COMMAND_ID_ATTRIBUTE = "i";
+    String COMMAND_TYPE_ATTRIBUTE = "t";
     String NAME_ATTRIBUTE = "n";
     String VALUE_ATTRIBUTE = "v";
     String PARAMS_ATTRIBUTE = "p";

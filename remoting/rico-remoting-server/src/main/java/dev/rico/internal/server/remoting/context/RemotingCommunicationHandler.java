@@ -19,7 +19,7 @@ package dev.rico.internal.server.remoting.context;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.remoting.communication.codec.Codec;
 import dev.rico.internal.remoting.communication.commands.Command;
-import dev.rico.internal.remoting.communication.commands.CreateContextCommand;
+import dev.rico.internal.remoting.communication.commands.impl.CreateContextCommand;
 import dev.rico.internal.server.client.ClientSessionProvider;
 import dev.rico.server.client.ClientSession;
 import org.apiguardian.api.API;

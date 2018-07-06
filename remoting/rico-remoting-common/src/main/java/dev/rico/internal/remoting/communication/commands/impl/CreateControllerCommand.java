@@ -14,19 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.internal.remoting.communication.commands;
+package dev.rico.internal.remoting.communication.commands.impl;
 
 import dev.rico.internal.core.Assert;
+import dev.rico.internal.remoting.communication.commands.AbstractCommand;
 import org.apiguardian.api.API;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
-public final class CreateControllerCommand implements Command {
+public final class CreateControllerCommand extends AbstractCommand {
 
     private String parentControllerId;
 
     private String controllerName;
+
+    private String controllerId;
+
+    private String modelId;
 
     public String getParentControllerId() {
         return parentControllerId;
@@ -43,5 +48,21 @@ public final class CreateControllerCommand implements Command {
     public void setControllerName(final String controllerName) {
         Assert.requireNonBlank(controllerName, "controllerName");
         this.controllerName = controllerName;
+    }
+
+    public String getControllerId() {
+        return controllerId;
+    }
+
+    public void setControllerId(final String controllerId) {
+        this.controllerId = Assert.requireNonBlank(controllerId, "controllerId");
+    }
+
+    public String getModelId() {
+        return modelId;
+    }
+
+    public void setModelId(final String modelId) {
+        this.modelId = Assert.requireNonBlank(modelId, "modelId");
     }
 }

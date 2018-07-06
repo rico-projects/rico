@@ -1,9 +1,11 @@
-package dev.rico.internal.remoting.communication.commands;
+package dev.rico.internal.remoting.communication.commands.impl;
+
+import dev.rico.internal.remoting.communication.commands.AbstractCommand;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public final class ListSpliceCommand implements Command {
+public final class ListSpliceCommand extends AbstractCommand {
 
     private String beanId;
 

@@ -14,9 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.internal.remoting.communication.commands;
+package dev.rico.internal.remoting.communication.commands.impl;
 
 import dev.rico.internal.core.Assert;
+import dev.rico.internal.remoting.communication.commands.AbstractCommand;
 import org.apiguardian.api.API;
 
 import java.util.Collections;
@@ -26,7 +27,7 @@ import java.util.Map;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
-public final class CallActionCommand implements Command {
+public final class CallActionCommand extends AbstractCommand {
 
     private String controllerId;
 

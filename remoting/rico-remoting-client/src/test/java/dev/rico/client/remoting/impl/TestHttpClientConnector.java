@@ -24,7 +24,7 @@ import dev.rico.client.Client;
 import dev.rico.internal.client.http.HttpClientImpl;
 import dev.rico.internal.core.http.HttpStatus;
 import dev.rico.internal.core.RicoConstants;
-import dev.rico.internal.remoting.communication.commands.CreateContextCommand;
+import dev.rico.internal.remoting.communication.commands.impl.CreateContextCommand;
 import dev.rico.internal.remoting.legacy.communication.Command;
 import dev.rico.internal.remoting.legacy.communication.CreatePresentationModelCommand;
 import dev.rico.internal.remoting.legacy.communication.JsonCodec;
@@ -89,7 +89,7 @@ public class TestHttpClientConnector {
                     @Override
                     public String getHeaderField(String name) {
                         if (RicoConstants.CLIENT_ID_HTTP_HEADER_NAME.equals(name)) {
-                            return "TEST-COMMAND_ID_ATTRIBUTE";
+                            return "TEST-COMMAND_TYPE_ATTRIBUTE";
                         }
                         return super.getHeaderField(name);
                     }

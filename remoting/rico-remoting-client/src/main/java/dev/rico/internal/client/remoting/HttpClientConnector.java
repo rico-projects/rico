@@ -20,7 +20,7 @@ import dev.rico.internal.client.remoting.legacy.ClientModelStore;
 import dev.rico.internal.client.remoting.legacy.communication.BlindCommandBatcher;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.http.HttpHeaderConstants;
-import dev.rico.internal.remoting.communication.commands.DestroyContextCommand;
+import dev.rico.internal.remoting.communication.commands.impl.DestroyContextCommand;
 import dev.rico.internal.remoting.legacy.communication.Codec;
 import dev.rico.internal.remoting.legacy.communication.Command;
 import dev.rico.client.ClientConfiguration;

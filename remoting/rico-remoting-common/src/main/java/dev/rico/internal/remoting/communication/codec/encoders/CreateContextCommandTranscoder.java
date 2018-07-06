@@ -17,7 +17,7 @@
 package dev.rico.internal.remoting.communication.codec.encoders;
 
 import dev.rico.internal.remoting.communication.commands.CommandConstants;
-import dev.rico.internal.remoting.communication.commands.CreateContextCommand;
+import dev.rico.internal.remoting.communication.commands.impl.CreateContextCommand;
 import com.google.gson.JsonObject;
 import org.apiguardian.api.API;
 

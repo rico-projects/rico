@@ -17,7 +17,7 @@
 package dev.rico.internal.remoting.communication.codec.encoders;
 
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.remoting.communication.commands.CallActionCommand;
+import dev.rico.internal.remoting.communication.commands.impl.CallActionCommand;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

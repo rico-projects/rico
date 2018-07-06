@@ -14,13 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.internal.remoting.communication.commands;
+package dev.rico.internal.remoting.communication.commands.impl;
 
+import dev.rico.internal.remoting.communication.commands.AbstractCommand;
 import org.apiguardian.api.API;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
-public final class DestroyContextCommand implements Command {
+public final class DestroyContextCommand extends AbstractCommand {
 
 }

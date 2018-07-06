@@ -1,6 +1,8 @@
-package dev.rico.internal.remoting.communication.commands;
+package dev.rico.internal.remoting.communication.commands.impl;
 
-public final class ValueChangedCommand implements Command {
+import dev.rico.internal.remoting.communication.commands.AbstractCommand;
+
+public final class ValueChangedCommand extends AbstractCommand {
 
     private String beanId;
 

@@ -18,7 +18,7 @@ package dev.rico.internal.remoting.communication.codec.encoders;
 
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.remoting.communication.commands.CommandConstants;
-import dev.rico.internal.remoting.communication.commands.DestroyControllerCommand;
+import dev.rico.internal.remoting.communication.commands.impl.DestroyControllerCommand;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import org.apiguardian.api.API;

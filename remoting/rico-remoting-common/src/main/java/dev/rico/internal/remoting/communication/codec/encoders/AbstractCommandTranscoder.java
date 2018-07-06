@@ -43,7 +43,7 @@ public abstract class AbstractCommandTranscoder<C extends Command> implements Co
     public JsonObject encode(final C command) {
         Assert.requireNonNull(command, "command");
         final JsonObject jsonCommand = new JsonObject();
-        jsonCommand.addProperty(CommandConstants.COMMAND_ID_ATTRIBUTE, id);
+        jsonCommand.addProperty(CommandConstants.COMMAND_TYPE_ATTRIBUTE, id);
         encode(command, jsonCommand);
         return jsonCommand;
     }
