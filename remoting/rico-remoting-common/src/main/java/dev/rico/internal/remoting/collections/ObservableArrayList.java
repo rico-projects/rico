@@ -62,8 +62,6 @@ public class ObservableArrayList<E> implements ObservableList<E> {
         notifyExternalListeners(event);
     }
 
-
-
     protected void notifyInternalListeners(final ListChangeEvent<E> event) {
 
     }

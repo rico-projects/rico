@@ -27,7 +27,7 @@ public final class CreateContextCommand extends AbstractCommand {
     public CreateContextCommand() {
     }
 
-    public CreateContextCommand(String uniqueIdentifier) {
+    public CreateContextCommand(final String uniqueIdentifier) {
         super(uniqueIdentifier);
     }
 

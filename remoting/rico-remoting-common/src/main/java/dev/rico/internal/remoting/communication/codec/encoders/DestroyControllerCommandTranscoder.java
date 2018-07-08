@@ -17,35 +17,32 @@
 package dev.rico.internal.remoting.communication.codec.encoders;
 
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.remoting.communication.commands.CommandConstants;
+import dev.rico.internal.remoting.communication.codec.CodecConstants;
 import dev.rico.internal.remoting.communication.commands.impl.DestroyControllerCommand;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import org.apiguardian.api.API;
 
+import static dev.rico.internal.remoting.communication.codec.CodecConstants.ID_ATTRIBUTE;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
 public class DestroyControllerCommandTranscoder extends AbstractCommandTranscoder<DestroyControllerCommand> {
 
     public DestroyControllerCommandTranscoder() {
-        super(CommandConstants.DESTROY_CONTROLLER_COMMAND_ID, DestroyControllerCommand.class);
+        super(CodecConstants.DESTROY_CONTROLLER_COMMAND_ID, DestroyControllerCommand.class);
     }
 
     @Override
     protected void encode(DestroyControllerCommand command, JsonObject jsonCommand) {
-        jsonCommand.addProperty(CommandConstants.CONTROLLER_ID_ATTRIBUTE, command.getControllerId());
+        jsonCommand.addProperty(CodecConstants.CONTROLLER_ATTRIBUTE, command.getControllerId());
     }
 
     @Override
     public DestroyControllerCommand decode(final JsonObject jsonObject) {
         Assert.requireNonNull(jsonObject, "jsonObject");
-        try {
-            final DestroyControllerCommand command = new DestroyControllerCommand();
-            command.setControllerId(getStringElement(jsonObject, CommandConstants.CONTROLLER_ID_ATTRIBUTE));
-            return command;
-        } catch (final Exception ex) {
-            throw new JsonParseException("Illegal JSON detected", ex);
-        }
+        final DestroyControllerCommand command = new DestroyControllerCommand(getStringElement(jsonObject, ID_ATTRIBUTE));
+        command.setControllerId(getStringElement(jsonObject, CodecConstants.CONTROLLER_ATTRIBUTE));
+        return command;
     }
 }

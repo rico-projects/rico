@@ -37,10 +37,7 @@ import org.apiguardian.api.API;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -71,11 +68,11 @@ public class ServerRemotingContext {
 
     private final ClientSession clientSession;
 
-    private boolean hasResponseCommands = false;
-
-    private boolean active = false;
-
     private final ServerRepository beanRepository;
+
+    private final Map<Class, CommandHandler> commandHandlers;
+
+    private final Queue<Command> toSendQueue;
 
     public ServerRemotingContext(final RemotingConfiguration configuration, ClientSession clientSession, ClientSessionProvider clientSessionProvider, ManagedBeanFactory beanFactory, ControllerRepository controllerRepository, Consumer<ServerRemotingContext> onDestroyCallback) {
         this.configuration = Assert.requireNonNull(configuration, "configuration");
@@ -84,14 +81,22 @@ public class ServerRemotingContext {
         this.onDestroyCallback = Assert.requireNonNull(onDestroyCallback, "onDestroyCallback");
         this.clientSession = Assert.requireNonNull(clientSession, "clientSession");
 
-        beanRepository = new ServerRepository(null);
+
+        this.commandHandlers = new HashMap<>();
+
+        beanRepository = new ServerRepository(() -> getGarbageCollector(), command -> sendCommand(command));
 
         //Init Garbage Collection
         garbageCollector = new GarbageCollector(configuration, new GarbageCollectionCallback() {
             @Override
             public void onReject(Set<Instance> instances) {
                 for (Instance instance : instances) {
-                    beanRepository.deleteBean(instance.getBean());
+                    try {
+                        beanRepository.deleteBean(instance.getBean());
+                    } catch (Exception e) {
+                        LOG.error("Error in bean garbage collection!", e);
+                        throw new RuntimeException("Error in bean garbage collection!", e);
+                    }
                 }
             }
         });
@@ -99,8 +104,7 @@ public class ServerRemotingContext {
         CommunicationManager manager = new CommunicationManager() {
             @Override
             public boolean hasResponseCommands() {
-                return hasResponseCommands;
-      //          return hasResponseCommands || serverModelStore.hasResponseCommands();
+                return !toSendQueue.isEmpty();
             }
         };
         taskQueue = new RemotingContextTaskQueue(clientSession.getId(), clientSessionProvider, manager, configuration.getMaxPollTime(), TimeUnit.MILLISECONDS);
@@ -112,39 +116,65 @@ public class ServerRemotingContext {
         //Init ControllerHandler
         controllerHandler = new ControllerHandler(beanFactory, beanRepository, controllerRepository);
 
-        //Register commands
-        registerDefaultCommands();
+        toSendQueue = new LinkedList<>();
+
+        registerCommand(CreateContextCommand.class, command -> onInitContext());
+
+        registerCommand(DestroyContextCommand.class, command -> onDestroyContext());
+
+        registerCommand(CreateControllerCommand.class, command -> {
+            Assert.requireNonNull(command, "command");
+            onCreateController(command.getControllerName(), command.getParentControllerId());
+        });
+
+        registerCommand(DestroyControllerCommand.class, command -> {
+            Assert.requireNonNull(command, "command");
+            onDestroyController(command.getControllerId());
+        });
+
+        registerCommand(CallActionCommand.class, command -> {
+            Assert.requireNonNull(command, "command");
+            onCallControllerAction(command.getControllerId(), command.getActionName(), command.getParams());
+        });
+
+        registerCommand(ValueChangedCommand.class, command -> beanRepository.onValueChangedCommand(command));
+
+        registerCommand(ListAddCommand.class, command -> beanRepository.onListAddCommand(command));
+
+        registerCommand(ListReplaceCommand.class, command -> beanRepository.onListReplaceCommand(command));
+
+        registerCommand(ListRemoveCommand.class, command -> beanRepository.onListRemoveCommand(command));
     }
 
-    protected <T extends Command> void registerCommand(final Class<T> commandClass, final Consumer<T> handler) {
+    private void sendCommand(final Command c) {
+        toSendQueue.offer(c);
+    }
+
+    private <T extends Command> void registerCommand(final Class<T> commandClass, final CommandHandler<T> handler) {
         Assert.requireNonNull(commandClass, "commandClass");
         Assert.requireNonNull(handler, "handler");
-//        registry.register(commandClass, new CommandHandler() {
-//            @Override
-//            public void handleCommand(final Command command, final List response) {
-//                LOG.trace("Handling {} for ServerRemotingContext {}", commandClass.getSimpleName(), getId());
-//                handler.accept((T) command);
-//            }
-//        });
+        commandHandlers.put(commandClass, handler);
     }
 
-    private void registerDefaultCommands() {
-        registerCommand(CreateContextCommand.class, (c) -> onInitContext());
-        registerCommand(DestroyContextCommand.class, (c) -> onDestroyContext());
-        registerCommand(CreateControllerCommand.class, (createControllerCommand) -> {
-            Assert.requireNonNull(createControllerCommand, "createControllerCommand");
-            onCreateController(createControllerCommand.getControllerName(), createControllerCommand.getParentControllerId());
-        });
-        registerCommand(DestroyControllerCommand.class, (destroyControllerCommand) -> {
-            Assert.requireNonNull(destroyControllerCommand, "destroyControllerCommand");
-            onDestroyController(destroyControllerCommand.getControllerId());
-        });
-        registerCommand(CallActionCommand.class, (callActionCommand) -> {
-            Assert.requireNonNull(callActionCommand, "callActionCommand");
-            onCallControllerAction(callActionCommand.getControllerId(), callActionCommand.getActionName(), callActionCommand.getParams());
-        });
-        //registerCommand(registry, StartLongPollCommand.class, (c) -> onLongPoll());
-        //registerCommand(registry, InterruptLongPollCommand.class, (c) -> interrupt());
+    public List<Command> handle(final List<Command> commands) {
+        for (final Command command : commands) {
+            final Class<?> commandClass = command.getClass();
+            final CommandHandler handler = commandHandlers.get(commandClass);
+            Assert.requireNonNull(handler, "handler");
+            try {
+                handler.handle(command);
+            } catch (final Exception e) {
+                //TODO:
+            }
+        }
+
+        onLongPoll();
+
+        final List<Command> results = new LinkedList<>();
+        while (!toSendQueue.isEmpty()) {
+            results.add(toSendQueue.poll());
+        }
+        return results;
     }
 
     private void onInitContext() {
@@ -155,25 +185,29 @@ public class ServerRemotingContext {
     }
 
     public void destroy() {
-        controllerHandler.destroyAllControllers();
-
-        onDestroyCallback.accept(this);
+        try {
+            controllerHandler.destroyAllControllers();
+        } catch (Exception e) {
+            LOG.error("Error in destroying remoting context!", e);
+        } finally {
+            onDestroyCallback.accept(this);
+        }
     }
 
     private void onCreateController(final String controllerName, final String parentControllerId) {
         Assert.requireNonBlank(controllerName, "controllerName");
 
-       // final InternalAttributesBean bean = platformBeanRepository.getInternalAttributesBean();
+        // final InternalAttributesBean bean = platformBeanRepository.getInternalAttributesBean();
         final String controllerId = controllerHandler.createController(controllerName, parentControllerId);
 
         //bean.setControllerId(controllerId);
         Object model = controllerHandler.getControllerModel(controllerId);
         if (model != null) {
-          //  bean.setModel(model);
+            //  bean.setModel(model);
         }
     }
 
-    private void onDestroyController(final String controllerId) {
+    private void onDestroyController(final String controllerId) throws Exception {
         Assert.requireNonBlank(controllerId, "controllerId");
         controllerHandler.destroyController(controllerId);
     }
@@ -199,7 +233,7 @@ public class ServerRemotingContext {
         taskQueue.interrupt();
     }
 
-    protected void onLongPoll() {
+    private void onLongPoll() {
         if (configuration.isUseGc()) {
             LOG.trace("Handling GarbageCollection for ServerRemotingContext {}", getId());
             onGarbageCollection();
@@ -227,20 +261,6 @@ public class ServerRemotingContext {
 
     public String getId() {
         return clientSession.getId();
-    }
-
-    public List<Command> handle(final List<Command> commands) {
-        active = true;
-        try {
-            final List<Command> results = new LinkedList<>();
-            for (final Command command : commands) {
-               // results.addAll(serverConnector.receive(command));
-                hasResponseCommands = !results.isEmpty();
-            }
-            return results;
-        } finally {
-            active = false;
-        }
     }
 
     public ClientSession getClientSession() {
@@ -277,7 +297,7 @@ public class ServerRemotingContext {
         return taskQueue.addTask(callable);
     }
 
-    public boolean isActive() {
-        return active;
+    private GarbageCollector getGarbageCollector() {
+        return garbageCollector;
     }
 }

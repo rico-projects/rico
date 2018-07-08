@@ -27,6 +27,7 @@ import org.apiguardian.api.API;
 
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
@@ -41,6 +42,8 @@ public class ClassInfo {
     private final Map<String, PropertyInfo> propertyInfoMap;
 
     private final Map<String, PropertyInfo> observableListInfoMap;
+
+    private static final AtomicLong idCounter = new AtomicLong();
 
     public ClassInfo(final String id, final Class<?> beanClass, final Collection<PropertyInfo> propertyInfos, final Collection<PropertyInfo> observableListInfos) {
         this.beanClass = beanClass;
@@ -115,6 +118,6 @@ public class ClassInfo {
     }
 
     public static ClassInfo create(final Class<?> beanClass, final Converters converters) {
-        return create(RemotingUtils.getPresentationModelTypeForClass(beanClass), beanClass, converters);
+        return create(idCounter.incrementAndGet() + "", beanClass, converters);
     }
 }

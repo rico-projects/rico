@@ -33,6 +33,13 @@ public final class CreateControllerCommand extends AbstractCommand {
 
     private String modelId;
 
+    public CreateControllerCommand() {
+    }
+
+    public CreateControllerCommand(final String uniqueIdentifier) {
+        super(uniqueIdentifier);
+    }
+
     public String getParentControllerId() {
         return parentControllerId;
     }
@@ -46,8 +53,7 @@ public final class CreateControllerCommand extends AbstractCommand {
     }
 
     public void setControllerName(final String controllerName) {
-        Assert.requireNonBlank(controllerName, "controllerName");
-        this.controllerName = controllerName;
+        this.controllerName = Assert.requireNonBlank(controllerName, "controllerName");
     }
 
     public String getControllerId() {

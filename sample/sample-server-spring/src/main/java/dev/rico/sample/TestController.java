@@ -45,7 +45,7 @@ public class TestController {
 
         model.getItems().clear();
 
-        IntStream.range(0,  24 + random.nextInt(24)).forEach(i -> {
+        IntStream.range(0,  2).forEach(i -> {
             final Item item = beanManager.create(Item.class);
             item.setBooleanValue(random.nextBoolean());
             item.setDoubleValue(random.nextDouble());

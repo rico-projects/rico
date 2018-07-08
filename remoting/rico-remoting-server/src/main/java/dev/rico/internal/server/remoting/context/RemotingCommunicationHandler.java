@@ -87,6 +87,12 @@ public class RemotingCommunicationHandler {
         try {
             ServerRemotingContext context = getOrCreateContext(clientSession, commands);
 
+            if(context == null && commands.isEmpty()) {
+                return;
+            } else if(context == null) {
+                throw new IllegalStateException("No context found!");
+            }
+
             final List<Command> results = new ArrayList<>();
             try {
                 results.addAll(handle(context, commands));
@@ -151,7 +157,7 @@ public class RemotingCommunicationHandler {
             add(clientSession, createdContext);
             return createdContext;
         }
-        throw new IllegalStateException("No remoting context is defined and no init command is send.");
+        return null;
     }
 
     private boolean containsInitCommand(final List<Command> commands) {
@@ -163,7 +169,7 @@ public class RemotingCommunicationHandler {
         return false;
     }
 
-    private List<Command> readCommands(final HttpServletRequest request) throws IOException {
+    private List<Command> readCommands(final HttpServletRequest request) throws Exception {
         final List<Command> commands = new ArrayList<>();
         final StringBuilder requestJson = new StringBuilder();
         String line;
@@ -174,7 +180,7 @@ public class RemotingCommunicationHandler {
         return commands;
     }
 
-    private void writeCommands(final List<Command> commands, final HttpServletResponse response) throws IOException {
+    private void writeCommands(final List<Command> commands, final HttpServletResponse response) throws Exception {
         response.setHeader("Content-Type", "application/json");
         response.setCharacterEncoding("UTF-8");
         final String jsonResponse = codec.encode(commands);

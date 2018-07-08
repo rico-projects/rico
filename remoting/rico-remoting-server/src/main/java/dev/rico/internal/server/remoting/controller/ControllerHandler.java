@@ -128,7 +128,7 @@ public class ControllerHandler {
         return id;
     }
 
-    public void destroyController(final String id) {
+    public void destroyController(final String id) throws Exception {
         Assert.requireNonBlank(id, "id");
 
         final List<String> childControllerIds = parentChildRelations.remove(id);
@@ -157,7 +157,7 @@ public class ControllerHandler {
         }
     }
 
-    public void destroyAllControllers() {
+    public void destroyAllControllers() throws Exception {
         final List<String> currentControllerIds = new ArrayList<>(getAllControllerIds());
         for(String id : currentControllerIds) {
             destroyController(id);

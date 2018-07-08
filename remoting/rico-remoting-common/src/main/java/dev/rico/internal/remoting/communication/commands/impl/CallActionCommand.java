@@ -35,6 +35,13 @@ public final class CallActionCommand extends AbstractCommand {
 
     private final Map<String, Object> params = new HashMap<>();
 
+    public CallActionCommand() {
+    }
+
+    public CallActionCommand(final String uniqueIdentifier) {
+        super(uniqueIdentifier);
+    }
+
     public String getControllerId() {
         return controllerId;
     }
@@ -49,8 +56,7 @@ public final class CallActionCommand extends AbstractCommand {
     }
 
     public void setActionName(final String actionName) {
-        Assert.requireNonBlank(actionName, "actionName");
-        this.actionName = actionName;
+        this.actionName = Assert.requireNonBlank(actionName, "actionName");
     }
 
     public Map<String, Object> getParams() {

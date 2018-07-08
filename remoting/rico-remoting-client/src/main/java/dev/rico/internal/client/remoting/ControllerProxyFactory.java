@@ -19,11 +19,10 @@ package dev.rico.internal.client.remoting;
 import dev.rico.client.remoting.ControllerProxy;
 import dev.rico.internal.remoting.communication.commands.impl.CreateControllerCommand;
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.client.remoting.legacy.ClientModelStore;
-import dev.rico.internal.remoting.communication.converters.Converters;
 import org.apiguardian.api.API;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
@@ -31,19 +30,19 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class ControllerProxyFactory {
 
-    private final ClientPlatformBeanRepository platformBeanRepository;
+    private final RemotingCommandHandler commandHandler;
 
-    private final RicoCommandHandler commandHandler;
+    private final ClientRepository repository;
 
-    private final AbstractClientConnector clientConnector;
+    private final AtomicLong controllerIdCounter;
 
-    private final Converters converters;
+    private final AtomicLong modelIdCounter;
 
-    public ControllerProxyFactory(final RicoCommandHandler commandHandler, final AbstractClientConnector clientConnector, final ClientModelStore modelStore, final BeanRepository beanRepository, final EventDispatcher dispatcher, final Converters converters) {
-        this.converters = Assert.requireNonNull(converters, "converters");
-        this.platformBeanRepository = new ClientPlatformBeanRepository(modelStore, beanRepository, dispatcher, converters);
+    public ControllerProxyFactory(final RemotingCommandHandler commandHandler, ClientRepository repository) {
         this.commandHandler = Assert.requireNonNull(commandHandler, "commandHandler");
-        this.clientConnector = Assert.requireNonNull(clientConnector, "clientConnector");
+        this.repository = Assert.requireNonNull(repository, "repository");
+        this.controllerIdCounter = new AtomicLong();
+        this.modelIdCounter = new AtomicLong();
     }
 
     public <T> CompletableFuture<ControllerProxy<T>> create(String name) {
@@ -52,18 +51,21 @@ public class ControllerProxyFactory {
 
     public <T> CompletableFuture<ControllerProxy<T>> create(String name, String parentControllerId) {
         Assert.requireNonBlank(name, "name");
-        final InternalAttributesBean bean = platformBeanRepository.getInternalAttributesBean();
-
+        final String controllerId = controllerIdCounter.incrementAndGet() + "";
+        final String modelId = modelIdCounter.incrementAndGet() + "";
         final CreateControllerCommand createControllerCommand = new CreateControllerCommand();
+        createControllerCommand.setControllerId(controllerId);
+        createControllerCommand.setModelId(modelId);
         createControllerCommand.setControllerName(name);
         if(parentControllerId != null) {
             createControllerCommand.setParentControllerId(parentControllerId);
         }
 
-        return commandHandler.invokeCommand(createControllerCommand).thenApply(new Function<Void, ControllerProxy<T>>() {
+        return commandHandler.sendAndReact(createControllerCommand).thenApply(new Function<Void, ControllerProxy<T>>() {
             @Override
             public ControllerProxy<T> apply(Void aVoid) {
-                return new ControllerProxyImpl<T>(bean.getControllerId(), (T) bean.getModel(), clientConnector, platformBeanRepository, ControllerProxyFactory.this, converters);
+                final T model = (T) repository.getBean(modelId);
+                return new ControllerProxyImpl<T>(controllerId, (T) model, repository, commandHandler,ControllerProxyFactory.this);
             }
         });
     }

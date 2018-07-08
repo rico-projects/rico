@@ -6,7 +6,9 @@ import dev.rico.internal.remoting.RemotingUtils;
 import dev.rico.internal.remoting.UpdateSource;
 import dev.rico.internal.remoting.collections.ObservableArrayList;
 import dev.rico.internal.remoting.communication.commands.Command;
-import dev.rico.internal.remoting.communication.commands.impl.ListSpliceCommand;
+import dev.rico.internal.remoting.communication.commands.impl.ListAddCommand;
+import dev.rico.internal.remoting.communication.commands.impl.ListRemoveCommand;
+import dev.rico.internal.remoting.communication.commands.impl.ListReplaceCommand;
 import dev.rico.internal.remoting.communication.commands.impl.ValueChangedCommand;
 import dev.rico.internal.remoting.communication.converters.Converters;
 import dev.rico.remoting.ListChangeEvent;
@@ -18,6 +20,7 @@ import dev.rico.remoting.converter.ValueConverterException;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class Repository implements BeanRepo {
 
@@ -37,11 +40,6 @@ public class Repository implements BeanRepo {
         this.commandHandler = Assert.requireNonNull(commandHandler, "commandHandler");
         this.converters = new Converters(this);
     }
-
-
-
-
-
 
     protected ClassInfo getClassInfo(final String classId) {
         return classIdToClassInfoMap.get(classId);
@@ -66,12 +64,6 @@ public class Repository implements BeanRepo {
     }
 
 
-
-
-
-
-
-
     public void onValueChangedCommand(final ValueChangedCommand changedCommand) throws ValueConverterException {
         final String beanId = changedCommand.getBeanId();
         final Object bean = getBean(beanId);
@@ -84,33 +76,51 @@ public class Repository implements BeanRepo {
         property.internalSet(newValue);
     }
 
-    public void onListSpliceCommand(final ListSpliceCommand listSpliceCommand) throws ValueConverterException {
-        final String beanId = listSpliceCommand.getBeanId();
+    public void onListAddCommand(final ListAddCommand command) throws ValueConverterException {
+        final String beanId = command.getBeanId();
         final Object bean = getBean(beanId);
         final ClassInfo classInfo = getClassInfo(bean.getClass());
-        final String listName = listSpliceCommand.getListName();
+        final String listName = command.getListName();
         final PropertyInfo listInfo = classInfo.getObservableListInfo(listName);
         final ObservableArrayList list = (ObservableArrayList) listInfo.getPrivileged(bean);
 
-        final int from = listSpliceCommand.getFrom();
-        final int to = listSpliceCommand.getTo();
-        final int count = listSpliceCommand.getCount();
+        final List<Object> newElements = command.getValues()
+                .stream()
+                .map(v -> {
+                    try {
+                        return listInfo.convertFromRemoting(v);
+                    } catch (ValueConverterException e) {
+                       throw new RuntimeException("TODO", e);
+                    }
+                })
+                .collect(Collectors.toList());
 
-        final List<Object> newElements = new ArrayList<Object>(count);
-        for (int i = 0; i < count; i++) {
-            final Object remotingValue = listSpliceCommand.getValues().get(i);
-            final Object value = listInfo.convertFromRemoting(remotingValue);
-            newElements.add(value);
-        }
-
-        list.internalSplice(from, to, newElements);
+        list.addAll(command.getStart(), newElements);
     }
 
+    public void onListRemoveCommand(final ListRemoveCommand command) throws ValueConverterException {
+        final String beanId = command.getBeanId();
+        final Object bean = getBean(beanId);
+        final ClassInfo classInfo = getClassInfo(bean.getClass());
+        final String listName = command.getListName();
+        final PropertyInfo listInfo = classInfo.getObservableListInfo(listName);
+        final ObservableArrayList list = (ObservableArrayList) listInfo.getPrivileged(bean);
+        list.remove(command.getFrom(), command.getTo());
+    }
 
-
-
-
-
+    public void onListReplaceCommand(final ListReplaceCommand command) throws ValueConverterException {
+        final String beanId = command.getBeanId();
+        final Object bean = getBean(beanId);
+        final ClassInfo classInfo = getClassInfo(bean.getClass());
+        final String listName = command.getListName();
+        final PropertyInfo listInfo = classInfo.getObservableListInfo(listName);
+        final ObservableArrayList list = (ObservableArrayList) listInfo.getPrivileged(bean);
+        int index = command.getStart();
+        for(Object value : command.getValues()) {
+            list.set(index, value);
+            index++;
+        }
+    }
 
     public <T> T createBean(final ClassInfo classInfo, final String id, final UpdateSource source) throws Exception {
         Assert.requireNonNull(classInfo, "classInfo");
@@ -133,7 +143,7 @@ public class Repository implements BeanRepo {
     public Object getBean(final String beanId) {
         Assert.requireNonBlank(beanId, "beanId");
         final Object bean = idToBeanMap.get(beanId);
-        if(bean == null) {
+        if (bean == null) {
             throw new IllegalArgumentException("No bean instance found with id " + beanId);
         }
         return bean;
@@ -143,13 +153,11 @@ public class Repository implements BeanRepo {
         Assert.requireNonNull(bean, "bean");
         RemotingUtils.assertIsRemotingBean(bean);
         final String id = beanToIdMap.get(bean);
-        if(id == null) {
+        if (id == null) {
             throw new IllegalArgumentException("Only managed remoting beans can be used.");
         }
         return id;
     }
-
-
 
 
     private void setupProperties(final ClassInfo classInfo, final Object bean, final String beanId) {
@@ -180,23 +188,48 @@ public class Repository implements BeanRepo {
 
     protected ObservableArrayList createList(final String beanId, final PropertyInfo observableListInfo) {
         ObservableArrayList list = new ObservableArrayList();
-        //TODO: Define Listener to create & send sync commands
+        list.onChanged(e -> processListEvent(observableListInfo, beanId, e));
         return list;
     }
 
-    private void processListEvent(final PropertyInfo observableListInfo, final String beanId, final ListChangeEvent<?> event) throws Exception {
+    private void processListEvent(final PropertyInfo observableListInfo, final String beanId, final ListChangeEvent<?> event) {
         for (final ListChangeEvent.Change<?> change : event.getChanges()) {
-            final ListSpliceCommand command = new ListSpliceCommand();
-            command.setBeanId(beanId);
-            command.setListName(observableListInfo.getAttributeName());
-            command.setFrom(change.getFrom());
-            command.setTo(change.getFrom() + change.getRemovedElements().size());
-            final List<?> newElements = event.getSource().subList(change.getFrom(), change.getTo());
-            command.setCount(newElements.size());
-            for (final Object element : newElements) {
-                command.getValues().add(observableListInfo.convertToRemoting(element));
+            if (change.isAdded()) {
+                final ListAddCommand command = new ListAddCommand();
+                command.setBeanId(beanId);
+                command.setListName(observableListInfo.getAttributeName());
+                command.setStart(change.getFrom());
+                final List<?> newElements = event.getSource().subList(change.getFrom(), change.getTo());
+                for (final Object element : newElements) {
+                    try {
+                        command.getValues().add(observableListInfo.convertToRemoting(element));
+                    } catch (Exception e) {
+                        throw new RuntimeException("Can not sync list splice", e);
+                    }
+                }
+                commandHandler.accept(command);
+            } else if (change.isReplaced()) {
+                final ListReplaceCommand command = new ListReplaceCommand();
+                command.setBeanId(beanId);
+                command.setListName(observableListInfo.getAttributeName());
+                command.setStart(change.getFrom());
+                final List<?> newElements = event.getSource().subList(change.getFrom(), change.getTo());
+                for (final Object element : newElements) {
+                    try {
+                        command.getValues().add(observableListInfo.convertToRemoting(element));
+                    } catch (Exception e) {
+                        throw new RuntimeException("Can not sync list splice", e);
+                    }
+                }
+                commandHandler.accept(command);
+            } else if (change.isRemoved()) {
+                final ListRemoveCommand command = new ListRemoveCommand();
+                command.setBeanId(beanId);
+                command.setListName(observableListInfo.getAttributeName());
+                command.setFrom(change.getFrom());
+                command.setTo(change.getRemovedElements().size());
+                commandHandler.accept(command);
             }
-            commandHandler.accept(command);
         }
     }
 
@@ -210,7 +243,14 @@ public class Repository implements BeanRepo {
 
                 final ValueChangedCommand command = new ValueChangedCommand();
                 command.setBeanId(beanId);
-                command.setNewValue(value);
+                if (value != null) {
+                    try {
+                        final Object convertedValue = getConverter(value.getClass()).convertToRemoting(value);
+                        command.setNewValue(convertedValue);
+                    } catch (Exception e) {
+                        throw new RuntimeException("Error in value converter", e);
+                    }
+                }
                 command.setPropertyName(propertyInfo.getAttributeName());
                 commandHandler.accept(command);
             }
@@ -219,28 +259,23 @@ public class Repository implements BeanRepo {
     }
 
 
-
-
-
-
-
-
-
     protected Consumer<Command> getCommandHandler() {
         return commandHandler;
     }
-
-
-
-
-
 
 
     public Converter getConverter(final Class<?> clazz) {
         return converters.getConverter(clazz);
     }
 
-    protected Converters getConverters() {
+    public Converters getConverters() {
         return converters;
+    }
+
+    public void clear() {
+        classToClassInfoMap.clear();
+        classIdToClassInfoMap.clear();
+        beanToIdMap.clear();
+        idToBeanMap.clear();
     }
 }

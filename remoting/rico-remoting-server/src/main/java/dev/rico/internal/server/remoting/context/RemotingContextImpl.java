@@ -82,8 +82,4 @@ public class RemotingContextImpl implements RemotingContext {
         return serverRemotingContext.getClientSession();
     }
 
-    @Override
-    public boolean isActive() {
-        return serverRemotingContext.isActive();
-    }
 }

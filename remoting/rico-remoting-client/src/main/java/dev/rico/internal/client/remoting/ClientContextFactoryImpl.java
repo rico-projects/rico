@@ -16,11 +16,9 @@
  */
 package dev.rico.internal.client.remoting;
 
-import dev.rico.internal.client.remoting.legacy.ClientModelStore;
 import dev.rico.client.Client;
 import dev.rico.internal.client.session.StrictClientSessionResponseHandler;
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.remoting.communication.codec.Codec;
 import dev.rico.client.ClientConfiguration;
 import dev.rico.client.session.ClientSessionStore;
 import dev.rico.core.http.HttpClient;
@@ -32,7 +30,6 @@ import org.apiguardian.api.API;
 
 import java.net.URI;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
@@ -59,13 +56,7 @@ public class ClientContextFactoryImpl implements ClientContextFactory {
         Assert.requireNonNull(clientConfiguration, "clientConfiguration");
         final HttpClient httpClient = Client.getService(HttpClient.class);
         final HttpURLConnectionHandler clientSessionCheckResponseHandler = new StrictClientSessionResponseHandler(endpoint);
-        httpClient.addResponseHandler(clientSessionCheckResponseHandler);
-        final Function<ClientModelStore, AbstractClientConnector> connectionProvider = s -> {
-            return new HttpClientConnector(endpoint, clientConfiguration, s, Codec.getInstance(), e -> {}, httpClient);
-        };
-
-
-        return new ClientContextImpl(clientConfiguration, endpoint, connectionProvider, Client.getService(ClientSessionStore.class));
+        final ClientSessionStore clientSessionStore = Client.getService(ClientSessionStore.class);
+        return new ClientContextImpl(clientConfiguration, endpoint, clientSessionStore);
     }
-
 }

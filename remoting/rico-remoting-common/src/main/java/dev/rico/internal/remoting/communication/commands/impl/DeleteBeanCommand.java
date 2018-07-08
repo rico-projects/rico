@@ -7,6 +7,13 @@ public class DeleteBeanCommand extends AbstractCommand {
 
     private String beanId;
 
+    public DeleteBeanCommand() {
+    }
+
+    public DeleteBeanCommand(final String uniqueIdentifier) {
+        super(uniqueIdentifier);
+    }
+
     public String getBeanId() {
         return beanId;
     }

@@ -14,32 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.internal.remoting.communication.commands.impl;
+package dev.rico.internal.client.remoting;
 
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.remoting.communication.commands.AbstractCommand;
+import dev.rico.internal.remoting.communication.commands.Command;
 import org.apiguardian.api.API;
+
+import java.util.concurrent.CompletableFuture;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
-public final class DestroyControllerCommand extends AbstractCommand {
+public interface RemotingCommandHandler {
 
-    private String controllerId;
+    CompletableFuture<Void> sendAndReact(final Command command);
 
-    public DestroyControllerCommand() {
-    }
-
-    public DestroyControllerCommand(final String uniqueIdentifier) {
-        super(uniqueIdentifier);
-    }
-
-    public String getControllerId() {
-        return controllerId;
-    }
-
-    public void setControllerId(final String controllerId) {
-        this.controllerId = Assert.requireNonBlank(controllerId, "controllerId");
-    }
+    void send(final Command command);
 }
-

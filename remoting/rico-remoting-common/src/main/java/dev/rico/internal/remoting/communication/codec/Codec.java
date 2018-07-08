@@ -23,7 +23,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import dev.rico.internal.remoting.communication.commands.Command;
@@ -31,10 +30,7 @@ import org.apiguardian.api.API;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
@@ -47,41 +43,57 @@ public final class Codec {
 
     private final Gson GSON;
 
-    private final Map<Class<?>, CommandTranscoder<?>> transcoders = new HashMap<>();
+    private final Map<String, CommandTranscoder<?>> transcodersByType = new HashMap<>();
+
+    private final Map<Class<?>, CommandTranscoder<?>> transcodersByClass = new HashMap<>();
 
     private Codec() {
         GSON = new GsonBuilder().serializeNulls().create();
 
-        //TODO: add all commands
+        addTranscoder(new CallActionCommandTranscoder());
+        addTranscoder(new CreateBeanCommandTranscoder());
+        addTranscoder(new CreateBeanTypeCommandTranscoder());
         addTranscoder(new CreateContextCommandTranscoder());
         addTranscoder(new CreateControllerCommandTranscoder());
-        addTranscoder(new CallActionCommandTranscoder());
-        addTranscoder(new DestroyControllerCommandTranscoder());
+        addTranscoder(new DeleteBeanCommandTranscoder());
         addTranscoder(new DestroyContextCommandTranscoder());
-
+        addTranscoder(new DestroyControllerCommandTranscoder());
+        addTranscoder(new ErrorResponseCommandTranscoder());
+        addTranscoder(new InternalErrorCommandTranscoder());
+        addTranscoder(new ListAddCommandTranscoder());
+        addTranscoder(new ListRemoveCommandTranscoder());
+        addTranscoder(new ListReplaceCommandTranscoder());
+        addTranscoder(new ValueChangedCommandTranscoder());
     }
 
     private <C extends Command> void addTranscoder(final AbstractCommandTranscoder<C> transcoder) {
         Assert.requireNonNull(transcoder, "transcoder");
-        final String id = transcoder.getId();
-        if(transcoders.containsKey(id)) {
-            throw new IllegalStateException("Transcoder for " + id + " already defined!");
+
+        final Class<C> commandClass = transcoder.getCommandClass();
+        if(transcodersByClass.containsKey(commandClass)) {
+            throw new IllegalStateException("Transcoder for " + commandClass + " already defined!");
         }
-        transcoders.put(transcoder.getCommandClass(), transcoder);
+        transcodersByClass.put(commandClass, transcoder);
+
+        final String type = transcoder.getType();
+        if(transcodersByType.containsKey(type)) {
+            throw new IllegalStateException("Transcoder for " + type + " already defined!");
+        }
+        transcodersByType.put(type, transcoder);
     }
 
-    public String encode(final List<? extends Command> commands) {
+    public String encode(final List<? extends Command> commands) throws CodecException {
         Assert.requireNonNull(commands, "commands");
         LOG.debug("Encoding command list with {} commands", commands.size());
         final StringBuilder builder = new StringBuilder("[");
         for (final Command command : commands) {
             if (command == null) {
-                throw new IllegalArgumentException("Command list contains a null command: " + command);
+                throw new CodecException("Command list contains a null command: " + command);
             } else {
                 LOG.trace("Encoding command of type {}", command.getClass());
-                final CommandTranscoder encoder = transcoders.get(command.getClass());
+                final CommandTranscoder encoder = transcodersByClass.get(command.getClass());
                 if (encoder == null) {
-                    throw new RuntimeException("No encoder for command type " + command.getClass() + " found");
+                    throw new CodecException("No encoder for command type " + command.getClass() + " found");
                 }
                 final JsonObject jsonObject = encoder.encode(command);
                 GSON.toJson(jsonObject, builder);
@@ -99,23 +111,26 @@ public final class Codec {
         return builder.toString();
     }
 
-    public List<Command> decode(final String transmitted) {
+    public List<Command> decode(final String transmitted) throws CodecException {
         Assert.requireNonNull(transmitted, "transmitted");
         LOG.trace("Decoding message: {}", transmitted);
+        if(transmitted.trim().isEmpty()) {
+            return Collections.emptyList();
+        }
         try {
             final JsonArray array = (JsonArray) new JsonParser().parse(transmitted);
             final List<Command> commands = new ArrayList<>(array.size());
             for (final JsonElement jsonElement : array) {
                 final JsonObject command = (JsonObject) jsonElement;
-                final JsonPrimitive idElement = command.getAsJsonPrimitive("id");
-                if (idElement == null) {
+                final JsonPrimitive typeElement = command.getAsJsonPrimitive(CodecConstants.COMMAND_TYPE_ATTRIBUTE);
+                if (typeElement == null) {
                     throw new RuntimeException("Can not encode command without id!");
                 }
-                String id = idElement.getAsString();
-                LOG.trace("Decoding command: {}", id);
-                final CommandTranscoder<?> encoder = transcoders.get(id);
+                String type = typeElement.getAsString();
+                LOG.trace("Decoding command: {}", type);
+                final CommandTranscoder<?> encoder = transcodersByType.get(type);
                 if (encoder == null) {
-                    throw new RuntimeException("Can not encode command of type " + id + ". No matching encoder found!");
+                    throw new RuntimeException("Can not encode command of type " + type + ". No matching encoder found!");
                 }
                 final Command convertedCommand = encoder.decode(command);
                 Assert.requireNonNull(convertedCommand, "convertedCommand");
@@ -124,7 +139,7 @@ public final class Codec {
             LOG.debug("Decoded command list with {} commands", commands.size());
             return commands;
         } catch (Exception ex) {
-            throw new JsonParseException("Illegal JSON detected", ex);
+            throw new CodecException("Illegal JSON detected", ex);
         }
     }
 

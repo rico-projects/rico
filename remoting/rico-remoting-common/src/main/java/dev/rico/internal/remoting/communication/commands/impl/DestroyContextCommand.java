@@ -24,4 +24,10 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public final class DestroyContextCommand extends AbstractCommand {
 
+    public DestroyContextCommand() {
+    }
+
+    public DestroyContextCommand(final String uniqueIdentifier) {
+        super(uniqueIdentifier);
+    }
 }

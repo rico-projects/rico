@@ -21,53 +21,48 @@ import dev.rico.internal.remoting.communication.commands.impl.CallActionCommand;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import dev.rico.internal.remoting.communication.commands.CommandConstants;
+import dev.rico.internal.remoting.communication.codec.CodecConstants;
 import org.apiguardian.api.API;
 
 import java.util.Map;
 
+import static dev.rico.internal.remoting.communication.codec.CodecConstants.*;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
 public class CallActionCommandTranscoder extends AbstractCommandTranscoder<CallActionCommand> {
 
     public CallActionCommandTranscoder() {
-        super(CommandConstants.CALL_ACTION_COMMAND_ID, CallActionCommand.class);
+        super(CodecConstants.CALL_ACTION_COMMAND_ID, CallActionCommand.class);
     }
 
     @Override
     public void encode(final CallActionCommand command, final JsonObject jsonCommand) {
         Assert.requireNonNull(command, "command");
-        jsonCommand.addProperty(CommandConstants.NAME_ATTRIBUTE, command.getActionName());
+        jsonCommand.addProperty(NAME_ATTRIBUTE, command.getActionName());
 
         final JsonArray paramArray = new JsonArray();
-        for(final Map.Entry<String, Object> paramEntry : command.getParams().entrySet()) {
+        for (final Map.Entry<String, Object> paramEntry : command.getParams().entrySet()) {
             final JsonObject paramObject = new JsonObject();
-            paramObject.addProperty(CommandConstants.NAME_ATTRIBUTE, paramEntry.getKey());
-            paramObject.add(CommandConstants.VALUE_ATTRIBUTE, ValueEncoder.encodeValue(paramEntry.getValue()));
+            paramObject.addProperty(NAME_ATTRIBUTE, paramEntry.getKey());
+            paramObject.add(VALUE_ATTRIBUTE, ValueEncoder.encodeValue(paramEntry.getValue()));
             paramArray.add(paramObject);
         }
-        jsonCommand.add(CommandConstants.PARAMS_ATTRIBUTE, paramArray);
+        jsonCommand.add(PARAMS_ATTRIBUTE, paramArray);
     }
 
     @Override
     public CallActionCommand decode(final JsonObject jsonObject) {
         Assert.requireNonNull(jsonObject, "jsonObject");
-        try {
-            final CallActionCommand command = new CallActionCommand();
-            command.setActionName(getStringElement(jsonObject, CommandConstants.NAME_ATTRIBUTE));
-
-            final JsonArray jsonArray = jsonObject.getAsJsonArray(CommandConstants.PARAMS_ATTRIBUTE);
-            if(jsonArray != null) {
-                for (final JsonElement jsonElement : jsonArray) {
-                    final JsonObject paramObject = jsonElement.getAsJsonObject();
-                    command.addParam(getStringElement(paramObject, CommandConstants.NAME_ATTRIBUTE), ValueEncoder.decodeValue(paramObject.get(CommandConstants.VALUE_ATTRIBUTE)));
-                }
+        final CallActionCommand command = new CallActionCommand(getStringElement(jsonObject, ID_ATTRIBUTE));
+        command.setActionName(getStringElement(jsonObject, NAME_ATTRIBUTE));
+        final JsonArray jsonArray = jsonObject.getAsJsonArray(PARAMS_ATTRIBUTE);
+        if (jsonArray != null) {
+            for (final JsonElement jsonElement : jsonArray) {
+                final JsonObject paramObject = jsonElement.getAsJsonObject();
+                command.addParam(getStringElement(paramObject, NAME_ATTRIBUTE), ValueEncoder.decodeValue(paramObject.get(VALUE_ATTRIBUTE)));
             }
-            return command;
-        } catch (final Exception ex) {
-            throw new JsonParseException("Illegal JSON detected", ex);
         }
+        return command;
     }
 }

@@ -16,23 +16,24 @@
  */
 package dev.rico.internal.remoting.communication.codec.encoders;
 
-import dev.rico.internal.remoting.communication.commands.CommandConstants;
+import dev.rico.internal.remoting.communication.codec.CodecConstants;
 import dev.rico.internal.remoting.communication.commands.impl.CreateContextCommand;
 import com.google.gson.JsonObject;
 import org.apiguardian.api.API;
 
+import static dev.rico.internal.remoting.communication.codec.CodecConstants.ID_ATTRIBUTE;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
 public class CreateContextCommandTranscoder extends AbstractCommandTranscoder<CreateContextCommand> {
 
     public CreateContextCommandTranscoder() {
-        super(CommandConstants.CREATE_CONTEXT_COMMAND_ID, CreateContextCommand.class);
+        super(CodecConstants.CREATE_CONTEXT_COMMAND_ID, CreateContextCommand.class);
     }
 
     @Override
     public CreateContextCommand decode(final JsonObject jsonObject) {
-        return new CreateContextCommand();
+        return new CreateContextCommand(getStringElement(jsonObject, ID_ATTRIBUTE));
     }
 
     @Override

@@ -20,20 +20,21 @@ import dev.rico.internal.core.Assert;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.rico.internal.remoting.communication.commands.Command;
-import dev.rico.internal.remoting.communication.commands.CommandConstants;
+import dev.rico.internal.remoting.communication.codec.CodecConstants;
 import org.apiguardian.api.API;
+import sun.lwawt.macosx.CocoaConstants;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
 public abstract class AbstractCommandTranscoder<C extends Command> implements CommandTranscoder<C> {
 
-    private final String id;
+    private final String type;
 
     private final Class<C> commandClass;
 
-    public AbstractCommandTranscoder(final String id, Class<C> commandClass) {
-        this.id = Assert.requireNonBlank(id, "id");
+    public AbstractCommandTranscoder(final String type, Class<C> commandClass) {
+        this.type = Assert.requireNonBlank(type, "type");
         this.commandClass = Assert.requireNonNull(commandClass, "commandClass");
     }
 
@@ -43,7 +44,8 @@ public abstract class AbstractCommandTranscoder<C extends Command> implements Co
     public JsonObject encode(final C command) {
         Assert.requireNonNull(command, "command");
         final JsonObject jsonCommand = new JsonObject();
-        jsonCommand.addProperty(CommandConstants.COMMAND_TYPE_ATTRIBUTE, id);
+        jsonCommand.addProperty(CodecConstants.COMMAND_TYPE_ATTRIBUTE, type);
+        jsonCommand.addProperty(CodecConstants.ID_ATTRIBUTE, command.getUniqueIdentifier());
         encode(command, jsonCommand);
         return jsonCommand;
     }
@@ -53,7 +55,15 @@ public abstract class AbstractCommandTranscoder<C extends Command> implements Co
     }
 
     protected String getStringElement(final JsonObject jsonObject, final String jsonElementName) {
-        return getElement(jsonObject, jsonElementName).getAsString();
+        final JsonElement element = getElement(jsonObject, jsonElementName);
+        if(element.isJsonNull()) {
+            return null;
+        }
+        return element.getAsString();
+    }
+
+    protected int getIntElement(final JsonObject jsonObject, final String jsonElementName) {
+        return getElement(jsonObject, jsonElementName).getAsInt();
     }
 
     private JsonElement getElement(final JsonObject jsonObject, final String jsonElementName) {
@@ -68,7 +78,7 @@ public abstract class AbstractCommandTranscoder<C extends Command> implements Co
         return commandClass;
     }
 
-    public String getId() {
-        return id;
+    public String getType() {
+        return type;
     }
 }

@@ -17,39 +17,41 @@
 package dev.rico.internal.remoting.communication.codec.encoders;
 
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.remoting.communication.commands.CommandConstants;
+import dev.rico.internal.remoting.communication.codec.CodecConstants;
 import dev.rico.internal.remoting.communication.commands.impl.CreateControllerCommand;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 import org.apiguardian.api.API;
 
+import static dev.rico.internal.remoting.communication.codec.CodecConstants.*;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
 public class CreateControllerCommandTranscoder extends AbstractCommandTranscoder<CreateControllerCommand> {
 
     public CreateControllerCommandTranscoder() {
-        super(CommandConstants.CREATE_CONTROLLER_COMMAND_ID, CreateControllerCommand.class);
+        super(CodecConstants.CREATE_CONTROLLER_COMMAND_ID, CreateControllerCommand.class);
     }
 
     @Override
     protected void encode(CreateControllerCommand command, JsonObject jsonCommand) {
-        jsonCommand.addProperty(CommandConstants.CONTROLLER_ID_ATTRIBUTE, command.getParentControllerId());
-        jsonCommand.addProperty(CommandConstants.NAME_ATTRIBUTE, command.getControllerName());
+        Assert.requireNonNull(command, "command");
+        Assert.requireNonNull(jsonCommand, "jsonCommand");
+        jsonCommand.addProperty(CONTROLLER_ATTRIBUTE, command.getControllerId());
+        jsonCommand.addProperty(NAME_ATTRIBUTE, command.getControllerName());
+        jsonCommand.addProperty(MODEL_ATTRIBUTE, command.getModelId());
+        jsonCommand.addProperty(PARENT_ATTRIBUTE, command.getParentControllerId());
     }
 
     @Override
     public CreateControllerCommand decode(final JsonObject jsonObject) {
         Assert.requireNonNull(jsonObject, "jsonObject");
-        try {
-            final CreateControllerCommand command = new CreateControllerCommand();
-            if(jsonObject.has(CommandConstants.CONTROLLER_ID_ATTRIBUTE) && !isElementJsonNull(jsonObject, CommandConstants.CONTROLLER_ID_ATTRIBUTE)) {
-                command.setParentControllerId(getStringElement(jsonObject, CommandConstants.CONTROLLER_ID_ATTRIBUTE));
-            }
-            command.setControllerName(getStringElement(jsonObject, CommandConstants.NAME_ATTRIBUTE));
-            return command;
-        } catch (final Exception ex) {
-            throw new JsonParseException("Illegal JSON detected", ex);
+        final CreateControllerCommand command = new CreateControllerCommand(getStringElement(jsonObject, ID_ATTRIBUTE));
+        command.setControllerId(getStringElement(jsonObject, CONTROLLER_ATTRIBUTE));
+        command.setControllerName(getStringElement(jsonObject, NAME_ATTRIBUTE));
+        command.setModelId(getStringElement(jsonObject, MODEL_ATTRIBUTE));
+        if(jsonObject.has(PARENT_ATTRIBUTE)) {
+            command.setParentControllerId(getStringElement(jsonObject, PARENT_ATTRIBUTE));
         }
+        return command;
     }
 }

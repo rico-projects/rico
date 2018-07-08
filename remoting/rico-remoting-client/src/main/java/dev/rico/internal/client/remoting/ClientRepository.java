@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 
 public class ClientRepository extends Repository {
 
-    public ClientRepository(Consumer<Command> commandHandler) {
+    public ClientRepository(final Consumer<Command> commandHandler) {
         super(commandHandler);
     }
 
@@ -30,7 +30,6 @@ public class ClientRepository extends Repository {
         }
         final ClassInfo classInfo = ClassInfo.create(id, beanClass, getConverters());
         addClassInfo(classInfo);
-
     }
 
     public void onCreateBeanCommand(final CreateBeanCommand command) throws Exception {

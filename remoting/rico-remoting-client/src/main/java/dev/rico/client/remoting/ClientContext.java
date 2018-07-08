@@ -17,7 +17,6 @@
 package dev.rico.client.remoting;
 
 import dev.rico.internal.client.remoting.ClientContextFactoryImpl;
-import dev.rico.remoting.BeanManager;
 import org.apiguardian.api.API;
 
 import java.util.concurrent.CompletableFuture;

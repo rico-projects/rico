@@ -16,11 +16,12 @@
  */
 package dev.rico.internal.remoting.communication.codec.encoders;
 
-import dev.rico.internal.remoting.communication.commands.CommandConstants;
+import dev.rico.internal.remoting.communication.codec.CodecConstants;
 import dev.rico.internal.remoting.communication.commands.impl.DestroyContextCommand;
 import com.google.gson.JsonObject;
 import org.apiguardian.api.API;
 
+import static dev.rico.internal.remoting.communication.codec.CodecConstants.ID_ATTRIBUTE;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
@@ -28,12 +29,12 @@ public class DestroyContextCommandTranscoder extends AbstractCommandTranscoder<D
 
 
     public DestroyContextCommandTranscoder() {
-        super(CommandConstants.DESTROY_CONTEXT_COMMAND_ID, DestroyContextCommand.class);
+        super(CodecConstants.DESTROY_CONTEXT_COMMAND_ID, DestroyContextCommand.class);
     }
 
     @Override
     public DestroyContextCommand decode(final JsonObject jsonObject) {
-        return new DestroyContextCommand();
+        return new DestroyContextCommand(getStringElement(jsonObject, ID_ATTRIBUTE));
     }
 
     @Override

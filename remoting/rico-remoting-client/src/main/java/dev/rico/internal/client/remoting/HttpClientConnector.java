@@ -16,26 +16,32 @@
  */
 package dev.rico.internal.client.remoting;
 
-import dev.rico.internal.client.remoting.legacy.ClientModelStore;
-import dev.rico.internal.client.remoting.legacy.communication.BlindCommandBatcher;
+import dev.rico.client.CalledInUiThread;
+import dev.rico.core.http.HttpResponse;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.http.HttpHeaderConstants;
-import dev.rico.internal.remoting.communication.commands.impl.DestroyContextCommand;
-import dev.rico.internal.remoting.legacy.communication.Codec;
-import dev.rico.internal.remoting.legacy.communication.Command;
+import dev.rico.internal.core.http.HttpStatus;
+import dev.rico.internal.remoting.communication.codec.Codec;
+import dev.rico.internal.remoting.communication.commands.Command;
 import dev.rico.client.ClientConfiguration;
 import dev.rico.core.http.HttpClient;
 import dev.rico.core.http.RequestMethod;
 import dev.rico.remoting.RemotingException;
-import dev.rico.client.remoting.RemotingExceptionHandler;
 import org.apiguardian.api.API;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URI;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.Lock;
+import java.util.function.Consumer;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
@@ -43,7 +49,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
  * This class is used to sync the unique client scope id of the current remoting context
  */
 @API(since = "0.x", status = INTERNAL)
-public class HttpClientConnector extends AbstractClientConnector {
+public class HttpClientConnector implements RemotingCommandHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(HttpClientConnector.class);
 
@@ -53,50 +59,147 @@ public class HttpClientConnector extends AbstractClientConnector {
 
     private final HttpClient client;
 
-    private final AtomicBoolean disconnecting = new AtomicBoolean(false);
+    private final AtomicBoolean connected = new AtomicBoolean(false);
 
-    public HttpClientConnector(final URI servletUrl, final ClientConfiguration configuration, final ClientModelStore clientModelStore, final Codec codec, final RemotingExceptionHandler onException, final HttpClient client) {
-        super(clientModelStore, Assert.requireNonNull(configuration, "configuration").getUiExecutor(), new BlindCommandBatcher(), onException, configuration.getBackgroundExecutor());
+    private final Executor backgroundExecutor;
+
+    private final Executor uiExecutor;
+
+    private final Consumer<Command> clientCommandHandler;
+
+    private final Consumer<Exception> errorHandler;
+
+    private final Queue<CommandAndHandler> commandQueue;
+
+    public HttpClientConnector(final URI servletUrl, final ClientConfiguration configuration, final Codec codec, final HttpClient client, final Consumer<Command> clientCommandHandler, final Consumer<Exception> errorHandler) {
         this.servletUrl = Assert.requireNonNull(servletUrl, "servletUrl");
         this.codec = Assert.requireNonNull(codec, "codec");
         this.client = Assert.requireNonNull(client, "client");
+        this.backgroundExecutor = Assert.requireNonNull(configuration, "configuration").getBackgroundExecutor();
+        this.uiExecutor = configuration.getUiExecutor();
+        this.clientCommandHandler = Assert.requireNonNull(clientCommandHandler, "clientCommandHandler");
+        this.errorHandler = Assert.requireNonNull(errorHandler, "errorHandler");
+        this.commandQueue = new ConcurrentLinkedQueue<>();
     }
 
-    public List<Command> transmit(final List<Command> commands) throws RemotingException {
-        Assert.requireNonNull(commands, "commands");
+    public void connect() {
+        backgroundExecutor.execute(() -> {
+            connected.set(true);
+            while (isConnected()) {
+                try {
+                    final List<Command> toSend = new ArrayList<>();
+                    final List<Runnable> onFinishHandler = new ArrayList<>();
+                    while (!commandQueue.isEmpty()) {
+                        CommandAndHandler commandAndHandler = commandQueue.remove();
+                        toSend.add(commandAndHandler.command);
+                        if(commandAndHandler.handler != null) {
+                            onFinishHandler.add(commandAndHandler.handler);
+                        }
+                    }
+                    final List<Command> received = transmit(toSend);
 
-        if (disconnecting.get()) {
-            LOG.warn("Canceled communication based on disconnect");
-            return Collections.emptyList();
-        }
-
-        //block if diconnect is called in other thread (poll / release)
-        for (Command command : commands) {
-            if (command instanceof DestroyContextCommand) {
-                disconnecting.set(true);
+                    callInUiAndWait(() -> {
+                        try {
+                            handleResponse(received);
+                            onFinishHandler.forEach(h -> h.run());
+                        } catch (Exception e) {
+                            errorHandler.accept(e);
+                        }
+                    });
+                } catch (final Exception e) {
+                    try {
+                        callInUiAndWait(() -> errorHandler.accept(e));
+                    } catch (InterruptedException e1) {
+                        LOG.error("Internal error!", e1);
+                    } catch (ExecutionException e1) {
+                        LOG.error("Internal error!", e1);
+                    }
+                }
             }
-        }
+        });
+    }
 
+    @Override
+    public CompletableFuture<Void> sendAndReact(final Command command) {
+        Assert.requireNonNull(command, "command");
+        final CompletableFuture<Void> result = new CompletableFuture<>();
+        sendImpl(command, () -> result.complete(null));
+        return result;
+    }
+
+    private void sendImpl(final Command command, Runnable onFinishHandler) {
+        final CommandAndHandler cmh = new CommandAndHandler(command, onFinishHandler);
+        commandQueue.add(cmh);
+        triggerInterrupt();
+    }
+
+    @Override
+    public void send(final Command command) {
+        this.sendImpl(command, null);
+    }
+
+    private void triggerInterrupt() {
+
+    }
+
+    @CalledInUiThread
+    private void handleResponse(final List<Command> commands) {
+        Assert.requireNonNull(commands, "commands");
+        commands.forEach(c -> clientCommandHandler.accept(c));
+    }
+
+    private List<Command> transmit(final List<Command> commands) throws RemotingException {
+        Assert.requireNonNull(commands, "commands");
+        if (!connected.get()) {
+            throw new RemotingException("Not connected!");
+        }
         try {
             final String data = codec.encode(commands);
-            final String receivedContent = client.request(servletUrl, RequestMethod.POST).withContent(data, HttpHeaderConstants.JSON_MIME_TYPE).readString().execute().get().getContent();
+            final HttpResponse<String> response = client.request(servletUrl, RequestMethod.POST).withContent(data, HttpHeaderConstants.JSON_MIME_TYPE).readString().execute().get();
+            if (response.getStatusCode() != HttpStatus.HTTP_OK) {
+                throw new RemotingException("Bad http response code " + response.getStatusCode());
+            }
+            final String receivedContent = response.getContent();
             return codec.decode(receivedContent);
         } catch (final Exception e) {
-            throw new RemotingException("Error in remoting layer", e);
+            throw new RemotingException("Error in request", e);
         }
     }
 
-    @Override
-    public void connect() {
-        disconnecting.set(false);
-        super.connect();
+    public void disconnect() {
+        connected.set(false);
     }
 
-    @Override
-    public void disconnect() {
-        super.disconnect();
-        disconnecting.set(false);
+    public boolean isConnected() {
+        return connected.get();
     }
+
+    private class CommandAndHandler {
+
+        private final Command command;
+
+        private final Runnable handler;
+
+        public CommandAndHandler(Command command, Runnable handler) {
+            this.command = Assert.requireNonNull(command, "command");
+            this.handler = handler;
+        }
+    }
+
+    @Deprecated
+    private void callInUiAndWait(final Runnable runnable) throws ExecutionException, InterruptedException {
+        Assert.requireNonNull(runnable, "runnable");
+        final CompletableFuture<Void> blocker = new CompletableFuture<>();
+        uiExecutor.execute(() -> {
+            try {
+                runnable.run();
+            } finally {
+                blocker.complete(null);
+            }
+        });
+        blocker.get();
+    }
+
 }
 
 

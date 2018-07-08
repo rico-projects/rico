@@ -5,22 +5,21 @@ import dev.rico.internal.remoting.communication.commands.AbstractCommand;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class ListSpliceCommand extends AbstractCommand {
+public class ListAddCommand extends AbstractCommand {
 
     private String beanId;
 
     private String listName;
 
-    private int from;
+    private int start;
 
-    private int to;
+    private final List<Object> values = new ArrayList<>();
 
-    private int count;
+    public ListAddCommand() {
+    }
 
-    private final List<Object> values;
-
-    public ListSpliceCommand() {
-        values = new ArrayList<>();
+    public ListAddCommand(String uniqueIdentifier) {
+        super(uniqueIdentifier);
     }
 
     public String getBeanId() {
@@ -39,28 +38,12 @@ public final class ListSpliceCommand extends AbstractCommand {
         this.listName = listName;
     }
 
-    public int getFrom() {
-        return from;
+    public int getStart() {
+        return start;
     }
 
-    public void setFrom(int from) {
-        this.from = from;
-    }
-
-    public int getTo() {
-        return to;
-    }
-
-    public void setTo(int to) {
-        this.to = to;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
+    public void setStart(int start) {
+        this.start = start;
     }
 
     public List<Object> getValues() {

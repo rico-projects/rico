@@ -10,6 +10,13 @@ public final class ValueChangedCommand extends AbstractCommand {
 
     private Object newValue;
 
+    public ValueChangedCommand() {
+    }
+
+    public ValueChangedCommand(final String uniqueIdentifier) {
+        super(uniqueIdentifier);
+    }
+
     public String getBeanId() {
         return beanId;
     }
