@@ -14,6 +14,7 @@ import dev.rico.internal.remoting.communication.converters.Converters;
 import dev.rico.remoting.ListChangeEvent;
 import dev.rico.remoting.ObservableList;
 import dev.rico.remoting.Property;
+import dev.rico.remoting.ValueChangeEvent;
 import dev.rico.remoting.converter.BeanRepo;
 import dev.rico.remoting.converter.Converter;
 import dev.rico.remoting.converter.ValueConverterException;
@@ -186,9 +187,32 @@ public class Repository implements BeanRepo {
         });
     }
 
+    protected PropertyImpl createProperty(final String beanId, final PropertyInfo propertyInfo) {
+        Assert.requireNonBlank(beanId, "beanId");
+        Assert.requireNonNull(propertyInfo, "propertyInfo");
+        PropertyImpl property = new PropertyImpl(e -> processPropertyEvent(propertyInfo, beanId, e));
+        return property;
+    }
+
     protected ObservableArrayList createList(final String beanId, final PropertyInfo observableListInfo) {
-        ObservableArrayList list = new ObservableArrayList(e -> processListEvent(observableListInfo, beanId, e));
+        final ObservableArrayList list = new ObservableArrayList(e -> processListEvent(observableListInfo, beanId, e));
         return list;
+    }
+
+    private void processPropertyEvent(final PropertyInfo propertyInfo, final String beanId, final ValueChangeEvent<?> event) {
+        final Object value = event.getNewValue();
+        final ValueChangedCommand command = new ValueChangedCommand();
+        command.setBeanId(beanId);
+        if (value != null) {
+            try {
+                final Object convertedValue = getConverter(value.getClass()).convertToRemoting(value);
+                command.setNewValue(convertedValue);
+            } catch (Exception e) {
+                throw new RuntimeException("Error in value converter", e);
+            }
+        }
+        command.setPropertyName(propertyInfo.getAttributeName());
+        commandHandler.accept(command);
     }
 
     private void processListEvent(final PropertyInfo observableListInfo, final String beanId, final ListChangeEvent<?> event) {
@@ -231,32 +255,6 @@ public class Repository implements BeanRepo {
             }
         }
     }
-
-    protected PropertyImpl createProperty(final String beanId, final PropertyInfo propertyInfo) {
-        Assert.requireNonBlank(beanId, "beanId");
-        Assert.requireNonNull(propertyInfo, "propertyInfo");
-        PropertyImpl property = new PropertyImpl() {
-            @Override
-            public void set(Object value) {
-                super.set(value);
-
-                final ValueChangedCommand command = new ValueChangedCommand();
-                command.setBeanId(beanId);
-                if (value != null) {
-                    try {
-                        final Object convertedValue = getConverter(value.getClass()).convertToRemoting(value);
-                        command.setNewValue(convertedValue);
-                    } catch (Exception e) {
-                        throw new RuntimeException("Error in value converter", e);
-                    }
-                }
-                command.setPropertyName(propertyInfo.getAttributeName());
-                commandHandler.accept(command);
-            }
-        };
-        return property;
-    }
-
 
     protected Consumer<Command> getCommandHandler() {
         return commandHandler;

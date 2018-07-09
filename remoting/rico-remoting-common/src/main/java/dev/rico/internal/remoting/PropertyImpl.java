@@ -16,8 +16,16 @@
  */
 package dev.rico.internal.remoting;
 
+import dev.rico.core.functional.Subscription;
+import dev.rico.internal.core.Assert;
 import dev.rico.remoting.Property;
+import dev.rico.remoting.ValueChangeEvent;
+import dev.rico.remoting.ValueChangeListener;
 import org.apiguardian.api.API;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
@@ -27,9 +35,80 @@ import static org.apiguardian.api.API.Status.INTERNAL;
  * @param <T> The type of the wrapped property.
  */
 @API(since = "0.x", status = INTERNAL)
-public class PropertyImpl<T> extends AbstractProperty<T> {
+public class PropertyImpl<T> implements Property<T> {
 
     private T internalValue;
+
+    private final ValueChangeListener<? super T> internalListener;
+
+    private final List<ValueChangeListener<? super T>> listeners = new CopyOnWriteArrayList<>();
+
+    private boolean internalValueChange = false;
+
+    public PropertyImpl(final ValueChangeListener<? super T> internalListener) {
+        this.internalListener = Assert.requireNonNull(internalListener, "internalListener");
+    }
+
+    @Override
+    public Subscription onChanged(final ValueChangeListener<? super T> listener) {
+        listeners.add(listener);
+        return new Subscription() {
+            @Override
+            public void unsubscribe() {
+                listeners.remove(listener);
+            }
+        };
+    }
+
+    protected void firePropertyChanged(final T oldValue, final T newValue) {
+        final ValueChangeEvent<T> event = new ValueChangeEvent<T>() {
+            @Override
+            public Property<T> getSource() {
+                return PropertyImpl.this;
+            }
+
+            @Override
+            public T getOldValue() {
+                return oldValue;
+            }
+
+            @Override
+            public T getNewValue() {
+                return newValue;
+            }
+        };
+        notifyInternalListeners(event);
+        notifyExternalListeners(event);
+    }
+
+    protected void notifyExternalListeners(ValueChangeEvent<T> event) {
+        for(final ValueChangeListener<? super T> listener : listeners) {
+            listener.valueChanged(event);
+        }
+    }
+
+    protected void notifyInternalListeners(ValueChangeEvent<T> event) {
+        if (!internalValueChange) {
+            internalListener.valueChanged(event);
+        }
+    }
+
+    public String toString() {
+        return "Remoting " + getClass().getSimpleName() + "[value: " + get() + "]";
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(get());
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final PropertyImpl<?> that = (PropertyImpl<?>) o;
+        return Objects.equals(get(), that.get());
+    }
 
     @Override
     public void set(final T value) {
@@ -46,11 +125,11 @@ public class PropertyImpl<T> extends AbstractProperty<T> {
 
 
     public void internalSet(T value) {
-        final T oldValue = internalValue;
-        internalValue = value;
-        firePropertyChanged(oldValue, internalValue);
-    }
-
-    public void setWithOutSendCommand(Object newValue) {
+        internalValueChange = true;
+        try {
+            set(value);
+        } finally {
+            internalValueChange = false;
+        }
     }
 }

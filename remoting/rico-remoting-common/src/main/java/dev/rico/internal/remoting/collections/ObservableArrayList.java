@@ -43,7 +43,7 @@ public class ObservableArrayList<E> implements ObservableList<E> {
 
     private final ListChangeListener<? super E> internalListener;
 
-    private boolean blockListener = false;
+    private boolean internalValueChange = false;
 
     public ObservableArrayList(final ListChangeListener<? super E> internalListener) {
         this.list = new ArrayList<>();
@@ -62,7 +62,7 @@ public class ObservableArrayList<E> implements ObservableList<E> {
     }
 
     protected void notifyInternalListeners(final ListChangeEvent<E> event) {
-        if (!blockListener) {
+        if (!internalValueChange) {
             internalListener.listChanged(event);
         }
     }
@@ -312,29 +312,29 @@ public class ObservableArrayList<E> implements ObservableList<E> {
     }
 
     public void internalRemove(int from, int to) {
-        blockListener = true;
+        internalValueChange = true;
         try {
             remove(from, to);
         } finally {
-            blockListener = false;
+            internalValueChange = false;
         }
     }
 
     public void internalAddAll(int start, Collection<? extends E> c) {
-        blockListener = true;
+        internalValueChange = true;
         try {
             addAll(start, c);
         } finally {
-            blockListener = false;
+            internalValueChange = false;
         }
     }
 
     public void internalSet(int index, E value) {
-        blockListener = true;
+        internalValueChange = true;
         try {
             set(index, value);
         } finally {
-            blockListener = false;
+            internalValueChange = false;
         }
     }
 
