@@ -34,10 +34,11 @@ public class TestController {
         final ClientSessionExecutor executor = context.createSessionExecutor();
         Executors.newSingleThreadExecutor().submit(() -> {
             while (true) {
-                executor.runLaterInClientSession(() -> update()).get();
+     //           executor.runLaterInClientSession(() -> update()).get();
                 Thread.sleep(200);
             }
         });
+        model.getValueA().onChanged(e -> model.getValueB().set(e.getNewValue()));
     }
 
     private void update() {
