@@ -95,7 +95,7 @@ public class Repository implements BeanRepo {
                 })
                 .collect(Collectors.toList());
 
-        list.addAll(command.getStart(), newElements);
+        list.internalAddAll(command.getStart(), newElements);
     }
 
     public void onListRemoveCommand(final ListRemoveCommand command) throws ValueConverterException {
@@ -105,7 +105,7 @@ public class Repository implements BeanRepo {
         final String listName = command.getListName();
         final PropertyInfo listInfo = classInfo.getObservableListInfo(listName);
         final ObservableArrayList list = (ObservableArrayList) listInfo.getPrivileged(bean);
-        list.remove(command.getFrom(), command.getTo());
+        list.internalRemove(command.getFrom(), command.getTo());
     }
 
     public void onListReplaceCommand(final ListReplaceCommand command) throws ValueConverterException {
@@ -117,7 +117,7 @@ public class Repository implements BeanRepo {
         final ObservableArrayList list = (ObservableArrayList) listInfo.getPrivileged(bean);
         int index = command.getStart();
         for(Object value : command.getValues()) {
-            list.set(index, value);
+            list.internalSet(index, value);
             index++;
         }
     }
@@ -187,8 +187,7 @@ public class Repository implements BeanRepo {
     }
 
     protected ObservableArrayList createList(final String beanId, final PropertyInfo observableListInfo) {
-        ObservableArrayList list = new ObservableArrayList();
-        list.onChanged(e -> processListEvent(observableListInfo, beanId, e));
+        ObservableArrayList list = new ObservableArrayList(e -> processListEvent(observableListInfo, beanId, e));
         return list;
     }
 
