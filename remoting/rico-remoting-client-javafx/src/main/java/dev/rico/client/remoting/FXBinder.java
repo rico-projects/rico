@@ -51,7 +51,7 @@ import static dev.rico.internal.core.Assert.requireNonNull;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
 /**
- * Utility class to createList unidirectional and bidirectional bindings between JavaFX and remoting properties.
+ * Utility class to create unidirectional and bidirectional bindings between JavaFX and remoting properties.
  */
 @API(since = "0.x", status = MAINTAINED)
 public final class FXBinder {
@@ -63,10 +63,10 @@ public final class FXBinder {
     }
 
     /**
-     * Start point of the fluent API to createList a binding.
+     * Start point of the fluent API to create a binding.
      * @param list the JavaFX list
      * @param <T> the data type of the list
-     * @return a binder that can be used by the fluent API to createList binding.
+     * @return a binder that can be used by the fluent API to create binding.
      */
     public static <T> JavaFXListBinder<T> bind(ObservableList<T> list) {
         requireNonNull(list, "list");
@@ -74,9 +74,9 @@ public final class FXBinder {
     }
 
     /**
-     * Start point of the fluent API to createList a binding.
+     * Start point of the fluent API to create a binding.
      * @param writableDoubleValue the javafx property
-     * @return a binder that can be used by the fluent API to createList binding.
+     * @return a binder that can be used by the fluent API to create binding.
      */
     public static JavaFXBinder<Double> bind(WritableDoubleValue writableDoubleValue) {
         requireNonNull(writableDoubleValue, "writableDoubleValue");
@@ -84,9 +84,9 @@ public final class FXBinder {
     }
 
     /**
-     * Start point of the fluent API to createList a binding.
+     * Start point of the fluent API to create a binding.
      * @param writableDoubleValue the javafx property
-     * @return a binder that can be used by the fluent API to createList binding.
+     * @return a binder that can be used by the fluent API to create binding.
      */
     public static JavaFXBinder<Float> bind(WritableFloatValue writableDoubleValue) {
         requireNonNull(writableDoubleValue, "writableDoubleValue");
@@ -94,9 +94,9 @@ public final class FXBinder {
     }
 
     /**
-     * Start point of the fluent API to createList a binding.
+     * Start point of the fluent API to create a binding.
      * @param writableDoubleValue the javafx property
-     * @return a binder that can be used by the fluent API to createList binding.
+     * @return a binder that can be used by the fluent API to create binding.
      */
     public static JavaFXBinder<Integer> bind(WritableIntegerValue writableDoubleValue) {
         requireNonNull(writableDoubleValue, "writableDoubleValue");
@@ -104,9 +104,9 @@ public final class FXBinder {
     }
 
     /**
-     * Start point of the fluent API to createList a binding.
+     * Start point of the fluent API to create a binding.
      * @param writableDoubleValue the javafx property
-     * @return a binder that can be used by the fluent API to createList binding.
+     * @return a binder that can be used by the fluent API to create binding.
      */
     public static JavaFXBinder<Long> bind(WritableLongValue writableDoubleValue) {
         requireNonNull(writableDoubleValue, "writableDoubleValue");
@@ -114,9 +114,9 @@ public final class FXBinder {
     }
 
     /**
-     * Start point of the fluent API to createList a binding.
+     * Start point of the fluent API to create a binding.
      * @param property the javafx property
-     * @returna binder that can be used by the fluent API to createList binding.
+     * @returna binder that can be used by the fluent API to create binding.
      */
     public static NumericJavaFXBidirectionaBinder<Double> bind(DoubleProperty property) {
         requireNonNull(property, "property");
@@ -124,9 +124,9 @@ public final class FXBinder {
     }
 
     /**
-     * Start point of the fluent API to createList a binding.
+     * Start point of the fluent API to create a binding.
      * @param property the javafx property
-     * @return binder that can be used by the fluent API to createList binding.
+     * @return binder that can be used by the fluent API to create binding.
      */
     public static NumericJavaFXBidirectionaBinder<Float> bind(FloatProperty property) {
         requireNonNull(property, "property");
@@ -134,9 +134,9 @@ public final class FXBinder {
     }
 
     /**
-     * Start point of the fluent API to createList a binding.
+     * Start point of the fluent API to create a binding.
      * @param property the javafx property
-     * @return binder that can be used by the fluent API to createList binding.
+     * @return binder that can be used by the fluent API to create binding.
      */
     public static NumericJavaFXBidirectionaBinder<Integer> bind(IntegerProperty property) {
         requireNonNull(property, "property");
@@ -144,9 +144,9 @@ public final class FXBinder {
     }
 
     /**
-     * Start point of the fluent API to createList a binding.
+     * Start point of the fluent API to create a binding.
      * @param property the javafx property
-     * @return binder that can be used by the fluent API to createList binding.
+     * @return binder that can be used by the fluent API to create binding.
      */
     public static NumericJavaFXBidirectionaBinder<Long> bind(LongProperty property) {
         requireNonNull(property, "property");
@@ -154,9 +154,9 @@ public final class FXBinder {
     }
 
     /**
-     * Start point of the fluent API to createList a binding.
+     * Start point of the fluent API to create a binding.
      * @param writableDoubleValue the javafx property
-     * @return binder that can be used by the fluent API to createList binding.
+     * @return binder that can be used by the fluent API to create binding.
      */
     public static <T> JavaFXBinder<T> bind(WritableValue<T> writableDoubleValue) {
         requireNonNull(writableDoubleValue, "writableDoubleValue");
@@ -164,9 +164,9 @@ public final class FXBinder {
     }
 
     /**
-     * Start point of the fluent API to createList a binding.
+     * Start point of the fluent API to create a binding.
      * @param property the javafx property
-     * @return binder that can be used by the fluent API to createList binding.
+     * @return binder that can be used by the fluent API to create binding.
      */
     public static <T> JavaFXBidirectionalBinder<T> bind(javafx.beans.property.Property<T> property) {
         requireNonNull(property, "property");
@@ -174,9 +174,9 @@ public final class FXBinder {
     }
 
     /**
-     * Start point of the fluent API to createList a binding.
+     * Start point of the fluent API to create a binding.
      * @param property the remoting property
-     * @return binder that can be used by the fluent API to createList binding.
+     * @return binder that can be used by the fluent API to create binding.
      */
     public static <T> Binder<T> bind(Property<T> property) {
         requireNonNull(property, "property");
@@ -184,9 +184,9 @@ public final class FXBinder {
     }
 
     /**
-     * Start point of the fluent API to createList a binding.
+     * Start point of the fluent API to create a binding.
      * @param property the remoting property
-     * @return binder that can be used by the fluent API to createList binding.
+     * @return binder that can be used by the fluent API to create binding.
      */
     public static NumericRemotingBinder<Double> bindDouble(Property<Double> property) {
         requireNonNull(property, "property");
@@ -194,9 +194,9 @@ public final class FXBinder {
     }
 
     /**
-     * Start point of the fluent API to createList a binding.
+     * Start point of the fluent API to create a binding.
      * @param property the remoting property
-     * @return binder that can be used by the fluent API to createList binding.
+     * @return binder that can be used by the fluent API to create binding.
      */
     public static NumericRemotingBinder<Float> bindFloat(Property<Float> property) {
         requireNonNull(property, "property");
@@ -204,9 +204,9 @@ public final class FXBinder {
     }
 
     /**
-     * Start point of the fluent API to createList a binding.
+     * Start point of the fluent API to create a binding.
      * @param property the remoting property
-     * @return binder that can be used by the fluent API to createList binding.
+     * @return binder that can be used by the fluent API to create binding.
      */
     public static NumericRemotingBinder<Integer> bindInteger(Property<Integer> property) {
         requireNonNull(property, "property");
@@ -214,9 +214,9 @@ public final class FXBinder {
     }
 
     /**
-     * Start point of the fluent API to createList a binding.
+     * Start point of the fluent API to create a binding.
      * @param property the remoting property
-     * @return binder that can be used by the fluent API to createList binding.
+     * @return binder that can be used by the fluent API to create binding.
      */
     public static NumericRemotingBinder<Long> bindLong(Property<Long> property) {
         requireNonNull(property, "property");

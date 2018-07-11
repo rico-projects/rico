@@ -27,7 +27,7 @@ import java.net.URL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
 /**
- * Defines an abstract class that can be used to createList a FXML based view that is bound to a remoting controller
+ * Defines an abstract class that can be used to create a FXML based view that is bound to a remoting controller
  * on the server and shares a model with the controller.
  *
  * By creating new instances of classes that extend this class a JavaFX view will be automatically created by using the

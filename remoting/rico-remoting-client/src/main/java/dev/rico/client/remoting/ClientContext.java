@@ -27,7 +27,7 @@ import static org.apiguardian.api.API.Status.MAINTAINED;
  * The client context defines a connection to the remoting endpoint on the server.
  * For each client instance there should be one {@link ClientContext} instance that can be
  * created by using the {@link ClientContextFactoryImpl}.
- * The client context is needed to createList {@link ControllerProxy} instances.
+ * The client context is needed to create {@link ControllerProxy} instances.
  */
 @API(since = "0.x", status = MAINTAINED)
 public interface ClientContext extends ControllerFactory {

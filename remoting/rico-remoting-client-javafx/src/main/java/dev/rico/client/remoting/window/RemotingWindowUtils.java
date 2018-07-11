@@ -90,7 +90,7 @@ public class RemotingWindowUtils {
     }
 
 	/**
-	 * The method will createList a JavaFX {@link Window} that contains the view of a {@link AbstractViewController} and will automatically call
+	 * The method will create a JavaFX {@link Window} that contains the view of a {@link AbstractViewController} and will automatically call
 	 * {@link AbstractViewController#destroy()} when the stage becomes hidden.
 	 *
 	 * @param <M> type of the model
@@ -101,7 +101,7 @@ public class RemotingWindowUtils {
     }
     
 	/**
-	 * The method will createList a JavaFX {@link Stage} that contains the view of a {@link AbstractViewController} and will automatically
+	 * The method will create a JavaFX {@link Stage} that contains the view of a {@link AbstractViewController} and will automatically
 	 * call {@link AbstractViewController#destroy()} when the stage becomes hidden.
 	 * @param <M> type of the model
 	 */
