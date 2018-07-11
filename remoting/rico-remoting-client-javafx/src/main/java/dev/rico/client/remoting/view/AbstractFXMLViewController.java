@@ -57,7 +57,7 @@ public abstract class AbstractFXMLViewController<M> extends AbstractViewControll
             loader.setController(this);
             rootNode = loader.load();
         } catch (Exception e) {
-            throw new RuntimeException("Can not createList view based on FXML location " + fxmlLocation, e);
+            throw new RuntimeException("Can not create view based on FXML location " + fxmlLocation, e);
         }
     }
 

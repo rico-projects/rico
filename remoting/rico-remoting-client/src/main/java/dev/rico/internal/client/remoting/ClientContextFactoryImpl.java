@@ -34,7 +34,7 @@ import java.util.concurrent.CompletableFuture;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 /**
- * Factory to createList a {@link ClientContext}. Normally you will createList a {@link ClientContext} at the bootstrap of your
+ * Factory to create a {@link ClientContext}. Normally you will create a {@link ClientContext} at the bootstrap of your
  * client by using the {@link #create(ClientConfiguration, URI)} method and use this context as a singleton in your client.
  * The {@link ClientContext} defines the connection between the client and the remoting server endpoint.
  */
