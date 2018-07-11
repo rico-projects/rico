@@ -16,25 +16,26 @@
  */
 package dev.rico.internal.core.http;
 
-import dev.rico.internal.core.Assert;
 import dev.rico.core.http.HttpHeader;
 import dev.rico.core.http.HttpURLConnectionFactory;
 import dev.rico.core.http.RequestMethod;
+import dev.rico.internal.core.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static dev.rico.core.http.RequestMethod.GET;
 import static dev.rico.internal.core.http.HttpHeaderConstants.CHARSET;
 import static dev.rico.internal.core.http.HttpHeaderConstants.CHARSET_HEADER;
 import static dev.rico.internal.core.http.HttpHeaderConstants.CONTENT_LENGHT_HEADER;
-import static dev.rico.core.http.RequestMethod.GET;
 
 public class HttpClientConnection {
 
@@ -89,6 +90,21 @@ public class HttpClientConnection {
             ConnectionUtils.writeContent(connection, content);
         }
     }
+
+    public void writeRequestContent(final InputStream inputStream) throws IOException {
+        Assert.requireNonNull(inputStream, "inputStream");
+        if(inputStream.available() > 0) {
+            setDoOutput(true);
+            final OutputStream outputStream = connection.getOutputStream();
+            final long length = ConnectionUtils.copy(inputStream, outputStream);
+            if (length > 0) {
+                if (method.equals(GET)) {
+                    LOG.warn("You are currently defining a request content for a HTTP GET call for endpoint '{}'", url);
+                }
+            }
+        }
+    }
+
 
     public int readResponseCode() throws IOException {
         return connection.getResponseCode();

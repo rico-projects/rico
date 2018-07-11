@@ -28,11 +28,13 @@ import static org.apiguardian.api.API.Status.MAINTAINED;
  * @author Hendrik Ebbers
  */
 @API(since = "0.x", status = MAINTAINED)
+@Deprecated
 public interface ExtendedThreadFactory extends ThreadFactory {
 
     /**
      * Sets the exception handler that will handle all uncaught exceptions
      * @param uncaughtExceptionHandler the exception handler that will handle all uncaught exceptions
      */
+    @Deprecated
     void setUncaughtExceptionHandler(Thread.UncaughtExceptionHandler uncaughtExceptionHandler);
 }

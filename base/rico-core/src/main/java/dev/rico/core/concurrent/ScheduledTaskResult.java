@@ -18,7 +18,7 @@ package dev.rico.core.concurrent;
 
 import java.time.LocalDateTime;
 
-public interface TaskResult {
+public interface ScheduledTaskResult {
 
     LocalDateTime lastScheduledStartTime();
 

@@ -16,17 +16,18 @@
  */
 package dev.rico.internal.client.http;
 
-import dev.rico.internal.core.Assert;
+import dev.rico.client.Client;
 import dev.rico.client.ClientConfiguration;
+import dev.rico.client.concurrent.BackgroundExecutor;
+import dev.rico.client.concurrent.UiExecutor;
 import dev.rico.core.functional.Promise;
 import dev.rico.core.http.BadResponseException;
 import dev.rico.core.http.HttpException;
 import dev.rico.core.http.HttpResponse;
+import dev.rico.internal.core.Assert;
 import org.apiguardian.api.API;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
@@ -34,11 +35,11 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class HttpCallExecutorImpl<R> implements Promise<HttpResponse<R>, HttpException> {
 
-    private final ExecutorService executor;
+    private final BackgroundExecutor executor;
 
     private final HttpProvider<R> provider;
 
-    private final Executor uiExecutor;
+    private final UiExecutor uiExecutor;
 
     private Consumer<HttpResponse<R>> onDone;
 
@@ -46,8 +47,8 @@ public class HttpCallExecutorImpl<R> implements Promise<HttpResponse<R>, HttpExc
 
     public HttpCallExecutorImpl(final ClientConfiguration configuration, final HttpProvider<R> provider) {
         Assert.requireNonNull(configuration, "configuration");
-        this.executor = configuration.getBackgroundExecutor();
-        this.uiExecutor = configuration.getUiExecutor();
+        this.executor = Client.getService(BackgroundExecutor.class);
+        this.uiExecutor = Client.getService(UiExecutor.class);
         this.provider = Assert.requireNonNull(provider, "provider");
     }
 

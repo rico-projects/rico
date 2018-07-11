@@ -16,17 +16,18 @@
  */
 package dev.rico.internal.client.http;
 
-import dev.rico.internal.core.Assert;
-import dev.rico.internal.core.http.HttpClientConnection;
-import dev.rico.internal.core.http.HttpHeaderImpl;
+import com.google.gson.Gson;
 import dev.rico.client.ClientConfiguration;
-import dev.rico.core.http.ByteArrayProvider;
 import dev.rico.core.http.HttpCallRequestBuilder;
 import dev.rico.core.http.HttpCallResponseBuilder;
 import dev.rico.core.http.HttpURLConnectionHandler;
-import com.google.gson.Gson;
+import dev.rico.internal.core.Assert;
+import dev.rico.internal.core.http.EmptyInputStream;
+import dev.rico.internal.core.http.HttpClientConnection;
+import dev.rico.internal.core.http.HttpHeaderImpl;
 import org.apiguardian.api.API;
 
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -70,23 +71,24 @@ public class HttpCallRequestBuilderImpl implements HttpCallRequestBuilder {
     }
 
     @Override
-    public HttpCallResponseBuilder withContent(final byte[] content, final String contentType) {
-        withHeader(CONTENT_TYPE_HEADER, contentType);
-        connection.setDoOutput(true);
-        return continueWithResponseBuilder(() -> content);
-    }
-
-    @Override
     public <I> HttpCallResponseBuilder withContent(final I content) {
         return withContent(gson.toJson(content), JSON_MIME_TYPE);
     }
 
     @Override
     public HttpCallResponseBuilder withoutContent() {
-        return continueWithResponseBuilder(() -> new byte[0]);
+        return continueWithResponseBuilder(new EmptyInputStream());
     }
 
-    private HttpCallResponseBuilder continueWithResponseBuilder(final ByteArrayProvider dataProvider) {
+    public HttpCallResponseBuilder withContent(final InputStream stream, final String contentType) {
+        if(contentType != null && !contentType.isEmpty()) {
+            withHeader(CONTENT_TYPE_HEADER, contentType);
+        }
+        return continueWithResponseBuilder(stream);
+    }
+
+
+    private HttpCallResponseBuilder continueWithResponseBuilder(final InputStream dataProvider) {
         Assert.requireNonNull(dataProvider, "dataProvider");
         if (done.get()) {
             throw new RuntimeException("Request already defined!");

@@ -16,6 +16,9 @@
  */
 package dev.rico.internal.client.remoting.communication;
 
+import dev.rico.client.Client;
+import dev.rico.client.concurrent.BackgroundExecutor;
+import dev.rico.client.concurrent.UiExecutor;
 import dev.rico.core.http.HttpResponse;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.http.HttpHeaderConstants;
@@ -63,9 +66,9 @@ public class HttpClientConnector implements RemotingCommandHandler {
 
     private final AtomicBoolean connected = new AtomicBoolean(false);
 
-    private final Executor backgroundExecutor;
+    private final BackgroundExecutor backgroundExecutor;
 
-    private final Executor uiExecutor;
+    private final UiExecutor uiExecutor;
 
     private final Consumer<Command> clientCommandHandler;
 
@@ -83,8 +86,8 @@ public class HttpClientConnector implements RemotingCommandHandler {
         this.servletUrl = Assert.requireNonNull(servletUrl, "servletUrl");
         this.codec = Assert.requireNonNull(codec, "codec");
         this.client = Assert.requireNonNull(client, "client");
-        this.backgroundExecutor = Assert.requireNonNull(configuration, "configuration").getBackgroundExecutor();
-        this.uiExecutor = configuration.getUiExecutor();
+        this.backgroundExecutor = Client.getService(BackgroundExecutor.class);
+        this.uiExecutor = Client.getService(UiExecutor.class);
         this.clientCommandHandler = Assert.requireNonNull(clientCommandHandler, "clientCommandHandler");
         this.errorHandler = Assert.requireNonNull(errorHandler, "errorHandler");
         this.commandQueue = new CommandQueue();
