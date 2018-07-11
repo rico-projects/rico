@@ -16,8 +16,7 @@
  */
 package dev.rico.client.concurrent;
 
-import javafx.concurrent.Task;
-
+import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -28,26 +27,21 @@ public interface ProcessChain<T> {
 
     <V> ProcessChain<V> addBackgroundFunction(final Function<T, V> function);
 
-
     ProcessChain<Void> addUiRunnable(final Runnable runnable);
 
     ProcessChain<Void> addBackgroundRunnable(final Runnable runnable);
-
 
     ProcessChain<Void> addUiConsumer(final Consumer<T> consumer);
 
     ProcessChain<Void> addBackgroundConsumer(final Consumer<T> consumer);
 
-
     <V> ProcessChain<V> addUiSupplier(final Supplier<V> supplier);
 
     <V> ProcessChain<V> addBackgroundSupplier(final Supplier<V> supplier);
-
 
     ProcessChain<T> onException(final Consumer<Throwable> consumer);
 
     ProcessChain<T> withUiFinal(final Runnable finalRunnable);
 
-
-    Task<T> run();
+    Callable<T> run();
 }

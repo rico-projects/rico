@@ -21,9 +21,7 @@ import static dev.rico.internal.core.RicoConstants.RICO;
 public interface ClientConstants {
 
     String UI_CONTEXT = "uiToolkit";
-    String BACKGROUND_EXECUTOR = RICO + ".background.executor";
     String UNCAUGHT_EXCEPTION_HANDLER = RICO + ".background.uncaughtExceptionHandler";
-    String UI_EXECUTOR = RICO + ".ui.executor";
     String UI_UNCAUGHT_EXCEPTION_HANDLER = RICO + ".ui.uncaughtExceptionHandler";
     String COOKIE_STORE = RICO + ".http.cookieStore";
     String CONNECTION_FACTORY = RICO + ".http.connectionFactory";

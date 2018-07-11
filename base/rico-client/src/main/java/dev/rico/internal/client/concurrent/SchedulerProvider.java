@@ -16,12 +16,11 @@
  */
 package dev.rico.internal.client.concurrent;
 
-import dev.rico.internal.client.AbstractServiceProvider;
-import dev.rico.internal.core.Assert;
+import dev.rico.client.Client;
 import dev.rico.client.ClientConfiguration;
+import dev.rico.client.concurrent.BackgroundExecutor;
 import dev.rico.core.concurrent.Scheduler;
-
-import java.util.concurrent.Executor;
+import dev.rico.internal.client.AbstractServiceProvider;
 
 public class SchedulerProvider extends AbstractServiceProvider<Scheduler> {
 
@@ -31,8 +30,7 @@ public class SchedulerProvider extends AbstractServiceProvider<Scheduler> {
 
     @Override
     protected Scheduler createService(final ClientConfiguration configuration) {
-        final Executor backgroundExecutor = configuration.getBackgroundExecutor();
-        Assert.requireNonNull(backgroundExecutor, "backgroundExecutor");
+        final BackgroundExecutor backgroundExecutor = Client.getService(BackgroundExecutor.class);
         return new SchedulerImpl(backgroundExecutor);
     }
 }

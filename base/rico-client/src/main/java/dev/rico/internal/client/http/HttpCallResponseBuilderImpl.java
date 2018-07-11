@@ -57,11 +57,11 @@ public class HttpCallResponseBuilderImpl implements HttpCallResponseBuilder {
 
     private final List<HttpURLConnectionHandler> responseHandlers;
 
-    private final ByteArrayProvider dataProvider;
+    private final InputStream dataProvider;
 
     private final ClientConfiguration configuration;
 
-    public HttpCallResponseBuilderImpl(final HttpClientConnection connection, final ByteArrayProvider dataProvider, final Gson gson, final List<HttpURLConnectionHandler> requestHandlers, final List<HttpURLConnectionHandler> responseHandlers, final ClientConfiguration configuration) {
+    public HttpCallResponseBuilderImpl(final HttpClientConnection connection, final InputStream dataProvider, final Gson gson, final List<HttpURLConnectionHandler> requestHandlers, final List<HttpURLConnectionHandler> responseHandlers, final ClientConfiguration configuration) {
         this.connection = Assert.requireNonNull(connection, "connection");
         this.dataProvider = Assert.requireNonNull(dataProvider, "dataProvider");
         this.gson = Assert.requireNonNull(gson, "gson");
@@ -154,9 +154,8 @@ public class HttpCallResponseBuilderImpl implements HttpCallResponseBuilder {
         handled.set(true);
 
         requestHandlers.forEach(h -> h.handle(connection.getConnection()));
-        final byte[] rawBytes = dataProvider.get();
         try {
-            connection.writeRequestContent(rawBytes);
+            connection.writeRequestContent(dataProvider);
         } catch (final IOException e) {
             throw new ConnectionException("Can not connect to server", e);
         }

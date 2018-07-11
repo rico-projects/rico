@@ -16,6 +16,9 @@
  */
 package dev.rico.internal.client.concurrent;
 
+import dev.rico.client.Client;
+import dev.rico.client.concurrent.BackgroundExecutor;
+import dev.rico.client.concurrent.UiExecutor;
 import dev.rico.internal.client.AbstractServiceProvider;
 import dev.rico.client.ClientConfiguration;
 import dev.rico.client.concurrent.ProcessChain;
@@ -28,6 +31,8 @@ public class ProcessChainProvider extends AbstractServiceProvider<ProcessChain> 
 
     @Override
     protected ProcessChain createService(final ClientConfiguration configuration) {
-        return new ProcessChainImpl(configuration);
+        final UiExecutor uiExecutor = Client.getService(UiExecutor.class);
+        final BackgroundExecutor backgroundExecutor = Client.getService(BackgroundExecutor.class);
+        return new ProcessChainImpl(uiExecutor, backgroundExecutor, configuration);
     }
 }

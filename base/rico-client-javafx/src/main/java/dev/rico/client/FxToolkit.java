@@ -16,10 +16,10 @@
  */
 package dev.rico.client;
 
+import dev.rico.client.concurrent.UiExecutor;
+import dev.rico.internal.core.Assert;
 import javafx.application.Platform;
 import org.apiguardian.api.API;
-
-import java.util.concurrent.Executor;
 
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
@@ -29,13 +29,8 @@ public class FxToolkit implements Toolkit {
     private final static String NAME = "JavaFX toolkit";
 
     @Override
-    public Executor getUiExecutor() {
-        return new Executor() {
-            @Override
-            public void execute(Runnable command) {
-                Platform.runLater(command);
-            }
-        };
+    public UiExecutor getUiExecutor() {
+        return task -> Platform.runLater(Assert.requireNonNull(task, "task"));
     }
 
     @Override

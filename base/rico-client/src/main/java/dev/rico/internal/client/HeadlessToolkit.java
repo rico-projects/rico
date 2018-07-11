@@ -17,7 +17,8 @@
 package dev.rico.internal.client;
 
 import dev.rico.client.Toolkit;
-import dev.rico.internal.client.ClientConstants;
+import dev.rico.client.concurrent.UiExecutor;
+import dev.rico.internal.core.Assert;
 import org.apiguardian.api.API;
 
 import java.util.concurrent.Executor;
@@ -31,8 +32,8 @@ public class HeadlessToolkit implements Toolkit {
     private final static Executor EXECUTOR = Executors.newSingleThreadExecutor();
 
     @Override
-    public Executor getUiExecutor() {
-        return EXECUTOR;
+    public UiExecutor getUiExecutor() {
+        return task -> EXECUTOR.execute(Assert.requireNonNull(task, "task"));
     }
 
     @Override

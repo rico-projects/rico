@@ -5,3 +5,5 @@ dev.rico.internal.client.http.cookie.CookieHandlerProvider
 dev.rico.internal.client.context.ContextManagerServiceProvider
 dev.rico.internal.client.concurrent.SchedulerProvider
 dev.rico.internal.client.concurrent.ProcessChainProvider
+dev.rico.internal.client.concurrent.BackgroundExecutorProvider
+dev.rico.internal.client.concurrent.UiExecutorProvider

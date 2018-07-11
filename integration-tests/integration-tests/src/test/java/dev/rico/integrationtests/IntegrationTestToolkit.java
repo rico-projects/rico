@@ -17,8 +17,8 @@
 package dev.rico.integrationtests;
 
 import dev.rico.client.Toolkit;
-
-import java.util.concurrent.Executor;
+import dev.rico.client.concurrent.UiExecutor;
+import dev.rico.internal.core.Assert;
 
 public class IntegrationTestToolkit implements Toolkit {
 
@@ -26,13 +26,8 @@ public class IntegrationTestToolkit implements Toolkit {
 
 
     @Override
-    public Executor getUiExecutor() {
-        return new Executor() {
-            @Override
-            public void execute(Runnable command) {
-                command.run();
-            }
-        };
+    public UiExecutor getUiExecutor() {
+        return task -> Assert.requireNonNull(task, "task").run();
     }
 
     @Override

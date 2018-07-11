@@ -17,6 +17,7 @@
 package dev.rico.integrationtests;
 
 import dev.rico.client.Client;
+import dev.rico.client.concurrent.BackgroundExecutor;
 import dev.rico.client.remoting.ClientContext;
 import dev.rico.client.remoting.ClientContextFactory;
 import dev.rico.client.remoting.ControllerProxy;
@@ -26,7 +27,11 @@ import dev.rico.docker.Wait;
 import dev.rico.internal.core.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterGroups;
+import org.testng.annotations.BeforeGroups;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 import java.net.URI;
@@ -37,7 +42,6 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -64,7 +68,8 @@ public class AbstractIntegrationTest {
         try {
             final URL dockerComposeURL = AbstractIntegrationTest.class.getClassLoader().getResource("docker-compose.yml");
             final Path dockerComposeFile = Paths.get(dockerComposeURL.toURI());
-            dockerCompose = new DockerCompose(Client.getClientConfiguration().getBackgroundExecutor(), dockerComposeFile);
+            final BackgroundExecutor backgroundExecutor = Client.getService(BackgroundExecutor.class);
+            dockerCompose = new DockerCompose(backgroundExecutor, dockerComposeFile);
         } catch (Exception e) {
             throw new RuntimeException("Can not createList Docker environment!", e);
         }
@@ -72,12 +77,11 @@ public class AbstractIntegrationTest {
 
     @BeforeGroups(INTEGRATION_TESTS_TEST_GROUP)
     protected void startDockerContainers() {
-        final Executor executor = Client.getClientConfiguration().getBackgroundExecutor();
         final Wait[] waits = endpoints.stream()
                 .map(e -> Wait.forHttp(e.getHeathEndpoint(), HTTP_OK))
                 .collect(Collectors.toList())
                 .toArray(new Wait[]{});
-        dockerCompose.start(2, TimeUnit.MINUTES, waits);
+        dockerCompose.start(timeoutInMinutes, TimeUnit.MINUTES, waits);
     }
 
     @AfterGroups(INTEGRATION_TESTS_TEST_GROUP)
@@ -102,7 +106,7 @@ public class AbstractIntegrationTest {
 
     protected <T> ControllerProxy<T> createController(ClientContext clientContext, String controllerName) {
         try {
-            return (ControllerProxy<T>) clientContext.createController(controllerName).get(2, TimeUnit.MINUTES);
+            return (ControllerProxy<T>) clientContext.createController(controllerName).get(timeoutInMinutes, TimeUnit.MINUTES);
         } catch (Exception e) {
             throw new RuntimeException("Can not createList controller " + controllerName, e);
         }
@@ -116,7 +120,7 @@ public class AbstractIntegrationTest {
             long timeOutTime = System.currentTimeMillis() + Duration.ofMinutes(timeoutInMinutes).toMillis();
             while (System.currentTimeMillis() < timeOutTime && clientContext.getClientId() == null) {
                 try {
-                    clientContext.connect().get(10, TimeUnit.SECONDS);
+                    clientContext.connect().get(timeoutInMinutes, TimeUnit.MINUTES);
                 } catch (Exception ex) {
                     // do nothing since server is not up at the moment...
                 }
@@ -157,7 +161,7 @@ public class AbstractIntegrationTest {
 
     protected void disconnect(ClientContext clientContext, String endpoint) {
         try {
-            clientContext.disconnect().get(10, TimeUnit.SECONDS);
+            clientContext.disconnect().get(timeoutInMinutes, TimeUnit.MINUTES);
         } catch (Exception e) {
             //do nothing
         }

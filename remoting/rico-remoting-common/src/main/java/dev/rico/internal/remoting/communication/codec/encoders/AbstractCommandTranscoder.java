@@ -22,7 +22,6 @@ import com.google.gson.JsonObject;
 import dev.rico.internal.remoting.communication.commands.Command;
 import dev.rico.internal.remoting.communication.codec.CodecConstants;
 import org.apiguardian.api.API;
-import sun.lwawt.macosx.CocoaConstants;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
