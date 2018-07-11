@@ -102,6 +102,9 @@ public class RemotingCommunicationHandler {
                 return;
             }
 
+
+
+
             LOG.trace("Sending RPM response for client session {} in http session {} from client with user-agent {}", context.getId(), httpSession.getId(), userAgent);
             LOG.trace("RPM response for client session {} in http session {} contains {} commands", context.getId(), httpSession.getId(), results.size());
 

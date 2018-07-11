@@ -14,9 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.internal.client.remoting;
+package dev.rico.internal.client.remoting.communication;
 
-import dev.rico.client.CalledInUiThread;
 import dev.rico.core.http.HttpResponse;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.http.HttpHeaderConstants;
@@ -34,9 +33,7 @@ import org.slf4j.LoggerFactory;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -45,6 +42,9 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 
+import static dev.rico.core.http.RequestMethod.GET;
+import static dev.rico.internal.core.http.HttpHeaderConstants.JSON_MIME_TYPE;
+import static dev.rico.internal.core.http.HttpStatus.HTTP_OK;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 /**
@@ -71,13 +71,13 @@ public class HttpClientConnector implements RemotingCommandHandler {
 
     private final Consumer<Exception> errorHandler;
 
-    private final Queue<CommandAndHandler> commandQueue;
+    private final CommandQueue commandQueue;
 
+    private AtomicBoolean interruptsActive = new AtomicBoolean(false);
 
-    private final Lock requestLock = new ReentrantLock();
+    private final Lock interruptLock;
 
-    private final Condition requestCondition = requestLock.newCondition();
-
+    private final Condition interruptCondition;
 
     public HttpClientConnector(final URI servletUrl, final ClientConfiguration configuration, final Codec codec, final HttpClient client, final Consumer<Command> clientCommandHandler, final Consumer<Exception> errorHandler) {
         this.servletUrl = Assert.requireNonNull(servletUrl, "servletUrl");
@@ -87,50 +87,10 @@ public class HttpClientConnector implements RemotingCommandHandler {
         this.uiExecutor = configuration.getUiExecutor();
         this.clientCommandHandler = Assert.requireNonNull(clientCommandHandler, "clientCommandHandler");
         this.errorHandler = Assert.requireNonNull(errorHandler, "errorHandler");
-        this.commandQueue = new ConcurrentLinkedQueue<>();
-    }
+        this.commandQueue = new CommandQueue();
 
-    private List<Command> handleRequest(final List<Command> toSend) throws Exception {
-        LOG.info("Handle request - 1");
-        requestLock.lock();
-        try {
-            final CompletableFuture<List<Command>> requestFuture = new CompletableFuture<>();
-            backgroundExecutor.execute(() -> {
-                requestLock.lock();
-                try {
-                    final List<Command> receivedCommands = transmit(toSend);
-                    requestFuture.complete(receivedCommands);
-                    requestCondition.signal();
-                } catch (RemotingException e) {
-                    handleError(e);
-                    requestFuture.completeExceptionally(e);
-                } finally {
-                    requestLock.unlock();
-                }
-            });
-            LOG.info("Handle request - 2");
-            requestCondition.await();
-            LOG.info("Handle request - 3");
-            if (!requestFuture.isDone()) {
-                final CompletableFuture<Void> interruptFuture = new CompletableFuture<>();
-                backgroundExecutor.execute(() -> {
-                    requestLock.lock();
-                    try {
-                        transmitInterrupt();
-                        interruptFuture.complete(null);
-                    } catch (Exception e) {
-                        handleError(e);
-                        interruptFuture.completeExceptionally(e);
-                    } finally {
-                        requestLock.unlock();
-                    }
-                });
-                interruptFuture.get();
-            }
-            return requestFuture.get();
-        } finally {
-            requestLock.unlock();
-        }
+        this.interruptLock = new ReentrantLock();
+        this.interruptCondition = interruptLock.newCondition();
     }
 
     public void connect() {
@@ -140,22 +100,40 @@ public class HttpClientConnector implements RemotingCommandHandler {
                 while (isConnected()) {
                     final List<Command> toSend = new ArrayList<>();
                     final List<Runnable> onFinishHandler = new ArrayList<>();
-                    while (!commandQueue.isEmpty()) {
-                        CommandAndHandler commandAndHandler = commandQueue.remove();
-                        toSend.add(commandAndHandler.command);
-                        if (commandAndHandler.handler != null) {
-                            onFinishHandler.add(commandAndHandler.handler);
+                    commandQueue.getAll().forEach(c -> {
+                        final Command command = c.getCommand();
+                        final Runnable handler = c.getHandler();
+                        toSend.add(command);
+                        if (handler != null) {
+                            onFinishHandler.add(handler);
                         }
-                    }
-                    final List<Command> receivedCommands = handleRequest(toSend);
+                    });
+
+                    final List<Command> receivedCommands = transmitCommands(toSend);
                     callInUiAndWait(() -> {
                         try {
-                            handleResponse(receivedCommands);
+                            receivedCommands.forEach(c -> clientCommandHandler.accept(c));
                             onFinishHandler.forEach(h -> h.run());
                         } catch (Exception e) {
                             errorHandler.accept(e);
                         }
                     });
+                }
+            } catch (Exception e) {
+                handleError(e);
+            }
+        });
+
+        backgroundExecutor.execute(() -> {
+            try {
+                while (isConnected()) {
+                    interruptLock.lock();
+                    try {
+                        interruptCondition.await();
+                        transmitInterrupt();
+                    } finally {
+                        interruptLock.unlock();
+                    }
                 }
             } catch (Exception e) {
                 handleError(e);
@@ -174,6 +152,11 @@ public class HttpClientConnector implements RemotingCommandHandler {
     }
 
     @Override
+    public void send(final Command command) {
+        this.sendImpl(command, null);
+    }
+
+    @Override
     public CompletableFuture<Void> sendAndReact(final Command command) {
         Assert.requireNonNull(command, "command");
         final CompletableFuture<Void> result = new CompletableFuture<>();
@@ -183,47 +166,37 @@ public class HttpClientConnector implements RemotingCommandHandler {
 
     private void sendImpl(final Command command, Runnable onFinishHandler) {
         final CommandAndHandler cmh = new CommandAndHandler(command, onFinishHandler);
-        commandQueue.add(cmh);
-        triggerInterrupt();
-    }
-
-    @Override
-    public void send(final Command command) {
-        this.sendImpl(command, null);
-    }
-
-    private void triggerInterrupt() {
-        LOG.info("Interrupt should be triggered - 1");
         backgroundExecutor.execute(() -> {
-            LOG.info("Interrupt should be triggered - 2");
-            requestLock.lock();
-            try {
-                LOG.info("Interrupt should be triggered - 3");
-                requestCondition.signal();
-            } finally {
-                requestLock.unlock();
+            commandQueue.add(cmh);
+            if (interruptsActive.get()) {
+                interruptLock.lock();
+                try {
+                    interruptCondition.signal();
+                } finally {
+                    interruptLock.unlock();
+                }
             }
         });
     }
 
-    @CalledInUiThread
-    private void handleResponse(final List<Command> commands) {
-        Assert.requireNonNull(commands, "commands");
-        commands.forEach(c -> clientCommandHandler.accept(c));
-    }
-
-    private List<Command> transmit(final List<Command> commands) throws RemotingException {
+    private List<Command> transmitCommands(final List<Command> commands) throws RemotingException {
         Assert.requireNonNull(commands, "commands");
         if (!connected.get()) {
             throw new RemotingException("Not connected!");
         }
         try {
             final String data = codec.encode(commands);
-            final HttpResponse<String> response = client.request(servletUrl, RequestMethod.POST).withContent(data, HttpHeaderConstants.JSON_MIME_TYPE).readString().execute().get();
-            if (response.getStatusCode() != HttpStatus.HTTP_OK) {
+            LOG.info("Sending request with data size {}", data.length());
+            final HttpResponse<String> response = client.post(servletUrl)
+                    .withContent(data, JSON_MIME_TYPE)
+                    .readString()
+                    .execute()
+                    .get();
+            if (response.getStatusCode() != HTTP_OK) {
                 throw new RemotingException("Bad http response code " + response.getStatusCode());
             }
             final String receivedContent = response.getContent();
+            LOG.info("Received response with data size {}", receivedContent.length());
             return codec.decode(receivedContent);
         } catch (final Exception e) {
             throw new RemotingException("Error in request", e);
@@ -232,8 +205,12 @@ public class HttpClientConnector implements RemotingCommandHandler {
 
     private void transmitInterrupt() throws RemotingException {
         try {
-            final HttpResponse<Void> response = client.request(servletUrl, RequestMethod.GET).withoutContent().withoutResult().execute().get();
-            if (response.getStatusCode() != HttpStatus.HTTP_OK) {
+            final HttpResponse<Void> response = client.get(servletUrl)
+                    .withoutContent()
+                    .withoutResult()
+                    .execute()
+                    .get();
+            if (response.getStatusCode() != HTTP_OK) {
                 throw new RemotingException("Bad http response code " + response.getStatusCode());
             }
         } catch (final Exception e) {
@@ -242,24 +219,12 @@ public class HttpClientConnector implements RemotingCommandHandler {
     }
 
     public void disconnect() {
+        interruptsActive.set(false);
         connected.set(false);
     }
 
     public boolean isConnected() {
         return connected.get();
-    }
-
-    private class CommandAndHandler {
-
-        private final Command command;
-
-        private final Runnable handler;
-
-        public CommandAndHandler(Command command, Runnable handler) {
-            this.command = Assert.requireNonNull(command, "command");
-            this.handler = handler;
-        }
-
     }
 
     @Deprecated
@@ -276,6 +241,9 @@ public class HttpClientConnector implements RemotingCommandHandler {
         blocker.get();
     }
 
+    public void activeInterrupts() {
+        interruptsActive.set(true);
+    }
 }
 
 

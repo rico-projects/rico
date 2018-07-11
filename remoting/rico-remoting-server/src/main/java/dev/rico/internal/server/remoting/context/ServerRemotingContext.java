@@ -18,6 +18,7 @@ package dev.rico.internal.server.remoting.context;
 
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.remoting.communication.commands.impl.*;
+import dev.rico.internal.remoting.communication.merge.CommandMergeUtils;
 import dev.rico.internal.server.remoting.model.BeanManagerImpl;
 import dev.rico.internal.remoting.communication.commands.*;
 import dev.rico.internal.server.client.ClientSessionProvider;
@@ -172,10 +173,49 @@ public class ServerRemotingContext {
 
         final List<Command> results = new LinkedList<>();
         while (!toSendQueue.isEmpty()) {
-            results.add(toSendQueue.poll());
+            final Command nextCommand = toSendQueue.poll();
+            doPossibleMerge(results, nextCommand);
+            results.add(nextCommand);
         }
         return results;
     }
+
+    private void doPossibleMerge(final List<Command> current, final Command nextCommand) {
+        if(nextCommand instanceof ValueChangedCommand) {
+            ListIterator<Command> iterator = current.listIterator();
+            while (iterator.hasNext()) {
+                final Command command = iterator.next();
+                if(command instanceof ValueChangedCommand) {
+                    CommandMergeUtils.checkValueChangedCommand((ValueChangedCommand)command, () -> iterator.remove(), (ValueChangedCommand)nextCommand);
+                }
+            }
+        } else if(nextCommand instanceof ListAddCommand) {
+            ListIterator<Command> iterator = current.listIterator();
+            while (iterator.hasNext()) {
+                final Command command = iterator.next();
+                if(command instanceof ListAddCommand) {
+                    CommandMergeUtils.checkListAddCommand((ListAddCommand)command, () -> iterator.remove(), (ListAddCommand)nextCommand);
+                }
+            }
+        } else if(nextCommand instanceof ListReplaceCommand) {
+            ListIterator<Command> iterator = current.listIterator();
+            while (iterator.hasNext()) {
+                final Command command = iterator.next();
+                if(command instanceof ListReplaceCommand) {
+                    CommandMergeUtils.checkListReplaceCommand((ListReplaceCommand)command, () -> iterator.remove(), (ListReplaceCommand)nextCommand);
+                }
+            }
+        } else if(nextCommand instanceof ListRemoveCommand) {
+            ListIterator<Command> iterator = current.listIterator();
+            while (iterator.hasNext()) {
+                final Command command = iterator.next();
+                if(command instanceof ListRemoveCommand) {
+                    CommandMergeUtils.checkListRemoveCommand((ListRemoveCommand)command, () -> iterator.remove(), (ListRemoveCommand)nextCommand);
+                }
+            }
+        }
+    }
+
 
     private void onInitContext() {
     }

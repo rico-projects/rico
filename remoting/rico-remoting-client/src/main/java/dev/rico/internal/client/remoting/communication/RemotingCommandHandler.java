@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.internal.client.remoting;
+package dev.rico.internal.client.remoting.communication;
 
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.remoting.communication.commands.Command;

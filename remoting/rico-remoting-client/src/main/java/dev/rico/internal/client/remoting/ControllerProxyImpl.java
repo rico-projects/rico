@@ -16,6 +16,7 @@
  */
 package dev.rico.internal.client.remoting;
 
+import dev.rico.internal.client.remoting.communication.RemotingCommandHandler;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.remoting.MappingException;
 import dev.rico.internal.remoting.communication.commands.impl.CallActionCommand;

@@ -18,6 +18,7 @@ package dev.rico.internal.client.remoting;
 
 import dev.rico.client.Client;
 import dev.rico.core.http.HttpClient;
+import dev.rico.internal.client.remoting.communication.HttpClientConnector;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.remoting.communication.codec.Codec;
 import dev.rico.internal.remoting.communication.commands.Command;
@@ -113,7 +114,11 @@ public class ClientContextImpl implements ClientContext {
     public CompletableFuture<Void> connect() {
         final CreateContextCommand command = new CreateContextCommand();
         clientConnector.connect();
-        return clientConnector.sendAndReact(command);
+        return clientConnector.sendAndReact(command).whenComplete((v, e) -> {
+            if(e == null) {
+                clientConnector.activeInterrupts();
+            }
+        });
     }
 
     @Override

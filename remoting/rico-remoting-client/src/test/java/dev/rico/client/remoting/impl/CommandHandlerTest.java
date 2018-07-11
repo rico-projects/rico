@@ -17,7 +17,7 @@
 package dev.rico.client.remoting.impl;
 
 import dev.rico.client.remoting.util.AbstractRemotingTest;
-import dev.rico.internal.client.remoting.RemotingCommandHandler;
+import dev.rico.internal.client.remoting.communication.RemotingCommandHandler;
 import dev.rico.internal.client.remoting.legacy.ClientAttribute;
 import dev.rico.internal.client.remoting.legacy.ClientModelStore;
 import dev.rico.internal.remoting.legacy.communication.Command;

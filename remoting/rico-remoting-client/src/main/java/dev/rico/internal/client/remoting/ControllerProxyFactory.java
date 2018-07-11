@@ -17,6 +17,7 @@
 package dev.rico.internal.client.remoting;
 
 import dev.rico.client.remoting.ControllerProxy;
+import dev.rico.internal.client.remoting.communication.RemotingCommandHandler;
 import dev.rico.internal.remoting.communication.commands.impl.CreateControllerCommand;
 import dev.rico.internal.core.Assert;
 import org.apiguardian.api.API;

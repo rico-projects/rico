@@ -16,7 +16,7 @@
  */
 package dev.rico.client.remoting.impl;
 
-import dev.rico.internal.client.remoting.HttpClientConnector;
+import dev.rico.internal.client.remoting.communication.HttpClientConnector;
 import dev.rico.internal.client.remoting.legacy.ClientModelStore;
 import dev.rico.internal.client.remoting.legacy.DefaultModelSynchronizer;
 import dev.rico.internal.client.remoting.legacy.communication.SimpleExceptionHandler;

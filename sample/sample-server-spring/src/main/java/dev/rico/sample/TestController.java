@@ -34,8 +34,8 @@ public class TestController {
         final ClientSessionExecutor executor = context.createSessionExecutor();
         Executors.newSingleThreadExecutor().submit(() -> {
             while (true) {
-     //           executor.runLaterInClientSession(() -> update()).get();
-                Thread.sleep(200);
+                executor.runLaterInClientSession(() -> update()).get();
+                Thread.sleep(20);
             }
         });
         model.getValueA().onChanged(e -> model.getValueB().set(e.getNewValue()));
@@ -46,7 +46,7 @@ public class TestController {
 
         model.getItems().clear();
 
-        IntStream.range(0,  2).forEach(i -> {
+        IntStream.range(0,  24).forEach(i -> {
             final Item item = beanManager.create(Item.class);
             item.setBooleanValue(random.nextBoolean());
             item.setDoubleValue(random.nextDouble());
