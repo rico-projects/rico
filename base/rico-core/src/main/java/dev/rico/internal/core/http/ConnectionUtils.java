@@ -48,6 +48,10 @@ public class ConnectionUtils {
         return Base64.getEncoder().encodeToString(bytes);
     }
 
+    public static byte[] fromBase64(String string) {
+        return Base64.getDecoder().decode(string);
+    }
+
     public static String toHex(byte[] bytes) {
         return DatatypeConverter.printHexBinary(bytes).toUpperCase();
     }
