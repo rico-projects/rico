@@ -29,7 +29,7 @@ public class ConnectionTest extends AbstractIntegrationTest {
             Assert.assertNotNull(context);
             disconnect(context, endpoint);
         } catch (Exception e) {
-            Assert.fail("Can not createList connection for " + containerType, e);
+            Assert.fail("Can not create connection for " + containerType, e);
         }
     }
 }

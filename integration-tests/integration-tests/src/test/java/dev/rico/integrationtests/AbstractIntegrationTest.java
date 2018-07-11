@@ -71,7 +71,7 @@ public class AbstractIntegrationTest {
             final BackgroundExecutor backgroundExecutor = Client.getService(BackgroundExecutor.class);
             dockerCompose = new DockerCompose(backgroundExecutor, dockerComposeFile);
         } catch (Exception e) {
-            throw new RuntimeException("Can not createList Docker environment!", e);
+            throw new RuntimeException("Can not create Docker environment!", e);
         }
     }
 
@@ -108,7 +108,7 @@ public class AbstractIntegrationTest {
         try {
             return (ControllerProxy<T>) clientContext.createController(controllerName).get(timeoutInMinutes, TimeUnit.MINUTES);
         } catch (Exception e) {
-            throw new RuntimeException("Can not createList controller " + controllerName, e);
+            throw new RuntimeException("Can not create controller " + controllerName, e);
         }
     }
 
@@ -131,7 +131,7 @@ public class AbstractIntegrationTest {
 
             return clientContext;
         } catch (Exception e) {
-            throw new RuntimeException("Can not createList client context for endpoint " + endpoint, e);
+            throw new RuntimeException("Can not create client context for endpoint " + endpoint, e);
         }
     }
 
