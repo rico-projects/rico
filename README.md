@@ -28,7 +28,21 @@ Next to tis Rico provides implementations for the following ui toolkits and lang
 * Angular 1.x client ([external repo](https://github.com/rico-project/rico-angularjs))
 
 ## Features of Rico
-TODO
+As already mentioned Rico provides a list of general features that are usefull in mostly all enterprise applications. A
+detailed description of the features will be part of the future technical documentation of Rico. Until now Rico provides
+APIs for the following functionalities:
+
+* client scope / session
+* ui toolkit friendly http client
+* application management
+* general context manager
+* metrics handling
+* server timing
+* security and sso
+* remoting
+* logging
+* projection
+* tracing
 
 ## 🆕🐥🐶 First Timers Support
 At Karakun we ❤️ open source. Based on this we develop the complete Rico framework as an open source project. If you are new to open source development we have some specific issues for you. Just have a look at all issues with the 'good first issue' label. This issues are reserved for people who never contributed to Open Source before. We know that the process of creating a pull request is the biggest barrier for new contributors. This issues are for you 💝 We use such issues for example to get involved at Hacktoberfest. If you want to know more about open source development and contribution in general you should have a look at this overview.
