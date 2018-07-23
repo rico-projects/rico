@@ -44,6 +44,11 @@ APIs for the following functionalities:
 * projection
 * tracing
 
+## Development origin
+The Rico framework is the successor of the [Dolphin Platform](https://github.com/canoo/dolphin-platform) that provided 
+functionality like an asynchronous remoting layer for enterprise applications based on generic APIs. While Rico shares 
+the general idea of the Dolphin Platform it provides a lot more functionality.
+
 ## 🆕🐥🐶 First Timers Support
 At Karakun we ❤️ open source. Based on this we develop the complete Rico framework as an open source project. If you are new to open source development we have some specific issues for you. Just have a look at all issues with the 'good first issue' label. This issues are reserved for people who never contributed to Open Source before. We know that the process of creating a pull request is the biggest barrier for new contributors. This issues are for you 💝 We use such issues for example to get involved at Hacktoberfest. If you want to know more about open source development and contribution in general you should have a look at this overview.
 
