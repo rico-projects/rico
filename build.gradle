@@ -29,10 +29,38 @@ plugins {
     id "com.jfrog.bintray" version "1.8.4"
 }
 
-allprojects { proj ->
+subprojects { proj ->
     apply plugin: 'idea'
     apply plugin: 'java'
+    apply plugin: 'maven-publish'
 
+       publishing {
+        publications {
+            mavenCustom(MavenPublication) {
+                from components.java
+                artifact sourcesJar
+                artifact javadocJar
+
+                pom.withXml {
+                    asNode().children().last() + pomConfig
+                }
+            }
+        }
+    }
+
+    bintray {
+        user = project.bintrayUsername
+        key = project.bintrayApiKey
+        configurations = ['mavenCustom']
+        pkg {
+            repo = 'Rico'
+            name = 'Rico'
+            userOrg = 'karakun'
+            licenses = ['Apache-2.0']
+            vcsUrl = 'https://github.com/rico-project/rico.git'
+        }
+    }
+    
     repositories {
         jcenter()
         mavenLocal()
@@ -73,22 +101,3 @@ allprojects { proj ->
         archives javadocJar
     }
 }
-
-bintray {
-    user = project.bintrayUsername
-    key = project.bintrayApiKey
-    configurations = ['archives']
-    pkg {
-        repo = 'Rico'
-        name = 'Rico'
-        userOrg = 'karakun'
-        licenses = ['Apache-2.0']
-        vcsUrl = 'https://github.com/rico-project/rico.git'
-        version {
-            name = "$version"
-			desc = "Rico Framework $version"
-			vcsTag = "$version"
-        }
-    }
-}
-
