@@ -13,6 +13,6 @@ stages:
 jobs:
   include:
     - stage: build
-      script: "./gradlew clean build artifactoryPublish"
+      script: "./gradlew clean build artifactoryPublish -x test"
     - stage: snapshot
       script: "./gradlew clean build"
