@@ -27,6 +27,7 @@ buildscript {
     dependencies {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
         classpath 'com.adarshr:gradle-test-logger-plugin:1.1.2'
+        classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:4.5.4'
     }
 }
 
@@ -61,9 +62,24 @@ subprojects { proj ->
         archives javadocJar
     }
 
+    repositories {
+        jcenter()
+        mavenLocal()
+    }
+
+    dependencies {
+        testCompile "org.testng:testng:$testngVersion"
+        testCompile "org.hamcrest:java-hamcrest:$hamcrestVersion"
+        testCompile "org.jmockit:jmockit:$jmockitVersion"
+    }
+
+    jar.finalizedBy sourcesJar
+    jar.finalizedBy javadocJar
+
     if(proj.publishJars.toBoolean()) {
         apply plugin: 'maven-publish'
         apply plugin: 'com.jfrog.bintray'
+        apply plugin: 'com.jfrog.artifactory'
 
         publishing {
             publications {
@@ -87,19 +103,20 @@ subprojects { proj ->
                 vcsUrl = 'https://github.com/rico-project/rico.git'
             }
         }
-    }
 
-    repositories {
-        jcenter()
-        mavenLocal()
-    }
+        artifactory {
+            contextUrl = 'https://oss.jfrog.org'
+            publish {
+                repository {
+                    repoKey = 'oss-snapshot-local'
+                    username = project.bintrayUsername
+                    password = project.bintrayApiKey
 
-    dependencies {
-        testCompile "org.testng:testng:$testngVersion"
-        testCompile "org.hamcrest:java-hamcrest:$hamcrestVersion"
-        testCompile "org.jmockit:jmockit:$jmockitVersion"
+                }
+                defaults{
+                    publications('mavenCustom')
+                }
+            }
+        }
     }
-
-    jar.finalizedBy sourcesJar
-    jar.finalizedBy javadocJar
 }
