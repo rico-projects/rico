@@ -5,5 +5,14 @@ jdk: oraclejdk8
 services:
   - docker
 
-script:
-  ./gradlew clean build
+stages:
+  - build
+  - name: snapshot
+    if: (branch = master) AND (NOT (type IN (push, pull_request)))
+
+jobs:
+  include:
+    - stage: build
+      script: "./gradlew clean build artifactoryPublish"
+    - stage: snapshot
+      script: "./gradlew clean build"

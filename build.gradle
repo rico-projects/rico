@@ -91,9 +91,12 @@ subprojects { proj ->
             }
         }
 
+        project.ext.setProperty('bintrayUser', project.hasProperty('bintrayUsername') ? project.property('bintrayUsername') : System.getenv('BINTRAY_USERNAME'))
+        project.ext.setProperty('bintrayKey', project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY'))
+
         bintray {
-            user = project.bintrayUsername
-            key = project.bintrayApiKey
+            user = proj.bintrayUser
+            key = proj.bintrayKey
             publications = ['mavenCustom']
             pkg {
                 repo = 'Rico'
@@ -109,9 +112,8 @@ subprojects { proj ->
             publish {
                 repository {
                     repoKey = 'oss-snapshot-local'
-                    username = project.bintrayUsername
-                    password = project.bintrayApiKey
-
+                    username = project.bintrayUser
+                    password = project.bintrayKey
                 }
                 defaults{
                     publications('mavenCustom')
