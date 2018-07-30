@@ -2,6 +2,11 @@
 This guide defines the coding standards for source code in the Java™ Programming Language as defined by Karakun AG. It should be used in 
 all (open source) Java projects that are maintaned by Karakun AG or members of Karakun AG.
 
+## Why do we need this
+When writing source code one main goal should be to create classes and code blocks that are easy to read, understand and maintain.
+By doing so bugs can be found much easier in source code and new developers will understand the functionality of the code faster.
+This style guide contains common rules that are known by mostly all Java developers.
+
 ## Source files
 All source files (*.java) must have case-sensitive name of the top-level class it contains. Source files are always encoded in UTF-8. If the file belongs to an open source project a licence header must be added to the top of the file.
 
