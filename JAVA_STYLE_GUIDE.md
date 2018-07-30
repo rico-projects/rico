@@ -50,5 +50,56 @@ In a class API, you should support access to any methods and fields that you mak
 ### Favor immutability
 Mutable objects carry a burden - you need to make sure that those who are able to mutate it are not violating expectations of other users of the object, and that it's even safe for them to modify. Based on this the `final` keyword must be added to any field, paramater and variable if possible.
 
+Negative example:
+
+```java
+public class SpecificService {
+
+    private String name;
+
+    public SpecificService(String name) {
+        this.name = name;
+        ServiceProvider provider = new ServiceProvider();
+        provider.register(this);
+    }
+}
+```
+
+Good example:
+
+```java
+public final class SpecificService {
+
+    private final String name;
+
+    public SpecificService(final String name) {
+        this.name = name;
+        final ServiceProvider provider = new ServiceProvider();
+        provider.register(this);
+    }
+}
+```
+
 ### Do null checks
-Each parameter that is accessed after initalization / mutation must be directly checked for a `null` value.
+Each parameter, variable & field that is accessed after initalization / change must be directly checked for a `null` value.
+
+Example:
+
+```java
+public class Service {
+
+    private Handler handler;
+
+    public Service(final Handler handler) {
+        this.handler = Objects.requireNonNull(handler);
+    }
+
+    public void setHandler(final Handler handler) {
+        this.handler = Objects.requireNonNull(handler);
+    }
+
+    public void start() {
+        handler.start();
+    }
+}
+```
