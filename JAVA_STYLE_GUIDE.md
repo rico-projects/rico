@@ -1,0 +1,54 @@
+# Java Style Guide
+This guide defines the coding standards for source code in the Java™ Programming Language as defined by Karakun AG. It should be used in 
+all (open source) Java projects that are maintaned by Karakun AG or members of Karakun AG.
+
+## Source files
+All source files (*.java) must have case-sensitive name of the top-level class it contains. Source files are always encoded in UTF-8. If the file belongs to an open source project a licence header must be added to the top of the file.
+
+## Naming and declaration
+
+### Package names
+Package names are all lowercase, with consecutive words simply concatenated together (no underscores). For example, `com.example.deepspace`,
+not `com.example.deepSpace` or `com.example.deep_space`.
+
+### Class names
+Class names are written in UpperCamelCase. Test classes are named starting with the name of the class they are testing, and ending with 
+`Test`. For example, `HashTest` or `HashIntegrationTest`.
+
+### Method names
+Method names are written in lowerCamelCase.
+
+### Constant names
+Constant names use CONSTANT_CASE: all uppercase letters, with each word separated from the next by a single underscore. Constants are static final fields whose contents are deeply immutable and whose methods have no detectable side effects. This includes primitives, Strings, immutable types, and immutable collections of immutable types. If any of the instance's observable state can change, it is not a constant. Merely intending to never mutate the object is not enough.
+
+### Non-constant field names
+Non-constant field names (static or otherwise) are written in lowerCamelCase.
+
+### Parameter names
+Parameter names are written in lowerCamelCase. One-character parameter names in public methods should be avoided.
+
+### Local variable names
+Local variable names are written in lowerCamelCase. Even when final and immutable, local variables are not considered to be constants, and should not be styled as constants.
+
+## Programming Practices
+
+### Declaration of variables
+Every variable declaration (field or local) declares only one variable: declarations such as `int a, b;` are not used. 
+
+### Usage of @Override
+A method is marked with the @Override annotation whenever it is legal. This includes a class method overriding a superclass method, a class method implementing an interface method, and an interface method respecifying a superinterface method.
+
+### No wildcard imports
+Wildcard imports make the source of an imported class less clear.
+
+### Avoid assert
+We avoid the assert statement since it can be disabled at execution time.
+
+### Minimize visibility
+In a class API, you should support access to any methods and fields that you make accessible. Therefore, only expose what you intend the caller to use. This can be imperative when writing thread-safe code.
+
+### Favor immutability
+Mutable objects carry a burden - you need to make sure that those who are able to mutate it are not violating expectations of other users of the object, and that it's even safe for them to modify. Based on this the `final` keyword must be added to any field, paramater and variable if possible.
+
+### Do null checks
+Each parameter that is accessed after initalization / mutation must be directly checked for a `null` value.
