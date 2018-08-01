@@ -59,7 +59,7 @@ public class BasicConfigurationProvider extends SimpleConfigurationProvider {
 
     public final static boolean ACTIVE_DEFAULT_VALUE = true;
 
-    public final static List<String> ACCESS_CONTROL_ALLOW_HEADERS_DEFAULT_VALUE = Arrays.asList("Content-Type", "x-requested-with", "origin", "authorization", "accept", "client-security-token", "X-platform-security-bearer-only");
+    public final static List<String> ACCESS_CONTROL_ALLOW_HEADERS_DEFAULT_VALUE = Arrays.asList("Content-Type", "x-requested-with", "origin", "authorization", "accept", "client-security-token", "X-platform-security-bearer-only", "X-platform-security-realm", "X-platform-security-application");
 
     public final static List<String> ACCESS_CONTROL_ALLOW_METHODS_DEFAULT_VALUE = Arrays.asList("*");
 
