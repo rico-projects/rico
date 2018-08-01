@@ -24,15 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static dev.rico.internal.security.SecurityConstants.AUTH_ENDPOINT_PROPERTY_DEFAULT_VALUE;
-import static dev.rico.internal.security.SecurityConstants.AUTH_ENDPOINT_PROPERTY_NAME;
-import static dev.rico.internal.server.security.SecurityServerConstants.SECURE_ENDPOINTS_PROPERTY_DEFAULT_VALUE;
-import static dev.rico.internal.server.security.SecurityServerConstants.SECURE_ENDPOINTS_PROPERTY_NAME;
-import static dev.rico.internal.server.security.SecurityServerConstants.SECURITY_ACTIVE_PROPERTY_DEFAULT_VALUE;
-import static dev.rico.internal.server.security.SecurityServerConstants.SECURITY_ACTIVE_PROPERTY_NAME;
-import static dev.rico.internal.server.security.SecurityServerConstants.CORS_PROPERTY_DEFAULT_VALUE;
-import static dev.rico.internal.server.security.SecurityServerConstants.CORS_PROPERTY_NAME;
-import static dev.rico.internal.server.security.SecurityServerConstants.REALMS_PROPERTY_NAME;
+import static dev.rico.internal.security.SecurityConstants.*;
+import static dev.rico.internal.server.security.SecurityServerConstants.*;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.19.0", status = INTERNAL)
@@ -42,14 +35,20 @@ public class SecurityDefaultValueProvider extends ConfigurationProviderAdapter {
     public Map<String, String> getStringProperties() {
         final HashMap<String, String> ret = new HashMap<>();
         ret.put(AUTH_ENDPOINT_PROPERTY_NAME, AUTH_ENDPOINT_PROPERTY_DEFAULT_VALUE);
+        ret.put(LOGIN_ENDPOINTS_PROPERTY_NAME, LOGIN_ENDPOINTS_PROPERTY_DEFAULT_VALUE);
+        ret.put(LOGOUT_ENDPOINTS_PROPERTY_NAME, LOGOUT_ENDPOINTS_PROPERTY_DEFAULT_VALUE);
+        ret.put(REALM_PROPERTY_NAME, "");
+        ret.put(APPLICATION_PROPERTY_NAME, "");
         return ret;
     }
 
     @Override
     public Map<String, Boolean> getBooleanProperties() {
         final HashMap<String, Boolean> ret = new HashMap<>();
-        ret.put(SECURITY_ACTIVE_PROPERTY_NAME, SECURITY_ACTIVE_PROPERTY_DEFAULT_VALUE);
+        ret.put(SECURITY_MODULE_ACTIVE_PROPERTY, SECURITY_MODULE_ACTIVE_PROPERTY_DEFAULT_VALUE);
         ret.put(CORS_PROPERTY_NAME, CORS_PROPERTY_DEFAULT_VALUE);
+        ret.put(LOGIN_ENDPOINTS_ACTIVE_PROPERTY_NAME, LOGIN_ENDPOINTS_ACTIVE_PROPERTY_DEFAULT_VALUE);
+        ret.put(DIRECT_CONNECTION_PROPERTY_NAME, DIRECT_CONNECTION_PROPERTY_DEFAULT_VALUE);
         return ret;
     }
 

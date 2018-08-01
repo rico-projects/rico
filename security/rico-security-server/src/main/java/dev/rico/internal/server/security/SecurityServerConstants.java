@@ -33,13 +33,11 @@ public interface SecurityServerConstants {
 
     String KEYCLOAK_CONFIG_RESOLVER_PROPERTY_NAME = "keycloak.config.resolver";
 
-    String SECURITY_ACTIVE_PROPERTY_NAME = "security.active";
-
-    boolean SECURITY_ACTIVE_PROPERTY_DEFAULT_VALUE = true;
-
     String SECURE_ENDPOINTS_PROPERTY_NAME = "security.endpoints";
 
     String LOGIN_ENDPOINTS_ACTIVE_PROPERTY_NAME = "security.loginEndpoint.active";
+
+    boolean LOGIN_ENDPOINTS_ACTIVE_PROPERTY_DEFAULT_VALUE = true;
 
     String LOGIN_ENDPOINTS_PROPERTY_NAME = "security.loginEndpoint";
 
@@ -54,4 +52,7 @@ public interface SecurityServerConstants {
     String SECURITY_MODULE_NAME = "SecurityModule";
 
     String SECURITY_MODULE_ACTIVE_PROPERTY = "security.active";
+
+    boolean SECURITY_MODULE_ACTIVE_PROPERTY_DEFAULT_VALUE = true;
+
 }
