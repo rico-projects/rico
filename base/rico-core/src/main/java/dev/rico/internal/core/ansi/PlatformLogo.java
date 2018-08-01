@@ -29,7 +29,7 @@ public class PlatformLogo {
     public static void printLogo() {
         final String version = PlatformVersion.getVersion();
         final String versionString = Optional.of(version).map(v -> "Version " + version + " | ").orElse("");
-        final String versionEndSuffix = "                                      ".substring(versionString.length());
+        final String versionEndSuffix = "                       ".substring(Math.min(20,versionString.length()));
 
         final String strokeColor = AnsiOut.ANSI_BLUE;
         final String textColor = AnsiOut.ANSI_RED;
@@ -46,17 +46,20 @@ public class PlatformLogo {
         final String boldTextEnd = AnsiOut.ANSI_RESET;
 
         System.out.println("");
-        System.out.println("  " + borderStart + "_____________________________________________________________________________________" + borderEnd);
-        System.out.println("  " + borderPipe + logoStart + "   _____        _       _     _       _____  _       _    __                       " + borderPipe);
-        System.out.println("  " + borderPipe + logoStart + "  |  __ \\      | |     | |   (_)     |  __ \\| |     | |  / _|                      " + borderPipe);
-        System.out.println("  " + borderPipe + logoStart + "  | |  | | ___ | |_ __ | |__  _ _ __ | |__) | | __ _| |_| |_ ___  _ __ _ __ ___    " + borderPipe);
-        System.out.println("  " + borderPipe + logoStart + "  | |  | |/ _ \\| | '_ \\| '_ \\| | '_ \\|  ___/| |/ _` | __|  _/ _ \\| '__| '_ ` _ \\   " + borderPipe);
-        System.out.println("  " + borderPipe + logoStart + "  | |  | | (_) | | |_) | | | | | | | | |    | | (_| | |_| || (_) | |  | | | | | |  " + borderPipe);
-        System.out.println("  " + borderPipe + logoStart + "  | |__| |\\___/|_| .__/|_| |_|_|_| |_|_|    |_|\\__,_|\\__|_| \\___/|_|  |_| |_| | |  " + borderPipe);
-        System.out.println("  " + borderPipe + logoStart + "  |_____/        | |                                                          |_|  " + borderPipe);
-        System.out.println("  " + borderPipe + logoStart + "                 |_|   " + textStart + versionString + "supported by " + textEnd + boldTextStart + "canoo.com" + boldTextEnd + versionEndSuffix + borderPipe);
-        System.out.println("  " + borderPipe + borderStart + "___________________________________________________________________________________" + borderEnd + borderPipe);
+        System.out.println("  " + borderStart + "____________________________________________________________________________________" + borderEnd);
+        System.out.println("  " + borderPipe + logoStart + "   _____  _                  __                                           _       " + borderPipe);
+        System.out.println("  " + borderPipe + logoStart + "  |  __ \\(_)                / _| _ _  __ _  _ __   ___ __ __ __ ___  _ _ | |__    " + borderPipe);
+        System.out.println("  " + borderPipe + logoStart + "  | |__) |_  ___ ___       |  _|| '_|/ _` || '  \\ / -_)\\ V  V // _ \\| '_|| / /    " + borderPipe);
+        System.out.println("  " + borderPipe + logoStart + "  |  _  /| |/ __/ _ \\      | |  |_|  \\__,_||_|_|_|\\___| \\_/\\_/ \\___/|_|  | \\ \\    " + borderPipe);
+        System.out.println("  " + borderPipe + logoStart + "  | | \\ \\| | (_| (_) |     | |                                           | |\\ \\   " + borderPipe);
+        System.out.println("  " + borderPipe + logoStart + "  |_|  \\_\\_|\\___\\___/      |_|  " + textStart + versionString + "by " + textEnd + boldTextStart + "dev.karakun.com" + boldTextEnd + versionEndSuffix + logoStart + "|_| \\_\\  " + borderPipe);
+        System.out.println("  " + borderPipe + borderStart + "__________________________________________________________________________________" + borderEnd + borderPipe);
         System.out.println("");
         System.out.println("");
+    }
+
+
+    public static void main(String[] args) {
+        printLogo();
     }
 }
