@@ -18,6 +18,8 @@
 dependencies {
     compile project(':rico-core')
     compile "org.reflections:reflections:$reflectionsVersion"
+    compile 'io.opentracing.contrib:opentracing-web-servlet-filter:0.1.1'
+    compile 'io.opentracing.brave:brave-opentracing:0.31.3'
     compileOnly "javax.servlet:javax.servlet-api:$servletApiVersion"
     testCompile "javax.servlet:javax.servlet-api:$servletApiVersion"
 }
