@@ -16,9 +16,7 @@
  */
 package dev.rico.client.remoting.impl;
 
-import dev.rico.client.concurrent.BackgroundExecutor;
-import dev.rico.client.concurrent.UiExecutor;
-import dev.rico.internal.client.remoting.HttpClientConnector;
+import dev.rico.internal.client.remoting.communication.HttpClientConnector;
 import dev.rico.internal.client.remoting.legacy.ClientModelStore;
 import dev.rico.internal.client.remoting.legacy.DefaultModelSynchronizer;
 import dev.rico.internal.client.remoting.legacy.communication.SimpleExceptionHandler;
@@ -26,7 +24,7 @@ import dev.rico.client.Client;
 import dev.rico.internal.client.http.HttpClientImpl;
 import dev.rico.internal.core.http.HttpStatus;
 import dev.rico.internal.core.RicoConstants;
-import dev.rico.internal.remoting.commands.CreateContextCommand;
+import dev.rico.internal.remoting.communication.commands.impl.CreateContextCommand;
 import dev.rico.internal.remoting.legacy.communication.Command;
 import dev.rico.internal.remoting.legacy.communication.CreatePresentationModelCommand;
 import dev.rico.internal.remoting.legacy.communication.JsonCodec;
@@ -91,7 +89,7 @@ public class TestHttpClientConnector {
                     @Override
                     public String getHeaderField(String name) {
                         if (RicoConstants.CLIENT_ID_HTTP_HEADER_NAME.equals(name)) {
-                            return "TEST-ID";
+                            return "TEST-COMMAND_TYPE_ATTRIBUTE";
                         }
                         return super.getHeaderField(name);
                     }
@@ -99,11 +97,8 @@ public class TestHttpClientConnector {
             }
         });
 
-        final UiExecutor uiExecutor = Client.getService(UiExecutor.class);
-        final BackgroundExecutor backgroundExecutor = Client.getService(BackgroundExecutor.class);
-
         final ClientModelStore clientModelStore = new ClientModelStore(new DefaultModelSynchronizer(() -> null));
-        final HttpClientConnector connector = new HttpClientConnector(getDummyURL(), uiExecutor, backgroundExecutor, clientModelStore, new JsonCodec(), new SimpleExceptionHandler(), Client.getService(HttpClient.class));
+        final HttpClientConnector connector = new HttpClientConnector(getDummyURL(), Client.getClientConfiguration(), clientModelStore, new JsonCodec(), new SimpleExceptionHandler(), Client.getService(HttpClient.class));
 
         final CreatePresentationModelCommand command = new CreatePresentationModelCommand();
         command.setPmId("p1");
@@ -148,11 +143,7 @@ public class TestHttpClientConnector {
 
         final ClientModelStore clientModelStore = new ClientModelStore(new DefaultModelSynchronizer(() -> null));
 
-        final UiExecutor uiExecutor = Client.getService(UiExecutor.class);
-        final BackgroundExecutor backgroundExecutor = Client.getService(BackgroundExecutor.class);
-
-
-        final HttpClientConnector connector = new HttpClientConnector(getDummyURL(), uiExecutor, backgroundExecutor, clientModelStore, new JsonCodec(), new SimpleExceptionHandler(), new HttpClientImpl(new Gson(), Client.getClientConfiguration()));
+        final HttpClientConnector connector = new HttpClientConnector(getDummyURL(), Client.getClientConfiguration(), clientModelStore, new JsonCodec(), new SimpleExceptionHandler(), new HttpClientImpl(new Gson(), Client.getClientConfiguration()));
 
         final List<Command> commands = new ArrayList<>();
         commands.add(new CreateContextCommand());

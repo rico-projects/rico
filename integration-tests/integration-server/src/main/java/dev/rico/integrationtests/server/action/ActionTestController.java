@@ -18,7 +18,7 @@ package dev.rico.integrationtests.server.action;
 
 import dev.rico.integrationtests.action.ActionErrorBean;
 import dev.rico.integrationtests.action.ActionTestBean;
-import dev.rico.remoting.BeanManager;
+import dev.rico.server.remoting.BeanManager;
 import dev.rico.server.remoting.Param;
 import dev.rico.server.remoting.RemotingAction;
 import dev.rico.server.remoting.RemotingController;

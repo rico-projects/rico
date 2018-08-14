@@ -17,7 +17,7 @@
 package dev.rico.internal.server.remoting.test;
 
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.remoting.BeanManagerImpl;
+import dev.rico.internal.server.remoting.model.BeanManagerImpl;
 import dev.rico.internal.server.remoting.binding.PropertyBinderImpl;
 import dev.rico.internal.server.client.ClientSessionLifecycleHandlerImpl;
 import dev.rico.internal.server.remoting.context.ClientSessionExecutorImpl;
@@ -25,7 +25,7 @@ import dev.rico.internal.server.remoting.context.ServerRemotingContext;
 import dev.rico.internal.server.remoting.context.ServerRemotingContextProvider;
 import dev.rico.internal.server.remoting.event.DefaultRemotingEventBus;
 import dev.rico.internal.server.ClientScopeImpl;
-import dev.rico.remoting.BeanManager;
+import dev.rico.server.remoting.BeanManager;
 import dev.rico.server.remoting.ClientSessionExecutor;
 import dev.rico.server.remoting.RemotingContext;
 import dev.rico.server.remoting.binding.PropertyBinder;
@@ -55,7 +55,7 @@ public class SpringTestBootstrap {
         try {
             return new TestConfiguration(context, httpSession);
         } catch (Exception e) {
-            throw new RuntimeException("Can not create test configuration", e);
+            throw new RuntimeException("Can not createList test configuration", e);
         }
     }
 
@@ -74,7 +74,7 @@ public class SpringTestBootstrap {
     }
 
     /**
-     * Method to create a spring managed {@link BeanManagerImpl} instance in client scope.
+     * Method to createList a spring managed {@link BeanManagerImpl} instance in client scope.
      *
      * @return the instance
      */
@@ -142,7 +142,7 @@ public class SpringTestBootstrap {
     }
 
     /**
-     * Method to create a spring managed {@link RemotingEventBus} instance in singleton scope.
+     * Method to createList a spring managed {@link RemotingEventBus} instance in singleton scope.
      *
      * @return the instance
      */

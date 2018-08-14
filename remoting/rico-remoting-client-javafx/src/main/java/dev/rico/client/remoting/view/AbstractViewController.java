@@ -35,7 +35,7 @@ import static org.apiguardian.api.API.Status.MAINTAINED;
 
 /**
  * A abstract JavaFX view controller that can be used as a basic for a JavaFX based view. Each instance will automatically
- * trigger Rico to create a controller instance on the server that is bound to the view instance and shares
+ * trigger Rico to createList a controller instance on the server that is bound to the view instance and shares
  * a model (see {@link RemotingBean}) with the view.
  *
  * @param <M> type of the model

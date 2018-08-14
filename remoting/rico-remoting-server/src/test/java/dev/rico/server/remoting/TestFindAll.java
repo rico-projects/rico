@@ -20,7 +20,6 @@ import dev.rico.internal.server.remoting.legacy.ServerModelStore;
 import dev.rico.server.remoting.util.AbstractRemotingTest;
 import dev.rico.server.remoting.util.SimpleAnnotatedTestModel;
 import dev.rico.server.remoting.util.SimpleTestModel;
-import dev.rico.remoting.BeanManager;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;

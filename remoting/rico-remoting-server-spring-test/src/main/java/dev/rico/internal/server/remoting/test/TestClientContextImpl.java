@@ -18,7 +18,6 @@ package dev.rico.internal.server.remoting.test;
 
 import dev.rico.internal.client.remoting.ClientContextImpl;
 import dev.rico.internal.client.remoting.legacy.ClientModelStore;
-import dev.rico.internal.client.remoting.legacy.communication.AbstractClientConnector;
 import dev.rico.internal.core.Assert;
 import dev.rico.client.ClientConfiguration;
 import dev.rico.client.session.ClientSessionStore;

@@ -16,8 +16,6 @@
  */
 package dev.rico.internal.server.remoting.gc;
 
-import dev.rico.internal.remoting.MockedProperty;
-
 public class PropertyWithGcSupport<T> extends MockedProperty<T> {
 
     private final GarbageCollector garbageCollector;

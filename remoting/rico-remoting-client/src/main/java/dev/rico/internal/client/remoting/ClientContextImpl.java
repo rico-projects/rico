@@ -17,151 +17,108 @@
 package dev.rico.internal.client.remoting;
 
 import dev.rico.client.Client;
-import dev.rico.client.concurrent.BackgroundExecutor;
-import dev.rico.internal.client.remoting.legacy.ClientModelStore;
-import dev.rico.internal.client.remoting.legacy.DefaultModelSynchronizer;
-import dev.rico.internal.client.remoting.legacy.ModelSynchronizer;
-import dev.rico.internal.client.remoting.legacy.communication.AbstractClientConnector;
+import dev.rico.core.http.HttpClient;
+import dev.rico.internal.client.remoting.communication.HttpClientConnector;
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.remoting.BeanManagerImpl;
-import dev.rico.internal.remoting.BeanRepository;
-import dev.rico.internal.remoting.BeanRepositoryImpl;
-import dev.rico.internal.remoting.ClassRepository;
-import dev.rico.internal.remoting.ClassRepositoryImpl;
-import dev.rico.internal.remoting.Converters;
-import dev.rico.internal.remoting.EventDispatcher;
-import dev.rico.internal.remoting.PresentationModelBuilderFactory;
-import dev.rico.internal.remoting.collections.ListMapperImpl;
-import dev.rico.internal.remoting.commands.CreateContextCommand;
-import dev.rico.internal.remoting.commands.DestroyContextCommand;
+import dev.rico.internal.remoting.communication.codec.Codec;
+import dev.rico.internal.remoting.communication.commands.Command;
+import dev.rico.internal.remoting.communication.commands.impl.*;
 import dev.rico.client.ClientConfiguration;
 import dev.rico.client.session.ClientSessionStore;
-import dev.rico.remoting.BeanManager;
-import dev.rico.remoting.RemotingException;
 import dev.rico.client.remoting.ClientContext;
-import dev.rico.client.remoting.ClientInitializationException;
-import dev.rico.client.remoting.ControllerInitalizationException;
 import dev.rico.client.remoting.ControllerProxy;
 import org.apiguardian.api.API;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
 public class ClientContextImpl implements ClientContext {
 
-    private final ClientConfiguration clientConfiguration;
+    private static final Logger LOG = LoggerFactory.getLogger(ClientContextImpl.class);
 
-    private final Function<ClientModelStore, AbstractClientConnector> connectorProvider;
+    private final ClientConfiguration clientConfiguration;
 
     private final URI endpoint;
 
     private final ClientSessionStore clientSessionStore;
 
-    private final AbstractClientConnector clientConnector;
-
-    private final ClientModelStore modelStore;
-
-    @Deprecated
-    private  final BeanManager clientBeanManager;
-
     private final ControllerProxyFactory controllerProxyFactory;
 
-    private final RicoCommandHandler commandHandler;
+    private final HttpClientConnector clientConnector;
 
-    public ClientContextImpl(final ClientConfiguration clientConfiguration, final URI endpoint, final Function<ClientModelStore, AbstractClientConnector> connectorProvider, final ClientSessionStore clientSessionStore) {
+    private final ClientRepository clientRepository;
+
+    public ClientContextImpl(final ClientConfiguration clientConfiguration, final URI endpoint, final ClientSessionStore clientSessionStore) {
         this.clientConfiguration = Assert.requireNonNull(clientConfiguration, "clientConfiguration");
-        this.connectorProvider = Assert.requireNonNull(connectorProvider, "connectorProvider");
         this.clientSessionStore = Assert.requireNonNull(clientSessionStore, "clientSessionStore");
         this.endpoint = Assert.requireNonNull(endpoint, "endpoint");
+        final HttpClient httpClient = Client.getService(HttpClient.class);
+        this.clientConnector = new HttpClientConnector(endpoint, clientConfiguration, Codec.getInstance(), httpClient, c -> handleResponseCommand(c), e -> handleError(e));
+        this.clientRepository = new ClientRepository(c -> clientConnector.send(c));
+        this.controllerProxyFactory = new ControllerProxyFactory(clientConnector, clientRepository);
+    }
 
-        final ModelSynchronizer defaultModelSynchronizer = new DefaultModelSynchronizer(new Supplier<AbstractClientConnector>() {
-            @Override
-            public AbstractClientConnector get() {
-                return clientConnector;
+    private void handleResponseCommand(final Command command) {
+        Assert.requireNonNull(command, "command");
+        try {
+            if (command instanceof CreateBeanTypeCommand) {
+                clientRepository.onCreateBeanTypeCommand((CreateBeanTypeCommand) command);
+            } else if (command instanceof CreateBeanCommand) {
+                clientRepository.onCreateBeanCommand((CreateBeanCommand) command);
+            } else if (command instanceof DeleteBeanCommand) {
+                clientRepository.onBeanRemovedCommand((DeleteBeanCommand) command);
+            } else if (command instanceof ValueChangedCommand) {
+                clientRepository.onValueChangedCommand((ValueChangedCommand) command);
+            } else if (command instanceof ListAddCommand) {
+                clientRepository.onListAddCommand((ListAddCommand) command);
+            } else if (command instanceof ListRemoveCommand) {
+                clientRepository.onListRemoveCommand((ListRemoveCommand) command);
+            } else if (command instanceof ListReplaceCommand) {
+                clientRepository.onListReplaceCommand((ListReplaceCommand) command);
             }
-        });
-
-        this.modelStore = new ClientModelStore(defaultModelSynchronizer);
-        this.clientConnector = connectorProvider.apply(modelStore);
-
-        final EventDispatcher dispatcher = new ClientEventDispatcher(modelStore);
-        final BeanRepository beanRepository = new BeanRepositoryImpl(modelStore, dispatcher);
-        final Converters converters = new Converters(beanRepository);
-        final PresentationModelBuilderFactory builderFactory = new ClientPresentationModelBuilderFactory(modelStore);
-        final ClassRepository classRepository = new ClassRepositoryImpl(modelStore, converters, builderFactory);
-
-        this.commandHandler = new RicoCommandHandler(clientConnector);
-        this.controllerProxyFactory = new ControllerProxyFactory(commandHandler, clientConnector, modelStore, beanRepository, dispatcher, converters);
-        this.clientBeanManager = new BeanManagerImpl(beanRepository, new ClientBeanBuilderImpl(classRepository, beanRepository, new ListMapperImpl(modelStore, classRepository, beanRepository, builderFactory, dispatcher), builderFactory, dispatcher));
-    }
-
-    protected RicoCommandHandler getCommandHandler() {
-        return commandHandler;
-    }
-
-    @Override
-    public synchronized <T> CompletableFuture<ControllerProxy<T>> createController(final String name) {
-        Assert.requireNonBlank(name, "name");
-
-        if (controllerProxyFactory == null) {
-            throw new IllegalStateException("connect was not called!");
+        } catch (Exception e) {
+            throw new RuntimeException("Error while handling response command " + command.getUniqueIdentifier(), e);
         }
+    }
 
-        return controllerProxyFactory.<T>create(name).handle((ControllerProxy<T> controllerProxy, Throwable throwable) -> {
-            if (throwable != null) {
-                throw new ControllerInitalizationException("Error while creating controller of type " + name, throwable);
-            }
-            return controllerProxy;
-        });
+    private void handleError(final Exception exception) {
+        Assert.requireNonNull(exception, "exception");
+        LOG.error("Error in remoting!", exception);
+        clientConnector.disconnect();
+        clientRepository.clear();
+        clientSessionStore.resetSession(endpoint);
     }
 
     @Override
-    public synchronized BeanManager getBeanManager() {
-        return clientBeanManager;
+    public <T> CompletableFuture<ControllerProxy<T>> createController(final String name) {
+        Assert.requireNonBlank(name, "name");
+        return controllerProxyFactory.<T>create(name);
     }
 
     @Override
-    public synchronized CompletableFuture<Void> disconnect() {
-        final CompletableFuture<Void> result = new CompletableFuture<>();
-        final BackgroundExecutor backgroundExecutor = Client.getService(BackgroundExecutor.class);
-        backgroundExecutor.execute(() -> {
-            commandHandler.invokeCommand(new DestroyContextCommand()).handle((Void aVoid, Throwable throwable) -> {
-
-                clientConnector.disconnect();
-                clientSessionStore.resetSession(endpoint);
-                if (throwable != null) {
-                    result.completeExceptionally(new RemotingException("Can't disconnect", throwable));
-                } else {
-                    result.complete(null);
-                }
-                return null;
-            });
+    public CompletableFuture<Void> disconnect() {
+        final DestroyContextCommand command = new DestroyContextCommand();
+        return clientConnector.sendAndReact(command).whenComplete((v,e) -> {
+            clientConnector.disconnect();
+            clientRepository.clear();
+            clientSessionStore.resetSession(endpoint);
         });
-        return result;
     }
 
     @Override
     public CompletableFuture<Void> connect() {
-
-        final CompletableFuture<Void> result = new CompletableFuture<>();
+        final CreateContextCommand command = new CreateContextCommand();
         clientConnector.connect();
-        final BackgroundExecutor backgroundExecutor = Client.getService(BackgroundExecutor.class);
-        backgroundExecutor.execute(() -> {
-            commandHandler.invokeCommand(new CreateContextCommand()).handle((Void aVoid, Throwable throwable) -> {
-                if (throwable != null) {
-                    result.completeExceptionally(new ClientInitializationException("Can't call init action!", throwable));
-                } else {
-                }
-                result.complete(null);
-                return null;
-            });
+        return clientConnector.sendAndReact(command).whenComplete((v, e) -> {
+            if(e == null) {
+                clientConnector.activeInterrupts();
+            }
         });
-        return result;
     }
 
     @Override

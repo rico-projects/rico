@@ -16,14 +16,11 @@
  */
 package dev.rico.internal.client.remoting;
 
-import dev.rico.internal.client.remoting.legacy.communication.AbstractClientConnector;
+import dev.rico.internal.client.remoting.communication.RemotingCommandHandler;
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.remoting.Converters;
-import dev.rico.internal.remoting.InternalAttributesBean;
 import dev.rico.internal.remoting.MappingException;
-import dev.rico.internal.remoting.commands.CallActionCommand;
-import dev.rico.internal.remoting.commands.DestroyControllerCommand;
-import dev.rico.client.remoting.ControllerActionException;
+import dev.rico.internal.remoting.communication.commands.impl.CallActionCommand;
+import dev.rico.internal.remoting.communication.commands.impl.DestroyControllerCommand;
 import dev.rico.client.remoting.ControllerInitalizationException;
 import dev.rico.client.remoting.ControllerProxy;
 import dev.rico.client.remoting.Param;
@@ -46,25 +43,22 @@ public class ControllerProxyImpl<T> implements ControllerProxy<T> {
 
     private final String controllerId;
 
-    private final AbstractClientConnector clientConnector;
-
-    private final ClientPlatformBeanRepository platformBeanRepository;
-
     private final ControllerProxyFactory controllerProxyFactory;
-
-    private final Converters converters;
 
     private T model;
 
     private volatile boolean destroyed = false;
 
-    public ControllerProxyImpl(final String controllerId, final T model, final AbstractClientConnector clientConnector, final ClientPlatformBeanRepository platformBeanRepository, final ControllerProxyFactory controllerProxyFactory, final Converters converters) {
-        this.clientConnector = Assert.requireNonNull(clientConnector, "clientConnector");
+    private final RemotingCommandHandler commandHandler;
+
+    private final ClientRepository repository;
+
+    public ControllerProxyImpl(final String controllerId, final T model, final ClientRepository repository, final RemotingCommandHandler commandHandler, final ControllerProxyFactory controllerProxyFactory) {
         this.controllerId = Assert.requireNonBlank(controllerId, "controllerId");
         this.controllerProxyFactory = Assert.requireNonNull(controllerProxyFactory, "controllerProxyFactory");
         this.model = model;
-        this.platformBeanRepository = Assert.requireNonNull(platformBeanRepository, "platformBeanRepository");
-        this.converters = Assert.requireNonNull(converters, "converters");
+        this.commandHandler = Assert.requireNonNull(commandHandler, "commandHandler");
+        this.repository = Assert.requireNonNull(repository, "repository");
     }
 
     @Override
@@ -86,8 +80,6 @@ public class ControllerProxyImpl<T> implements ControllerProxy<T> {
             throw new IllegalStateException("The controller was already destroyed");
         }
 
-        final ClientControllerActionCallBean bean = platformBeanRepository.createControllerActionCallBean(controllerId, actionName, params);
-
         final CallActionCommand callActionCommand = new CallActionCommand();
         callActionCommand.setControllerId(controllerId);
         callActionCommand.setActionName(actionName);
@@ -98,7 +90,7 @@ public class ControllerProxyImpl<T> implements ControllerProxy<T> {
                     callActionCommand.addParam(param.getName(), null);
                 } else {
                     try {
-                        callActionCommand.addParam(param.getName(), converters.getConverter(value.getClass()).convertToRemoting(value));
+                        callActionCommand.addParam(param.getName(), repository.getConverter(value.getClass()).convertToRemoting(value));
                     } catch (ValueConverterException e) {
                         throw new MappingException("Error in value conversion of param '" + param.getName() + "' for action '" + actionName + "'", e);
                     }
@@ -106,17 +98,10 @@ public class ControllerProxyImpl<T> implements ControllerProxy<T> {
             }
         }
 
-        final CompletableFuture<Void> result = new CompletableFuture<>();
-        clientConnector.send(callActionCommand, () -> {
 
-                if (bean.isError()) {
-                    result.completeExceptionally(new ControllerActionException("Error on calling action on the server. Please check the server log."));
-                } else {
-                    result.complete(null);
-                }
-                bean.unregister();
-        });
-        return result;
+        return commandHandler.sendAndReact(callActionCommand);
+        //TODO: Here we have the special case for error return.....
+
     }
 
     @Override
@@ -125,19 +110,9 @@ public class ControllerProxyImpl<T> implements ControllerProxy<T> {
             throw new IllegalStateException("The controller was already destroyed");
         }
         destroyed = true;
-
-        final InternalAttributesBean bean = platformBeanRepository.getInternalAttributesBean();
-
-        final CompletableFuture<Void> ret = new CompletableFuture<>();
-
         final DestroyControllerCommand destroyControllerCommand = new DestroyControllerCommand();
         destroyControllerCommand.setControllerId(controllerId);
-
-        clientConnector.send(destroyControllerCommand, () -> {
-            model = null;
-            ret.complete(null);
-        });
-        return ret;
+        return commandHandler.sendAndReact(destroyControllerCommand);
     }
 
     @Override
@@ -146,7 +121,7 @@ public class ControllerProxyImpl<T> implements ControllerProxy<T> {
 
         return controllerProxyFactory.<C>create(name, controllerId).handle((ControllerProxy<C> cControllerProxy, Throwable throwable) -> {
             if (throwable != null) {
-                throw new ControllerInitalizationException("Error while creating controller of type " + name, throwable);
+                throw new ControllerInitalizationException("Error while creating subcontroller of type " + name, throwable);
             }
             return cControllerProxy;
         });

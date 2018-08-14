@@ -36,10 +36,6 @@ public class RemotingUtils {
     private RemotingUtils() {
     }
 
-    public static String getAttributePropertyNameForField(Field propertyField) {
-        return propertyField.getName();
-    }
-
     public static String getPresentationModelTypeForClass(Class<?> beanClass) {
         return assertIsRemotingBean(beanClass).getName();
     }

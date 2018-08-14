@@ -24,20 +24,20 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.TimeZone;
 
-import dev.rico.internal.remoting.converters.ValueFieldTypes;
+import dev.rico.internal.remoting.communication.converters.ValueFieldTypes;
+import dev.rico.internal.remoting.repo.Repository;
 import org.testng.annotations.Test;
 
 import dev.rico.remoting.converter.Converter;
 import dev.rico.remoting.converter.ValueConverterException;
-import dev.rico.internal.remoting.Converters;
-import dev.rico.internal.remoting.BeanRepository;
+import dev.rico.internal.remoting.communication.converters.Converters;
 
 import mockit.Mocked;
 
 public class LocalDateConverterFactoryTest {
 
     @Test
-    public void testFactoryFieldType(@Mocked BeanRepository beanRepository) {
+    public void testFactoryFieldType(@Mocked Repository beanRepository) {
         // Given
         Converters converters = new Converters(beanRepository);
 
@@ -49,7 +49,7 @@ public class LocalDateConverterFactoryTest {
     }
 
     @Test
-    public void testConverterCreation(@Mocked BeanRepository beanRepository) {
+    public void testConverterCreation(@Mocked Repository beanRepository) {
         // Given
         Converters converters = new Converters(beanRepository);
 
@@ -61,7 +61,7 @@ public class LocalDateConverterFactoryTest {
     }
 
     @Test
-    public void testBasicConversions(@Mocked BeanRepository beanRepository) {
+    public void testBasicConversions(@Mocked Repository beanRepository) {
         // Given
         Converters converters = new Converters(beanRepository);
 
@@ -90,7 +90,7 @@ public class LocalDateConverterFactoryTest {
     }
 
     @Test
-    public void testNullValues(@Mocked BeanRepository beanRepository) {
+    public void testNullValues(@Mocked Repository beanRepository) {
         // Given
         Converters converters = new Converters(beanRepository);
 
@@ -107,7 +107,7 @@ public class LocalDateConverterFactoryTest {
     }
 
     @Test(expectedExceptions = ClassCastException.class)
-    public void testWrongRemotingValues(@Mocked BeanRepository beanRepository)
+    public void testWrongRemotingValues(@Mocked Repository beanRepository)
             throws ValueConverterException {
         // Given
         Converters converters = new Converters(beanRepository);
@@ -120,7 +120,7 @@ public class LocalDateConverterFactoryTest {
     }
 
     @Test(expectedExceptions = ClassCastException.class)
-    public void testWrongBeanValues(@Mocked BeanRepository beanRepository)
+    public void testWrongBeanValues(@Mocked Repository beanRepository)
             throws ValueConverterException {
         // Given
         Converters converters = new Converters(beanRepository);

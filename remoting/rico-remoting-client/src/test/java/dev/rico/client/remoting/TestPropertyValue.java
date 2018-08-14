@@ -25,12 +25,9 @@ import dev.rico.client.remoting.util.SimpleTestModel;
 import dev.rico.client.remoting.util.SingleReferenceModel;
 import dev.rico.internal.client.remoting.legacy.ClientModelStore;
 import dev.rico.internal.client.remoting.legacy.ClientPresentationModel;
-import dev.rico.internal.client.remoting.legacy.communication.AbstractClientConnector;
-import dev.rico.internal.remoting.BeanRepository;
-import dev.rico.internal.remoting.EventDispatcher;
 import dev.rico.internal.remoting.legacy.core.Attribute;
 import dev.rico.internal.remoting.legacy.core.PresentationModel;
-import dev.rico.remoting.BeanManager;
+import dev.rico.server.remoting.BeanManager;
 import mockit.Mocked;
 import org.testng.annotations.Test;
 

@@ -16,7 +16,7 @@
  */
 package dev.rico.server.remoting.test;
 
-import dev.rico.remoting.BeanManager;
+import dev.rico.server.remoting.BeanManager;
 import dev.rico.server.remoting.RemotingAction;
 import dev.rico.server.remoting.RemotingController;
 import dev.rico.server.remoting.RemotingModel;

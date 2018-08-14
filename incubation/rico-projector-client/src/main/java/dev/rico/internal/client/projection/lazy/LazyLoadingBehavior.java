@@ -141,7 +141,7 @@ public class LazyLoadingBehavior<T extends LazyListElement> {
 
             update();
         } catch (Exception e) {
-            throw new RuntimeException("Can't create behavior", e);
+            throw new RuntimeException("Can't createList behavior", e);
         }
     }
 

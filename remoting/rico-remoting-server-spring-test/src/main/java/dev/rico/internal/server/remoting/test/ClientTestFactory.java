@@ -38,7 +38,7 @@ public class ClientTestFactory {
             final ControllerProxy<T> proxy = (ControllerProxy<T>) clientContext.createController(controllerName).get();
             return new ControllerUnderTestWrapper<>(clientContext, proxy);
         } catch (Exception e) {
-            throw new ControllerTestException("Can't create controller proxy", e);
+            throw new ControllerTestException("Can't createList controller proxy", e);
         }
     }
 

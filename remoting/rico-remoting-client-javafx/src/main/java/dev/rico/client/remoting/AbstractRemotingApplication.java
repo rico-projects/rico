@@ -135,7 +135,7 @@ public abstract class AbstractRemotingApplication extends Application {
     }
 
     /**
-     * This method must be defined by each application to create the initial view. The method will be called on
+     * This method must be defined by each application to createList the initial view. The method will be called on
      * the JavaFX Platform thread after the connection to the server has been created.
      *
      * @param primaryStage  the primary stage

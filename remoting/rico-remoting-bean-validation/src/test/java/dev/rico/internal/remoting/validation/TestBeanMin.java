@@ -16,7 +16,6 @@
  */
 package dev.rico.internal.remoting.validation;
 
-import dev.rico.internal.remoting.MockedProperty;
 import dev.rico.remoting.RemotingBean;
 import dev.rico.remoting.Property;
 

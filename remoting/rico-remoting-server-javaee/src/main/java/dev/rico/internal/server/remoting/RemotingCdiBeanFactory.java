@@ -22,7 +22,7 @@ import dev.rico.internal.server.remoting.context.ServerRemotingContext;
 import dev.rico.internal.server.remoting.context.ServerRemotingContextProvider;
 import dev.rico.internal.server.remoting.context.RemotingContextImpl;
 import dev.rico.internal.server.remoting.event.LazyEventBusInvocationHandler;
-import dev.rico.remoting.BeanManager;
+import dev.rico.server.remoting.BeanManager;
 import dev.rico.server.remoting.RemotingContext;
 import dev.rico.server.remoting.binding.PropertyBinder;
 import dev.rico.server.remoting.event.RemotingEventBus;

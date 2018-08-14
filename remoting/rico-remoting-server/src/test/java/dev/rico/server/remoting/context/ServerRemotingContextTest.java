@@ -16,11 +16,11 @@
  */
 package dev.rico.server.remoting.context;
 
-import dev.rico.internal.remoting.commands.CallActionCommand;
-import dev.rico.internal.remoting.commands.CreateContextCommand;
-import dev.rico.internal.remoting.commands.CreateControllerCommand;
-import dev.rico.internal.remoting.commands.DestroyContextCommand;
-import dev.rico.internal.remoting.commands.DestroyControllerCommand;
+import dev.rico.internal.remoting.communication.commands.impl.CallActionCommand;
+import dev.rico.internal.remoting.communication.commands.impl.CreateContextCommand;
+import dev.rico.internal.remoting.communication.commands.impl.CreateControllerCommand;
+import dev.rico.internal.remoting.communication.commands.impl.DestroyContextCommand;
+import dev.rico.internal.remoting.communication.commands.impl.DestroyControllerCommand;
 import dev.rico.internal.remoting.legacy.commands.InterruptLongPollCommand;
 import dev.rico.internal.remoting.legacy.commands.StartLongPollCommand;
 import dev.rico.internal.remoting.legacy.communication.Command;

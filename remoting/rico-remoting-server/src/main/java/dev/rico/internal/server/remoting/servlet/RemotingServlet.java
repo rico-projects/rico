@@ -16,7 +16,10 @@
  */
 package dev.rico.internal.server.remoting.servlet;
 
+import dev.rico.internal.core.Assert;
 import dev.rico.internal.server.remoting.context.RemotingCommunicationHandler;
+import dev.rico.internal.server.remoting.context.ServerRemotingContext;
+import dev.rico.internal.server.remoting.context.ServerRemotingContextProvider;
 import dev.rico.server.timing.Metric;
 import org.apiguardian.api.API;
 
@@ -34,10 +37,13 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class RemotingServlet extends HttpServlet {
 
+    private final ServerRemotingContextProvider contextProvider;
+
     private final RemotingCommunicationHandler communicationHandler;
 
-    public RemotingServlet(RemotingCommunicationHandler communicationHandler) {
+    public RemotingServlet(RemotingCommunicationHandler communicationHandler, final ServerRemotingContextProvider contextProvider) {
         this.communicationHandler = communicationHandler;
+        this.contextProvider = Assert.requireNonNull(contextProvider, "contextProvider");
     }
 
     @Override
@@ -47,6 +53,17 @@ public class RemotingServlet extends HttpServlet {
             communicationHandler.handle(req, resp);
         } finally {
             metric.stop();
+        }
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Assert.requireNonNull(resp, "resp");
+        final ServerRemotingContext currentContext = contextProvider.getCurrentContext();
+        if(currentContext == null) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing or wrong client session id");
+        } else {
+            currentContext.interrupt();
         }
     }
 }

@@ -18,4 +18,5 @@
 dependencies {
     compile project(':rico-core')
     compile "com.google.code.gson:gson:$gsonVersion"
+    compile "org.msgpack:msgpack-core:$msgpackVersion"
 }

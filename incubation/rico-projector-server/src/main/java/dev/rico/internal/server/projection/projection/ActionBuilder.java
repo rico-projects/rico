@@ -23,7 +23,7 @@ import dev.rico.internal.projection.metadata.AbstractKeyValueBean;
 import dev.rico.internal.projection.metadata.KeyValue;
 import dev.rico.internal.server.projection.i18n.BeanLocalization;
 import dev.rico.internal.server.projection.i18n.LocaleKey;
-import dev.rico.remoting.BeanManager;
+import dev.rico.server.remoting.BeanManager;
 
 import java.util.HashMap;
 import java.util.Map;

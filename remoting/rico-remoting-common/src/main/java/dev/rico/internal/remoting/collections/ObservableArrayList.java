@@ -38,23 +38,22 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 public class ObservableArrayList<E> implements ObservableList<E> {
 
     private final ArrayList<E> list;
+
     private final List<ListChangeListener<? super E>> listeners = new CopyOnWriteArrayList<>();
 
-    public ObservableArrayList() {
-        list = new ArrayList<>();
+    private final ListChangeListener<? super E> internalListener;
+
+    private boolean internalValueChange = false;
+
+    public ObservableArrayList(final ListChangeListener<? super E> internalListener) {
+        this.list = new ArrayList<>();
+        this.internalListener = internalListener;
     }
 
-    public ObservableArrayList(final int initialCapacity) {
-        list = new ArrayList<>(initialCapacity);
-    }
-
-    public ObservableArrayList(final Collection<? extends E> c) {
-        list = new ArrayList<>(c);
-    }
-
-    @SafeVarargs
-    public ObservableArrayList(final E... elements) {
-        this(Arrays.asList(elements));
+    private ObservableArrayList(final Collection<? extends E> c) {
+        this.list = new ArrayList<>(c);
+        this.internalListener = e -> {
+        };
     }
 
     protected void fireListChanged(final ListChangeEvent<E> event) {
@@ -62,24 +61,16 @@ public class ObservableArrayList<E> implements ObservableList<E> {
         notifyExternalListeners(event);
     }
 
-
-
     protected void notifyInternalListeners(final ListChangeEvent<E> event) {
-
+        if (!internalValueChange) {
+            internalListener.listChanged(event);
+        }
     }
 
     protected void notifyExternalListeners(final ListChangeEvent<E> event) {
         for (final ListChangeListener<? super E> listener : listeners) {
             listener.listChanged(event);
         }
-    }
-
-    public void internalSplice(final int from, final int to, final Collection<? extends E> newElements) {
-        final List<E> slice = list.subList(from, to);
-        final List<E> removedElements = new ArrayList<>(slice);
-        slice.clear();
-        list.addAll(from, newElements);
-        notifyExternalListeners(new ListChangeEventImpl<E>(this, from, from + newElements.size(), removedElements));
     }
 
     @Override
@@ -189,11 +180,11 @@ public class ObservableArrayList<E> implements ObservableList<E> {
         return batchRemove(Arrays.asList(elements), false);
     }
 
-    private boolean batchRemove(final Collection<?> c, boolean isRemove){
+    private boolean batchRemove(final Collection<?> c, boolean isRemove) {
         if (null != c && c.isEmpty()) {
             return false;
         }
-        final List<E> listElement =  new ArrayList<>();
+        final List<E> listElement = new ArrayList<>();
 
         for (int i = 0; i < list.size(); i++) {
             E element;
@@ -206,8 +197,8 @@ public class ObservableArrayList<E> implements ObservableList<E> {
                 listElement.add(element);
             }
         }
-        if(!listElement.isEmpty()){
-            for(E e:listElement){
+        if (!listElement.isEmpty()) {
+            for (E e : listElement) {
                 remove(e);
             }
             return true;
@@ -251,8 +242,7 @@ public class ObservableArrayList<E> implements ObservableList<E> {
     }
 
     @Override
-    public void remove(final int from, final int to)
-    {
+    public void remove(final int from, final int to) {
         final List<E> toRemove = new ArrayList<>(list.subList(from, to));
         toRemove.forEach(e -> remove(e));
     }
@@ -321,12 +311,39 @@ public class ObservableArrayList<E> implements ObservableList<E> {
         return subList;
     }
 
+    public void internalRemove(int from, int to) {
+        internalValueChange = true;
+        try {
+            remove(from, to);
+        } finally {
+            internalValueChange = false;
+        }
+    }
+
+    public void internalAddAll(int start, Collection<? extends E> c) {
+        internalValueChange = true;
+        try {
+            addAll(start, c);
+        } finally {
+            internalValueChange = false;
+        }
+    }
+
+    public void internalSet(int index, E value) {
+        internalValueChange = true;
+        try {
+            set(index, value);
+        } finally {
+            internalValueChange = false;
+        }
+    }
+
     private class ListIteratorWrapper implements ListIterator<E> {
 
         private final ListIterator<E> iterator;
         int lastRet = -1; // index of last element returned;
 
-        private ListIteratorWrapper (ListIterator<E> iterator) {
+        private ListIteratorWrapper(ListIterator<E> iterator) {
             this.iterator = iterator;
         }
 
@@ -367,7 +384,7 @@ public class ObservableArrayList<E> implements ObservableList<E> {
         @Override
         public void remove() {
             E oldElement = null;
-            if(lastRet >=0){
+            if (lastRet >= 0) {
                 oldElement = ObservableArrayList.this.get(lastRet);
             }// do not throw any exception...it will be thrown by next line
             iterator.remove();

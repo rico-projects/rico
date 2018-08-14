@@ -16,22 +16,19 @@
  */
 package dev.rico.server.remoting;
 
-import dev.rico.internal.remoting.BeanDefinitionException;
-import dev.rico.internal.remoting.BeanRepository;
-import dev.rico.internal.remoting.EventDispatcher;
-import dev.rico.internal.remoting.RemotingConstants;
-import dev.rico.internal.remoting.converters.BooleanConverterFactory;
-import dev.rico.internal.remoting.converters.ByteConverterFactory;
-import dev.rico.internal.remoting.converters.CalendarConverterFactory;
-import dev.rico.internal.remoting.converters.DateConverterFactory;
-import dev.rico.internal.remoting.converters.BeanConverterFactory;
-import dev.rico.internal.remoting.converters.DoubleConverterFactory;
-import dev.rico.internal.remoting.converters.EnumConverterFactory;
-import dev.rico.internal.remoting.converters.FloatConverterFactory;
-import dev.rico.internal.remoting.converters.IntegerConverterFactory;
-import dev.rico.internal.remoting.converters.LongConverterFactory;
-import dev.rico.internal.remoting.converters.ShortConverterFactory;
-import dev.rico.internal.remoting.converters.StringConverterFactory;
+import dev.rico.internal.remoting.*;
+import dev.rico.internal.remoting.communication.converters.BooleanConverterFactory;
+import dev.rico.internal.remoting.communication.converters.ByteConverterFactory;
+import dev.rico.internal.remoting.communication.converters.CalendarConverterFactory;
+import dev.rico.internal.remoting.communication.converters.DateConverterFactory;
+import dev.rico.internal.remoting.communication.converters.BeanConverterFactory;
+import dev.rico.internal.remoting.communication.converters.DoubleConverterFactory;
+import dev.rico.internal.remoting.communication.converters.EnumConverterFactory;
+import dev.rico.internal.remoting.communication.converters.FloatConverterFactory;
+import dev.rico.internal.remoting.communication.converters.IntegerConverterFactory;
+import dev.rico.internal.remoting.communication.converters.LongConverterFactory;
+import dev.rico.internal.remoting.communication.converters.ShortConverterFactory;
+import dev.rico.internal.remoting.communication.converters.StringConverterFactory;
 import dev.rico.internal.remoting.legacy.LegacyConstants;
 import dev.rico.internal.remoting.legacy.core.Attribute;
 import dev.rico.internal.remoting.legacy.core.PresentationModel;
@@ -46,7 +43,6 @@ import dev.rico.server.remoting.util.PrimitiveDataTypesModel;
 import dev.rico.server.remoting.util.SimpleAnnotatedTestModel;
 import dev.rico.server.remoting.util.SimpleTestModel;
 import dev.rico.server.remoting.util.SingleReferenceModel;
-import dev.rico.remoting.BeanManager;
 import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
 

@@ -16,7 +16,7 @@
  */
 package dev.rico.remoting.impl.codec.encoders;
 
-import dev.rico.internal.remoting.codec.encoders.ValueEncoder;
+import dev.rico.internal.remoting.communication.codec.encoders.ValueEncoder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;

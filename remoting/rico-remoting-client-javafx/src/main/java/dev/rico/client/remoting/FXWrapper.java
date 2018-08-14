@@ -41,7 +41,7 @@ import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
 /**
- * A util class that can be used to create JavaFX properties and lists as wrapper around remoting properties and lists.
+ * A util class that can be used to createList JavaFX properties and lists as wrapper around remoting properties and lists.
  */
 @API(since = "0.x", status = MAINTAINED)
 public class FXWrapper {
