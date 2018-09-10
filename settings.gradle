@@ -62,6 +62,7 @@ include 'incubation/rico-projector-server'
 include 'integration-tests/integration-common'
 include 'integration-tests/integration-server'
 include 'integration-tests/integration-tests-jee'
+include 'integration-tests/integration-tests-spring'
 include 'integration-tests/integration-tests'
 
 
