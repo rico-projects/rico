@@ -19,8 +19,8 @@ package dev.rico.internal.server.data.mapping;
 import dev.rico.internal.core.Assert;
 import dev.rico.server.data.DataService;
 import dev.rico.server.data.DataWithId;
-import dev.rico.remoting.BeanManager;
 import dev.rico.server.data.mapping.BeanMapper;
+import dev.rico.server.remoting.BeanManager;
 
 import java.io.Serializable;
 import java.util.HashMap;

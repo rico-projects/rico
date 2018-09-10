@@ -16,5 +16,5 @@
  */
 
 dependencies {
-    compile project(':rico-remoting-common')
+    compile project(':rico-remoting-server')
 }

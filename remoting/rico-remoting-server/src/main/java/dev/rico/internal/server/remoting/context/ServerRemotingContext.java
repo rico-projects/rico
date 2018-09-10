@@ -151,7 +151,7 @@ public class ServerRemotingContext {
         toSendQueue.offer(c);
     }
 
-    private <T extends Command> void registerCommand(final Class<T> commandClass, final CommandHandler<T> handler) {
+    protected  <T extends Command> void registerCommand(final Class<T> commandClass, final CommandHandler<T> handler) {
         Assert.requireNonNull(commandClass, "commandClass");
         Assert.requireNonNull(handler, "handler");
         commandHandlers.put(commandClass, handler);
@@ -166,6 +166,7 @@ public class ServerRemotingContext {
                 handler.handle(command);
             } catch (final Exception e) {
                 //TODO:
+                throw new RuntimeException("Error in command handling", e);
             }
         }
 
@@ -273,7 +274,7 @@ public class ServerRemotingContext {
         taskQueue.interrupt();
     }
 
-    private void onLongPoll() {
+    protected void onLongPoll() {
         if (configuration.isUseGc()) {
             LOG.trace("Handling GarbageCollection for ServerRemotingContext {}", getId());
             onGarbageCollection();
@@ -286,7 +287,7 @@ public class ServerRemotingContext {
         }
     }
 
-    private void onGarbageCollection() {
+    protected void onGarbageCollection() {
         final Metric metric = ServerTimingFilter.getCurrentTiming().start("RemotingGc", "Garbage collection for the remoting model");
         try {
             garbageCollector.gc();

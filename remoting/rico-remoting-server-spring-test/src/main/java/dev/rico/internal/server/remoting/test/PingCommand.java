@@ -16,11 +16,13 @@
  */
 package dev.rico.internal.server.remoting.test;
 
-import dev.rico.internal.remoting.legacy.communication.Command;
 
-public final class PingCommand extends Command {
+import dev.rico.internal.remoting.communication.commands.Command;
 
-    public PingCommand() {
-        super("PING");
+public final class PingCommand implements Command {
+
+    @Override
+    public String getUniqueIdentifier() {
+        return "PING";
     }
 }

@@ -59,8 +59,12 @@ public class ClientContextImpl implements ClientContext {
         this.endpoint = Assert.requireNonNull(endpoint, "endpoint");
         final HttpClient httpClient = Client.getService(HttpClient.class);
         this.clientConnector = new HttpClientConnector(endpoint, clientConfiguration, Codec.getInstance(), httpClient, c -> handleResponseCommand(c), e -> handleError(e));
-        this.clientRepository = new ClientRepository(c -> clientConnector.send(c));
+        this.clientRepository = new ClientRepository(c -> send(c));
         this.controllerProxyFactory = new ControllerProxyFactory(clientConnector, clientRepository);
+    }
+
+    protected CompletableFuture<Void> send(final Command command) {
+        return clientConnector.sendAndReact(command);
     }
 
     private void handleResponseCommand(final Command command) {

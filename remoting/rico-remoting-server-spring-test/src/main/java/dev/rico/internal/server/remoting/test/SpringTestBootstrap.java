@@ -50,7 +50,7 @@ public class SpringTestBootstrap {
 
     @Bean
     @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-    protected TestConfiguration createTestConfiguration(final WebApplicationContext context, final HttpSession httpSession) {
+    protected TestConfiguration createTestConfiguration(final WebApplicationContext context, @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection") final HttpSession httpSession) {
         Assert.requireNonNull(context, "context");
         try {
             return new TestConfiguration(context, httpSession);
@@ -132,11 +132,6 @@ public class SpringTestBootstrap {
             @Override
             public ClientSession getClientSession() {
                 return testConfiguration.getRemotingTestContext().getClientSession();
-            }
-
-            @Override
-            public boolean isActive() {
-                return true;
             }
         };
     }

@@ -17,18 +17,13 @@
 package dev.rico.internal.server.remoting.test;
 
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.remoting.legacy.commands.StartLongPollCommand;
-import dev.rico.internal.remoting.legacy.communication.Command;
 import dev.rico.internal.server.client.ClientSessionProvider;
 import dev.rico.internal.server.remoting.config.RemotingConfiguration;
 import dev.rico.internal.server.remoting.context.ServerRemotingContext;
 import dev.rico.internal.server.remoting.controller.ControllerRepository;
-import dev.rico.internal.server.remoting.legacy.communication.CommandHandler;
 import dev.rico.server.client.ClientSession;
 import dev.rico.server.spi.components.ManagedBeanFactory;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
@@ -46,24 +41,12 @@ public class TestServerRemotingContext extends ServerRemotingContext {
     public TestServerRemotingContext(final RemotingConfiguration configuration, final ClientSession clientSession, final ClientSessionProvider clientSessionProvider, final ManagedBeanFactory beanFactory, final ControllerRepository controllerRepository, final Consumer<ServerRemotingContext> onDestroyCallback) {
         super(configuration, clientSession, clientSessionProvider, beanFactory, controllerRepository, onDestroyCallback);
 
-        getServerConnector().getRegistry().register(PingCommand.class, new CommandHandler() {
-            @Override
-            public void handleCommand(Command command, List response) {
-
-            }
-        });
-    }
-
-    @Override
-    public List<Command> handle(final List<Command> commands) {
-        final List<Command> commandsWithFackedLongPool = new ArrayList<>(commands);
-        commandsWithFackedLongPool.add(new StartLongPollCommand());
-
-        return super.handle(commandsWithFackedLongPool);
+        registerCommand(PingCommand.class, c -> {});
     }
 
     @Override
     protected void onLongPoll() {
+        onGarbageCollection();
         while (!callLaterTasks.isEmpty()) {
             callLaterTasks.poll().run();
         }

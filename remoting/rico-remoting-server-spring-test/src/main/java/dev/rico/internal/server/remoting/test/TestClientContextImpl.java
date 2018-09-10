@@ -16,26 +16,24 @@
  */
 package dev.rico.internal.server.remoting.test;
 
-import dev.rico.internal.client.remoting.ClientContextImpl;
-import dev.rico.internal.client.remoting.legacy.ClientModelStore;
-import dev.rico.internal.core.Assert;
 import dev.rico.client.ClientConfiguration;
 import dev.rico.client.session.ClientSessionStore;
+import dev.rico.internal.client.remoting.ClientContextImpl;
+import dev.rico.internal.core.Assert;
 
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
 
 public class TestClientContextImpl extends ClientContextImpl implements TestClientContext {
 
-    public TestClientContextImpl(final ClientConfiguration clientConfiguration, final URI endpoint, final Function<ClientModelStore, AbstractClientConnector> connectorProvider, final ClientSessionStore clientSessionStore) {
-        super(clientConfiguration, endpoint, connectorProvider, clientSessionStore);
+    public TestClientContextImpl(final ClientConfiguration clientConfiguration, final URI endpoint, final ClientSessionStore clientSessionStore) {
+        super(clientConfiguration, endpoint, clientSessionStore);
     }
 
     @Override
     public void sendPing() {
         try {
-            getCommandHandler().invokeCommand(new PingCommand()).get();
+            send(new PingCommand()).get();
         } catch (Exception e) {
             throw new RuntimeException("Error in ping handling", e);
         }
@@ -45,7 +43,7 @@ public class TestClientContextImpl extends ClientContextImpl implements TestClie
     public void sendPing(long time, TimeUnit unit) {
         Assert.requireNonNull(unit, "unit");
         try {
-            getCommandHandler().invokeCommand(new PingCommand()).get(time, unit);
+            send(new PingCommand()).get(time, unit);
         } catch (Exception e) {
             throw new RuntimeException("Error in ping handling", e);
         }
