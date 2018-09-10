@@ -39,6 +39,7 @@ public class CallActionCommandTranscoder extends AbstractCommandTranscoder<CallA
     @Override
     public void encode(final CallActionCommand command, final JsonObject jsonCommand) {
         Assert.requireNonNull(command, "command");
+        jsonCommand.addProperty(CONTROLLER_ATTRIBUTE, command.getControllerId());
         jsonCommand.addProperty(NAME_ATTRIBUTE, command.getActionName());
 
         final JsonArray paramArray = new JsonArray();
@@ -55,6 +56,7 @@ public class CallActionCommandTranscoder extends AbstractCommandTranscoder<CallA
     public CallActionCommand decode(final JsonObject jsonObject) {
         Assert.requireNonNull(jsonObject, "jsonObject");
         final CallActionCommand command = new CallActionCommand(getStringElement(jsonObject, ID_ATTRIBUTE));
+        command.setControllerId(getStringElement(jsonObject, CONTROLLER_ATTRIBUTE));
         command.setActionName(getStringElement(jsonObject, NAME_ATTRIBUTE));
         final JsonArray jsonArray = jsonObject.getAsJsonArray(PARAMS_ATTRIBUTE);
         if (jsonArray != null) {

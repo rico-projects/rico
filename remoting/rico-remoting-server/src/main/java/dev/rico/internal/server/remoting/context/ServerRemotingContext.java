@@ -262,9 +262,8 @@ public class ServerRemotingContext {
         try {
             controllerHandler.invokeAction(controllerId, actionName, params);
         } catch (final Exception e) {
-            LOG.error("Unexpected exception while invoking action {} on controller {}",
+            LOG.error("Unexpected exception while invoking action '{}' on controller {}",
                     actionName, controllerId, e);
-            //bean.setError(true);
         } finally {
             metric.stop();
         }
