@@ -15,10 +15,14 @@
  * limitations under the License.
  */
 
+plugins {
+    id "org.springframework.boot" version "1.5.9.RELEASE"
+}
+
 dependencies {
     compile project(':integration-server')
     compile project(':rico-remoting-server-spring')
-    compileOnly "javax:javaee-api:$javaeeApiVersion"
+    compile "javax.inject:javax.inject:$javaxInjectVersion"
 }
 
 jar {

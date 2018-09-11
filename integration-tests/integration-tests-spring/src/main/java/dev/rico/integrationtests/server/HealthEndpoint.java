@@ -16,16 +16,14 @@
  */
 package dev.rico.integrationtests.server;
 
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.ws.rs.GET;
 
-
-//TODO: create
-@RestController("/health")
+@RestController
 public class HealthEndpoint {
 
-    @GET
+    @RequestMapping("/health")
     public void check() {}
 
 }

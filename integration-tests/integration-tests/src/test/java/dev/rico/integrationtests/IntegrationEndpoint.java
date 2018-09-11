@@ -4,7 +4,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 public enum IntegrationEndpoint {
-    WILDFLY("Wildfly", 8083), TOMEE("TomEE", 8082);
+    TOMEE("TomEE", 8082), WILDFLY("Wildfly", 8083), SPRING("Spring", 8084);
 
     private final static String ENDPOINT_URI_PREFIX = "http://localhost:";
 

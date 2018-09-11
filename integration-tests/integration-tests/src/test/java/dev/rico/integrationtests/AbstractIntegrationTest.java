@@ -42,6 +42,8 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -63,6 +65,11 @@ public class AbstractIntegrationTest {
 
     private final List<IntegrationEndpoint> endpoints;
 
+    private final boolean isLocal = Optional.ofNullable(System.getenv("test-environment"))
+            .filter(v -> Objects.equals("local", v))
+            .map(v -> v != null)
+            .orElse(false);
+
     public AbstractIntegrationTest() {
         endpoints = Arrays.asList(IntegrationEndpoint.values());
         try {
@@ -77,16 +84,20 @@ public class AbstractIntegrationTest {
 
     @BeforeGroups(INTEGRATION_TESTS_TEST_GROUP)
     protected void startDockerContainers() {
-        final Wait[] waits = endpoints.stream()
-                .map(e -> Wait.forHttp(e.getHeathEndpoint(), HTTP_OK))
-                .collect(Collectors.toList())
-                .toArray(new Wait[]{});
-        dockerCompose.start(timeoutInMinutes, TimeUnit.MINUTES, waits);
+        if(!isLocal) {
+            final Wait[] waits = endpoints.stream()
+                    .map(e -> Wait.forHttp(e.getHeathEndpoint(), HTTP_OK))
+                    .collect(Collectors.toList())
+                    .toArray(new Wait[]{});
+            dockerCompose.start(timeoutInMinutes, TimeUnit.MINUTES, waits);
+        }
     }
 
     @AfterGroups(INTEGRATION_TESTS_TEST_GROUP)
     protected void stopDockerContainers() {
-        dockerCompose.kill();
+        if(!isLocal) {
+            dockerCompose.kill();
+        }
     }
 
     @BeforeMethod
@@ -98,10 +109,14 @@ public class AbstractIntegrationTest {
 
     @DataProvider(name = ENDPOINTS_DATAPROVIDER, parallel = false)
     public Object[][] getEndpoints() {
-        return endpoints.stream()
-                .map(e -> new String[]{e.getName(), e.getEndpoint().toString()})
-                .collect(Collectors.toList())
-                .toArray(new String[][]{});
+        if(isLocal) {
+            return new Object[][]{new String[]{"Local Spring Boot app", "http://localhost:8080/remoting"}};
+        } else {
+            return endpoints.stream()
+                    .map(e -> new String[]{e.getName(), e.getRemotingEndpoint().toString()})
+                    .collect(Collectors.toList())
+                    .toArray(new String[][]{});
+        }
     }
 
     protected <T> ControllerProxy<T> createController(ClientContext clientContext, String controllerName) {
@@ -116,7 +131,7 @@ public class AbstractIntegrationTest {
         Client.init(new IntegrationTestToolkit());
         Client.getClientConfiguration().getCookieStore().removeAll();
         try {
-            ClientContext clientContext = Client.getService(ClientContextFactory.class).create(Client.getClientConfiguration(), new URI(endpoint + "/remoting"));
+            ClientContext clientContext = Client.getService(ClientContextFactory.class).create(Client.getClientConfiguration(), new URI(endpoint));
             long timeOutTime = System.currentTimeMillis() + Duration.ofMinutes(timeoutInMinutes).toMillis();
             while (System.currentTimeMillis() < timeOutTime && clientContext.getClientId() == null) {
                 try {

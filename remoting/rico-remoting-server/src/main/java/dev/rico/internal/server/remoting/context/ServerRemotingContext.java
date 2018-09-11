@@ -125,7 +125,7 @@ public class ServerRemotingContext {
 
         registerCommand(CreateControllerCommand.class, command -> {
             Assert.requireNonNull(command, "command");
-            onCreateController(command.getControllerName(), command.getParentControllerId());
+            onCreateController(command.getControllerName(), command.getControllerId(), command.getParentControllerId());
         });
 
         registerCommand(DestroyControllerCommand.class, command -> {
@@ -235,11 +235,11 @@ public class ServerRemotingContext {
         }
     }
 
-    private void onCreateController(final String controllerName, final String parentControllerId) {
+    private void onCreateController(final String controllerName, final String controllerId, final String parentControllerId) {
         Assert.requireNonBlank(controllerName, "controllerName");
 
         // final InternalAttributesBean bean = platformBeanRepository.getInternalAttributesBean();
-        final String controllerId = controllerHandler.createController(controllerName, parentControllerId);
+        controllerHandler.createController(controllerName, controllerId, parentControllerId);
 
         //bean.setControllerId(controllerId);
         Object model = controllerHandler.getControllerModel(controllerId);

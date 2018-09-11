@@ -16,21 +16,20 @@
  */
 package dev.rico.internal.server.remoting.controller;
 
+import dev.rico.core.functional.Subscription;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.ReflectionHelper;
 import dev.rico.internal.core.context.ContextManagerImpl;
-import dev.rico.internal.remoting.communication.converters.Converters;
 import dev.rico.internal.server.beans.PostConstructInterceptor;
 import dev.rico.internal.server.remoting.error.ActionErrorHandler;
-import dev.rico.core.functional.Subscription;
 import dev.rico.internal.server.remoting.model.ServerRepository;
+import dev.rico.remoting.converter.ValueConverterException;
 import dev.rico.server.remoting.Param;
 import dev.rico.server.remoting.ParentController;
 import dev.rico.server.remoting.PostChildCreated;
 import dev.rico.server.remoting.PreChildDestroyed;
 import dev.rico.server.remoting.RemotingAction;
 import dev.rico.server.remoting.RemotingModel;
-import dev.rico.remoting.converter.ValueConverterException;
 import dev.rico.server.spi.components.ManagedBeanFactory;
 import org.apiguardian.api.API;
 import org.slf4j.Logger;
@@ -47,7 +46,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 
 import static dev.rico.internal.server.remoting.RemotingServerConstants.CONTROLLER_ACTION_CONTEXT;
 import static dev.rico.internal.server.remoting.RemotingServerConstants.CONTROLLER_CONTEXT;
@@ -92,30 +90,34 @@ public class ControllerHandler {
         return models.get(id);
     }
 
-    public String createController(final String name, final String parentControllerId) {
+    public void createController(final String name, final String controllerId, final String parentControllerId) {
         Assert.requireNonBlank(name, "name");
+
+        if(controllers.containsKey(controllerId)) {
+            throw new IllegalArgumentException("Controller with Id " + controllerId + " already registered!");
+        }
+
         final Class<?> controllerClass = controllerRepository.getControllerClassForName(name);
 
         if(controllerClass == null) {
             throw new ControllerCreationException("Can not find controller class for name " + name);
         }
 
-        final String id = UUID.randomUUID().toString();
         final Object instance = beanFactory.createDependentInstance(controllerClass, new PostConstructInterceptor() {
             @Override
             public void intercept(final Object controller) {
                 try {
-                    attachModel(id, controller);
+                    attachModel(controllerId, controller);
                 } catch (Exception e) {
                     throw new RuntimeException("Can not attach model to controller", e);
                 }
                 if(parentControllerId != null) {
-                    attachParent(id, controller, parentControllerId);
+                    attachParent(controllerId, controller, parentControllerId);
                 }
             }
         });
-        controllers.put(id, instance);
-        controllerClassMapping.put(id, controllerClass);
+        controllers.put(controllerId, instance);
+        controllerClassMapping.put(controllerId, controllerClass);
 
         if(parentControllerId != null) {
             final Object parentController = controllers.get(parentControllerId);
@@ -123,9 +125,7 @@ public class ControllerHandler {
             firePostChildCreated(parentController, instance);
         }
 
-        LOG.trace("Created Controller of type %s and id %s for name %s", ControllerUtils.getControllerName(controllerClass), id, name);
-
-        return id;
+        LOG.trace("Created Controller of type %s and id %s for name %s", ControllerUtils.getControllerName(controllerClass), controllerId, name);
     }
 
     public void destroyController(final String id) throws Exception {

@@ -21,12 +21,10 @@ import dev.rico.server.remoting.EnableRemoting;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import javax.ws.rs.core.Application;
-
 @SpringBootApplication
 @EnableRico
 @EnableRemoting
-public class TestApplication extends Application {
+public class TestApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(TestApplication.class);
