@@ -30,7 +30,7 @@ public class CookieHandlerProvider extends AbstractServiceProvider<HttpClientCoo
     }
 
     @Override
-    protected HttpClientCookieHandler createService(ClientConfiguration configuration) {
+    protected HttpClientCookieHandler createService(final ClientConfiguration configuration) {
         return new HttpClientCookieHandler(configuration.getCookieStore());
     }
 }

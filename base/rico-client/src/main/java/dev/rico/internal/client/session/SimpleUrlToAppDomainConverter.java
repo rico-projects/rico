@@ -28,7 +28,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 public class SimpleUrlToAppDomainConverter implements Function<URI, String> {
 
     @Override
-    public String apply(URI uri) {
+    public String apply(final URI uri) {
         return Assert.requireNonNull(uri, "uri").getHost() + ":" + uri.getPort();
     }
 }

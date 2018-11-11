@@ -43,12 +43,11 @@ public class ClientSessionHandler implements HttpURLConnectionInterceptor {
     }
 
     @Override
-    public void handle(final HttpURLConnection request, RequestChain requestChain) throws IOException{
+    public void handle(final HttpURLConnection request, final RequestChain requestChain) throws IOException{
         Assert.requireNonNull(request, "request");
         Assert.requireNonNull(requestChain, "requestChain");
-        final String clientId;
         try {
-            clientId = clientSessionStore.getClientIdentifierForUrl(request.getURL().toURI());
+            final String clientId = clientSessionStore.getClientIdentifierForUrl(request.getURL().toURI());
             if (clientId != null) {
                 LOG.debug("Adding client id {} to http request at {}", clientId, request.getURL());
                 request.setRequestProperty(RicoConstants.CLIENT_ID_HTTP_HEADER_NAME, clientId);
@@ -56,9 +55,9 @@ public class ClientSessionHandler implements HttpURLConnectionInterceptor {
                 LOG.trace("Request to application at {} without client id. Client id not defined until now.", request.getURL());
             }
             final HttpURLConnection response = requestChain.call();
-            String clientIdInHeader = response.getHeaderField(RicoConstants.CLIENT_ID_HTTP_HEADER_NAME);
+            final String clientIdInHeader = response.getHeaderField(RicoConstants.CLIENT_ID_HTTP_HEADER_NAME);
             clientSessionStore.setClientIdentifierForUrl(response.getURL().toURI(), clientIdInHeader);
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             LOG.error("Exception while converting to request URL {} to URI", request.getURL());
             throw new RuntimeException("Exception while converting URL " + request.getURL() + "to URI", e);
         }

@@ -43,7 +43,7 @@ public class CookieHandler implements HttpURLConnectionInterceptor {
             clientCookieHandler.setRequestCookies(connection);
             HttpURLConnection response = chain.call();
             clientCookieHandler.updateCookiesFromResponse(response);
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             throw new RuntimeException("Can not set cookies", e);
         }
     }

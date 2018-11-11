@@ -45,7 +45,7 @@ public class ClientImpl {
 
     private final ClientConfiguration clientConfiguration;
 
-    private AtomicBoolean isToolkitSet =  new AtomicBoolean(false);
+    private final AtomicBoolean isToolkitSet =  new AtomicBoolean(false);
 
     private ClientImpl() {
         PlatformLogo.printLogo();
@@ -76,7 +76,7 @@ public class ClientImpl {
                 .filter(c -> !providers.keySet().contains(c))
                 .collect(Collectors.toList());
         if(!unresolvedServices.isEmpty()) {
-            throw new RuntimeException("No provider found for the follwoing needed services:" + Arrays.toString(unresolvedServices.toArray()));
+            throw new RuntimeException("No provider found for the following needed services:" + Arrays.toString(unresolvedServices.toArray()));
         }
 
         initImpl(new HeadlessToolkit());

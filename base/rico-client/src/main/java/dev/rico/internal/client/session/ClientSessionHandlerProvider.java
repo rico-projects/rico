@@ -28,7 +28,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class ClientSessionHandlerProvider implements RequestHandlerProvider {
     @Override
-    public HttpURLConnectionInterceptor getHandler(Configuration configuration) {
+    public HttpURLConnectionInterceptor getHandler(final Configuration configuration) {
         return new ClientSessionHandler(Client.getService(ClientSessionStore.class));
     }
 }

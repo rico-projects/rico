@@ -31,7 +31,7 @@ public class ClientSessionStoreProvider extends AbstractServiceProvider<ClientSe
     }
 
     @Override
-    protected ClientSessionStore createService(ClientConfiguration configuration) {
+    protected ClientSessionStore createService(final ClientConfiguration configuration) {
         return new ClientSessionStoreImpl();
     }
 }
