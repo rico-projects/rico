@@ -34,7 +34,7 @@ public class RemotingException extends Exception {
      * Constructor
      * @param message the detailed message
      */
-    public RemotingException(String message) {
+    public RemotingException(final String message) {
         super(message);
     }
 
@@ -43,7 +43,7 @@ public class RemotingException extends Exception {
      * @param message the detailed message
      * @param cause the cause
      */
-    public RemotingException(String message, Throwable cause) {
+    public RemotingException(final String message, final Throwable cause) {
         super(message, cause);
     }
 

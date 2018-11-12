@@ -50,11 +50,11 @@ public class ControllerProxyFactory {
         this.clientConnector = Assert.requireNonNull(clientConnector, "clientConnector");
     }
 
-    public <T> CompletableFuture<ControllerProxy<T>> create(String name) {
+    public <T> CompletableFuture<ControllerProxy<T>> create(final String name) {
        return create(name, null);
     }
 
-    public <T> CompletableFuture<ControllerProxy<T>> create(String name, String parentControllerId) {
+    public <T> CompletableFuture<ControllerProxy<T>> create(final String name, final String parentControllerId) {
         Assert.requireNonBlank(name, "name");
         final InternalAttributesBean bean = platformBeanRepository.getInternalAttributesBean();
 

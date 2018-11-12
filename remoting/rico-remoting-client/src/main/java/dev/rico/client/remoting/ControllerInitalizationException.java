@@ -28,15 +28,15 @@ public class ControllerInitalizationException extends RuntimeException {
     public ControllerInitalizationException() {
     }
 
-    public ControllerInitalizationException(String message) {
+    public ControllerInitalizationException(final String message) {
         super(message);
     }
 
-    public ControllerInitalizationException(String message, Throwable cause) {
+    public ControllerInitalizationException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
-    public ControllerInitalizationException(Throwable cause) {
+    public ControllerInitalizationException(final Throwable cause) {
         super(cause);
     }
 }
