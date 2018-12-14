@@ -13,12 +13,12 @@ public class MqttFactoryImpl implements MqttFactory {
 
     private final ClientConfiguration configuration;
 
-    public MqttFactoryImpl(ClientConfiguration configuration) {
+    public MqttFactoryImpl(final ClientConfiguration configuration) {
         this.configuration = configuration;
     }
 
     @Override
-    public MqttClient getClient(String remoteUrl) throws MqttException {
+    public MqttClient getClient(final String remoteUrl) throws MqttException {
         return new MqttClientImpl(remoteUrl, configuration, Client.getService(UiExecutor.class));
     }
 }
