@@ -58,6 +58,8 @@ include 'incubation/rico-crud-jpa'
 include 'incubation/rico-projector-common'
 include 'incubation/rico-projector-client'
 include 'incubation/rico-projector-server'
+include 'incubation/rico-mqtt'
+include 'incubation/rico-mqtt-client'
 
 include 'integration-tests/integration-common'
 include 'integration-tests/integration-server'
