@@ -19,4 +19,5 @@ public interface MqttClient {
     CompletableFuture<Void> publish(String topic, MqttMessage message);
 
     CompletableFuture<Subscription> subscribe(String topicFilter, Qos qos, BiConsumer<String, MqttMessage> messageListener);
+
 }
