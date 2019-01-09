@@ -66,7 +66,7 @@ public class ActionControllerTest extends AbstractRemotingIntegrationTest {
         }
     }
 
-    @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an public action with param method can be called")
+    @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an public action with param as map can be called")
     public void testCallPublicMethodWithParamAsMap(String containerType, String endpoint) {
         try {
             final ClientContext context = connect(endpoint);
@@ -152,7 +152,7 @@ public class ActionControllerTest extends AbstractRemotingIntegrationTest {
         }
     }
 
-    @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an private action method can be called")
+    @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an private action with multiple parameters can be called")
     public void testCallWithParams(String containerType, String endpoint) {
         try {
             final ClientContext context = connect(endpoint);
