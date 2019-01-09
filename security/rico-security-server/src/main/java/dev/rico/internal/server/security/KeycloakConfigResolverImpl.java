@@ -67,8 +67,8 @@ public class KeycloakConfigResolverImpl implements KeycloakConfigResolver {
             adapterConfig.setRealm(realmName);
         }else{
             if(LOG.isDebugEnabled()) {
-                    final String allowedRealms = configuration.getRealmNames().stream().reduce("", (a, b) -> a + "," + b);
-                    LOG.debug("Realm '" + realmName + "' is not allowed! Allowed realms are {}", allowedRealms);
+                final String allowedRealms = configuration.getRealmNames().stream().reduce("", (a, b) -> a + "," + b);
+                LOG.debug("Realm '" + realmName + "' is not allowed! Allowed realms are {}", allowedRealms);
             }
             throw new SecurityException("Access Denied! The given realm is not in the allowed realms.");
         }
