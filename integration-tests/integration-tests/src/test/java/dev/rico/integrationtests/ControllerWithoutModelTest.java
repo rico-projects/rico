@@ -25,7 +25,7 @@ import static dev.rico.integrationtests.controllerwithoutmodel.ControllerWithout
 
 public class ControllerWithoutModelTest extends AbstractIntegrationTest {
 
-    @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Test if all bean types can be injected in a controller")
+    @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Test if a controller without model can be created")
     public void testCreateController(String containerType, String endpoint) {
         try {
             ClientContext context = connect(endpoint);
