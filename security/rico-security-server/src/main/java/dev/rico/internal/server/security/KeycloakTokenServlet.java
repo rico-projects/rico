@@ -20,6 +20,7 @@ import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.http.ConnectionUtils;
 import dev.rico.internal.core.http.HttpClientConnection;
 import dev.rico.core.http.RequestMethod;
+import dev.rico.server.security.SecurityException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,20 +60,30 @@ public class KeycloakTokenServlet extends HttpServlet {
             final String content = ConnectionUtils.readUTF8Content(req.getInputStream()) + "&client_id=" + appName;
 
 
-            LOG.debug("Calling Keycloak");
-            final URI url = new URI(authEndPoint + "/realms/" + realmName + "/protocol/openid-connect/token");
-            final HttpClientConnection clientConnection = new HttpClientConnection(url, RequestMethod.POST);
-            clientConnection.addRequestHeader(CONTENT_TYPE_HEADER, FORM_MIME_TYPE);
-            clientConnection.addRequestHeader(CHARSET_HEADER, CHARSET);
-            clientConnection.writeRequestContent(content);
-            final int responseCode = clientConnection.readResponseCode();
-            if(responseCode == SC_HTTP_UNAUTHORIZED) {
-                LOG.debug("Invalid login!");
-                throw new RuntimeException("Invalid login!");
+            if(configuration.isRealmAllowed(realmName)){
+                LOG.debug("Calling Keycloak");
+                final URI url = new URI(authEndPoint + "/realms/" + realmName + "/protocol/openid-connect/token");
+                final HttpClientConnection clientConnection = new HttpClientConnection(url, RequestMethod.POST);
+                clientConnection.addRequestHeader(CONTENT_TYPE_HEADER, FORM_MIME_TYPE);
+                clientConnection.addRequestHeader(CHARSET_HEADER, CHARSET);
+                clientConnection.writeRequestContent(content);
+                final int responseCode = clientConnection.readResponseCode();
+                if(responseCode == SC_HTTP_UNAUTHORIZED) {
+                    LOG.debug("Invalid login!");
+                    throw new RuntimeException("Invalid login!");
+                }
+                LOG.debug("sending auth token to client");
+                final byte[] responseContent = clientConnection.readResponseContent();
+                ConnectionUtils.writeContent(resp.getOutputStream(), responseContent);
+            }else{
+                if(LOG.isDebugEnabled()) {
+                    final String allowedRealms = configuration.getRealmNames().stream().reduce("", (a, b) -> a + "," + b);
+                    LOG.debug("Realm '" + realmName + "' is not allowed! Allowed realms are {}", allowedRealms);
+                }
+                throw new SecurityException("Access Denied! The given realm is not in the allowed realms.");
             }
-            LOG.debug("sending auth token to client");
-            final byte[] responseContent = clientConnection.readResponseContent();
-            ConnectionUtils.writeContent(resp.getOutputStream(), responseContent);
+
+
         } catch (final Exception e) {
             LOG.error("Error in security token handling", e);
             resp.sendError(SC_HTTP_UNAUTHORIZED, "Can not authorize");

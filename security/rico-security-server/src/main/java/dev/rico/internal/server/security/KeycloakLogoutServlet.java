@@ -52,7 +52,7 @@ public class KeycloakLogoutServlet extends HttpServlet {
             final String realmName = Optional.ofNullable(req.getHeader(REALM_NAME_HEADER)).orElse(configuration.getRealmName());
             final String authEndPoint = configuration.getAuthEndpoint();
             final URI url = new URI(authEndPoint + "/realms/" + realmName + "/protocol/openid-connect/logout");
-            LOG.debug("Calling Keycloak");
+            LOG.debug("Calling Keycloak logout for realm '{}'", realmName);
             final HttpClientConnection clientConnection = new HttpClientConnection(url, RequestMethod.GET);
             clientConnection.addRequestHeader(AUTHORIZATION_HEADER, req.getHeader(AUTHORIZATION_HEADER));
             final int responseCode = clientConnection.readResponseCode();
