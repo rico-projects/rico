@@ -20,14 +20,10 @@ import dev.rico.remoting.converter.Converter;
 import dev.rico.remoting.converter.ValueConverterException;
 import org.apiguardian.api.API;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.*;
 
-import static dev.rico.internal.remoting.RemotingConstants.REMOTING_DATE_FORMAT_PATTERN;
 import static dev.rico.internal.core.RicoConstants.TIMEZONE_UTC;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
@@ -66,7 +62,7 @@ public class LocalDateTimeConverterFactory extends AbstractConverterFactory {
             try {
                 final Calendar result = Calendar.getInstance(TimeZone.getTimeZone(TIMEZONE_UTC));
                 result.setTime(getDateFormat().parse(value));
-                return result.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+                return result.toInstant().atZone(ZoneOffset.UTC).toLocalDateTime();
             } catch (final Exception e) {
                 throw new ValueConverterException("Can not convert to LocalDateTime", e);
             }
@@ -78,7 +74,7 @@ public class LocalDateTimeConverterFactory extends AbstractConverterFactory {
                 return null;
             }
             try {
-                final Date date = Date.from(value.toInstant(OffsetDateTime.now().getOffset()));
+                final Date date = Date.from(value.toInstant(ZoneOffset.UTC));
                 return getDateFormat().format(date);
             } catch (final Exception e) {
                 throw new ValueConverterException("Can not convert from LocalDateTime", e);
