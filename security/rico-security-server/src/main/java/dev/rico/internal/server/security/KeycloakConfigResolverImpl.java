@@ -32,6 +32,7 @@ import java.util.Optional;
 import static dev.rico.internal.security.SecurityConstants.APPLICATION_NAME_HEADER;
 import static dev.rico.internal.security.SecurityConstants.BEARER_ONLY_HEADER;
 import static dev.rico.internal.security.SecurityConstants.REALM_NAME_HEADER;
+import static dev.rico.internal.server.security.SecurityServerConstants.REALMS_PROPERTY_NAME;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.19.0", status = INTERNAL)
@@ -59,7 +60,10 @@ public class KeycloakConfigResolverImpl implements KeycloakConfigResolver {
 
         final AdapterConfig adapterConfig = new AdapterConfig();
         LOG.debug("Checking if realm '" +realmName + "' is allowed");
-        if(isRealmAllowed(realmName)){
+        if(configuration.isRealmAllowed(realmName)){
+            if(LOG.isTraceEnabled()) {
+                LOG.trace("Realm '" + realmName + "' is allowed");
+            }
             adapterConfig.setRealm(realmName);
         }else{
             if(LOG.isDebugEnabled()) {
@@ -79,19 +83,18 @@ public class KeycloakConfigResolverImpl implements KeycloakConfigResolver {
         return KeycloakDeploymentBuilder.build(adapterConfig);
     }
 
-    public static boolean isRealmAllowed(final String realmName){
-        Assert.requireNonNull(realmName, "realmName");
-        return configuration.getRealmNames().contains(realmName);
-    }
-
     public static void setConfiguration(final KeycloakConfiguration configuration) {
         Assert.requireNonNull(configuration, "configuration");
         KeycloakConfigResolverImpl.configuration = configuration;
 
         LOG.debug("Configuration for keycloak resolver defined");
         if(LOG.isTraceEnabled()) {
-            final String allowedRealms = configuration.getRealmNames().stream().reduce("", (a, b) -> a + "," + b);
-            LOG.trace("Allowed keycloak realms: {}", allowedRealms);
+            if(configuration.isRealmCheckEnabled()) {
+                final String allowedRealms = configuration.getRealmNames().stream().reduce("", (a, b) -> a + "," + b);
+                LOG.trace("Allowed keycloak realms: {}", allowedRealms);
+            } else {
+                LOG.trace("Any keycloak realm is allowed. Property '" + REALMS_PROPERTY_NAME + "' won't be used!");
+            }
         }
     }
 }
