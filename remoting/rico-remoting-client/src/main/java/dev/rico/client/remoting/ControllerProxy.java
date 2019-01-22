@@ -55,6 +55,7 @@ public interface ControllerProxy<T> extends ControllerFactory {
      */
     CompletableFuture<Void> invoke(String actionName, Param... params);
 
+    @Deprecated
     CompletableFuture<Void> invoke(String actionName, Map<String, ?> params);
 
 
