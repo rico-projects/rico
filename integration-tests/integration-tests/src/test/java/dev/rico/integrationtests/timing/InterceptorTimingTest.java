@@ -33,7 +33,7 @@ public class InterceptorTimingTest extends AbstractIntegrationTest {
     }
 
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER)
-    public void testCall2(String containerType, String endpoint) throws Exception {
+    public void testCall2(final String containerType, final String endpoint) throws Exception {
 
         //given
         final String url = endpoint + "/rest/interceptor-timing/2";
