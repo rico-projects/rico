@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,6 +17,9 @@
 package dev.rico.internal.server.security;
 
 import org.apiguardian.api.API;
+
+import java.util.Collections;
+import java.util.List;
 
 @API(since = "0.19.0", status = API.Status.EXPERIMENTAL)
 public interface SecurityServerConstants {
@@ -37,7 +40,11 @@ public interface SecurityServerConstants {
 
     String LOGIN_ENDPOINTS_ACTIVE_PROPERTY_NAME = "security.loginEndpoint.active";
 
+    String REALM_CHECK_ACTIVE_PROPERTY_NAME = "security.keycloak.realmCheck";
+
     boolean LOGIN_ENDPOINTS_ACTIVE_PROPERTY_DEFAULT_VALUE = true;
+
+    boolean REALM_CHECK_ACTIVE_PROPERTY_DEFAULT_VALUE = true;
 
     String LOGIN_ENDPOINTS_PROPERTY_NAME = "security.loginEndpoint";
 
@@ -47,12 +54,20 @@ public interface SecurityServerConstants {
 
     String LOGOUT_ENDPOINTS_PROPERTY_DEFAULT_VALUE = "/openid-logout";
 
-    String SECURE_ENDPOINTS_PROPERTY_DEFAULT_VALUE = "/remoting";
+    List<String> SECURE_ENDPOINTS_PROPERTY_DEFAULT_VALUE = Collections.emptyList();
 
     String SECURITY_MODULE_NAME = "SecurityModule";
 
     String SECURITY_MODULE_ACTIVE_PROPERTY = "security.active";
 
     boolean SECURITY_MODULE_ACTIVE_PROPERTY_DEFAULT_VALUE = true;
+
+    List<String> REALMS_PROPERTY_DEFAULT_VALUE = Collections.emptyList();
+
+    String REALM_PROPERTY_DEFAULT_VALUE = "";
+
+    String APPLICATION_PROPERTY_DEFAULT_VALUE = "";
+
+    String SECURITY_ENDPOINT_SUFFIX = "/auth";
 
 }

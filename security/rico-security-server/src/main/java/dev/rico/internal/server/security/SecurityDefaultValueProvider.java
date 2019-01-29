@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -37,8 +37,8 @@ public class SecurityDefaultValueProvider extends ConfigurationProviderAdapter {
         ret.put(AUTH_ENDPOINT_PROPERTY_NAME, AUTH_ENDPOINT_PROPERTY_DEFAULT_VALUE);
         ret.put(LOGIN_ENDPOINTS_PROPERTY_NAME, LOGIN_ENDPOINTS_PROPERTY_DEFAULT_VALUE);
         ret.put(LOGOUT_ENDPOINTS_PROPERTY_NAME, LOGOUT_ENDPOINTS_PROPERTY_DEFAULT_VALUE);
-        ret.put(REALM_PROPERTY_NAME, "");
-        ret.put(APPLICATION_PROPERTY_NAME, "");
+        ret.put(REALM_PROPERTY_NAME, REALM_PROPERTY_DEFAULT_VALUE);
+        ret.put(APPLICATION_PROPERTY_NAME, APPLICATION_PROPERTY_DEFAULT_VALUE);
         return ret;
     }
 
@@ -49,14 +49,15 @@ public class SecurityDefaultValueProvider extends ConfigurationProviderAdapter {
         ret.put(CORS_PROPERTY_NAME, CORS_PROPERTY_DEFAULT_VALUE);
         ret.put(LOGIN_ENDPOINTS_ACTIVE_PROPERTY_NAME, LOGIN_ENDPOINTS_ACTIVE_PROPERTY_DEFAULT_VALUE);
         ret.put(DIRECT_CONNECTION_PROPERTY_NAME, DIRECT_CONNECTION_PROPERTY_DEFAULT_VALUE);
+        ret.put(REALM_CHECK_ACTIVE_PROPERTY_NAME, REALM_CHECK_ACTIVE_PROPERTY_DEFAULT_VALUE);
         return ret;
     }
 
     @Override
     public Map<String, List<String>> getListProperties() {
         final HashMap<String, List<String>> ret = new HashMap<>();
-        ret.put(SECURE_ENDPOINTS_PROPERTY_NAME, Collections.<String>singletonList(SECURE_ENDPOINTS_PROPERTY_DEFAULT_VALUE));
-        ret.put(REALMS_PROPERTY_NAME, Collections.emptyList());
+        ret.put(SECURE_ENDPOINTS_PROPERTY_NAME, SECURE_ENDPOINTS_PROPERTY_DEFAULT_VALUE);
+        ret.put(REALMS_PROPERTY_NAME, REALMS_PROPERTY_DEFAULT_VALUE);
         return ret;
     }
 }

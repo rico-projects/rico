@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +16,7 @@
  */
 package dev.rico.integrationtests.server.runLater;
 
-import dev.rico.integrationtests.runlater.RunLaterTestBean;
+import dev.rico.integrationtests.remoting.runlater.RunLaterTestBean;
 import dev.rico.integrationtests.server.TestConfiguration;
 import dev.rico.server.remoting.test.CommunicationMonitor;
 import dev.rico.server.remoting.test.ControllerUnderTest;
@@ -27,9 +27,9 @@ import org.testng.annotations.Test;
 
 import java.util.concurrent.TimeUnit;
 
-import static dev.rico.integrationtests.runlater.RunLaterTestConstants.RUN_LATER_ACTION_NAME;
-import static dev.rico.integrationtests.runlater.RunLaterTestConstants.RUN_LATER_ASYNC_ACTION_NAME;
-import static dev.rico.integrationtests.runlater.RunLaterTestConstants.RUN_LATER_CONTROLLER_NAME;
+import static dev.rico.integrationtests.remoting.runlater.RunLaterTestConstants.RUN_LATER_ACTION_NAME;
+import static dev.rico.integrationtests.remoting.runlater.RunLaterTestConstants.RUN_LATER_ASYNC_ACTION_NAME;
+import static dev.rico.integrationtests.remoting.runlater.RunLaterTestConstants.RUN_LATER_CONTROLLER_NAME;
 
 @SpringBootTest(classes = TestConfiguration.class)
 public class RunLaterControllerTest extends SpringTestNGControllerTest {
