@@ -46,7 +46,7 @@ public class AbstractRemotingIntegrationTest extends AbstractIntegrationTest {
         }
     }
 
-    protected void invoke(ControllerProxy<?> controllerProxy, String actionName, String containerType, Param... params) {
+    protected void invoke(final ControllerProxy<?> controllerProxy, final String actionName, final String containerType, final Param... params) {
         try {
             controllerProxy.invoke(actionName, params).get(getTimeoutInMinutes(), TimeUnit.MINUTES);
         } catch (Exception e) {
