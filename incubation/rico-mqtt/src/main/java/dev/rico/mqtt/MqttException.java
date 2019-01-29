@@ -10,7 +10,7 @@ public class MqttException extends Exception {
         super(message, cause);
     }
 
-    public MqttException(Throwable cause) {
+    public MqttException(final Throwable cause) {
         super(cause);
     }
 }
