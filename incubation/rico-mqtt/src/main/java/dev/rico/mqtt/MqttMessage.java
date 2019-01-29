@@ -2,6 +2,9 @@ package dev.rico.mqtt;
 
 import dev.rico.internal.mqtt.MqttMessageImpl;
 
+/**
+ * Definition of a mqtt message.
+ */
 public interface MqttMessage {
 
     byte[] getPayload();

@@ -17,6 +17,7 @@ import org.eclipse.paho.client.mqttv3.MqttPingSender;
 import org.eclipse.paho.client.mqttv3.TimerPingSender;
 import org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -87,13 +88,12 @@ public class MqttClientImpl implements MqttClient {
         };
         try {
             internalClient.disconnect(null, listener);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             result.completeExceptionally(new MqttException("MQTT error", e));
         }
         return result;
     }
 
-    @Override
     public Optional<String> clientId() {
         return Optional.ofNullable(internalClient.getClientId());
     }
@@ -116,13 +116,39 @@ public class MqttClientImpl implements MqttClient {
         final org.eclipse.paho.client.mqttv3.MqttMessage innerMessage = new org.eclipse.paho.client.mqttv3.MqttMessage();
         innerMessage.setPayload(message.getPayload());
         innerMessage.setRetained(message.isRetained());
-        innerMessage.setQos(Qos.toInt(message.getQos()));
+        innerMessage.setQos(toInt(message.getQos()));
         try {
             internalClient.publish(topic, innerMessage, null, listener);
         } catch (final Exception e) {
             result.completeExceptionally(new MqttException("MQTT error", e));
         }
         return result;
+    }
+
+    private int toInt(final Qos qos) {
+        if(Objects.equals(qos, Qos.Q0)) {
+            return 0;
+        }
+        if(Objects.equals(qos, Qos.Q1)) {
+            return 1;
+        }
+        if(Objects.equals(qos, Qos.Q2)) {
+            return 2;
+        }
+        throw new IllegalArgumentException("Illegal QoS: " + qos);
+    }
+
+    private Qos of(int qos) {
+        if(qos == 0) {
+            return Qos.Q0;
+        }
+        if(qos == 1) {
+            return Qos.Q1;
+        }
+        if(qos == 2) {
+            return Qos.Q2;
+        }
+        throw new IllegalArgumentException("Illegal QoS: " + qos);
     }
 
     @Override
@@ -150,12 +176,12 @@ public class MqttClientImpl implements MqttClient {
             @Override
             public void messageArrived(final String topic, final org.eclipse.paho.client.mqttv3.MqttMessage message) throws Exception {
                 Assert.requireNonNull(message, "message");
-                final MqttMessage receivedMessage = MqttMessage.of(message.getPayload(), message.isRetained(), Qos.of(message.getQos()));
+                final MqttMessage receivedMessage = MqttMessage.of(message.getPayload(), message.isRetained(), of(message.getQos()));
                 subscriptionCaller.execute(() -> messageListener.accept(topic, receivedMessage));
             }
         };
         try {
-            internalClient.subscribe(topic, Qos.toInt(qos), null, actionListener, internalMessageListener);
+            internalClient.subscribe(topic, toInt(qos), null, actionListener, internalMessageListener);
         } catch (final org.eclipse.paho.client.mqttv3.MqttException e) {
            result.completeExceptionally(new MqttException("MQTT error", e));
         }
