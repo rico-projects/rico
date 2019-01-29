@@ -2,7 +2,7 @@ package dev.rico.mqtt;
 
 public class MqttException extends Exception {
 
-    public MqttException(String message) {
+    public MqttException(final String message) {
         super(message);
     }
 
