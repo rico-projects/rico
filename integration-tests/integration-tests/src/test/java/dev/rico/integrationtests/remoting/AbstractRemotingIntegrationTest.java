@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 public class AbstractRemotingIntegrationTest extends AbstractIntegrationTest {
 
-    protected <T> ControllerProxy<T> createController(ClientContext clientContext, String controllerName) {
+    protected <T> ControllerProxy<T> createController(final ClientContext clientContext, final String controllerName) {
         try {
             return (ControllerProxy<T>) clientContext.createController(controllerName).get(getTimeoutInMinutes(), TimeUnit.MINUTES);
         } catch (Exception e) {
