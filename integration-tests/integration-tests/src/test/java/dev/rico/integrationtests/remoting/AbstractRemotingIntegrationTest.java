@@ -62,7 +62,7 @@ public class AbstractRemotingIntegrationTest extends AbstractIntegrationTest {
         }
     }
 
-    protected void destroy(ControllerProxy<?> controllerProxy, String endpoint) {
+    protected void destroy(final ControllerProxy<?> controllerProxy, final String endpoint) {
         try {
             controllerProxy.destroy().get(getTimeoutInMinutes(), TimeUnit.MINUTES);
         } catch (Exception e) {
