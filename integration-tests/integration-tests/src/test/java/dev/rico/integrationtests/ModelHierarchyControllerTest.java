@@ -85,7 +85,7 @@ public class ModelHierarchyControllerTest extends AbstractIntegrationTest {
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER)
     public void testSwitchChildModelsWithCounter(final String containerType, final String endpoint) {
         try {
-            ClientContext context = connect(endpoint);
+            final ClientContext context = connect(endpoint);
             ControllerProxy<RootModel> controller = createController(context, CONTROLLER_NAME);
             controller.invoke(ADD_COUNTER_LISTENER_ACTION).get();
 
