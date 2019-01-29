@@ -1,4 +1,5 @@
 /*
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2016 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,6 +27,7 @@ import java.util.List;
 
 /**
  * Created by hendrikebbers on 25.10.16.
+ *  Adopted by Jörg Hälker on 29.01.18.
  */
 public class InstantConverterFactory extends AbstractConverterFactory {
 
@@ -33,7 +35,7 @@ public class InstantConverterFactory extends AbstractConverterFactory {
     private final static Converter CONVERTER = new InstantConverter();
 
     @Override
-    public boolean supportsType(Class<?> cls) {
+    public boolean supportsType(final Class<?> cls) {
         return Instant.class.isAssignableFrom(cls);
     }
 
@@ -48,14 +50,14 @@ public class InstantConverterFactory extends AbstractConverterFactory {
     }
 
     @Override
-    public Converter getConverterForType(Class<?> cls) {
+    public Converter getConverterForType(final Class<?> cls) {
         return CONVERTER;
     }
 
     private static class InstantConverter extends AbstractStringConverter<Instant> {
 
         @Override
-        public Instant convertFromRemoting(String value) throws ValueConverterException {
+        public Instant convertFromRemoting(final String value) throws ValueConverterException {
             if (value == null) {
                 return null;
             }
@@ -67,7 +69,7 @@ public class InstantConverterFactory extends AbstractConverterFactory {
         }
 
         @Override
-        public String convertToRemoting(Instant value) throws ValueConverterException {
+        public String convertToRemoting(final Instant value) throws ValueConverterException {
             if (value == null) {
                 return null;
             }

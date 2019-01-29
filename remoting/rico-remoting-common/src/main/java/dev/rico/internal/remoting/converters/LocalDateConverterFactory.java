@@ -54,6 +54,8 @@ public class LocalDateConverterFactory extends AbstractConverterFactory {
     private static class LocalDateConverter
             extends AbstractDateConverter<LocalDate> {
 
+        private static final String UTC = "UTC";
+
         @Override
         public LocalDate convertFromRemoting(final String value)
                 throws ValueConverterException {
@@ -61,7 +63,7 @@ public class LocalDateConverterFactory extends AbstractConverterFactory {
                 return null;
             }
             try {
-                final Calendar result = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+                final Calendar result = Calendar.getInstance(TimeZone.getTimeZone(UTC));
                 result.setTime(getDateFormat().parse(value));
                 return result.toInstant().atZone(ZoneOffset.UTC).toLocalDate();
             } catch (final Exception e) {

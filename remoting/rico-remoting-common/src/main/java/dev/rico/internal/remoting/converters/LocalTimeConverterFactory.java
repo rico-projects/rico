@@ -1,4 +1,5 @@
 /*
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2016 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,6 +27,7 @@ import java.util.List;
 
 /**
  * Created by hendrikebbers on 25.10.16.
+ * Adopted by Jörg Hälker on 29.01.18.
  */
 public class LocalTimeConverterFactory extends AbstractConverterFactory {
 
@@ -33,7 +35,7 @@ public class LocalTimeConverterFactory extends AbstractConverterFactory {
    private final static Converter CONVERTER = new LocalTimeConverter();
 
    @Override
-   public boolean supportsType(Class<?> cls) {
+   public boolean supportsType(final Class<?> cls) {
       return LocalTime.class.isAssignableFrom(cls);
    }
 
@@ -48,14 +50,14 @@ public class LocalTimeConverterFactory extends AbstractConverterFactory {
    }
 
    @Override
-   public Converter getConverterForType(Class<?> cls) {
+   public Converter getConverterForType(final Class<?> cls) {
       return CONVERTER;
    }
 
    private static class LocalTimeConverter extends AbstractStringConverter<LocalTime> {
 
       @Override
-      public LocalTime convertFromRemoting(String value) throws ValueConverterException {
+      public LocalTime convertFromRemoting(final String value) throws ValueConverterException {
          if (value == null) {
             return null;
          }
@@ -67,7 +69,7 @@ public class LocalTimeConverterFactory extends AbstractConverterFactory {
       }
 
       @Override
-      public String convertToRemoting(LocalTime value) throws ValueConverterException {
+      public String convertToRemoting(final LocalTime value) throws ValueConverterException {
          if (value == null) {
             return null;
          }
