@@ -16,7 +16,7 @@ import static dev.rico.integrationtests.timing.TimingConstants.METRICS_NAME;
 public class SimpleTimingTest extends AbstractIntegrationTest {
 
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER)
-    public void testCall1(final String containerType, final String endpoint) throws Exception {
+    public void testCallEndpoint1(final String containerType, final String endpoint) throws Exception {
 
         //given
         final String url = endpoint + "/rest/simple-timing/1";
@@ -33,7 +33,7 @@ public class SimpleTimingTest extends AbstractIntegrationTest {
     }
 
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER)
-    public void testCall2(final String containerType, final String endpoint) throws Exception {
+    public void testCallEndpoint2(final String containerType, final String endpoint) throws Exception {
 
         //given
         final String url = endpoint + "/rest/simple-timing/2";
@@ -53,7 +53,7 @@ public class SimpleTimingTest extends AbstractIntegrationTest {
     }
 
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER)
-    public void testCall3(final String containerType, final String endpoint) throws Exception {
+    public void testCallEndpoint3(final String containerType, final String endpoint) throws Exception {
 
         //given
         final String url = endpoint + "/rest/simple-timing/3";

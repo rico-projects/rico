@@ -16,6 +16,8 @@ import java.util.Optional;
 @Interceptor
 public class TimingInterceptor {
 
+    private final static String UNKNOWN_NAME = "UNKNOWN";
+
     private final ServerTiming serverTiming;
 
     @Inject
@@ -28,7 +30,7 @@ public class TimingInterceptor {
         final Method m = joinPoint.getMethod();
         final Timing timingAnnotation = m.getAnnotation(Timing.class);
         if(timingAnnotation != null) {
-            final String name = Optional.ofNullable(timingAnnotation.value()).orElse("UNKNOWN");
+            final String name = Optional.ofNullable(timingAnnotation.value()).orElse(UNKNOWN_NAME);
             final String description = timingAnnotation.description();
             final Metric metric = serverTiming.start(name, description);
             try {
