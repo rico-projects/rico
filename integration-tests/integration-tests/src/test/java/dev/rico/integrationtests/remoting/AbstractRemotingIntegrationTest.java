@@ -28,7 +28,7 @@ public class AbstractRemotingIntegrationTest extends AbstractIntegrationTest {
         Client.getClientConfiguration().getCookieStore().removeAll();
         try {
             final ClientContext clientContext = Client.getService(ClientContextFactory.class).create(Client.getClientConfiguration(), new URI(endpoint + "/remoting"));
-            long timeOutTime = System.currentTimeMillis() + Duration.ofMinutes(getTimeoutInMinutes()).toMillis();
+            final long timeOutTime = System.currentTimeMillis() + Duration.ofMinutes(getTimeoutInMinutes()).toMillis();
             while (System.currentTimeMillis() < timeOutTime && clientContext.getClientId() == null) {
                 try {
                     clientContext.connect().get(getTimeoutInMinutes(), TimeUnit.MINUTES);
