@@ -24,7 +24,7 @@ public class TimingInterceptor {
     }
 
     @AroundInvoke
-    public Object handleFoo(InvocationContext joinPoint) throws Exception {
+    public Object handle(final InvocationContext joinPoint) throws Exception {
         final Method m = joinPoint.getMethod();
         final Timing timingAnnotation = m.getAnnotation(Timing.class);
         if(timingAnnotation != null) {
