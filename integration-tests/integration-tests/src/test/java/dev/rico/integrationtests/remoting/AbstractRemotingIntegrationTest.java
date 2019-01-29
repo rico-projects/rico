@@ -23,7 +23,7 @@ public class AbstractRemotingIntegrationTest extends AbstractIntegrationTest {
         }
     }
 
-    protected ClientContext connect(String endpoint) {
+    protected ClientContext connect(final String endpoint) {
         Client.init(new IntegrationTestToolkit());
         Client.getClientConfiguration().getCookieStore().removeAll();
         try {
