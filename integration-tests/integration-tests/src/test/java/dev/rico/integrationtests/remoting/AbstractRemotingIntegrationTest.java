@@ -70,7 +70,7 @@ public class AbstractRemotingIntegrationTest extends AbstractIntegrationTest {
         }
     }
 
-    protected void disconnect(ClientContext clientContext, String endpoint) {
+    protected void disconnect(final ClientContext clientContext, final String endpoint) {
         try {
             clientContext.disconnect().get(getTimeoutInMinutes(), TimeUnit.MINUTES);
         } catch (Exception e) {
