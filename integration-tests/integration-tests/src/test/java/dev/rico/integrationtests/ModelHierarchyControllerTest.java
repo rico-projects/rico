@@ -113,7 +113,7 @@ public class ModelHierarchyControllerTest extends AbstractIntegrationTest {
     public void testSetChildMultipleTimes(final String containerType, final String endpoint) {
         try {
             final ClientContext context = connect(endpoint);
-            ControllerProxy<RootModel> controller = createController(context, CONTROLLER_NAME);
+            final ControllerProxy<RootModel> controller = createController(context, CONTROLLER_NAME);
 
             final AtomicInteger counter = new AtomicInteger(0);
             controller.getModel().childAProperty().onChanged(e -> counter.addAndGet(1));
