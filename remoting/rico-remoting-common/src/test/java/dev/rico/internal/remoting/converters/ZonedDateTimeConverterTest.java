@@ -21,10 +21,13 @@ import dev.rico.remoting.converter.ValueConverterException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.text.ParseException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Objects;
+import java.util.TimeZone;
 
 public class ZonedDateTimeConverterTest {
 
@@ -71,7 +74,7 @@ public class ZonedDateTimeConverterTest {
         Assert.assertEquals(reconvertedTime, time);
     }
 
-    @Test(enabled = false)
+    @Test
     public void testDifferentTimeZone() throws ValueConverterException {
         //given
         final ZonedDateTimeConverterFactory factory = new ZonedDateTimeConverterFactory();
@@ -86,6 +89,7 @@ public class ZonedDateTimeConverterTest {
 
         //when
         final Object rawObject = converter.convertToRemoting(time);
+        System.out.println(rawObject);
         final Object reConverted = converter.convertFromRemoting(rawObject);
 
         //then
@@ -94,6 +98,30 @@ public class ZonedDateTimeConverterTest {
         Assert.assertTrue(ZonedDateTime.class.isAssignableFrom(reConverted.getClass()));
         final ZonedDateTime reconvertedTime = (ZonedDateTime) reConverted;
         Assert.assertEquals(reconvertedTime, time);
+    }
+
+    @Test
+    public void testRawSameTimeZone() throws ValueConverterException, ParseException {
+        final TimeZone defaultZone = TimeZone.getDefault();
+        try {
+
+            //given
+            final ZonedDateTimeConverterFactory zonedDateTimeFactory = new ZonedDateTimeConverterFactory();
+            final Converter zonedDateTimeConverter = zonedDateTimeFactory.getConverterForType(LocalDate.class);
+            final String rawObject = "2019-01-30T11:25:07.341+08:00";
+
+            //when
+            final Object reconverted = zonedDateTimeConverter.convertFromRemoting(rawObject);
+
+            //then
+            Assert.assertNotNull(reconverted);
+            Assert.assertTrue(ZonedDateTime.class.isAssignableFrom(reconverted.getClass()));
+            final ZonedDateTime reconvertedTime = (ZonedDateTime) reconverted;
+            Assert.assertEquals(ZoneId.of("Australia/Sydney"), reconvertedTime.getZone());
+
+        } finally {
+            TimeZone.setDefault(defaultZone);
+        }
     }
 
 }

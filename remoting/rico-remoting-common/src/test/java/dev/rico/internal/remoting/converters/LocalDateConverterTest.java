@@ -21,6 +21,7 @@ import dev.rico.remoting.converter.ValueConverterException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -66,6 +67,7 @@ public class LocalDateConverterTest {
 
         //when
         final Object rawObject = converter.convertToRemoting(time);
+        System.out.println(rawObject);
         final Object reConverted = converter.convertFromRemoting(rawObject);
 
         //then
@@ -102,6 +104,34 @@ public class LocalDateConverterTest {
             Assert.assertTrue(LocalDate.class.isAssignableFrom(reConverted.getClass()));
             final LocalDate reconvertedTime = (LocalDate) reConverted;
             Assert.assertEquals(reconvertedTime, time);
+        } finally {
+            TimeZone.setDefault(defaultZone);
+        }
+    }
+
+    @Test
+    public void testRawSameTimeZone() throws ValueConverterException, ParseException {
+        final TimeZone defaultZone = TimeZone.getDefault();
+        try {
+
+            //given
+            final LocalDateConverterFactory localDateFactory = new LocalDateConverterFactory();
+            final Converter localDateConverter = localDateFactory.getConverterForType(LocalDate.class);
+            final ZonedDateTimeConverterFactory zonedDateTimeFactory = new ZonedDateTimeConverterFactory();
+            final Converter zonedDateTimeConverter = zonedDateTimeFactory.getConverterForType(LocalDate.class);
+            final String rawObject = "2019-01-30T11:25:07.341+03:00";
+            final ZonedDateTime zonedDateTime = (ZonedDateTime) zonedDateTimeConverter.convertFromRemoting(rawObject);
+            final LocalDate fromZonedTime = LocalDate.from(zonedDateTime);
+
+            //when
+            final Object reconvertedLocalDate = localDateConverter.convertFromRemoting(rawObject);
+
+            //then
+            Assert.assertNotNull(reconvertedLocalDate);
+            Assert.assertTrue(LocalDate.class.isAssignableFrom(reconvertedLocalDate.getClass()));
+            final LocalDate reconvertedTime = (LocalDate) reconvertedLocalDate;
+            Assert.assertEquals(reconvertedTime, fromZonedTime);
+
         } finally {
             TimeZone.setDefault(defaultZone);
         }

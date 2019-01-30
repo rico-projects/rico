@@ -76,7 +76,7 @@ public class LocalDateTimeConverterTest {
         Assert.assertEquals(reconvertedTime, time);
     }
 
-    @Test(enabled = false)
+    @Test
     public void testDifferentTimeZone() throws ValueConverterException {
         final TimeZone defaultZone = TimeZone.getDefault();
         try {
