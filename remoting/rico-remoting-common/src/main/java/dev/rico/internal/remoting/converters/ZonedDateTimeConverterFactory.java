@@ -20,14 +20,13 @@ import dev.rico.remoting.converter.Converter;
 import dev.rico.remoting.converter.ValueConverterException;
 import org.apiguardian.api.API;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.GregorianCalendar;
+import java.util.List;
 
-import static dev.rico.internal.remoting.RemotingConstants.REMOTING_DATE_FORMAT_PATTERN;
-import static dev.rico.internal.core.RicoConstants.TIMEZONE_UTC;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
@@ -65,7 +64,7 @@ public class ZonedDateTimeConverterFactory extends AbstractConverterFactory {
             try {
                 final Calendar result = Calendar.getInstance();
                 result.setTime(getDateFormat().parse(value));
-                return result.toInstant().atZone(ZoneId.systemDefault());
+                return result.toInstant().atZone(ZoneOffset.UTC);
             } catch (final Exception e) {
                 throw new ValueConverterException("Can not convert to ZonedDateTime", e);
             }

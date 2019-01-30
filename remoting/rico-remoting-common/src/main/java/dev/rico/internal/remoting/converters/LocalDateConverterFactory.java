@@ -20,15 +20,10 @@ import dev.rico.remoting.converter.Converter;
 import dev.rico.remoting.converter.ValueConverterException;
 import org.apiguardian.api.API;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.*;
 
-import static dev.rico.internal.remoting.RemotingConstants.REMOTING_DATE_FORMAT_PATTERN;
-import static dev.rico.internal.core.RicoConstants.TIMEZONE_UTC;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
@@ -59,6 +54,8 @@ public class LocalDateConverterFactory extends AbstractConverterFactory {
     private static class LocalDateConverter
             extends AbstractDateConverter<LocalDate> {
 
+        private static final String UTC = "UTC";
+
         @Override
         public LocalDate convertFromRemoting(final String value)
                 throws ValueConverterException {
@@ -66,9 +63,9 @@ public class LocalDateConverterFactory extends AbstractConverterFactory {
                 return null;
             }
             try {
-                final Calendar result = Calendar.getInstance(TimeZone.getDefault());
+                final Calendar result = Calendar.getInstance(TimeZone.getTimeZone(UTC));
                 result.setTime(getDateFormat().parse(value));
-                return result.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                return result.toInstant().atZone(ZoneOffset.UTC).toLocalDate();
             } catch (final Exception e) {
                 throw new ValueConverterException(
                         "Can not convert to LocalDate", e);
@@ -82,8 +79,9 @@ public class LocalDateConverterFactory extends AbstractConverterFactory {
                 return null;
             }
             try {
-                final Date date = Date.from(value.atStartOfDay().toInstant(ZoneOffset.ofHours(0)));
-                return getDateFormat().format(date);
+                final Date date = Date.from(value.atStartOfDay().toInstant(ZoneOffset.UTC));
+                String format = getDateFormat().format(date);
+                return format;
             } catch (final Exception e) {
                 throw new ValueConverterException(
                         "Can not convert from LocalDate", e);
