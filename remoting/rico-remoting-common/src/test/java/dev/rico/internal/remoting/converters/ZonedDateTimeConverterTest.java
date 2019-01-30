@@ -55,7 +55,7 @@ public class ZonedDateTimeConverterTest {
         Assert.assertEquals(reconvertedTime, time);
     }
 
-    @Test
+    @Test(enabled = false)
     public void testDifferentTimeZone() throws ValueConverterException {
         //given
         final ZonedDateTimeConverterFactory factory = new ZonedDateTimeConverterFactory();
