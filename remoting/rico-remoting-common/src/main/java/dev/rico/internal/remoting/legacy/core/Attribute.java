@@ -34,6 +34,7 @@ import static org.apiguardian.api.API.Status.DEPRECATED;
  * they belong) which refer to the same domain model object.
  */
 @API(since = "0.x", status = DEPRECATED)
+@Deprecated
 public interface Attribute extends Observable {
     String QUALIFIER_NAME = "qualifier";
     String VALUE_NAME = "value";

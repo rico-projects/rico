@@ -18,6 +18,7 @@ package dev.rico.internal.remoting.legacy.core;
 
 import org.apiguardian.api.API;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static org.apiguardian.api.API.Status.DEPRECATED;
@@ -26,6 +27,7 @@ import static org.apiguardian.api.API.Status.DEPRECATED;
  * The value may be null as long as the BaseAttribute is used as a "placeholder".
  */
 @API(since = "0.x", status = DEPRECATED)
+@Deprecated
 public abstract class BaseAttribute extends AbstractObservable implements Attribute {
 
     private static AtomicLong instanceCount = new AtomicLong();
@@ -73,13 +75,9 @@ public abstract class BaseAttribute extends AbstractObservable implements Attrib
     }
 
     public void setValue(Object newValue) {
-        if (isDifferent(value, newValue)) {
+        if (!Objects.equals(value, newValue)) {
             firePropertyChange(VALUE_NAME, value, value = newValue);
         }
-    }
-
-    private boolean isDifferent(Object oldValue, Object newValue) {
-        return oldValue == null ? newValue != null : !oldValue.equals(newValue);
     }
 
     public String toString() {

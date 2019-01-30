@@ -22,6 +22,7 @@ import dev.rico.server.remoting.test.ControllerUnderTest;
 import dev.rico.server.remoting.test.SpringTestNGControllerTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -37,6 +38,7 @@ public class BeanTestControllerTest extends SpringTestNGControllerTest {
         controller = createController(BEAN_CONTROLLER_NAME);
     }
 
+    @AfterMethod
     public void destroy() {
         controller.destroy();
     }
@@ -48,6 +50,5 @@ public class BeanTestControllerTest extends SpringTestNGControllerTest {
         Assert.assertTrue(controller.getModel().getEventBusInjected());
         Assert.assertTrue(controller.getModel().getPropertyBinderInjected());
         Assert.assertTrue(controller.getModel().getRemotingContextInjected());
-        destroy();
     }
 }

@@ -102,7 +102,7 @@ public class ClientResponseHandler {
     }
 
     private void handleValueChangedCommand(final ValueChangedCommand serverCommand) {
-        Attribute attribute = clientModelStore.findAttributeById(serverCommand.getAttributeId());
+        final ClientAttribute attribute = clientModelStore.findAttributeById(serverCommand.getAttributeId());
         if (attribute == null) {
             LOG.warn("C: attribute with id '{}' not found, cannot update to new value '{}'", serverCommand.getAttributeId() , serverCommand.getNewValue() );
             return;
@@ -114,7 +114,6 @@ public class ClientResponseHandler {
 
         LOG.trace("C: updating '{}' id '{}' from '{}' to '{}' ", attribute.getPropertyName(), serverCommand.getAttributeId(), attribute.getValue(), serverCommand.getNewValue());
         attribute.setValue(serverCommand.getNewValue());
-        return;
     }
 
     private void handleAttributeMetadataChangedCommand(final AttributeMetadataChangedCommand serverCommand) {
