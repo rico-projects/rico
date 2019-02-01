@@ -95,7 +95,7 @@ public class RemotingWindowUtils {
 	 *
 	 * @param <M> type of the model
 	 */
-    public static final <M> Window createWindow(AbstractViewController<M> viewBinder) {
+    public static final <M> Window createWindow(final AbstractViewController<M> viewBinder) {
        Assert.requireNonNull(viewBinder, "viewBinder");
 	   return new RemotingWindow<M>(viewBinder);
     }

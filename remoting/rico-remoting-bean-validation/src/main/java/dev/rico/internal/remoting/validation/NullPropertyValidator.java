@@ -32,12 +32,12 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 public final class NullPropertyValidator implements ConstraintValidator<Null, Property> {
 
     @Override
-    public void initialize(Null constraintAnnotation) {
+    public void initialize(final Null constraintAnnotation) {
     }
 
     @Override
-    public boolean isValid(Property value,
-                           ConstraintValidatorContext context) {
+    public boolean isValid(final Property value,
+                           final ConstraintValidatorContext context) {
         if (value == null) {
             return true;
         }

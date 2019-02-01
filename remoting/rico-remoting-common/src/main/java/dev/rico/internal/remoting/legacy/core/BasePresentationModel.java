@@ -42,14 +42,14 @@ public class BasePresentationModel<A extends Attribute> extends AbstractObservab
     /**
      * @throws AssertionError if the list of attributes is null or empty
      */
-    public BasePresentationModel(String id, List<A> attributes) {
+    public BasePresentationModel(final String id, final List<A> attributes) {
         this.id = id;
-        for (A attr : attributes) {
+        for (final A attr : attributes) {
             _internal_addAttribute(attr);
         }
     }
 
-    public void _internal_addAttribute(A attribute) {
+    public void _internal_addAttribute(final A attribute) {
         if (null == attribute || attributes.contains(attribute)) return;
         if (null != getAttribute(attribute.getPropertyName())) {
             throw new IllegalStateException("There already is an attribute with property name '"
@@ -83,9 +83,9 @@ public class BasePresentationModel<A extends Attribute> extends AbstractObservab
         return Collections.unmodifiableList(attributes);
     }
 
-    public A getAttribute(String propertyName) {
+    public A getAttribute(final String propertyName) {
         if (null == propertyName) return null;
-        for (A attribute : attributes) {
+        for (final A attribute : attributes) {
             if (propertyName.equals(attribute.getPropertyName())) {
                 return attribute;
             }
@@ -93,9 +93,9 @@ public class BasePresentationModel<A extends Attribute> extends AbstractObservab
         return null;
     }
 
-    public A findAttributeByQualifier(String qualifier) {
+    public A findAttributeByQualifier(final String qualifier) {
         if (null == qualifier) return null;
-        for (A attribute : attributes) {
+        for (final A attribute : attributes) {
             if (qualifier.equals(attribute.getQualifier())) {
                 return attribute;
             }
@@ -103,8 +103,8 @@ public class BasePresentationModel<A extends Attribute> extends AbstractObservab
         return null;
     }
 
-    public A findAttributeById(String id) {
-        for (A attribute : attributes) {
+    public A findAttributeById(final String id) {
+        for (final A attribute : attributes) {
             if (attribute.getId().equals(id)) {
                 return attribute;
             }

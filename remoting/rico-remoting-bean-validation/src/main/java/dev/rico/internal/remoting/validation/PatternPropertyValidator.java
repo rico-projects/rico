@@ -44,7 +44,7 @@ public final class PatternPropertyValidator extends AbstractPropertyValidator<Pa
     public void initialize(final Pattern annotation) {
         Assert.requireNonNull(annotation, "annotation");
 
-        int flags = combineFlags(annotation.flags());
+        final int flags = combineFlags(annotation.flags());
         pattern = java.util.regex.Pattern.compile(annotation.regexp(), flags);
     }
 

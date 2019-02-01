@@ -79,7 +79,7 @@ public class ListMapperImpl implements ListMapper {
                     }
 
                     list.internalSplice(from, to, newElements);
-                } catch (Exception ex) {
+                } catch (final Exception ex) {
                     //TODO: This exception must be handled!
                     LOG.error("Invalid LIST_SPLICE command received: " + model, ex);
                 } finally {
@@ -115,7 +115,7 @@ public class ListMapperImpl implements ListMapper {
             for (final Object current : newElements) {
                 try {
                     builder.withAttribute(Integer.toString(i++), observableListInfo.convertToRemoting(current));
-                }catch (Exception e) {
+                }catch (final Exception e) {
                     throw new MappingException("Error in event processing!", e);
                 }
             }

@@ -30,7 +30,7 @@ public class Base64Utils {
         final ByteArrayOutputStream rawOutputStream = new ByteArrayOutputStream();
         final ObjectOutputStream dataOutputStream = new ObjectOutputStream(rawOutputStream);
         dataOutputStream.writeObject(data);
-        Base64.Encoder encoder = Base64.getEncoder();
+        final Base64.Encoder encoder = Base64.getEncoder();
         return encoder.encodeToString(rawOutputStream.toByteArray());
     }
 

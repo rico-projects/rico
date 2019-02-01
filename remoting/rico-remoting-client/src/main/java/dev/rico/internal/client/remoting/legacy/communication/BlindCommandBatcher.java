@@ -43,11 +43,11 @@ public class BlindCommandBatcher extends CommandBatcher {
 
     private static final Logger LOG = LoggerFactory.getLogger(BlindCommandBatcher.class);
 
-    private ExecutorService executorService = Executors.newCachedThreadPool();
+    private final ExecutorService executorService = Executors.newCachedThreadPool();
 
-    private LinkedList<CommandAndHandler> commandsAndHandlers = new LinkedList<CommandAndHandler>();
+    private final LinkedList<CommandAndHandler> commandsAndHandlers = new LinkedList<CommandAndHandler>();
 
-    private Lock commandsAndHandlersLock = new ReentrantLock();
+    private final Lock commandsAndHandlersLock = new ReentrantLock();
 
     /**
      * Time allowed to fill the queue before a batch is assembled
@@ -142,7 +142,7 @@ public class BlindCommandBatcher extends CommandBatcher {
             public void run() {
                 getCommandsAndHandlersLock().lock();
                 try {
-                    CommandAndHandler last = batchBlinds(getCommandsAndHandlers());// always withContent leading blinds first
+                    final CommandAndHandler last = batchBlinds(getCommandsAndHandlers());// always withContent leading blinds first
                     if (last != null) {
                         // we do have a trailing command with handler and batch it separately
                         getWaitingBatches().add(Arrays.asList(last));
@@ -167,7 +167,7 @@ public class BlindCommandBatcher extends CommandBatcher {
             return null;
         }
 
-        List<CommandAndHandler> blindCommands = new LinkedList();
+        final List<CommandAndHandler> blindCommands = new LinkedList();
         int counter = maxBatchSize;
         // we have to check again, since new ones may have arrived since last check
         CommandAndHandler val = take(queue);
@@ -222,7 +222,7 @@ public class BlindCommandBatcher extends CommandBatcher {
 
 
         if(blindCommands.get(blindCommands.size() -1).getCommand() instanceof ValueChangedCommand) {
-            ValueChangedCommand valueChangedCommand = (ValueChangedCommand) blindCommands.get(blindCommands.size() -1).getCommand();
+            final ValueChangedCommand valueChangedCommand = (ValueChangedCommand) blindCommands.get(blindCommands.size() -1).getCommand();
             if(valCmd.getAttributeId().equals(valueChangedCommand.getAttributeId())) {
                 LOG.trace("merging value changed command for attribute {} with new values {}  -> {}", valueChangedCommand.getAttributeId(), valueChangedCommand.getNewValue(), valCmd.getNewValue());
                 valueChangedCommand.setNewValue(valCmd.getNewValue());

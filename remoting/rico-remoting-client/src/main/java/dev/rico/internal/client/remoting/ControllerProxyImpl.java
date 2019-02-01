@@ -141,7 +141,7 @@ public class ControllerProxyImpl<T> implements ControllerProxy<T> {
     }
 
     @Override
-    public <C> CompletableFuture<ControllerProxy<C>> createController(String name) {
+    public <C> CompletableFuture<ControllerProxy<C>> createController(final String name) {
         Assert.requireNonBlank(name, "name");
 
         return controllerProxyFactory.<C>create(name, controllerId).handle((ControllerProxy<C> cControllerProxy, Throwable throwable) -> {

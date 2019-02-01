@@ -40,12 +40,12 @@ public abstract class AbstractPropertyValidator<T extends Annotation, U> impleme
      * Constructor
      * @param supportedValueClass the data type that can be validated by this class
      */
-    public AbstractPropertyValidator(Class<U> supportedValueClass) {
+    public AbstractPropertyValidator(final Class<U> supportedValueClass) {
         this.supportedValueClass = supportedValueClass;
     }
 
     @Override
-    public void initialize(T constraintAnnotation) {
+    public void initialize(final T constraintAnnotation) {
     }
 
     /**
@@ -66,8 +66,8 @@ public abstract class AbstractPropertyValidator<T extends Annotation, U> impleme
     }
 
     @Override
-    public boolean isValid(Property property,
-                           ConstraintValidatorContext context) {
+    public boolean isValid(final Property property,
+                           final ConstraintValidatorContext context) {
         /*
          * TODO: onNullValue should not even be considered when property type is unsupported,
          * e.g. when we are validating Max constraint on Date we should throw runtime exception regardless
@@ -78,7 +78,7 @@ public abstract class AbstractPropertyValidator<T extends Annotation, U> impleme
             return onNullValue();
         }
 
-        Object value = property.get();
+        final Object value = property.get();
 
         if(value == null) {
             return onNullValue();

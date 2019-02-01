@@ -33,7 +33,7 @@ public class ControllerActionException extends Exception {
      * constructor
      * @param message error message
      */
-    public ControllerActionException(String message) {
+    public ControllerActionException(final String message) {
         super(message);
     }
 
