@@ -87,7 +87,7 @@ public class IdentitySet<E> implements Set<E> {
     public boolean addAll(final Collection<? extends E> c) {
         boolean ret = false;
         for(final E elem : c) {
-            boolean currentRet = add(elem);
+            final boolean currentRet = add(elem);
             if(currentRet) {
                 ret = true;
             }
@@ -104,7 +104,7 @@ public class IdentitySet<E> implements Set<E> {
     public boolean removeAll(final Collection<?> c) {
         boolean ret = false;
         for(final Object elem : c) {
-            boolean currentRet = remove(elem);
+            final boolean currentRet = remove(elem);
             if(currentRet) {
                 ret = true;
             }

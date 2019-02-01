@@ -26,7 +26,7 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 @API(since = "0.19.0", status = EXPERIMENTAL)
 public interface Client {
 
-    static void init(Toolkit toolkit) {
+    static void init(final Toolkit toolkit) {
         ClientImpl.init(toolkit);
     }
 
