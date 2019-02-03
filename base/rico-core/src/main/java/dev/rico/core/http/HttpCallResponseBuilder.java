@@ -28,6 +28,8 @@ public interface HttpCallResponseBuilder {
 
     Promise<HttpResponse<InputStream>, HttpException> streamBytes();
 
+    Promise<HttpResponse<DownloadInputStream>, HttpException> streamDownload();
+
     Promise<HttpResponse<ByteArrayProvider>, HttpException> readBytes();
 
     Promise<HttpResponse<ByteArrayProvider>, HttpException> readBytes(String contentType);

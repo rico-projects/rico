@@ -16,8 +16,12 @@
  */
 package dev.rico.internal.client.http;
 
+import dev.rico.client.Client;
+import dev.rico.client.concurrent.UiExecutor;
+import dev.rico.core.http.DownloadInputStream;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.http.ConnectionUtils;
+import dev.rico.internal.core.http.DownloadInputStreamImpl;
 import dev.rico.internal.core.http.HttpClientConnection;
 import dev.rico.internal.core.http.HttpHeaderImpl;
 import dev.rico.client.ClientConfiguration;
@@ -77,6 +81,16 @@ public class HttpCallResponseBuilderImpl implements HttpCallResponseBuilder {
     @Override
     public Promise<HttpResponse<InputStream>, HttpException> streamBytes() {
         return createExecutor();
+    }
+
+    @Override
+    public Promise<HttpResponse<DownloadInputStream>, HttpException> streamDownload() {
+        return new HttpCallExecutorImpl<>(configuration, () -> {
+            final HttpResponse<InputStream> response = handleRequest();
+            final UiExecutor uiExecutor = Client.getService(UiExecutor.class);
+            final DownloadInputStream stream = DownloadInputStreamImpl.map(response, uiExecutor);
+            return new HttpResponseImpl<>(response.getHeaders(), response.getStatusCode(), stream, response.getContentSize());
+        });
     }
 
     @Override
