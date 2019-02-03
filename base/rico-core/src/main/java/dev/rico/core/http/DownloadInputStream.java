@@ -2,13 +2,10 @@ package dev.rico.core.http;
 
 import dev.rico.core.functional.Subscription;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.function.Consumer;
 
 public abstract class DownloadInputStream extends InputStream {
-
-    public abstract void readTillDone() throws IOException;
 
     public abstract String getHash();
 
