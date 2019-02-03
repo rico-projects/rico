@@ -13,6 +13,7 @@ import java.security.DigestInputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
@@ -63,8 +64,12 @@ public class DownloadInputStreamImpl extends DownloadInputStream {
         while (read() >= 0) {}
     }
 
-    public String getHash() {
-        return ConnectionUtils.toHex(wrappedStream.getMessageDigest().digest());
+    public CompletableFuture<String> getHash() {
+        final CompletableFuture<String> future = new CompletableFuture<>();
+        addDownloadDoneListener(size -> {
+            future.complete(ConnectionUtils.toHex(wrappedStream.getMessageDigest().digest()));
+        });
+        return future;
     }
 
     @Override
