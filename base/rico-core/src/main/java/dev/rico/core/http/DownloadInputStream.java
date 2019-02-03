@@ -1,17 +1,17 @@
 package dev.rico.core.http;
 
 import dev.rico.core.functional.Subscription;
+import org.apiguardian.api.API;
 
 import java.io.InputStream;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+@API(since = "0.x", status = EXPERIMENTAL)
 public abstract class DownloadInputStream extends InputStream {
 
-    /**
-     * Returns the hash value of the
-     * @return
-     */
     public abstract CompletableFuture<String> getHash();
 
     public abstract Subscription addDownloadStartListener(final Consumer<Long> listener);

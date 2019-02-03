@@ -60,10 +60,6 @@ public class DownloadInputStreamImpl extends DownloadInputStream {
         }
     }
 
-    public void readTillDone() throws IOException {
-        while (read() >= 0) {}
-    }
-
     public CompletableFuture<String> getHash() {
         final CompletableFuture<String> future = new CompletableFuture<>();
         addDownloadDoneListener(size -> {
