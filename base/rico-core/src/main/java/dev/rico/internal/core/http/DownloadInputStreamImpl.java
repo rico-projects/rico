@@ -11,9 +11,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.DigestInputStream;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
@@ -49,9 +49,9 @@ public class DownloadInputStreamImpl extends DownloadInputStream {
         this.downloaded = new AtomicLong(0);
         this.lastUpdateSize = new AtomicLong(0);
         this.firstRead = new AtomicBoolean(true);
-        this.downloadPercentageListeners = new ArrayList<>();
-        this.downloadStartListeners = new ArrayList<>();
-        this.downloadDoneListeners = new ArrayList<>();
+        this.downloadPercentageListeners = new CopyOnWriteArrayList<>();
+        this.downloadStartListeners = new CopyOnWriteArrayList<>();
+        this.downloadDoneListeners = new CopyOnWriteArrayList<>();
         this.updateChunkSize = dataSize / 100;
         try {
             this.wrappedStream = ConnectionUtils.createMD5HashStream(inputStream);
