@@ -286,4 +286,10 @@ public class ReflectionHelper {
             return false;
         }
     }
+
+    public static <E extends Enum> List<E> getAllValues(final Class<E> enumClass) {
+        Assert.requireNonNull(enumClass, "enumClass");
+        final E[] values = (E[]) enumClass.getDeclaringClass().getEnumConstants();
+        return Arrays.asList(values);
+    }
 }

@@ -16,14 +16,53 @@
  */
 package dev.rico.internal.client.projection.routing;
 
+import dev.rico.client.remoting.ControllerProxy;
+import dev.rico.internal.client.projection.projection.Projector;
+import dev.rico.internal.core.Assert;
+import dev.rico.internal.projection.routing.Route;
 import javafx.scene.Parent;
+import javafx.scene.control.Label;
 
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 public class Routing {
 
-    public CompletableFuture<Void> addChild(String controllerName, Parent parent, Constraints constraints) {
-        return null;
+    private final Projector projector;
+
+    public Routing(final Projector projector) {
+        this.projector = Assert.requireNonNull(projector, "projector");
+    }
+
+    public void addRoutingLayer(String routingControllerName, final ControllerProxy currentProxy) {
+                
+    }
+
+    public Parent createLoadingScreen(final Route route) {
+        return new Label("LOADING...");
+    }
+
+    private void handleRouting(final Route route, final Consumer<Parent> handler, final ControllerProxy currentProxy) {
+        Assert.requireNonNull(handler, "handler");
+        Assert.requireNonNull(route, "route");
+
+        final String controllerName = route.getLocation();
+        Assert.requireNonNull(controllerName, "controllerName");
+
+        final Parent loadingScreen = createLoadingScreen(route);
+        handler.accept(loadingScreen);
+
+        Optional.ofNullable(currentProxy).map(p -> p.destroy()).orElse(CompletableFuture.completedFuture(null)).thenAccept((v) -> {
+            final CompletableFuture<Parent> future = projector.create(controllerName);
+            future.whenComplete((parent, exception) -> {
+                if(exception != null) {
+                    throw new RuntimeException("Error in routing", exception);
+                }
+                Assert.requireNonNull(parent, "parent");
+                handler.accept(parent);
+            });
+        });
     }
 
 }

@@ -23,12 +23,12 @@ import dev.rico.remoting.RemotingBean;
 @RemotingBean
 public class StringFormFieldBean extends AbstractFormFieldBean<String> {
 
-    private Property<Class> contentType;
+    private Property<Class<String>> contentType;
 
     private Property<String> value;
 
     @Override
-    public Property<Class> contentTypeProperty() {
+    public Property<Class<String>> contentTypeProperty() {
         return contentType;
     }
 
