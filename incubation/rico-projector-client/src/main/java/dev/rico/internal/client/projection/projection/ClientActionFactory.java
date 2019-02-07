@@ -16,16 +16,15 @@
  */
 package dev.rico.internal.client.projection.projection;
 
-import dev.rico.internal.projection.action.ClientAction;
-import dev.rico.internal.client.projection.action.ClientActionButton;
-import dev.rico.client.remoting.ClientContext;
 import dev.rico.client.remoting.ControllerProxy;
+import dev.rico.internal.client.projection.action.ClientActionButton;
+import dev.rico.internal.projection.action.ClientAction;
 import javafx.scene.Parent;
 
 public class ClientActionFactory<T> implements ProjectionFactory<ClientAction<T>> {
 
     @Override
-    public Parent createProjection(Projector projector, ClientContext clientContext, ControllerProxy controllerProxy, ClientAction<T> projectable) {
+    public Parent createProjection(Projector projector, ControllerProxy controllerProxy, ClientAction<T> projectable) {
         return new ClientActionButton<>(projectable, projector.getClientActionSupport());
     }
 

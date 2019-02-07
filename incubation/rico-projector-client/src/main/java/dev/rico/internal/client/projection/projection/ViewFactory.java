@@ -16,12 +16,11 @@
  */
 package dev.rico.internal.client.projection.projection;
 
+import dev.rico.client.remoting.ControllerProxy;
+import dev.rico.internal.projection.base.View;
 import dev.rico.internal.projection.base.WithLayoutMetadata;
 import dev.rico.internal.projection.metadata.MetadataUtilities;
-import dev.rico.internal.projection.base.View;
 import dev.rico.internal.projection.view.ViewMetadata;
-import dev.rico.client.remoting.ClientContext;
-import dev.rico.client.remoting.ControllerProxy;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -38,7 +37,7 @@ import java.util.Optional;
 public class ViewFactory implements ProjectionFactory<View> {
 
     @Override
-    public Parent createProjection(Projector projector, ClientContext clientContext, ControllerProxy controllerProxy, View projectable) {
+    public Parent createProjection(Projector projector, ControllerProxy controllerProxy, View projectable) {
         final StackPane mainPane = new StackPane();
 
         MetadataUtilities.addListenerToMetadata(projectable, () -> updateContentWrapper(mainPane, projectable));
