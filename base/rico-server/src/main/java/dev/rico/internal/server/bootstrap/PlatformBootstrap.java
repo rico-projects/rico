@@ -85,8 +85,8 @@ public class PlatformBootstrap {
                     if(!ServerModule.class.isAssignableFrom(moduleClass)) {
                         throw new RuntimeException("Class " + moduleClass + " is annoated with " + ModuleDefinition.class.getSimpleName() + " but do not implement " + ServerModule.class.getSimpleName());
                     }
-                    ModuleDefinition moduleDefinition = moduleClass.getAnnotation(ModuleDefinition.class);
-                    ServerModule instance = (ServerModule) moduleClass.newInstance();
+                    final ModuleDefinition moduleDefinition = moduleClass.getAnnotation(ModuleDefinition.class);
+                    final ServerModule instance = (ServerModule) moduleClass.newInstance();
                     modules.put(instance.getName(), instance);
                 }
 
