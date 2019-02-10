@@ -28,18 +28,18 @@ import static org.apiguardian.api.API.Status.MAINTAINED;
 @API(since = "0.x", status = MAINTAINED)
 public interface JavaFXListBinder<S> {
 
-    default Binding to(ObservableList<? extends S> remotingList) {
+    default Binding to(final ObservableList<? extends S> remotingList) {
         requireNonNull(remotingList, "remotingList");
         return to(remotingList, Function.<S>identity());
     }
 
-    <T> Binding to(ObservableList<T> remotingList, Function<? super T, ? extends S> converter);
+    <T> Binding to(final ObservableList<T> remotingList, Function<? super T, ? extends S> converter);
 
-    default Binding bidirectionalTo(ObservableList<S> remotingList) {
+    default Binding bidirectionalTo(final ObservableList<S> remotingList) {
         requireNonNull(remotingList, "remotingList");
         return bidirectionalTo(remotingList, Function.identity(), Function.identity());
     }
 
-    <T> Binding bidirectionalTo(ObservableList<T> remotingList, Function<? super T, ? extends S> converter, Function<? super S, ? extends T> backConverter);
+    <T> Binding bidirectionalTo(final ObservableList<T> remotingList, final Function<? super T, ? extends S> converter, final Function<? super S, ? extends T> backConverter);
 
 }

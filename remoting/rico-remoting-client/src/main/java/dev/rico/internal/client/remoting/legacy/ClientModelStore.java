@@ -52,10 +52,10 @@ public class ClientModelStore extends ModelStore<ClientAttribute, ClientPresenta
 
     @Override
     public boolean add(final ClientPresentationModel model) {
-        boolean success = super.add(model);
+        final boolean success = super.add(model);
         if (success) {
-            List<ClientAttribute> attributes = model.getAttributes();
-            for (ClientAttribute attribute : attributes) {
+            final List<ClientAttribute> attributes = model.getAttributes();
+            for (final ClientAttribute attribute : attributes) {
                 attribute.addPropertyChangeListener(attributeChangeListener);
             }
             if (!model.isClientSideOnly()) {
@@ -82,7 +82,7 @@ public class ClientModelStore extends ModelStore<ClientAttribute, ClientPresenta
     @Override
     public boolean remove(final ClientPresentationModel model) {
         boolean success = super.remove(model);
-        for (ClientAttribute attribute : model.getAttributes()) {
+        for (final ClientAttribute attribute : model.getAttributes()) {
             attribute.removePropertyChangeListener(attributeChangeListener);
         }
         return success;
@@ -97,7 +97,7 @@ public class ClientModelStore extends ModelStore<ClientAttribute, ClientPresenta
 
 
     public ClientPresentationModel createModel(final String id, final String presentationModelType, final ClientAttribute... attributes) {
-        ClientPresentationModel result = new ClientPresentationModel(id, Arrays.asList(attributes));
+        final ClientPresentationModel result = new ClientPresentationModel(id, Arrays.asList(attributes));
         result.setPresentationModelType(presentationModelType);
         add(result);
         return result;

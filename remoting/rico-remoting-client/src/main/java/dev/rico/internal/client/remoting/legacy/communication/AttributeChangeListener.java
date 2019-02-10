@@ -54,8 +54,8 @@ public class AttributeChangeListener implements PropertyChangeListener {
                 modelSynchronizer.onPropertyChanged(evt);
             }
 
-            List<ClientAttribute> attributes = clientModelStore.findAllAttributesByQualifier(((Attribute) evt.getSource()).getQualifier());
-            for (ClientAttribute attribute : attributes) {
+            final List<ClientAttribute> attributes = clientModelStore.findAllAttributesByQualifier(((Attribute) evt.getSource()).getQualifier());
+            for (final ClientAttribute attribute : attributes) {
                 attribute.setValue(evt.getNewValue());
             }
 
@@ -68,7 +68,7 @@ public class AttributeChangeListener implements PropertyChangeListener {
     }
 
     private boolean isSendable(final PropertyChangeEvent evt) {
-        PresentationModel pmOfAttribute = ((Attribute) evt.getSource()).getPresentationModel();
+        final PresentationModel pmOfAttribute = ((Attribute) evt.getSource()).getPresentationModel();
         if (pmOfAttribute == null) {
             return true;
         }

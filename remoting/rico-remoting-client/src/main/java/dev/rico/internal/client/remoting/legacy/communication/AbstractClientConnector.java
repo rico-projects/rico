@@ -61,9 +61,9 @@ public abstract class AbstractClientConnector {
 
     protected boolean connectionFlagForUiExecutor = false;
 
-    private StartLongPollCommand pushListener;
+    private final StartLongPollCommand pushListener;
 
-    private InterruptLongPollCommand releaseCommand;
+    private final InterruptLongPollCommand releaseCommand;
 
     protected AbstractClientConnector(final ClientModelStore clientModelStore, final Executor uiExecutor, final ICommandBatcher commandBatcher, final RemotingExceptionHandler remotingExceptionHandler, final Executor backgroundExecutor) {
         this.uiExecutor = Objects.requireNonNull(uiExecutor);
@@ -99,13 +99,13 @@ public abstract class AbstractClientConnector {
         while (connectedFlag.get()) {
             try {
                 final List<CommandAndHandler> toProcess = commandBatcher.getWaitingBatches().getVal();
-                List<Command> commands = new ArrayList<>();
+                final List<Command> commands = new ArrayList<>();
                 for (CommandAndHandler c : toProcess) {
                     commands.add(c.getCommand());
                 }
 
                 if (LOG.isDebugEnabled()) {
-                    StringBuffer buffer = new StringBuffer();
+                    final StringBuffer buffer = new StringBuffer();
                     for (Command command : commands) {
                         buffer.append(command.getClass().getSimpleName());
                         buffer.append(", ");
@@ -155,7 +155,7 @@ public abstract class AbstractClientConnector {
             release();
         }
         // we are inside the UI thread and events calls come in strict order as received by the UI toolkit
-        CommandAndHandler handler = new CommandAndHandler(command, callback, handlerType);
+        final CommandAndHandler handler = new CommandAndHandler(command, callback, handlerType);
         commandBatcher.batch(handler);
     }
 
@@ -170,8 +170,8 @@ public abstract class AbstractClientConnector {
     protected void processResults(final List<? extends Command> response, final List<CommandAndHandler> commandsAndHandlers) {
 
         if (LOG.isDebugEnabled() && response.size() > 0) {
-            StringBuffer buffer = new StringBuffer();
-            for (Command command : response) {
+            final StringBuffer buffer = new StringBuffer();
+            for (final Command command : response) {
                 buffer.append(command.getClass().getSimpleName());
                 buffer.append(", ");
             }
@@ -180,11 +180,11 @@ public abstract class AbstractClientConnector {
             LOG.trace("Processing {} commands from server", response.size());
         }
 
-        for (Command serverCommand : response) {
+        for (final Command serverCommand : response) {
             dispatchHandle(serverCommand);
         }
 
-        OnFinishedHandler callback = commandsAndHandlers.get(0).getHandler();
+        final OnFinishedHandler callback = commandsAndHandlers.get(0).getHandler();
         if (callback != null) {
             LOG.trace("Handling registered callback");
             try {
@@ -236,7 +236,7 @@ public abstract class AbstractClientConnector {
             @Override
             public void run() {
                 try {
-                    List<Command> releaseCommandList = new ArrayList<Command>(Collections.singletonList(releaseCommand));
+                    final List<Command> releaseCommandList = new ArrayList<Command>(Collections.singletonList(releaseCommand));
                     transmit(releaseCommandList);
                 } catch (RemotingException e) {
                     handleError(e);

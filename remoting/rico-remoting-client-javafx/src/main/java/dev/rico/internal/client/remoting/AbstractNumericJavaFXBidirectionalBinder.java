@@ -37,7 +37,7 @@ public abstract class AbstractNumericJavaFXBidirectionalBinder<S extends Number>
     }
 
     @Override
-    public <T> Binding bidirectionalTo(final Property<T> property, BidirectionalConverter<T, Number> converter) {
+    public <T> Binding bidirectionalTo(final Property<T> property, final BidirectionalConverter<T, Number> converter) {
         final Binding unidirectionalBinding = to(property, converter);
         final ChangeListener<Number> listener = (obs, oldVal, newVal) -> property.set(converter.convertBack(newVal));
         javaFxProperty.addListener(listener);
