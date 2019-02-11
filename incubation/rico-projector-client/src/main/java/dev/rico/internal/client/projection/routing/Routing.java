@@ -16,7 +16,6 @@
  */
 package dev.rico.internal.client.projection.routing;
 
-import dev.rico.client.remoting.ClientContext;
 import dev.rico.client.remoting.ControllerFactory;
 import dev.rico.client.remoting.ControllerProxy;
 import dev.rico.internal.client.projection.projection.Projector;
@@ -24,10 +23,13 @@ import dev.rico.internal.client.projection.projection.ViewFactory;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.projection.base.View;
 import dev.rico.internal.projection.routing.Route;
+import dev.rico.internal.projection.routing.RoutingConstants;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.WeakHashMap;
@@ -76,13 +78,17 @@ public class Routing {
         final CompletableFuture<Void> destroyFuture = Optional.ofNullable(controllerMapping.get(route))
                 .map(p -> p.destroy())
                 .orElse(CompletableFuture.completedFuture(null));
-
         destroyFuture.thenAccept((v) -> {
-            final ClientContext clientContext;
-            controllerFactory.createController(controllerName).thenAccept(controllerProxy -> {
-                final Parent newView = viewFactory.createProjection(projector, controllerProxy, (View) controllerProxy.getModel());
-                handler.accept(newView);
+            final Map<String, Object> parameters = new HashMap<>();
+            route.getParameters().stream().forEach(t -> parameters.put(t.getKey(), t.getValue()));
+            parameters.put(RoutingConstants.ANCHOR, route.getAnchor());
+            final CompletableFuture<ControllerProxy<View>> creation = controllerFactory.createController(controllerName, Collections.unmodifiableMap(parameters));
+            creation.thenApply(controllerProxy -> {
                 controllerMapping.put(route, controllerProxy);
+                return controllerProxy;
+            }).thenAccept(controllerProxy -> {
+                final Parent newView = viewFactory.createProjection(projector, controllerProxy, controllerProxy.getModel());
+                handler.accept(newView);
             }).exceptionally(exception -> {
                 throw new RuntimeException("Error in Routing", exception);
             });

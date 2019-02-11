@@ -18,6 +18,8 @@ package dev.rico.client.remoting;
 
 import org.apiguardian.api.API;
 
+import java.util.Collections;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import static org.apiguardian.api.API.Status.MAINTAINED;
@@ -36,6 +38,10 @@ public interface ControllerFactory {
      * @param <T> the type of the model that is bound to the controller and view
      * @return a {@link CompletableFuture} that defines the creation of the controller.
      */
-    <T> CompletableFuture<ControllerProxy<T>> createController(String name);
+    default <T> CompletableFuture<ControllerProxy<T>> createController(String name) {
+        return createController(name, Collections.emptyMap());
+    }
+
+    <T> CompletableFuture<ControllerProxy<T>> createController(String name, Map<String, ?> parameters);
 
 }
