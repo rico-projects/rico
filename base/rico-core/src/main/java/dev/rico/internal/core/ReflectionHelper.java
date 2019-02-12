@@ -20,6 +20,7 @@ import org.apiguardian.api.API;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -98,6 +99,22 @@ public class ReflectionHelper {
                 }
             }
         });
+    }
+
+    public static <A extends Annotation> Optional<A> getAnnotationOrMetaAnnotation(final Field field, final Class<A> annotationClass) {
+        Assert.requireNonNull(field, "field");
+        Assert.requireNonNull(annotationClass, "annotationClass");
+
+        if(field.isAnnotationPresent(annotationClass)) {
+            return Optional.of(field.getAnnotation(annotationClass));
+        }
+        for(Annotation annotation : field.getAnnotations()) {
+            final Annotation metaAnnotation = annotation.getClass().getAnnotation(annotationClass);
+            if(metaAnnotation != null) {
+                return Optional.of((A) metaAnnotation);
+            }
+        }
+        return Optional.empty();
     }
 
     public static void setPrivileged(final Field field, final Object bean,

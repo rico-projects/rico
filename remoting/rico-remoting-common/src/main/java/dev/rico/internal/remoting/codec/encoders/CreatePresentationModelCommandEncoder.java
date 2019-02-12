@@ -36,7 +36,7 @@ import static dev.rico.internal.remoting.legacy.communication.CommandConstants.I
 import static dev.rico.internal.remoting.legacy.communication.CommandConstants.NAME;
 import static dev.rico.internal.remoting.legacy.communication.CommandConstants.PM_ATTRIBUTES;
 import static dev.rico.internal.remoting.legacy.communication.CommandConstants.PM_ID;
-import static dev.rico.internal.remoting.legacy.communication.CommandConstants.PM_TYPE;
+import static dev.rico.internal.remoting.legacy.communication.CommandConstants.TYPE;
 import static dev.rico.internal.remoting.legacy.communication.CommandConstants.VALUE;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
@@ -49,7 +49,7 @@ public class CreatePresentationModelCommandEncoder extends AbstractCommandTransc
 
         final JsonObject jsonCommand = new JsonObject();
         jsonCommand.addProperty(PM_ID, command.getPmId());
-        jsonCommand.addProperty(PM_TYPE, command.getPmType());
+        jsonCommand.addProperty(TYPE, command.getPmType());
 
         final JsonArray jsonArray = new JsonArray();
         for (final Map<String, Object> attribute : command.getAttributes()) {
@@ -73,7 +73,7 @@ public class CreatePresentationModelCommandEncoder extends AbstractCommandTransc
             final CreatePresentationModelCommand command = new CreatePresentationModelCommand();
 
             command.setPmId(getStringElement(jsonObject, PM_ID));
-            command.setPmType(getStringElement(jsonObject, PM_TYPE));
+            command.setPmType(getStringElement(jsonObject, TYPE));
             command.setClientSideOnly(false);
 
             final JsonArray jsonArray = jsonObject.getAsJsonArray(PM_ATTRIBUTES);

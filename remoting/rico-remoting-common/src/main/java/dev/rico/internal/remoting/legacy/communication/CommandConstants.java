@@ -42,7 +42,7 @@ public interface CommandConstants {
     String ATTRIBUTE_ID = "a_id";
     String PM_ID = "p_id";
     String CONTROLLER_ID = "c_id";
-    String PM_TYPE = "t";
+    String TYPE = "t";
     String NAME = "n";
     String VALUE = "v";
     String PARAMS = "p";
