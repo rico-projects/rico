@@ -57,7 +57,7 @@ public class CreatePresentationModelCommandEncoder implements CommandTranscoder<
             final JsonObject jsonAttribute = new JsonObject();
             jsonAttribute.addProperty(NAME, String.valueOf(attribute.get(Attribute.PROPERTY_NAME)));
             jsonAttribute.addProperty(ATTRIBUTE_ID, String.valueOf(attribute.get(Attribute.ID)));
-            jsonAttribute.add(VALUE, ValueEncoder.encodeValue(attribute.get(Attribute.VALUE_NAME)));
+            jsonAttribute.add(VALUE, JsonUtils.encodeValue(attribute.get(Attribute.VALUE_NAME)));
             jsonArray.add(jsonAttribute);
         }
         jsonCommand.add(PM_ATTRIBUTES, jsonArray);
@@ -84,7 +84,7 @@ public class CreatePresentationModelCommandEncoder implements CommandTranscoder<
                 final HashMap<String, Object> map = new HashMap<>();
                 map.put(Attribute.PROPERTY_NAME, JsonUtils.getStringElement(attribute, NAME));
                 map.put(Attribute.ID, JsonUtils.getStringElement(attribute, ATTRIBUTE_ID));
-                final Object value = attribute.has(VALUE) ? ValueEncoder.decodeValue(attribute.get(VALUE)) : null;
+                final Object value = attribute.has(VALUE) ? JsonUtils.decodeValue(attribute.get(VALUE)) : null;
                 map.put(Attribute.VALUE_NAME, value);
                 attributes.add(map);
             }

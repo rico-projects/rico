@@ -21,6 +21,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.ReflectionHelper;
@@ -157,5 +158,40 @@ public class JsonUtils {
             array.add(jsonObject);
         });
         return array;
+    }
+
+    public static JsonElement encodeValue(final Object value) {
+        if(value == null) {
+            return JsonNull.INSTANCE;
+        }
+        if (value instanceof String) {
+            return new JsonPrimitive((String) value);
+        }
+        if (value instanceof Number) {
+            return new JsonPrimitive((Number) value);
+        }
+        if (value instanceof Boolean) {
+            return new JsonPrimitive((Boolean) value);
+        }
+        throw new JsonParseException("Only String, Number, and Boolean are allowed currently");
+    }
+
+    public static Object decodeValue(final JsonElement jsonElement) {
+        if (jsonElement == null || jsonElement.isJsonNull()) {
+            return null;
+        }
+        if (! jsonElement.isJsonPrimitive()) {
+            throw new JsonParseException("Illegal JSON detected");
+        }
+        final JsonPrimitive value = (JsonPrimitive) jsonElement;
+
+        if (value.isString()) {
+            return value.getAsString();
+        } else if (value.isBoolean()) {
+            return value.getAsBoolean();
+        } else if (value.isNumber()) {
+            return value.getAsNumber();
+        }
+        throw new JsonParseException("Currently only String, Boolean, or Number are allowed as primitives");
     }
 }

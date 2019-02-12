@@ -38,7 +38,7 @@ public class ValueChangedCommandEncoder implements CommandTranscoder<ValueChange
         final JsonObject jsonCommand = new JsonObject();
         jsonCommand.addProperty(ATTRIBUTE_ID, command.getAttributeId());
         if (command.getNewValue() != null) {
-            jsonCommand.add(VALUE, ValueEncoder.encodeValue(command.getNewValue()));
+            jsonCommand.add(VALUE, JsonUtils.encodeValue(command.getNewValue()));
         }
         jsonCommand.addProperty(ID, VALUE_CHANGED_COMMAND_ID);
         return jsonCommand;
@@ -49,7 +49,7 @@ public class ValueChangedCommandEncoder implements CommandTranscoder<ValueChange
         Assert.requireNonNull(jsonObject, "jsonObject");
         try {
             final ValueChangedCommand command = new ValueChangedCommand();
-            command.setNewValue(ValueEncoder.decodeValue(jsonObject.get(VALUE)));
+            command.setNewValue(JsonUtils.decodeValue(jsonObject.get(VALUE)));
             command.setAttributeId(JsonUtils.getStringElement(jsonObject, ATTRIBUTE_ID));
             return command;
         } catch (IllegalStateException | ClassCastException | NullPointerException ex) {

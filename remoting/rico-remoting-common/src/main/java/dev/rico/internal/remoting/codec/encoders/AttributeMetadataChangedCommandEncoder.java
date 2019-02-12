@@ -40,7 +40,7 @@ public class AttributeMetadataChangedCommandEncoder implements CommandTranscoder
         jsonCommand.addProperty(ID, ATTRIBUTE_METADATA_CHANGED_COMMAND_ID);
         jsonCommand.addProperty(ATTRIBUTE_ID, command.getAttributeId());
         jsonCommand.addProperty(NAME, command.getMetadataName());
-        jsonCommand.add(VALUE, ValueEncoder.encodeValue(command.getValue()));
+        jsonCommand.add(VALUE, JsonUtils.encodeValue(command.getValue()));
         return jsonCommand;
     }
 
@@ -49,7 +49,7 @@ public class AttributeMetadataChangedCommandEncoder implements CommandTranscoder
         final AttributeMetadataChangedCommand command = new AttributeMetadataChangedCommand();
         command.setAttributeId(JsonUtils.getStringElement(jsonObject, ATTRIBUTE_ID));
         command.setMetadataName(JsonUtils.getStringElement(jsonObject, NAME));
-        command.setValue(ValueEncoder.decodeValue(jsonObject.get(VALUE)));
+        command.setValue(JsonUtils.decodeValue(jsonObject.get(VALUE)));
         return command;
     }
 }

@@ -49,7 +49,7 @@ public class CallActionCommandEncoder implements CommandTranscoder<CallActionCom
         for(final Map.Entry<String, Object> paramEntry : command.getParams().entrySet()) {
             final JsonObject paramObject = new JsonObject();
             paramObject.addProperty(NAME, paramEntry.getKey());
-            paramObject.add(VALUE, ValueEncoder.encodeValue(paramEntry.getValue()));
+            paramObject.add(VALUE, JsonUtils.encodeValue(paramEntry.getValue()));
             paramArray.add(paramObject);
         }
         jsonCommand.add(PARAMS, paramArray);
@@ -70,7 +70,7 @@ public class CallActionCommandEncoder implements CommandTranscoder<CallActionCom
             if(jsonArray != null) {
                 for (final JsonElement jsonElement : jsonArray) {
                     final JsonObject paramObject = jsonElement.getAsJsonObject();
-                    command.addParam(JsonUtils.getStringElement(paramObject, NAME), ValueEncoder.decodeValue(paramObject.get(VALUE)));
+                    command.addParam(JsonUtils.getStringElement(paramObject, NAME), JsonUtils.decodeValue(paramObject.get(VALUE)));
                 }
             }
             return command;
