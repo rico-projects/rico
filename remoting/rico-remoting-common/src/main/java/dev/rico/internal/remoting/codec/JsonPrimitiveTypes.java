@@ -3,27 +3,36 @@ package dev.rico.internal.remoting.codec;
 import com.google.gson.JsonPrimitive;
 import dev.rico.internal.core.Assert;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Objects;
 
 public enum JsonPrimitiveTypes {
 
-    BIG_DECIMAL("BIG_DECIMAL"),
-    BIG_INTEGER("BIG_INTEGER"),
-    BOOLEAN("BOOLEAN"),
-    BYTE("BYTE"),
-    CHARACTER("CHARACTER"),
-    DOUBLE("DOUBLE"),
-    FLOAT("FLOAT"),
-    INT("INT"),
-    LONG("LONG"),
-    SHORT("SHORT"),
-    STRING("STRING");
+    BIG_DECIMAL("BIG_DECIMAL", BigDecimal.class),
+    BIG_INTEGER("BIG_INTEGER", BigInteger.class),
+    BOOLEAN("BOOLEAN", Boolean.class),
+    BYTE("BYTE", Byte.class),
+    CHARACTER("CHARACTER", Character.class),
+    DOUBLE("DOUBLE", Double.class),
+    FLOAT("FLOAT", Float.class),
+    INT("INT", Integer.class),
+    LONG("LONG", Long.class),
+    SHORT("SHORT", Short.class),
+    STRING("STRING", String.class);
 
     private final String type;
 
-    JsonPrimitiveTypes(final String type) {
+    private final Class typeClass;
+
+    JsonPrimitiveTypes(final String type, final Class typeClass) {
         this.type = Assert.requireNonBlank(type, "type");
+        this.typeClass = Assert.requireNonNull(typeClass, "typeClass");
+    }
+
+    public Class getTypeClass() {
+        return typeClass;
     }
 
     public String getType() {
@@ -79,5 +88,13 @@ public enum JsonPrimitiveTypes {
                 .filter(v -> Objects.equals(v.getType(), type))
                 .findAny()
                 .orElseThrow(() -> new IllegalArgumentException("Can not find type '" + type + "'"));
+    }
+
+    public static JsonPrimitiveTypes ofTypeClass(final Class typeClass) {
+        Assert.requireNonNull(typeClass, "typeClass");
+        return Arrays.asList(values()).stream()
+                .filter(v -> Objects.equals(v.getTypeClass(), typeClass))
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException("Can not find type '" + typeClass + "'"));
     }
 }
