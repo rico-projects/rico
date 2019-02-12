@@ -18,6 +18,7 @@ package dev.rico.client.remoting;
 
 import org.apiguardian.api.API;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -42,6 +43,6 @@ public interface ControllerFactory {
         return createController(name, Collections.emptyMap());
     }
 
-    <T> CompletableFuture<ControllerProxy<T>> createController(String name, Map<String, ?> parameters);
+    <T> CompletableFuture<ControllerProxy<T>> createController(String name, Map<String, Serializable> parameters);
 
 }
