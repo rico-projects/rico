@@ -17,6 +17,7 @@
 package dev.rico.internal.remoting.codec.encoders;
 
 import dev.rico.internal.core.Assert;
+import dev.rico.internal.remoting.codec.JsonUtils;
 import dev.rico.internal.remoting.commands.CreateControllerCommand;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
@@ -30,7 +31,7 @@ import static dev.rico.internal.remoting.legacy.communication.CommandConstants.P
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
-public class CreateControllerCommandEncoder extends AbstractCommandTranscoder<CreateControllerCommand> {
+public class CreateControllerCommandEncoder implements CommandTranscoder<CreateControllerCommand> {
 
     @Override
     public JsonObject encode(final CreateControllerCommand command) {
@@ -38,7 +39,7 @@ public class CreateControllerCommandEncoder extends AbstractCommandTranscoder<Cr
         final JsonObject jsonCommand = new JsonObject();
         jsonCommand.addProperty(CONTROLLER_ID, command.getParentControllerId());
         jsonCommand.addProperty(NAME, command.getControllerName());
-        jsonCommand.add(PARAMS, convertToJsonObject(command.getParameters()));
+        jsonCommand.add(PARAMS, JsonUtils.convertToJsonObject(command.getParameters()));
         jsonCommand.addProperty(ID, CREATE_CONTROLLER_COMMAND_ID);
         return jsonCommand;
     }
@@ -48,12 +49,12 @@ public class CreateControllerCommandEncoder extends AbstractCommandTranscoder<Cr
         Assert.requireNonNull(jsonObject, "jsonObject");
         try {
             final CreateControllerCommand command = new CreateControllerCommand();
-            if(jsonObject.has(CONTROLLER_ID) && !isElementJsonNull(jsonObject, CONTROLLER_ID)) {
-                command.setParentControllerId(getStringElement(jsonObject, CONTROLLER_ID));
+            if(jsonObject.has(CONTROLLER_ID) && !JsonUtils.isElementJsonNull(jsonObject, CONTROLLER_ID)) {
+                command.setParentControllerId(JsonUtils.getStringElement(jsonObject, CONTROLLER_ID));
             }
-            command.setControllerName(getStringElement(jsonObject, NAME));
-            if(jsonObject.has(PARAMS) && !isElementJsonNull(jsonObject, PARAMS)) {
-                command.setParameters(getAsMap(jsonObject, PARAMS));
+            command.setControllerName(JsonUtils.getStringElement(jsonObject, NAME));
+            if(jsonObject.has(PARAMS) && !JsonUtils.isElementJsonNull(jsonObject, PARAMS)) {
+                command.setParameters(JsonUtils.getAsMap(jsonObject, PARAMS));
             }
             return command;
         } catch (final Exception ex) {

@@ -17,6 +17,7 @@
 package dev.rico.internal.remoting.codec.encoders;
 
 import dev.rico.internal.core.Assert;
+import dev.rico.internal.remoting.codec.JsonUtils;
 import dev.rico.internal.remoting.legacy.communication.DeletePresentationModelCommand;
 import com.google.gson.JsonObject;
 import org.apiguardian.api.API;
@@ -27,7 +28,7 @@ import static dev.rico.internal.remoting.legacy.communication.CommandConstants.P
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
-public class DeletePresentationModelCommandEncoder extends AbstractCommandTranscoder<DeletePresentationModelCommand> {
+public class DeletePresentationModelCommandEncoder implements CommandTranscoder<DeletePresentationModelCommand> {
 
     @Override
     public JsonObject encode(final DeletePresentationModelCommand command) {
@@ -41,7 +42,7 @@ public class DeletePresentationModelCommandEncoder extends AbstractCommandTransc
     @Override
     public DeletePresentationModelCommand decode(final JsonObject jsonObject) {
         final DeletePresentationModelCommand command = new DeletePresentationModelCommand();
-        command.setPmId(getStringElement(jsonObject, PM_ID));
+        command.setPmId(JsonUtils.getStringElement(jsonObject, PM_ID));
         return command;
     }
 }

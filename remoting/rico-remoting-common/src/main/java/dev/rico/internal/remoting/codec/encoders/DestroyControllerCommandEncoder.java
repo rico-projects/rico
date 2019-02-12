@@ -17,6 +17,7 @@
 package dev.rico.internal.remoting.codec.encoders;
 
 import dev.rico.internal.core.Assert;
+import dev.rico.internal.remoting.codec.JsonUtils;
 import dev.rico.internal.remoting.commands.DestroyControllerCommand;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
@@ -28,7 +29,7 @@ import static dev.rico.internal.remoting.legacy.communication.CommandConstants.I
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
-public class DestroyControllerCommandEncoder extends AbstractCommandTranscoder<DestroyControllerCommand> {
+public class DestroyControllerCommandEncoder implements CommandTranscoder<DestroyControllerCommand> {
 
     @Override
     public JsonObject encode(final DestroyControllerCommand command) {
@@ -44,7 +45,7 @@ public class DestroyControllerCommandEncoder extends AbstractCommandTranscoder<D
         Assert.requireNonNull(jsonObject, "jsonObject");
         try {
             final DestroyControllerCommand command = new DestroyControllerCommand();
-            command.setControllerId(getStringElement(jsonObject, CONTROLLER_ID));
+            command.setControllerId(JsonUtils.getStringElement(jsonObject, CONTROLLER_ID));
             return command;
         } catch (final Exception ex) {
             throw new JsonParseException("Illegal JSON detected", ex);

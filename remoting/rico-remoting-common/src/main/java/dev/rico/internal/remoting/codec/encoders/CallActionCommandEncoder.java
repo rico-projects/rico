@@ -17,6 +17,7 @@
 package dev.rico.internal.remoting.codec.encoders;
 
 import dev.rico.internal.core.Assert;
+import dev.rico.internal.remoting.codec.JsonUtils;
 import dev.rico.internal.remoting.commands.CallActionCommand;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -35,7 +36,7 @@ import static dev.rico.internal.remoting.legacy.communication.CommandConstants.V
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
-public class CallActionCommandEncoder extends AbstractCommandTranscoder<CallActionCommand> {
+public class CallActionCommandEncoder implements CommandTranscoder<CallActionCommand> {
 
     @Override
     public JsonObject encode(final CallActionCommand command) {
@@ -62,14 +63,14 @@ public class CallActionCommandEncoder extends AbstractCommandTranscoder<CallActi
         Assert.requireNonNull(jsonObject, "jsonObject");
         try {
             final CallActionCommand command = new CallActionCommand();
-            command.setControllerId(getStringElement(jsonObject, CONTROLLER_ID));
-            command.setActionName(getStringElement(jsonObject, NAME));
+            command.setControllerId(JsonUtils.getStringElement(jsonObject, CONTROLLER_ID));
+            command.setActionName(JsonUtils.getStringElement(jsonObject, NAME));
 
             final JsonArray jsonArray = jsonObject.getAsJsonArray(PARAMS);
             if(jsonArray != null) {
                 for (final JsonElement jsonElement : jsonArray) {
                     final JsonObject paramObject = jsonElement.getAsJsonObject();
-                    command.addParam(getStringElement(paramObject, NAME), ValueEncoder.decodeValue(paramObject.get(VALUE)));
+                    command.addParam(JsonUtils.getStringElement(paramObject, NAME), ValueEncoder.decodeValue(paramObject.get(VALUE)));
                 }
             }
             return command;

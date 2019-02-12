@@ -17,6 +17,7 @@
 package dev.rico.internal.remoting.codec.encoders;
 
 import dev.rico.internal.core.Assert;
+import dev.rico.internal.remoting.codec.JsonUtils;
 import dev.rico.internal.remoting.legacy.communication.CreatePresentationModelCommand;
 import dev.rico.internal.remoting.legacy.core.Attribute;
 import com.google.gson.JsonArray;
@@ -41,7 +42,7 @@ import static dev.rico.internal.remoting.legacy.communication.CommandConstants.V
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
-public class CreatePresentationModelCommandEncoder extends AbstractCommandTranscoder<CreatePresentationModelCommand> {
+public class CreatePresentationModelCommandEncoder implements CommandTranscoder<CreatePresentationModelCommand> {
 
     @Override
     public JsonObject encode(final CreatePresentationModelCommand command) {
@@ -72,8 +73,8 @@ public class CreatePresentationModelCommandEncoder extends AbstractCommandTransc
         try {
             final CreatePresentationModelCommand command = new CreatePresentationModelCommand();
 
-            command.setPmId(getStringElement(jsonObject, PM_ID));
-            command.setPmType(getStringElement(jsonObject, TYPE));
+            command.setPmId(JsonUtils.getStringElement(jsonObject, PM_ID));
+            command.setPmType(JsonUtils.getStringElement(jsonObject, TYPE));
             command.setClientSideOnly(false);
 
             final JsonArray jsonArray = jsonObject.getAsJsonArray(PM_ATTRIBUTES);
@@ -81,8 +82,8 @@ public class CreatePresentationModelCommandEncoder extends AbstractCommandTransc
             for (final JsonElement jsonElement : jsonArray) {
                 final JsonObject attribute = jsonElement.getAsJsonObject();
                 final HashMap<String, Object> map = new HashMap<>();
-                map.put(Attribute.PROPERTY_NAME, getStringElement(attribute, NAME));
-                map.put(Attribute.ID, getStringElement(attribute, ATTRIBUTE_ID));
+                map.put(Attribute.PROPERTY_NAME, JsonUtils.getStringElement(attribute, NAME));
+                map.put(Attribute.ID, JsonUtils.getStringElement(attribute, ATTRIBUTE_ID));
                 final Object value = attribute.has(VALUE) ? ValueEncoder.decodeValue(attribute.get(VALUE)) : null;
                 map.put(Attribute.VALUE_NAME, value);
                 attributes.add(map);

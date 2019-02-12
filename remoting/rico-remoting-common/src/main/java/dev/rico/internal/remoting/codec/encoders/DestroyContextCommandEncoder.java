@@ -26,7 +26,7 @@ import static dev.rico.internal.remoting.legacy.communication.CommandConstants.I
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
-public class DestroyContextCommandEncoder extends AbstractCommandTranscoder<DestroyContextCommand> {
+public class DestroyContextCommandEncoder implements CommandTranscoder<DestroyContextCommand> {
     @Override
     public JsonObject encode(final DestroyContextCommand command) {
         Assert.requireNonNull(command, "command");

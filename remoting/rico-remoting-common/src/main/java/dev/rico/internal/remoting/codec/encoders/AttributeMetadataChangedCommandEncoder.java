@@ -17,6 +17,7 @@
 package dev.rico.internal.remoting.codec.encoders;
 
 import dev.rico.internal.core.Assert;
+import dev.rico.internal.remoting.codec.JsonUtils;
 import dev.rico.internal.remoting.legacy.communication.AttributeMetadataChangedCommand;
 import com.google.gson.JsonObject;
 import org.apiguardian.api.API;
@@ -30,7 +31,7 @@ import static org.apiguardian.api.API.Status.DEPRECATED;
 
 @Deprecated
 @API(since = "0.x", status = DEPRECATED)
-public class AttributeMetadataChangedCommandEncoder extends AbstractCommandTranscoder<AttributeMetadataChangedCommand> {
+public class AttributeMetadataChangedCommandEncoder implements CommandTranscoder<AttributeMetadataChangedCommand> {
 
     @Override
     public JsonObject encode(final AttributeMetadataChangedCommand command) {
@@ -46,8 +47,8 @@ public class AttributeMetadataChangedCommandEncoder extends AbstractCommandTrans
     @Override
     public AttributeMetadataChangedCommand decode(final JsonObject jsonObject) {
         final AttributeMetadataChangedCommand command = new AttributeMetadataChangedCommand();
-        command.setAttributeId(getStringElement(jsonObject, ATTRIBUTE_ID));
-        command.setMetadataName(getStringElement(jsonObject, NAME));
+        command.setAttributeId(JsonUtils.getStringElement(jsonObject, ATTRIBUTE_ID));
+        command.setMetadataName(JsonUtils.getStringElement(jsonObject, NAME));
         command.setValue(ValueEncoder.decodeValue(jsonObject.get(VALUE)));
         return command;
     }
