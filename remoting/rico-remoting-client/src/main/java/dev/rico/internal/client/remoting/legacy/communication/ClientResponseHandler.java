@@ -63,7 +63,7 @@ public class ClientResponseHandler {
     }
 
     private void handleDeletePresentationModelCommand(final DeletePresentationModelCommand serverCommand) {
-        ClientPresentationModel model = clientModelStore.findPresentationModelById(serverCommand.getPmId());
+        final ClientPresentationModel model = clientModelStore.findPresentationModelById(serverCommand.getPmId());
         if (model == null) {
             return;
         }
@@ -75,15 +75,15 @@ public class ClientResponseHandler {
             throw new IllegalStateException("There already is a presentation model with id '" + serverCommand.getPmId() + "' known to the client.");
         }
 
-        List<ClientAttribute> attributes = new ArrayList<ClientAttribute>();
-        for (Map<String, Object> attr : serverCommand.getAttributes()) {
+        final List<ClientAttribute> attributes = new ArrayList<ClientAttribute>();
+        for (final Map<String, Object> attr : serverCommand.getAttributes()) {
 
-            Object propertyName = attr.get("propertyName");
-            Object value = attr.get("value");
-            Object qualifier = attr.get("qualifier");
-            Object id = attr.get("id");
+            final Object propertyName = attr.get("propertyName");
+            final Object value = attr.get("value");
+            final Object qualifier = attr.get("qualifier");
+            final Object id = attr.get("id");
 
-            ClientAttribute attribute = new ClientAttribute(propertyName != null ? propertyName.toString() : null, value, qualifier != null ? qualifier.toString() : null);
+            final ClientAttribute attribute = new ClientAttribute(propertyName != null ? propertyName.toString() : null, value, qualifier != null ? qualifier.toString() : null);
             if (id != null && id.toString().endsWith("S")) {
                 attribute.setId(id.toString());
             }
@@ -91,7 +91,7 @@ public class ClientResponseHandler {
             attributes.add(attribute);
         }
 
-        ClientPresentationModel model = new ClientPresentationModel(serverCommand.getPmId(), attributes);
+        final ClientPresentationModel model = new ClientPresentationModel(serverCommand.getPmId(), attributes);
         model.setPresentationModelType(serverCommand.getPmType());
         if (serverCommand.isClientSideOnly()) {
             model.setClientSideOnly(true);
@@ -117,7 +117,7 @@ public class ClientResponseHandler {
     }
 
     private void handleAttributeMetadataChangedCommand(final AttributeMetadataChangedCommand serverCommand) {
-        ClientAttribute attribute = clientModelStore.findAttributeById(serverCommand.getAttributeId());
+        final ClientAttribute attribute = clientModelStore.findAttributeById(serverCommand.getAttributeId());
         if (attribute == null) {
             return;
         }

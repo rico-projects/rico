@@ -29,7 +29,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 public class ClientSessionResponseHandlerProvider implements ResponseHandlerProvider {
 
     @Override
-    public HttpURLConnectionHandler getHandler(Configuration configuration) {
+    public HttpURLConnectionHandler getHandler(final Configuration configuration) {
         return new ClientSessionResponseHandler(Client.getService(ClientSessionStore.class));
     }
 }

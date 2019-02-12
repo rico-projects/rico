@@ -42,11 +42,11 @@ public abstract class BaseAttribute extends AbstractObservable implements Attrib
 
     private String qualifier; // application specific semantics apply
 
-    public BaseAttribute(String propertyName, Object value) {
+    public BaseAttribute(final String propertyName, final Object value) {
         this(propertyName, value, null);
     }
 
-    public BaseAttribute(String propertyName, Object value, String qualifier) {
+    public BaseAttribute(final String propertyName, final Object value, final String qualifier) {
         this.id = instanceCount.incrementAndGet() + getOrigin();
         this.propertyName = propertyName;
         this.value = value;
@@ -58,7 +58,7 @@ public abstract class BaseAttribute extends AbstractObservable implements Attrib
      */
     public abstract String getOrigin();
 
-    public void setPresentationModel(PresentationModel presentationModel) {
+    public void setPresentationModel(final PresentationModel presentationModel) {
         if (this.presentationModel != null) {
             throw new IllegalStateException("You can not set a presentation model for an attribute that is already bound.");
         }
@@ -74,7 +74,7 @@ public abstract class BaseAttribute extends AbstractObservable implements Attrib
         return value;
     }
 
-    public void setValue(Object newValue) {
+    public void setValue(final Object newValue) {
         if (!Objects.equals(value, newValue)) {
             firePropertyChange(VALUE_NAME, value, value = newValue);
         }
@@ -106,7 +106,7 @@ public abstract class BaseAttribute extends AbstractObservable implements Attrib
         return qualifier;
     }
 
-    public void setQualifier(String qualifier) {
+    public void setQualifier(final String qualifier) {
         firePropertyChange(QUALIFIER_NAME, this.qualifier, this.qualifier = qualifier);
     }
 }

@@ -207,7 +207,7 @@ public class ObservableArrayList<E> implements ObservableList<E> {
             }
         }
         if(!listElement.isEmpty()){
-            for(E e:listElement){
+            for(final E e:listElement){
                 remove(e);
             }
             return true;
@@ -282,7 +282,7 @@ public class ObservableArrayList<E> implements ObservableList<E> {
         final ObservableArrayList subList = new ObservableArrayList(list.subList(fromIndex, toIndex));
         subList.onChanged(new ListChangeListener() {
             @Override
-            public void listChanged(ListChangeEvent evt) {
+            public void listChanged(final ListChangeEvent evt) {
                 final List<ListChangeEvent.Change<E>> changes = Assert.requireNonNull(evt, "evt").getChanges();
                 for (final ListChangeEvent.Change<E> change : changes) {
                     if (change.isAdded()) {
@@ -302,7 +302,7 @@ public class ObservableArrayList<E> implements ObservableList<E> {
 
         onChanged(new ListChangeListener<E>() {
             @Override
-            public void listChanged(ListChangeEvent<? extends E> evt) {
+            public void listChanged(final ListChangeEvent<? extends E> evt) {
                 final List<? extends ListChangeEvent.Change<? extends E>> changes = Assert.requireNonNull(evt, "evt").getChanges();
                 for (final ListChangeEvent.Change<? extends E> change : changes) {
                     if (change.isAdded()) {
@@ -326,7 +326,7 @@ public class ObservableArrayList<E> implements ObservableList<E> {
         private final ListIterator<E> iterator;
         int lastRet = -1; // index of last element returned;
 
-        private ListIteratorWrapper (ListIterator<E> iterator) {
+        private ListIteratorWrapper (final ListIterator<E> iterator) {
             this.iterator = iterator;
         }
 
@@ -371,7 +371,7 @@ public class ObservableArrayList<E> implements ObservableList<E> {
                 oldElement = ObservableArrayList.this.get(lastRet);
             }// do not throw any exception...it will be thrown by next line
             iterator.remove();
-            int removedIndex = iterator.nextIndex();
+            final int removedIndex = iterator.nextIndex();
             fireListChanged(new ListChangeEventImpl<>(ObservableArrayList.this, removedIndex, removedIndex, Collections.singletonList(oldElement)));
             lastRet = -1;
         }

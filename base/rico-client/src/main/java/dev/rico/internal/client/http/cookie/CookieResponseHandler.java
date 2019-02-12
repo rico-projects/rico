@@ -36,7 +36,6 @@ public class CookieResponseHandler implements HttpURLConnectionHandler {
 
     @Override
     public void handle(final HttpURLConnection connection) {
-        Assert.requireNonNull(connection, "connection");
         try {
             clientCookieHandler.updateCookiesFromResponse(connection);
         } catch (final URISyntaxException e) {

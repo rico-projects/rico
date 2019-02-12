@@ -49,14 +49,14 @@ public abstract class AbstractFXMLViewController<M> extends AbstractViewControll
      *                       be used with this view.
      * @param fxmlLocation the location (url) of the FXML file that defines the layout of the view.
      */
-    public AbstractFXMLViewController(ClientContext clientContext, String controllerName, URL fxmlLocation) {
+    public AbstractFXMLViewController(final ClientContext clientContext, final String controllerName, final URL fxmlLocation) {
         super(clientContext, controllerName);
         Assert.requireNonNull(fxmlLocation, "fxmlLocation");
         try {
-            FXMLLoader loader = new FXMLLoader(fxmlLocation);
+            final FXMLLoader loader = new FXMLLoader(fxmlLocation);
             loader.setController(this);
             rootNode = loader.load();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new RuntimeException("Can not create view based on FXML location " + fxmlLocation, e);
         }
     }

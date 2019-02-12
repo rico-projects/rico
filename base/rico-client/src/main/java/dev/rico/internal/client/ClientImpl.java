@@ -48,7 +48,7 @@ public class ClientImpl {
 
     private final ClientConfiguration clientConfiguration;
 
-    private AtomicBoolean isToolkitSet =  new AtomicBoolean(false);
+    private final AtomicBoolean isToolkitSet =  new AtomicBoolean(false);
 
     private Toolkit toolkit;
 
@@ -62,9 +62,9 @@ public class ClientImpl {
         final ServiceLoader<ServiceProvider> loader = ServiceLoader.load(ServiceProvider.class);
         final Iterator<ServiceProvider> iterator = loader.iterator();
         while (iterator.hasNext()) {
-            ServiceProvider provider = iterator.next();
+            final ServiceProvider provider = iterator.next();
             if(provider.isActive(clientConfiguration)) {
-                Class serviceClass = provider.getServiceType();
+                final Class serviceClass = provider.getServiceType();
                 Assert.requireNonNull(serviceClass, "serviceClass");
                 if (providers.containsKey(serviceClass)) {
                     throw new RuntimeException("Can not register more than 1 implementation for service type " + serviceClass);
@@ -119,7 +119,7 @@ public class ClientImpl {
         return service;
     }
 
-    public static void init(Toolkit toolkit) {
+    public static void init(final Toolkit toolkit) {
         getInstance().initImpl(toolkit);
     }
 

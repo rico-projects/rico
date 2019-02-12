@@ -54,19 +54,19 @@ public class ClassConverterFactory implements ConverterFactory {
     private static class ClassConverter extends AbstractStringConverter<Class> {
 
         @Override
-        public Class convertFromRemoting(String value) throws ValueConverterException {
+        public Class convertFromRemoting(final String value) throws ValueConverterException {
             if(value == null) {
                 return null;
             }
             try {
                 return Class.forName(value);
-            } catch (ClassNotFoundException e) {
+            } catch (final ClassNotFoundException e) {
                 throw new ValueConverterException("Can not find class " + value, e);
             }
         }
 
         @Override
-        public String convertToRemoting(Class value) throws ValueConverterException {
+        public String convertToRemoting(final Class value) throws ValueConverterException {
             if(value == null) {
                 return null;
             }
