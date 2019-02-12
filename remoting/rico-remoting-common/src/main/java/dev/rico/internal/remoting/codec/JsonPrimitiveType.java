@@ -1,6 +1,6 @@
 package dev.rico.internal.remoting.codec;
 
-import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonElement;
 import dev.rico.internal.core.Assert;
 
 import java.math.BigDecimal;
@@ -8,7 +8,7 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Objects;
 
-public enum JsonPrimitiveTypes {
+public enum JsonPrimitiveType {
 
     BIG_DECIMAL("BIG_DECIMAL", BigDecimal.class),
     BIG_INTEGER("BIG_INTEGER", BigInteger.class),
@@ -26,7 +26,7 @@ public enum JsonPrimitiveTypes {
 
     private final Class typeClass;
 
-    JsonPrimitiveTypes(final String type, final Class typeClass) {
+    JsonPrimitiveType(final String type, final Class typeClass) {
         this.type = Assert.requireNonBlank(type, "type");
         this.typeClass = Assert.requireNonNull(typeClass, "typeClass");
     }
@@ -39,7 +39,7 @@ public enum JsonPrimitiveTypes {
         return type;
     }
 
-    public <T> T getValueOfElement(final JsonPrimitive element) {
+    public <T> T getValueOfElement(final JsonElement element) {
         Assert.requireNonNull(element, "element");
 
         if(element.isJsonNull()) {
@@ -82,7 +82,7 @@ public enum JsonPrimitiveTypes {
         throw new IllegalStateException("Type can not be defined!");
     }
 
-    public static JsonPrimitiveTypes ofType(final String type) {
+    public static JsonPrimitiveType ofType(final String type) {
         Assert.requireNonBlank(type, "type");
         return Arrays.asList(values()).stream()
                 .filter(v -> Objects.equals(v.getType(), type))
@@ -90,7 +90,7 @@ public enum JsonPrimitiveTypes {
                 .orElseThrow(() -> new IllegalArgumentException("Can not find type '" + type + "'"));
     }
 
-    public static JsonPrimitiveTypes ofTypeClass(final Class typeClass) {
+    public static JsonPrimitiveType ofTypeClass(final Class typeClass) {
         Assert.requireNonNull(typeClass, "typeClass");
         return Arrays.asList(values()).stream()
                 .filter(v -> Objects.equals(v.getTypeClass(), typeClass))

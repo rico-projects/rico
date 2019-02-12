@@ -22,7 +22,7 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.remoting.codec.JsonPrimitiveTypes;
+import dev.rico.internal.remoting.codec.JsonPrimitiveType;
 import dev.rico.internal.remoting.legacy.communication.Command;
 import org.apiguardian.api.API;
 
@@ -53,40 +53,40 @@ public abstract class AbstractCommandTranscoder<C extends Command> implements Co
             final Object value = map.get(key);
             if(value == null) {
                 //For NULL we do not care about the type
-                jsonObject.addProperty(TYPE, JsonPrimitiveTypes.STRING.getType());
+                jsonObject.addProperty(TYPE, JsonPrimitiveType.STRING.getType());
                 jsonObject.add(VALUE, JsonNull.INSTANCE);
             } else if(value instanceof BigDecimal) {
-                jsonObject.addProperty(TYPE, JsonPrimitiveTypes.BIG_DECIMAL.getType());
+                jsonObject.addProperty(TYPE, JsonPrimitiveType.BIG_DECIMAL.getType());
                 jsonObject.add(VALUE, new JsonPrimitive((BigDecimal) value));
             } else if(value instanceof BigInteger) {
-                jsonObject.addProperty(TYPE, JsonPrimitiveTypes.BIG_INTEGER.getType());
+                jsonObject.addProperty(TYPE, JsonPrimitiveType.BIG_INTEGER.getType());
                 jsonObject.add(VALUE, new JsonPrimitive((BigInteger) value));
             } else if(value instanceof Boolean) {
-                jsonObject.addProperty(TYPE, JsonPrimitiveTypes.BOOLEAN.getType());
+                jsonObject.addProperty(TYPE, JsonPrimitiveType.BOOLEAN.getType());
                 jsonObject.add(VALUE, new JsonPrimitive((Boolean) value));
             } else if(value instanceof Byte) {
-                jsonObject.addProperty(TYPE, JsonPrimitiveTypes.BYTE.getType());
+                jsonObject.addProperty(TYPE, JsonPrimitiveType.BYTE.getType());
                 jsonObject.add(VALUE, new JsonPrimitive((Byte) value));
             } else if(value instanceof Character) {
-                jsonObject.addProperty(TYPE, JsonPrimitiveTypes.CHARACTER.getType());
+                jsonObject.addProperty(TYPE, JsonPrimitiveType.CHARACTER.getType());
                 jsonObject.add(VALUE, new JsonPrimitive((Character) value));
             } else if(value instanceof Double) {
-                jsonObject.addProperty(TYPE, JsonPrimitiveTypes.DOUBLE.getType());
+                jsonObject.addProperty(TYPE, JsonPrimitiveType.DOUBLE.getType());
                 jsonObject.add(VALUE, new JsonPrimitive((Double) value));
             } else if(value instanceof Float) {
-                jsonObject.addProperty(TYPE, JsonPrimitiveTypes.FLOAT.getType());
+                jsonObject.addProperty(TYPE, JsonPrimitiveType.FLOAT.getType());
                 jsonObject.add(VALUE, new JsonPrimitive((Float) value));
             } else if(value instanceof Integer) {
-                jsonObject.addProperty(TYPE, JsonPrimitiveTypes.INT.getType());
+                jsonObject.addProperty(TYPE, JsonPrimitiveType.INT.getType());
                 jsonObject.add(VALUE, new JsonPrimitive((Integer) value));
             } else if(value instanceof Long) {
-                jsonObject.addProperty(TYPE, JsonPrimitiveTypes.LONG.getType());
+                jsonObject.addProperty(TYPE, JsonPrimitiveType.LONG.getType());
                 jsonObject.add(VALUE, new JsonPrimitive((Long) value));
             } else if(value instanceof Short) {
-                jsonObject.addProperty(TYPE, JsonPrimitiveTypes.SHORT.getType());
+                jsonObject.addProperty(TYPE, JsonPrimitiveType.SHORT.getType());
                 jsonObject.add(VALUE, new JsonPrimitive((Short) value));
             } else if(value instanceof String) {
-                jsonObject.addProperty(TYPE, JsonPrimitiveTypes.STRING.getType());
+                jsonObject.addProperty(TYPE, JsonPrimitiveType.STRING.getType());
                 jsonObject.add(VALUE, new JsonPrimitive((String) value));
             } else {
                throw new IllegalArgumentException("Can not handle value of type '" + value.getClass() + "'");
@@ -104,7 +104,7 @@ public abstract class AbstractCommandTranscoder<C extends Command> implements Co
             final String key = getStringElement(element, NAME);
             final JsonPrimitive value = getElement(element, VALUE).getAsJsonPrimitive();
             final String typeName = getStringElement(element, TYPE);
-            final JsonPrimitiveTypes type = JsonPrimitiveTypes.ofType(typeName);
+            final JsonPrimitiveType type = JsonPrimitiveType.ofType(typeName);
             result.put(key, type.getValueOfElement(value));
         });
         return result;
