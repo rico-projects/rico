@@ -26,6 +26,7 @@ import static dev.rico.internal.remoting.legacy.communication.CommandConstants.C
 import static dev.rico.internal.remoting.legacy.communication.CommandConstants.CREATE_CONTROLLER_COMMAND_ID;
 import static dev.rico.internal.remoting.legacy.communication.CommandConstants.ID;
 import static dev.rico.internal.remoting.legacy.communication.CommandConstants.NAME;
+import static dev.rico.internal.remoting.legacy.communication.CommandConstants.PARAMS;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
@@ -37,6 +38,7 @@ public class CreateControllerCommandEncoder extends AbstractCommandTranscoder<Cr
         final JsonObject jsonCommand = new JsonObject();
         jsonCommand.addProperty(CONTROLLER_ID, command.getParentControllerId());
         jsonCommand.addProperty(NAME, command.getControllerName());
+        jsonCommand.add(PARAMS, convertToJsonObject(command.getParameters()));
         jsonCommand.addProperty(ID, CREATE_CONTROLLER_COMMAND_ID);
         return jsonCommand;
     }
@@ -50,6 +52,9 @@ public class CreateControllerCommandEncoder extends AbstractCommandTranscoder<Cr
                 command.setParentControllerId(getStringElement(jsonObject, CONTROLLER_ID));
             }
             command.setControllerName(getStringElement(jsonObject, NAME));
+            if(jsonObject.has(PARAMS) && !isElementJsonNull(jsonObject, PARAMS)) {
+                command.setParameters(getAsMap(jsonObject, PARAMS));
+            }
             return command;
         } catch (final Exception ex) {
             throw new JsonParseException("Illegal JSON detected", ex);
