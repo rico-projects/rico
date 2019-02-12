@@ -462,4 +462,160 @@ public class JsonPrimitiveTypeTests {
         Assert.assertNotNull(type);
         Assert.assertEquals(type, JsonPrimitiveType.STRING);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    @Test
+    public void testGetBigDecimalTypeByTypeClass() {
+        //given:
+        final Class<BigDecimal> typeDef = BigDecimal.class;
+
+        //when:
+        JsonPrimitiveType type = JsonPrimitiveType.ofTypeClass(typeDef);
+
+        //then:
+        Assert.assertNotNull(type);
+        Assert.assertEquals(type, JsonPrimitiveType.BIG_DECIMAL);
+    }
+
+    @Test
+    public void testGetBigIntegerTypeByTypeClass() {
+        //given:
+        final Class<BigInteger> typeDef = BigInteger.class;
+
+        //when:
+        JsonPrimitiveType type = JsonPrimitiveType.ofTypeClass(typeDef);
+
+        //then:
+        Assert.assertNotNull(type);
+        Assert.assertEquals(type, JsonPrimitiveType.BIG_INTEGER);
+    }
+
+    @Test
+    public void testGetBooleanTypeByTypeClass() {
+        //given:
+        final Class<Boolean> typeDef = Boolean.class;
+
+        //when:
+        JsonPrimitiveType type = JsonPrimitiveType.ofTypeClass(typeDef);
+
+        //then:
+        Assert.assertNotNull(type);
+        Assert.assertEquals(type, JsonPrimitiveType.BOOLEAN);
+    }
+
+    @Test
+    public void testGetByteTypeByTypeClass() {
+        //given:
+        final Class<Byte> typeDef = Byte.class;
+
+        //when:
+        JsonPrimitiveType type = JsonPrimitiveType.ofTypeClass(typeDef);
+
+        //then:
+        Assert.assertNotNull(type);
+        Assert.assertEquals(type, JsonPrimitiveType.BYTE);
+    }
+
+    @Test
+    public void testGetCharacterTypeByTypeClass() {
+        //given:
+        final Class<Character> typeDef = Character.class;
+
+        //when:
+        JsonPrimitiveType type = JsonPrimitiveType.ofTypeClass(typeDef);
+
+        //then:
+        Assert.assertNotNull(type);
+        Assert.assertEquals(type, JsonPrimitiveType.CHARACTER);
+    }
+
+    @Test
+    public void testGetDoubleTypeByTypeClass() {
+        //given:
+        final Class<Double> typeDef = Double.class;
+
+        //when:
+        JsonPrimitiveType type = JsonPrimitiveType.ofTypeClass(typeDef);
+
+        //then:
+        Assert.assertNotNull(type);
+        Assert.assertEquals(type, JsonPrimitiveType.DOUBLE);
+    }
+
+    @Test
+    public void testGetFloatTypeByTypeClass() {
+        //given:
+        final Class<Float> typeDef = Float.class;
+
+        //when:
+        JsonPrimitiveType type = JsonPrimitiveType.ofTypeClass(typeDef);
+
+        //then:
+        Assert.assertNotNull(type);
+        Assert.assertEquals(type, JsonPrimitiveType.FLOAT);
+    }
+
+    @Test
+    public void testGetIntegerTypeByTypeClass() {
+        //given:
+        final Class<Integer> typeDef = Integer.class;
+
+        //when:
+        JsonPrimitiveType type = JsonPrimitiveType.ofTypeClass(typeDef);
+
+        //then:
+        Assert.assertNotNull(type);
+        Assert.assertEquals(type, JsonPrimitiveType.INT);
+    }
+
+    @Test
+    public void testGetLongTypeByTypeClass() {
+        //given:
+        final Class<Long> typeDef = Long.class;
+
+        //when:
+        JsonPrimitiveType type = JsonPrimitiveType.ofTypeClass(typeDef);
+
+        //then:
+        Assert.assertNotNull(type);
+        Assert.assertEquals(type, JsonPrimitiveType.LONG);
+    }
+
+    @Test
+    public void testGetShortTypeByTypeClass() {
+        //given:
+        final Class<Short> typeDef = Short.class;
+
+        //when:
+        JsonPrimitiveType type = JsonPrimitiveType.ofTypeClass(typeDef);
+
+        //then:
+        Assert.assertNotNull(type);
+        Assert.assertEquals(type, JsonPrimitiveType.SHORT);
+    }
+
+    @Test
+    public void testGetStringTypeByTypeClass() {
+        //given:
+        final Class<String> typeDef = String.class;
+
+        //when:
+        JsonPrimitiveType type = JsonPrimitiveType.ofTypeClass(typeDef);
+
+        //then:
+        Assert.assertNotNull(type);
+        Assert.assertEquals(type, JsonPrimitiveType.STRING);
+    }
 }
