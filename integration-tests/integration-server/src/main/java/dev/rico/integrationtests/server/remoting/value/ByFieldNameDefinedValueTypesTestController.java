@@ -12,7 +12,7 @@ import java.math.BigInteger;
 
 @RemotingController(ValueTestConstants.BY_FIELD_NAME_DEFINED_VALUE_TYPES_CONTROLLER)
 public class ByFieldNameDefinedValueTypesTestController {
-    
+
     @RemotingValue
     private BigDecimal bigDecimalValue;
 

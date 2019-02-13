@@ -1,4 +1,4 @@
-package dev.rico.integrationtests.server.modelhierarchy;
+package dev.rico.integrationtests.server.remoting.modelhierarchy;
 
 import dev.rico.integrationtests.remoting.modelhierarchy.ChildModel;
 import dev.rico.integrationtests.remoting.modelhierarchy.RootModel;

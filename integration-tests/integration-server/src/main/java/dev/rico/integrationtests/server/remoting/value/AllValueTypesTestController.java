@@ -1,7 +1,6 @@
 package dev.rico.integrationtests.server.remoting.value;
 
 import dev.rico.integrationtests.remoting.value.AllValueTypesTestControllerModel;
-import dev.rico.integrationtests.remoting.value.ValueTestConstants;
 import dev.rico.server.remoting.RemotingController;
 import dev.rico.server.remoting.RemotingModel;
 import dev.rico.server.remoting.RemotingValue;
@@ -10,6 +9,7 @@ import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import static dev.rico.integrationtests.remoting.value.ValueTestConstants.ALL_VALUE_TYPES_CONTROLLER;
 import static dev.rico.integrationtests.remoting.value.ValueTestConstants.BIG_DECIMAL_VALUE;
 import static dev.rico.integrationtests.remoting.value.ValueTestConstants.BIG_INTEGER_VALUE;
 import static dev.rico.integrationtests.remoting.value.ValueTestConstants.BOOLEAN_VALUE;
@@ -30,7 +30,7 @@ import static dev.rico.integrationtests.remoting.value.ValueTestConstants.PRIMIT
 import static dev.rico.integrationtests.remoting.value.ValueTestConstants.SHORT_VALUE;
 import static dev.rico.integrationtests.remoting.value.ValueTestConstants.STRING_VALUE;
 
-@RemotingController(ValueTestConstants.ALL_VALUE_TYPES_CONTROLLER)
+@RemotingController(ALL_VALUE_TYPES_CONTROLLER)
 public class AllValueTypesTestController {
 
     @RemotingValue(BIG_DECIMAL_VALUE)
