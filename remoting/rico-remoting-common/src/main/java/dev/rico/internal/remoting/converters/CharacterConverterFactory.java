@@ -18,7 +18,7 @@ public class CharacterConverterFactory extends AbstractConverterFactory {
 
         @Override
         public Number convertToRemoting(final Character value) {
-            return Integer.valueOf(value.charValue());
+            return value == null ? null : Integer.valueOf(value.charValue());
         }
     };
 
