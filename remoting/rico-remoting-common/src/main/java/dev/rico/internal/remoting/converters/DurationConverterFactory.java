@@ -32,11 +32,6 @@ public class DurationConverterFactory extends AbstractConverterFactory {
     private final static Converter CONVERTER = new DurationConverter();
 
     @Override
-    public boolean supportsType(final Class<?> cls) {
-        return Duration.class.isAssignableFrom(cls);
-    }
-
-    @Override
     public List<Class> getSupportedTypes() {
         return Collections.singletonList(Duration.class);
     }

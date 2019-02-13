@@ -53,11 +53,6 @@ public class BigIntegerConverterFactory extends AbstractConverterFactory {
     };
 
     @Override
-    public boolean supportsType(final Class<?> cls) {
-        return BigInteger.class.equals(cls);
-    }
-
-    @Override
     public List<Class> getSupportedTypes() {
         return Collections.singletonList(BigInteger.class);
     }
