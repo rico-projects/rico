@@ -17,7 +17,7 @@ import java.util.Map;
 import static dev.rico.integrationtests.remoting.value.ValueTestConstants.BY_FIELD_NAME_DEFINED_VALUE_TYPES_CONTROLLER;
 
 @SpringBootTest(classes = TestConfiguration.class)
-public class ByFieldNameDefinedValueTypesTestControllerTest extends SpringTestNGControllerTest {
+public class ByFieldNameDefinedValueTypesTestControllerTests extends SpringTestNGControllerTest {
 
     @Test
     public void testCreationWithAllParameters() {
