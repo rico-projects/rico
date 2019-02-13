@@ -3,6 +3,7 @@ package dev.rico.integrationtests.server.remoting.value;
 import dev.rico.integrationtests.remoting.value.AllValueTypesTestControllerModel;
 import dev.rico.integrationtests.remoting.value.ValueTestConstants;
 import dev.rico.integrationtests.server.TestConfiguration;
+import dev.rico.server.remoting.test.ControllerTestException;
 import dev.rico.server.remoting.test.ControllerUnderTest;
 import dev.rico.server.remoting.test.SpringTestNGControllerTest;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -140,6 +141,16 @@ public class AllValueTypesTestControllerTests extends SpringTestNGControllerTest
         Assert.assertEquals(model.primitiveIntegerValue().get().intValue(), 0);
         Assert.assertEquals(model.primitiveLongValue().get().longValue(), 0l);
         Assert.assertEquals(model.primitiveShortValue().get().shortValue(), (short) 0);
+    }
+
+    @Test(expectedExceptions = ControllerTestException.class)
+    public void testCreationWithWrongTypedParameters() {
+        //given:
+        final Map<String, Serializable> parameters = new HashMap<>();
+        parameters.put(ValueTestConstants.PRIMITIVE_BOOLEAN_VALUE, "Hello");
+
+        //when:
+        createController(ALL_VALUE_TYPES_CONTROLLER, parameters);
     }
 
     @Test
