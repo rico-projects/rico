@@ -10,52 +10,64 @@ import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import static dev.rico.integrationtests.remoting.value.ValueTestConstants.BIG_DECIMAL_VALUE;
-import static dev.rico.integrationtests.remoting.value.ValueTestConstants.BIG_INTEGER_VALUE;
-import static dev.rico.integrationtests.remoting.value.ValueTestConstants.BOOLEAN_VALUE;
-import static dev.rico.integrationtests.remoting.value.ValueTestConstants.BYTE_VALUE;
-import static dev.rico.integrationtests.remoting.value.ValueTestConstants.CHARACTER_VALUE;
-import static dev.rico.integrationtests.remoting.value.ValueTestConstants.DOUBLE_VALUE;
-import static dev.rico.integrationtests.remoting.value.ValueTestConstants.FLOAT_VALUE;
-import static dev.rico.integrationtests.remoting.value.ValueTestConstants.INTEGER_VALUE;
-import static dev.rico.integrationtests.remoting.value.ValueTestConstants.LONG_VALUE;
-import static dev.rico.integrationtests.remoting.value.ValueTestConstants.SHORT_VALUE;
-import static dev.rico.integrationtests.remoting.value.ValueTestConstants.STRING_VALUE;
-
-@RemotingController(ValueTestConstants.OPTIONAL_VALUE_TYPES_CONTROLLER)
-public class OptionalValueTypesTestController {
-
-    @RemotingValue(BIG_DECIMAL_VALUE)
+@RemotingController(ValueTestConstants.BY_FIELD_NAME_DEFINED_VALUE_TYPES_CONTROLLER)
+public class ByFieldNameDefinedValueTypesTestController {
+    
+    @RemotingValue
     private BigDecimal bigDecimalValue;
 
-    @RemotingValue(BIG_INTEGER_VALUE)
+    @RemotingValue
     private BigInteger bigIntegerValue;
 
-    @RemotingValue(BOOLEAN_VALUE)
+    @RemotingValue
+    private boolean primitiveBooleanValue;
+
+    @RemotingValue
     private Boolean booleanValue;
 
-    @RemotingValue(BYTE_VALUE)
+    @RemotingValue
+    private byte primitiveByteValue;
+
+    @RemotingValue
     private Byte byteValue;
 
-    @RemotingValue(CHARACTER_VALUE)
+    @RemotingValue
+    private char primitiveCharacterValue;
+
+    @RemotingValue
     private Character characterValue;
 
-    @RemotingValue(DOUBLE_VALUE)
+    @RemotingValue
+    private double primitiveDoubleValue;
+
+    @RemotingValue
     private Double doubleValue;
 
-    @RemotingValue(FLOAT_VALUE)
+    @RemotingValue
+    private float primitiveFloatValue;
+
+    @RemotingValue
     private Float floatValue;
 
-    @RemotingValue(INTEGER_VALUE)
+    @RemotingValue
+    private int primitiveIntegerValue;
+
+    @RemotingValue
     private Integer integerValue;
 
-    @RemotingValue(LONG_VALUE)
+    @RemotingValue
+    private long primitiveLongValue;
+
+    @RemotingValue
     private Long longValue;
 
-    @RemotingValue(SHORT_VALUE)
+    @RemotingValue
+    private short primitiveShortValue;
+
+    @RemotingValue
     private Short shortValue;
 
-    @RemotingValue(STRING_VALUE)
+    @RemotingValue
     private String stringValue;
 
     @RemotingModel
@@ -65,14 +77,31 @@ public class OptionalValueTypesTestController {
     private void init() {
         model.bigDecimalValue().set(bigDecimalValue);
         model.bigIntegerValue().set(bigIntegerValue);
+
         model.booleanValue().set(booleanValue);
+        model.primitiveBooleanValue().set(primitiveBooleanValue);
+
         model.byteValue().set(byteValue);
+        model.primitiveByteValue().set(primitiveByteValue);
+
         model.characterValue().set(characterValue);
+        model.primitiveCharacterValue().set(primitiveCharacterValue);
+
         model.doubleValue().set(doubleValue);
+        model.primitiveDoubleValue().set(primitiveDoubleValue);
+
         model.floatValue().set(floatValue);
+        model.primitiveFloatValue().set(primitiveFloatValue);
+
         model.integerValue().set(integerValue);
+        model.primitiveIntegerValue().set(primitiveIntegerValue);
+
         model.longValue().set(longValue);
+        model.primitiveLongValue().set(primitiveLongValue);
+
         model.shortValue().set(shortValue);
+        model.primitiveShortValue().set(primitiveShortValue);
+
         model.stringValue().set(stringValue);
     }
 }
