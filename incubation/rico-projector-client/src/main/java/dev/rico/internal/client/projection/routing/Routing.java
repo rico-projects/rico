@@ -28,6 +28,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -79,8 +80,8 @@ public class Routing {
                 .map(p -> p.destroy())
                 .orElse(CompletableFuture.completedFuture(null));
         destroyFuture.thenAccept((v) -> {
-            final Map<String, Object> parameters = new HashMap<>();
-            route.getParameters().stream().forEach(t -> parameters.put(t.getKey(), t.getValue()));
+            final Map<String, Serializable> parameters = new HashMap<>();
+            route.getParameters().stream().forEach(t -> parameters.put(t.getKey(), (Serializable) t.getValue()));
             parameters.put(RoutingConstants.ANCHOR, route.getAnchor());
             final CompletableFuture<ControllerProxy<View>> creation = controllerFactory.createController(controllerName, Collections.unmodifiableMap(parameters));
             creation.thenApply(controllerProxy -> {

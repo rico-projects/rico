@@ -1,6 +1,6 @@
 package dev.rico.integrationtests.server.modelhierarchy;
 
-import dev.rico.integrationtests.modelhierarchy.RootModel;
+import dev.rico.integrationtests.remoting.modelhierarchy.RootModel;
 import dev.rico.integrationtests.server.TestConfiguration;
 import dev.rico.server.remoting.test.ControllerUnderTest;
 import dev.rico.server.remoting.test.SpringTestNGControllerTest;
@@ -10,11 +10,11 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static dev.rico.integrationtests.modelhierarchy.ModelHierarchyConstants.ADD_COUNTER_LISTENER_ACTION;
-import static dev.rico.integrationtests.modelhierarchy.ModelHierarchyConstants.A_TO_RANDOM_ACTION;
-import static dev.rico.integrationtests.modelhierarchy.ModelHierarchyConstants.B_TO_RANDOM_ACTION;
-import static dev.rico.integrationtests.modelhierarchy.ModelHierarchyConstants.CONTROLLER_NAME;
-import static dev.rico.integrationtests.modelhierarchy.ModelHierarchyConstants.SWITCH_CHILDREN_ACTION;
+import static dev.rico.integrationtests.remoting.modelhierarchy.ModelHierarchyConstants.ADD_COUNTER_LISTENER_ACTION;
+import static dev.rico.integrationtests.remoting.modelhierarchy.ModelHierarchyConstants.A_TO_RANDOM_ACTION;
+import static dev.rico.integrationtests.remoting.modelhierarchy.ModelHierarchyConstants.B_TO_RANDOM_ACTION;
+import static dev.rico.integrationtests.remoting.modelhierarchy.ModelHierarchyConstants.CONTROLLER_NAME;
+import static dev.rico.integrationtests.remoting.modelhierarchy.ModelHierarchyConstants.SWITCH_CHILDREN_ACTION;
 
 @SpringBootTest(classes = TestConfiguration.class)
 public class ModelHierarchyControllerTest extends SpringTestNGControllerTest {

@@ -1,7 +1,7 @@
 package dev.rico.integrationtests.server.modelhierarchy;
 
-import dev.rico.integrationtests.modelhierarchy.ChildModel;
-import dev.rico.integrationtests.modelhierarchy.RootModel;
+import dev.rico.integrationtests.remoting.modelhierarchy.ChildModel;
+import dev.rico.integrationtests.remoting.modelhierarchy.RootModel;
 import dev.rico.remoting.BeanManager;
 import dev.rico.server.remoting.RemotingAction;
 import dev.rico.server.remoting.RemotingController;
@@ -10,11 +10,11 @@ import dev.rico.server.remoting.RemotingModel;
 import javax.inject.Inject;
 import java.util.UUID;
 
-import static dev.rico.integrationtests.modelhierarchy.ModelHierarchyConstants.ADD_COUNTER_LISTENER_ACTION;
-import static dev.rico.integrationtests.modelhierarchy.ModelHierarchyConstants.A_TO_RANDOM_ACTION;
-import static dev.rico.integrationtests.modelhierarchy.ModelHierarchyConstants.B_TO_RANDOM_ACTION;
-import static dev.rico.integrationtests.modelhierarchy.ModelHierarchyConstants.CONTROLLER_NAME;
-import static dev.rico.integrationtests.modelhierarchy.ModelHierarchyConstants.SWITCH_CHILDREN_ACTION;
+import static dev.rico.integrationtests.remoting.modelhierarchy.ModelHierarchyConstants.ADD_COUNTER_LISTENER_ACTION;
+import static dev.rico.integrationtests.remoting.modelhierarchy.ModelHierarchyConstants.A_TO_RANDOM_ACTION;
+import static dev.rico.integrationtests.remoting.modelhierarchy.ModelHierarchyConstants.B_TO_RANDOM_ACTION;
+import static dev.rico.integrationtests.remoting.modelhierarchy.ModelHierarchyConstants.CONTROLLER_NAME;
+import static dev.rico.integrationtests.remoting.modelhierarchy.ModelHierarchyConstants.SWITCH_CHILDREN_ACTION;
 
 @RemotingController(CONTROLLER_NAME)
 public class ModelHierarchyController {

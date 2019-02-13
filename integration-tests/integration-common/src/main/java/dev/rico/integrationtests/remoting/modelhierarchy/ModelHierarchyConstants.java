@@ -1,4 +1,4 @@
-package dev.rico.integrationtests.modelhierarchy;
+package dev.rico.integrationtests.remoting.modelhierarchy;
 
 public interface ModelHierarchyConstants {
 
