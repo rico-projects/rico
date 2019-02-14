@@ -198,6 +198,11 @@ public class ControllerHandler {
         }
     }
 
+    /**
+     * Injects values to all field of the controller that are annotated by {@link RemotingValue}
+     * @param controller the controller instance
+     * @param parameters the map of possible parameters
+     */
     private void injectValues(final Object controller, final Map<String, Serializable> parameters) {
         Assert.requireNonNull(parameters, "parameters");
         Assert.requireNonNull(controller, "controller");

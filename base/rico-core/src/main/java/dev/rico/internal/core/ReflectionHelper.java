@@ -101,6 +101,14 @@ public class ReflectionHelper {
         });
     }
 
+    /**
+     * Checks if the given field is annotated with the given annonation or if an annotation of the field is annotated
+     * with the given annotation.
+     * @param field the field
+     * @param annotationClass the annotation class
+     * @param <A> the annotation type
+     * @return the annotation instance that annotates the field or an annotation fo the field.
+     */
     public static <A extends Annotation> Optional<A> getAnnotationOrMetaAnnotation(final Field field, final Class<A> annotationClass) {
         Assert.requireNonNull(field, "field");
         Assert.requireNonNull(annotationClass, "annotationClass");
@@ -304,6 +312,12 @@ public class ReflectionHelper {
         }
     }
 
+    /**
+     * Returns a list that contains all values of a given enum class
+     * @param enumClass the enum class
+     * @param <E> the enum type
+     * @return all enum values
+     */
     public static <E extends Enum> List<E> getAllValues(final Class<E> enumClass) {
         Assert.requireNonNull(enumClass, "enumClass");
         final E[] values = (E[]) enumClass.getDeclaringClass().getEnumConstants();

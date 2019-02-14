@@ -24,6 +24,9 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Objects;
 
+/**
+ * Enum that defines all JSON types and its Java mapping
+ */
 public enum JsonPrimitiveType {
 
     BIG_DECIMAL("BIG_DECIMAL", BigDecimal.class),
