@@ -34,7 +34,7 @@ public interface FormField<T> extends WithTitle, WithDescription, WithIcon, With
 
     Property<Boolean> editableProperty();
 
-    Property<Class<T>> contentTypeProperty();
+    Property<Class> contentTypeProperty();
 
     Property<T> valueProperty();
 

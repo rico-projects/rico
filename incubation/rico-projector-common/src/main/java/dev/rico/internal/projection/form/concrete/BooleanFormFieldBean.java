@@ -23,12 +23,12 @@ import dev.rico.remoting.RemotingBean;
 @RemotingBean
 public class BooleanFormFieldBean extends AbstractFormFieldBean<Boolean> {
 
-    private Property<Class<Boolean>> contentType;
+    private Property<Class> contentType;
 
     private Property<Boolean> value;
 
     @Override
-    public Property<Class<Boolean>> contentTypeProperty() {
+    public Property<Class> contentTypeProperty() {
         return contentType;
     }
 

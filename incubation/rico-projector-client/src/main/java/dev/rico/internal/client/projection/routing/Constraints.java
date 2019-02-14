@@ -14,26 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.internal.projection.form.concrete;
+package dev.rico.internal.client.projection.routing;
 
-import dev.rico.internal.projection.form.AbstractFormFieldBean;
-import dev.rico.remoting.Property;
-import dev.rico.remoting.RemotingBean;
-
-@RemotingBean
-public class StringFormFieldBean extends AbstractFormFieldBean<String> {
-
-    private Property<Class> contentType;
-
-    private Property<String> value;
-
-    @Override
-    public Property<Class> contentTypeProperty() {
-        return contentType;
-    }
-
-    @Override
-    public Property<String> valueProperty() {
-        return value;
-    }
+public class Constraints {
 }

@@ -16,18 +16,19 @@
  */
 package dev.rico.internal.client.projection.projection;
 
-import dev.rico.client.remoting.ControllerProxy;
 import dev.rico.internal.client.projection.lazy.LazyLoadingBehavior;
 import dev.rico.internal.client.projection.media.SimpleMediaListCell;
 import dev.rico.internal.projection.lazy.LazyMediaBean;
 import dev.rico.internal.projection.lazy.concrete.MediaLazyListBean;
+import dev.rico.client.remoting.ClientContext;
+import dev.rico.client.remoting.ControllerProxy;
 import javafx.scene.Parent;
 import javafx.scene.control.ListView;
 
 public class LazyListFactory implements ProjectionFactory<MediaLazyListBean> {
 
     @Override
-    public Parent createProjection(Projector projector, ControllerProxy controllerProxy, MediaLazyListBean projectable) {
+    public Parent createProjection(Projector projector, ClientContext clientContext, ControllerProxy controllerProxy, MediaLazyListBean projectable) {
         ListView<LazyMediaBean> listView = new ListView<>();
         listView.setCellFactory(SimpleMediaListCell.createDefaultCallback());
         LazyLoadingBehavior<LazyMediaBean> lazyLoadingBehavior = new LazyLoadingBehavior<>(listView);

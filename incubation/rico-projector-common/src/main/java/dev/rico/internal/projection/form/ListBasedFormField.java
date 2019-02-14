@@ -19,21 +19,10 @@ package dev.rico.internal.projection.form;
 import dev.rico.internal.projection.base.WithMultiSelection;
 import dev.rico.remoting.ObservableList;
 import dev.rico.remoting.RemotingBean;
-import dev.rico.remoting.Property;
 
 @RemotingBean
 public interface ListBasedFormField<T> extends FormField<T>, WithMultiSelection<T> {
 
     ObservableList<T> getItems();
-
-    Property<Boolean> containsNullValueProperty();
-
-    default boolean containsNullValue() {
-        return containsNullValueProperty().get();
-    }
-
-    default void setContainsNullValue(boolean value) {
-        containsNullValueProperty().set(value);
-    }
 
 }

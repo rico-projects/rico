@@ -16,17 +16,18 @@
  */
 package dev.rico.internal.client.projection.projection;
 
-import dev.rico.client.remoting.ControllerProxy;
 import dev.rico.internal.client.projection.form.SimpleForm;
 import dev.rico.internal.projection.form.Form;
 import dev.rico.internal.projection.metadata.MetadataUtilities;
 import dev.rico.internal.projection.view.ViewMetadata;
+import dev.rico.client.remoting.ClientContext;
+import dev.rico.client.remoting.ControllerProxy;
 import javafx.scene.Parent;
 
 public class FormFactory implements ProjectionFactory<Form> {
 
     @Override
-    public Parent createProjection(Projector projector, ControllerProxy controllerProxy, Form projectable) {
+    public Parent createProjection(Projector projector, ClientContext clientContext, ControllerProxy controllerProxy, Form projectable) {
         SimpleForm simpleForm = new SimpleForm(controllerProxy, projectable, projector);
         MetadataUtilities.addListenerToMetadata(projectable, () -> {
             updateByMetadata(simpleForm, projectable);
