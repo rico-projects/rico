@@ -26,7 +26,7 @@ public enum RequestMethod {
 
     private final String rawName;
 
-    RequestMethod(String rawName) {
+    RequestMethod(final String rawName) {
         this.rawName = rawName;
     }
 

@@ -20,7 +20,7 @@ import java.io.IOException;
 
 public class HttpException extends IOException {
 
-    public HttpException(String message) {
+    public HttpException(final String message) {
         super(message);
     }
 

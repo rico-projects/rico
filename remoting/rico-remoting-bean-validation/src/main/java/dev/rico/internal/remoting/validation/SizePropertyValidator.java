@@ -34,13 +34,13 @@ public class SizePropertyValidator extends AbstractPropertyValidator<Size, Strin
     }
 
     @Override
-    public void initialize(Size constraintAnnotation) {
+    public void initialize(final Size constraintAnnotation) {
         this.minSizeValue = constraintAnnotation.min();
         this.maxSizeValue = constraintAnnotation.max();
     }
 
     @Override
-    protected boolean checkValid(String value, ConstraintValidatorContext context) {
+    protected boolean checkValid(final String value, final ConstraintValidatorContext context) {
         return (value != null && value.length() >= minSizeValue && value.length() <= maxSizeValue);
     }
 }

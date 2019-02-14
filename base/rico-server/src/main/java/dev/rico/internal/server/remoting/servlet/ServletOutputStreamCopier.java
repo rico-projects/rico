@@ -35,7 +35,7 @@ public class ServletOutputStreamCopier extends ServletOutputStream {
     }
 
     @Override
-    public void write(int b) throws IOException {
+    public void write(final int b) throws IOException {
         outputStream.write(b);
         copy.write(b);
     }

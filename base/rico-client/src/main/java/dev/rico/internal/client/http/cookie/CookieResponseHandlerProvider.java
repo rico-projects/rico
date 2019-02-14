@@ -28,7 +28,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 public class CookieResponseHandlerProvider implements ResponseHandlerProvider {
 
     @Override
-    public HttpURLConnectionHandler getHandler(Configuration configuration) {
+    public HttpURLConnectionHandler getHandler(final Configuration configuration) {
         return new CookieResponseHandler(Client.getService(HttpClientCookieHandler.class));
     }
 }

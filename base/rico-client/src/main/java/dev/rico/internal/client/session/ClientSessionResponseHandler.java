@@ -42,7 +42,7 @@ public class ClientSessionResponseHandler implements HttpURLConnectionHandler {
     @Override
     public void handle(final HttpURLConnection response) {
         Assert.requireNonNull(response, "response");
-        String clientIdInHeader = response.getHeaderField(RicoConstants.CLIENT_ID_HTTP_HEADER_NAME);
+        final String clientIdInHeader = response.getHeaderField(RicoConstants.CLIENT_ID_HTTP_HEADER_NAME);
         try {
             clientSessionStore.setClientIdentifierForUrl(response.getURL().toURI(), clientIdInHeader);
         } catch (URISyntaxException e) {

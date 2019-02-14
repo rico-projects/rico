@@ -31,15 +31,15 @@ public class ModelInjectionException extends RuntimeException {
     public ModelInjectionException() {
     }
 
-    public ModelInjectionException(String message) {
+    public ModelInjectionException(final String message) {
         super(message);
     }
 
-    public ModelInjectionException(String message, Throwable cause) {
+    public ModelInjectionException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
-    public ModelInjectionException(Throwable cause) {
+    public ModelInjectionException(final Throwable cause) {
         super(cause);
     }
 }

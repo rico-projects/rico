@@ -52,7 +52,7 @@ public class ModelStoreConfig {
         return pmCapacity;
     }
 
-    public void setPmCapacity(int pmCapacity) {
+    public void setPmCapacity(final int pmCapacity) {
         ensurePowerOfTwo("pmCapacity", pmCapacity);
         this.pmCapacity = pmCapacity;
     }
@@ -61,7 +61,7 @@ public class ModelStoreConfig {
         return typeCapacity;
     }
 
-    public void setTypeCapacity(int typeCapacity) {
+    public void setTypeCapacity(final int typeCapacity) {
         ensurePowerOfTwo("typeCapacity", typeCapacity);
         this.typeCapacity = typeCapacity;
     }
@@ -70,7 +70,7 @@ public class ModelStoreConfig {
         return attributeCapacity;
     }
 
-    public void setAttributeCapacity(int attributeCapacity) {
+    public void setAttributeCapacity(final int attributeCapacity) {
         ensurePowerOfTwo("attributeCapacity", attributeCapacity);
         this.attributeCapacity = attributeCapacity;
     }
@@ -79,13 +79,13 @@ public class ModelStoreConfig {
         return qualifierCapacity;
     }
 
-    public void setQualifierCapacity(int qualifierCapacity) {
+    public void setQualifierCapacity(final int qualifierCapacity) {
         ensurePowerOfTwo("qualifierCapacity", qualifierCapacity);
         this.qualifierCapacity = qualifierCapacity;
     }
 
     // all the capacities will be used to initialize HashMaps so they should be powers of two
-    private void ensurePowerOfTwo(String parameter, int number) {
+    private void ensurePowerOfTwo(final String parameter, final int number) {
         if (Integer.bitCount(number) > 1) {
             LOG.warn("Parameter {} should be power of two but was {}", parameter, number);
         }

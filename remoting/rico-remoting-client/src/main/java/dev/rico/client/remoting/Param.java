@@ -38,7 +38,7 @@ public class Param {
      * @param name name of the param
      * @param value value of the param
      */
-    public Param(String name, Object value) {
+    public Param(final String name, final Object value) {
         this.name = Assert.requireNonBlank(name, "name");
         this.value = value;
     }
@@ -64,7 +64,7 @@ public class Param {
         if (this == o) return true;
         if (!(o instanceof Param)) return false;
 
-        Param param = (Param) o;
+        final Param param = (Param) o;
 
         if (!name.equals(param.name)) return false;
         if (value != null ? !value.equals(param.value) : param.value != null) return false;

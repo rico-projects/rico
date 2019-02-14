@@ -27,7 +27,7 @@ import static org.apiguardian.api.API.Status.MAINTAINED;
 @API(since = "0.x", status = MAINTAINED)
 public interface JavaFXBinder<S> {
 
-    default Binding to(Property<? extends S> remotingProperty) {
+    default Binding to(final Property<? extends S> remotingProperty) {
         Assert.requireNonNull(remotingProperty, "remotingProperty");
         return to(remotingProperty, n -> n);
     }

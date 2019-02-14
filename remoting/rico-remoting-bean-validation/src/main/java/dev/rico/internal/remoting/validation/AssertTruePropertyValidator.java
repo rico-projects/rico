@@ -37,7 +37,7 @@ public final class AssertTruePropertyValidator extends AbstractPropertyValidator
     }
 
     @Override
-    protected boolean checkValid(Boolean property, ConstraintValidatorContext context) {
+    protected boolean checkValid(final Boolean property, final ConstraintValidatorContext context) {
         return property;
     }
 

@@ -26,15 +26,15 @@ import static org.apiguardian.api.API.Status.MAINTAINED;
 @API(since = "0.x", status = MAINTAINED)
 public interface NumericJavaFXBidirectionaBinder<S extends Number> extends JavaFXBidirectionalBinder<Number> {
 
-    default Binding bidirectionalToNumeric(Property<S> remotingProperty) {
+    default Binding bidirectionalToNumeric(final Property<S> remotingProperty) {
         return bidirectionalTo(remotingProperty, new BidirectionalConverter<S, Number>() {
             @Override
-            public S convertBack(Number value) {
+            public S convertBack(final Number value) {
                 return convertNumber(value);
             }
 
             @Override
-            public Number convert(S value) {
+            public Number convert(final S value) {
                 return value;
             }
         });
@@ -42,5 +42,5 @@ public interface NumericJavaFXBidirectionaBinder<S extends Number> extends JavaF
 
     S convertNumber(Number value);
 
-    <T> Binding bidirectionalToNumeric(final Property<T> property, BidirectionalConverter<T, S> converter);
+    <T> Binding bidirectionalToNumeric(final Property<T> property, final BidirectionalConverter<T, S> converter);
 }

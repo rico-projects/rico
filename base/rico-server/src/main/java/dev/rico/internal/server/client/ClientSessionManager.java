@@ -81,7 +81,7 @@ public class ClientSessionManager {
         Assert.requireNonNull(lock, "lock");
         lock.lock();
         try {
-            Map<String, ClientSession> map = getOrCreateClientSessionMapInHttpSession(httpSession);
+            final Map<String, ClientSession> map = getOrCreateClientSessionMapInHttpSession(httpSession);
             for(ClientSession session : map.values()) {
                 lifecycleHandler.onSessionDestroyed(session);
             }

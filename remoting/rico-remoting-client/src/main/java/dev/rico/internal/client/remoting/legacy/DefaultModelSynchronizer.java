@@ -64,7 +64,7 @@ public class DefaultModelSynchronizer implements ModelSynchronizer {
     }
 
     private void send(final Command command) {
-        AbstractClientConnector clientConnector = connectionProvider.get();
+        final AbstractClientConnector clientConnector = connectionProvider.get();
         if(clientConnector == null) {
             throw new IllegalStateException("No connection defined!");
         }

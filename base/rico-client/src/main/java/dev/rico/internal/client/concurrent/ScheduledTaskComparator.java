@@ -20,8 +20,6 @@ import java.util.Comparator;
 
 public class ScheduledTaskComparator implements Comparator<ScheduledTask> {
 
-
-
     @Override
     public int compare(final ScheduledTask o1, final ScheduledTask o2) {
         return 0;
