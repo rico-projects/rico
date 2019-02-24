@@ -59,7 +59,7 @@ public final class ClientSessionLifecycleHandlerImpl implements ClientSessionLif
 
     @Override
     public void onSessionCreated(final ClientSession session) {
-        for (Consumer<ClientSession> listener : onCreateCallbacks) {
+        for (final Consumer<ClientSession> listener : onCreateCallbacks) {
             try {
                 listener.accept(session);
             } catch (Exception e) {
@@ -70,7 +70,7 @@ public final class ClientSessionLifecycleHandlerImpl implements ClientSessionLif
 
     @Override
     public void onSessionDestroyed(final ClientSession session) {
-        for (Consumer<ClientSession> listener : onDestroyCallbacks) {
+        for (final Consumer<ClientSession> listener : onDestroyCallbacks) {
             try {
                 listener.accept(session);
             } catch (Exception e) {

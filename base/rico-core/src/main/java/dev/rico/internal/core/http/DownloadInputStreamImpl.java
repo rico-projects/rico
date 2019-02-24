@@ -133,8 +133,8 @@ public class DownloadInputStreamImpl extends DownloadInputStream {
         updateExecutor.execute(() -> downloadStartListeners.forEach(l -> l.accept(dataSize)));
     }
 
-    private synchronized void update(int len) {
-        long currentSize = downloaded.addAndGet(len);
+    private synchronized void update(final int len) {
+        final long currentSize = downloaded.addAndGet(len);
         if (lastUpdateSize.get() + updateChunkSize <= currentSize) {
             LOG.trace("Downloaded {} bytes of {}", currentSize, dataSize);
             updateExecutor.execute(() -> {

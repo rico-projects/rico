@@ -27,7 +27,7 @@ import static org.apiguardian.api.API.Status.DEPRECATED;
 
 @Deprecated
 @API(since = "0.x", status = DEPRECATED)
-public class InterruptLongPollCommandEncoder extends AbstractCommandTranscoder<InterruptLongPollCommand> {
+public class InterruptLongPollCommandEncoder implements CommandTranscoder<InterruptLongPollCommand> {
 
     @Override
     public JsonObject encode(final InterruptLongPollCommand command) {

@@ -17,7 +17,6 @@
 package dev.rico.internal.remoting.codec;
 
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.remoting.codec.encoders.AbstractCommandTranscoder;
 import dev.rico.internal.remoting.codec.encoders.AttributeMetadataChangedCommandEncoder;
 import dev.rico.internal.remoting.codec.encoders.CallActionCommandEncoder;
 import dev.rico.internal.remoting.codec.encoders.ChangeAttributeMetadataCommandEncoder;
@@ -85,7 +84,7 @@ public final class OptimizedJsonCodec implements Codec {
         addTranscoder(new CallActionCommandEncoder(), CALL_ACTION_COMMAND_ID);
     }
 
-    private <C extends Command> void addTranscoder(final AbstractCommandTranscoder<C> transcoder, final String commandId) {
+    private <C extends Command> void addTranscoder(final CommandTranscoder<C> transcoder, final String commandId) {
         Assert.requireNonNull(transcoder, "transcoder");
         Assert.requireNonNull(commandId, "commandId");
 

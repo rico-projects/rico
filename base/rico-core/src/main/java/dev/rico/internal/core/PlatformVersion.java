@@ -75,7 +75,7 @@ public class PlatformVersion {
         Assert.requireNonNull(classLoader, "classLoader");
         try (final InputStream inputStream = classLoader.getResourceAsStream(DEFAULT_LOCATION)) {
             if (inputStream != null) {
-                Properties properties = new Properties();
+                final Properties properties = new Properties();
                 properties.load(inputStream);
                 return properties;
             }

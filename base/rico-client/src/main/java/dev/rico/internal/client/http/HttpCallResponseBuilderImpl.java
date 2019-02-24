@@ -175,7 +175,7 @@ public class HttpCallResponseBuilderImpl implements HttpCallResponseBuilder {
         }
 
         try {
-            int responseCode = connection.readResponseCode();
+            final int responseCode = connection.readResponseCode();
             responseHandlers.forEach(h -> h.handle(connection.getConnection()));
             final List<HttpHeader> headers = connection.getResponseHeaders();
             return new HttpResponseImpl<>(headers, responseCode, connection.getContentStream(), connection.getContentSize());

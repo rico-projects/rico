@@ -53,11 +53,6 @@ public class BigDecimalConverterFactory extends AbstractConverterFactory {
     };
 
     @Override
-    public boolean supportsType(final Class<?> cls) {
-        return BigDecimal.class.equals(cls);
-    }
-
-    @Override
     public List<Class> getSupportedTypes() {
         return Collections.singletonList(BigDecimal.class);
     }

@@ -64,6 +64,7 @@ import org.apiguardian.api.API;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -188,7 +189,7 @@ public class ServerRemotingContext {
                 registerCommand(registry, DestroyContextCommand.class, (c) -> onDestroyContext());
                 registerCommand(registry, CreateControllerCommand.class, (createControllerCommand) -> {
                     Assert.requireNonNull(createControllerCommand, "createControllerCommand");
-                    onCreateController(createControllerCommand.getControllerName(), createControllerCommand.getParentControllerId());
+                    onCreateController(createControllerCommand.getControllerName(), createControllerCommand.getParentControllerId(), createControllerCommand.getParameters());
                 });
                 registerCommand(registry, DestroyControllerCommand.class, (destroyControllerCommand) -> {
                     Assert.requireNonNull(destroyControllerCommand, "destroyControllerCommand");
@@ -218,15 +219,15 @@ public class ServerRemotingContext {
         onDestroyCallback.accept(this);
     }
 
-    private void onCreateController(final String controllerName, final String parentControllerId) {
+    private void onCreateController(final String controllerName, final String parentControllerId, final Map<String, Serializable> parameters) {
         Assert.requireNonBlank(controllerName, "controllerName");
 
         if (platformBeanRepository == null) {
             throw new IllegalStateException("An action was called before the init-command was sent.");
         }
-        final InternalAttributesBean bean = platformBeanRepository.getInternalAttributesBean();
-        final String controllerId = controllerHandler.createController(controllerName, parentControllerId);
+        final String controllerId = controllerHandler.createController(controllerName, parentControllerId, parameters);
 
+        final InternalAttributesBean bean = platformBeanRepository.getInternalAttributesBean();
         bean.setControllerId(controllerId);
         Object model = controllerHandler.getControllerModel(controllerId);
         if (model != null) {

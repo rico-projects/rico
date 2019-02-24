@@ -32,11 +32,6 @@ public class PeriodConverterFactory extends AbstractConverterFactory {
     private final static Converter CONVERTER = new PeriodConverter();
 
     @Override
-    public boolean supportsType(final Class<?> cls) {
-        return Period.class.isAssignableFrom(cls);
-    }
-
-    @Override
     public List<Class> getSupportedTypes() {
         return Collections.singletonList(Period.class);
     }

@@ -31,7 +31,7 @@ public final class ValueChangedCommand extends Command {
         super(CommandConstants.VALUE_CHANGED_COMMAND_ID);
     }
 
-    public ValueChangedCommand(String attributeId, Object newValue) {
+    public ValueChangedCommand(final String attributeId, final Object newValue) {
         this();
         this.attributeId = attributeId;
         this.newValue = newValue;
@@ -41,7 +41,7 @@ public final class ValueChangedCommand extends Command {
         return attributeId;
     }
 
-    public void setAttributeId(String attributeId) {
+    public void setAttributeId(final String attributeId) {
         this.attributeId = attributeId;
     }
 
@@ -49,7 +49,7 @@ public final class ValueChangedCommand extends Command {
         return newValue;
     }
 
-    public void setNewValue(Object newValue) {
+    public void setNewValue(final Object newValue) {
         this.newValue = newValue;
     }
 

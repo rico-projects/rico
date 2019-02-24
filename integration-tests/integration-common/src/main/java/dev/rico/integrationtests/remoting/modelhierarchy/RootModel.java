@@ -1,4 +1,4 @@
-package dev.rico.integrationtests.modelhierarchy;
+package dev.rico.integrationtests.remoting.modelhierarchy;
 
 import dev.rico.remoting.ObservableList;
 import dev.rico.remoting.Property;

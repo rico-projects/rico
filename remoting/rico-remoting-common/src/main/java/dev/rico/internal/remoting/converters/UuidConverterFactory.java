@@ -54,11 +54,6 @@ public class UuidConverterFactory extends AbstractConverterFactory {
     };
 
     @Override
-    public boolean supportsType(final Class<?> cls) {
-        return UUID.class.equals(cls);
-    }
-
-    @Override
     public List<Class> getSupportedTypes() {
         return Collections.singletonList(UUID.class);
     }

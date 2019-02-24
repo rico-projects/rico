@@ -42,12 +42,6 @@ public class IntegerConverterFactory extends AbstractConverterFactory {
         }
     };
 
-
-    @Override
-    public boolean supportsType(final Class<?> cls) {
-        return int.class.equals(cls) || Integer.class.equals(cls);
-    }
-
     @Override
     public List<Class> getSupportedTypes() {
         return Arrays.asList(int.class, Integer.class);

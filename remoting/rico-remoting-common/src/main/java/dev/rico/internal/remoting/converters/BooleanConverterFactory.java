@@ -43,11 +43,6 @@ public class BooleanConverterFactory extends AbstractConverterFactory {
     };
 
     @Override
-    public boolean supportsType(final Class<?> cls) {
-        return boolean.class.equals(cls) || Boolean.class.equals(cls);
-    }
-
-    @Override
     public List<Class> getSupportedTypes() {
         return Arrays.asList(boolean.class, Boolean.class);
     }

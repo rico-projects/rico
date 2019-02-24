@@ -35,28 +35,28 @@ public final class DecimalMinPropertyValidator extends AbstractNumberValidator<D
     private boolean inclusive;
 
     @Override
-    public void initialize(DecimalMin minValue) {
+    public void initialize(final DecimalMin minValue) {
         this.minValue = new BigDecimal(minValue.value() );
         this.inclusive = minValue.inclusive();
     }
 
     @Override
-    protected boolean checkValidLong(Long value) {
+    protected boolean checkValidLong(final Long value) {
         return checkValidBigDecimal(BigDecimal.valueOf(value) );
     }
 
     @Override
-    protected boolean checkValidCharSequence(CharSequence value) {
+    protected boolean checkValidCharSequence(final CharSequence value) {
         return checkValidBigDecimal(new BigDecimal(value.toString()) );
     }
 
     @Override
-    protected boolean checkValidBigInteger(BigInteger value) {
+    protected boolean checkValidBigInteger(final BigInteger value) {
         return checkValidBigDecimal(new BigDecimal(value) );
     }
 
     @Override
-    protected boolean checkValidBigDecimal(BigDecimal value) {
+    protected boolean checkValidBigDecimal(final BigDecimal value) {
         return inclusive ? value.compareTo(minValue) != -1 : value.compareTo(minValue) == 1;
     }
 }

@@ -16,30 +16,36 @@
  */
 package dev.rico.internal.server.remoting.test;
 
-import java.util.Map;
-
-import dev.rico.internal.core.Assert;
 import dev.rico.client.remoting.ControllerProxy;
 import dev.rico.client.remoting.Param;
+import dev.rico.internal.core.Assert;
 import dev.rico.server.remoting.test.CommunicationMonitor;
 import dev.rico.server.remoting.test.ControllerTestException;
 import dev.rico.server.remoting.test.ControllerUnderTest;
 import org.apiguardian.api.API;
+
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.Map;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
 public class ClientTestFactory {
 
-    public static <T> ControllerUnderTest<T> createController(final TestClientContext clientContext, final String controllerName) {
+    public static <T> ControllerUnderTest<T> createController(final TestClientContext clientContext, final String controllerName, final Map<String, Serializable> parameters) {
         Assert.requireNonNull(clientContext, "clientContext");
         Assert.requireNonBlank(controllerName, "controllerName");
         try {
-            final ControllerProxy<T> proxy = (ControllerProxy<T>) clientContext.createController(controllerName).get();
+            final ControllerProxy<T> proxy = (ControllerProxy<T>) clientContext.createController(controllerName, parameters).get();
             return new ControllerUnderTestWrapper<>(clientContext, proxy);
         } catch (Exception e) {
             throw new ControllerTestException("Can't create controller proxy", e);
         }
+    }
+
+    public static <T> ControllerUnderTest<T> createController(final TestClientContext clientContext, final String controllerName) {
+        return createController(clientContext, controllerName, Collections.emptyMap());
     }
 
     static class ControllerUnderTestWrapper<T> implements ControllerUnderTest<T> {

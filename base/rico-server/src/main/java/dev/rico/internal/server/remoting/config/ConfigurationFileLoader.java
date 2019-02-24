@@ -136,7 +136,7 @@ public class ConfigurationFileLoader {
                     return readConfig(inputStream);
                 }
             }
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new RuntimeException("Can not create configuration!", e);
         }
     }

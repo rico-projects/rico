@@ -27,6 +27,8 @@ import dev.rico.internal.client.remoting.legacy.ClientModelStore;
 import dev.rico.internal.client.remoting.legacy.communication.AbstractClientConnector;
 import org.apiguardian.api.API;
 
+import java.io.Serializable;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
@@ -50,11 +52,11 @@ public class ControllerProxyFactory {
         this.clientConnector = Assert.requireNonNull(clientConnector, "clientConnector");
     }
 
-    public <T> CompletableFuture<ControllerProxy<T>> create(String name) {
-       return create(name, null);
+    public <T> CompletableFuture<ControllerProxy<T>> create(final String name, final Map<String, Serializable> parameters) {
+       return create(name, null, parameters);
     }
 
-    public <T> CompletableFuture<ControllerProxy<T>> create(String name, String parentControllerId) {
+    public <T> CompletableFuture<ControllerProxy<T>> create(final String name, final String parentControllerId, final Map<String, Serializable> parameters) {
         Assert.requireNonBlank(name, "name");
         final InternalAttributesBean bean = platformBeanRepository.getInternalAttributesBean();
 
@@ -63,6 +65,7 @@ public class ControllerProxyFactory {
         if(parentControllerId != null) {
             createControllerCommand.setParentControllerId(parentControllerId);
         }
+        createControllerCommand.setParameters(parameters);
 
         return commandHandler.invokeCommand(createControllerCommand).thenApply(new Function<Void, ControllerProxy<T>>() {
             @Override

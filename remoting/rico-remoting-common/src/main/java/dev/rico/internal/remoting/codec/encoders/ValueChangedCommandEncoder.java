@@ -17,6 +17,7 @@
 package dev.rico.internal.remoting.codec.encoders;
 
 import dev.rico.internal.core.Assert;
+import dev.rico.internal.remoting.codec.JsonUtils;
 import dev.rico.internal.remoting.legacy.communication.ValueChangedCommand;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
@@ -29,7 +30,7 @@ import static dev.rico.internal.remoting.legacy.communication.CommandConstants.V
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
-public class ValueChangedCommandEncoder extends AbstractCommandTranscoder<ValueChangedCommand> {
+public class ValueChangedCommandEncoder implements CommandTranscoder<ValueChangedCommand> {
 
     @Override
     public JsonObject encode(final ValueChangedCommand command) {
@@ -37,7 +38,7 @@ public class ValueChangedCommandEncoder extends AbstractCommandTranscoder<ValueC
         final JsonObject jsonCommand = new JsonObject();
         jsonCommand.addProperty(ATTRIBUTE_ID, command.getAttributeId());
         if (command.getNewValue() != null) {
-            jsonCommand.add(VALUE, ValueEncoder.encodeValue(command.getNewValue()));
+            jsonCommand.add(VALUE, JsonUtils.encodeValue(command.getNewValue()));
         }
         jsonCommand.addProperty(ID, VALUE_CHANGED_COMMAND_ID);
         return jsonCommand;
@@ -48,8 +49,8 @@ public class ValueChangedCommandEncoder extends AbstractCommandTranscoder<ValueC
         Assert.requireNonNull(jsonObject, "jsonObject");
         try {
             final ValueChangedCommand command = new ValueChangedCommand();
-            command.setNewValue(ValueEncoder.decodeValue(jsonObject.get(VALUE)));
-            command.setAttributeId(getStringElement(jsonObject, ATTRIBUTE_ID));
+            command.setNewValue(JsonUtils.decodeValue(jsonObject.get(VALUE)));
+            command.setAttributeId(JsonUtils.getStringElement(jsonObject, ATTRIBUTE_ID));
             return command;
         } catch (IllegalStateException | ClassCastException | NullPointerException ex) {
             throw new JsonParseException("Illegal JSON detected", ex);

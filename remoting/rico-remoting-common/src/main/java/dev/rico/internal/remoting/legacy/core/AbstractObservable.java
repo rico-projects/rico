@@ -34,24 +34,24 @@ public class AbstractObservable implements Observable {
     }
 
     @Override
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
+    public void addPropertyChangeListener(final PropertyChangeListener listener) {
         if (listener == null || containsListener(listener, getPropertyChangeListeners())) return;
         pcs.addPropertyChangeListener(listener);
     }
 
     @Override
-    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+    public void addPropertyChangeListener(final String propertyName, final PropertyChangeListener listener) {
         if (listener == null || containsListener(listener, getPropertyChangeListeners(propertyName))) return;
         pcs.addPropertyChangeListener(propertyName, listener);
     }
 
     @Override
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
+    public void removePropertyChangeListener(final PropertyChangeListener listener) {
         pcs.removePropertyChangeListener(listener);
     }
 
     @Override
-    public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+    public void removePropertyChangeListener(final String propertyName, final PropertyChangeListener listener) {
         pcs.removePropertyChangeListener(propertyName, listener);
     }
 
@@ -61,16 +61,16 @@ public class AbstractObservable implements Observable {
     }
 
     @Override
-    public PropertyChangeListener[] getPropertyChangeListeners(String propertyName) {
+    public PropertyChangeListener[] getPropertyChangeListeners(final String propertyName) {
         return pcs.getPropertyChangeListeners(propertyName);
     }
 
-    protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
+    protected void firePropertyChange(final String propertyName, final Object oldValue, final Object newValue) {
         if (oldValue == newValue) return;
         pcs.firePropertyChange(propertyName, oldValue, newValue);
     }
 
-    private boolean containsListener(PropertyChangeListener listener, PropertyChangeListener[] listeners) {
+    private boolean containsListener(final PropertyChangeListener listener, final PropertyChangeListener[] listeners) {
         for (PropertyChangeListener subject : listeners) {
             if (subject == listener) return true;
         }

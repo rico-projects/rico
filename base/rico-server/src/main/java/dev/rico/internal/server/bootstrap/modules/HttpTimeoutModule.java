@@ -53,7 +53,7 @@ public class HttpTimeoutModule extends AbstractBaseModule {
         final ServletContext servletContext = coreComponents.getInstance(ServletContext.class);
         final Configuration configuration = coreComponents.getConfiguration();
 
-        HttpSessionTimeoutListener sessionCleaner = new HttpSessionTimeoutListener(configuration);
+        final HttpSessionTimeoutListener sessionCleaner = new HttpSessionTimeoutListener(configuration);
         servletContext.addListener(sessionCleaner);
     }
 }
