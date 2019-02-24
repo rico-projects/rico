@@ -1,6 +1,8 @@
 package dev.rico.internal.core.http;
 
 import dev.rico.core.functional.Subscription;
+import dev.rico.core.http.DownloadInputStream;
+import dev.rico.core.http.HttpResponse;
 import dev.rico.internal.core.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,16 +11,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.DigestInputStream;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
-public class DownloadInputStream extends InputStream {
+public class DownloadInputStreamImpl extends DownloadInputStream {
 
-    private final static Logger LOG = LoggerFactory.getLogger(DownloadInputStream.class);
+    private final static Logger LOG = LoggerFactory.getLogger(DownloadInputStreamImpl.class);
 
     private final List<Consumer<Double>> downloadPercentageListeners;
 
@@ -40,15 +43,15 @@ public class DownloadInputStream extends InputStream {
 
     private final AtomicBoolean firstRead;
 
-    public DownloadInputStream(final InputStream inputStream, final long dataSize, final Executor updateExecutor) {
+    public DownloadInputStreamImpl(final InputStream inputStream, final long dataSize, final Executor updateExecutor) {
         this.updateExecutor = Assert.requireNonNull(updateExecutor, "updateExecutor");
         this.dataSize = dataSize;
         this.downloaded = new AtomicLong(0);
         this.lastUpdateSize = new AtomicLong(0);
         this.firstRead = new AtomicBoolean(true);
-        this.downloadPercentageListeners = new ArrayList<>();
-        this.downloadStartListeners = new ArrayList<>();
-        this.downloadDoneListeners = new ArrayList<>();
+        this.downloadPercentageListeners = new CopyOnWriteArrayList<>();
+        this.downloadStartListeners = new CopyOnWriteArrayList<>();
+        this.downloadDoneListeners = new CopyOnWriteArrayList<>();
         this.updateChunkSize = dataSize / 100;
         try {
             this.wrappedStream = ConnectionUtils.createMD5HashStream(inputStream);
@@ -57,12 +60,12 @@ public class DownloadInputStream extends InputStream {
         }
     }
 
-    public void readTillDone() throws IOException {
-        while (read() >= 0) {}
-    }
-
-    public String getHash() {
-        return ConnectionUtils.toHex(wrappedStream.getMessageDigest().digest());
+    public CompletableFuture<String> getHash() {
+        final CompletableFuture<String> future = new CompletableFuture<>();
+        addDownloadDoneListener(size -> {
+            future.complete(ConnectionUtils.toHex(wrappedStream.getMessageDigest().digest()));
+        });
+        return future;
     }
 
     @Override
@@ -80,7 +83,6 @@ public class DownloadInputStream extends InputStream {
         onDone();
     }
 
-    @Override
     public int read() throws IOException {
         if (firstRead.get()) {
             onStart();
@@ -142,5 +144,14 @@ public class DownloadInputStream extends InputStream {
                 downloadPercentageListeners.forEach(l -> l.accept(percentageDone));
             });
         }
+    }
+
+    public static DownloadInputStreamImpl map(final HttpResponse<InputStream> response, final Executor executor) {
+        return map(ConnectionUtils.getContentName(response), response.getContent(), response.getContentSize(), executor);
+    }
+
+    public static DownloadInputStreamImpl map(final String name, final InputStream inputStream, final long length, final Executor executor) {
+        final DownloadInputStreamImpl downloadInputStream = new DownloadInputStreamImpl(inputStream, length, executor);
+        return downloadInputStream;
     }
 }
