@@ -21,6 +21,12 @@ import dev.rico.internal.remoting.legacy.communication.Command;
 import dev.rico.internal.remoting.legacy.communication.CommandConstants;
 import org.apiguardian.api.API;
 
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
@@ -30,8 +36,11 @@ public final class CreateControllerCommand extends Command {
 
     private String controllerName;
 
+    private Map<String, Serializable> parameters;
+
     public CreateControllerCommand() {
         super(CommandConstants.CREATE_CONTROLLER_COMMAND_ID);
+        parameters = new HashMap<>();
     }
 
     public String getParentControllerId() {
@@ -49,5 +58,13 @@ public final class CreateControllerCommand extends Command {
     public void setControllerName(final String controllerName) {
         Assert.requireNonBlank(controllerName, "controllerName");
         this.controllerName = controllerName;
+    }
+
+    public Map<String, Serializable> getParameters() {
+        return Optional.ofNullable(parameters).orElse(Collections.emptyMap());
+    }
+
+    public void setParameters(final Map<String, Serializable> parameters) {
+        this.parameters = parameters;
     }
 }

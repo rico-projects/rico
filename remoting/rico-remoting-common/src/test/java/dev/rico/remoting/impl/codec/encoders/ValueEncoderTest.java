@@ -16,7 +16,7 @@
  */
 package dev.rico.remoting.impl.codec.encoders;
 
-import dev.rico.internal.remoting.codec.encoders.ValueEncoder;
+import dev.rico.internal.remoting.codec.JsonUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
@@ -35,7 +35,7 @@ public class ValueEncoderTest {
         Object value = "Hello Encoder";
 
         //when:
-        JsonElement encoded = ValueEncoder.encodeValue(value);
+        JsonElement encoded = JsonUtils.encodeValue(value);
 
         //then:
         Assert.assertNotNull(encoded);
@@ -49,7 +49,7 @@ public class ValueEncoderTest {
         Object value = true;
 
         //when:
-        JsonElement encoded = ValueEncoder.encodeValue(value);
+        JsonElement encoded = JsonUtils.encodeValue(value);
 
         //then:
         Assert.assertNotNull(encoded);
@@ -63,7 +63,7 @@ public class ValueEncoderTest {
         Object value = 42;
 
         //when:
-        JsonElement encoded = ValueEncoder.encodeValue(value);
+        JsonElement encoded = JsonUtils.encodeValue(value);
 
         //then:
         Assert.assertNotNull(encoded);
@@ -77,7 +77,7 @@ public class ValueEncoderTest {
         Object value = 42L;
 
         //when:
-        JsonElement encoded = ValueEncoder.encodeValue(value);
+        JsonElement encoded = JsonUtils.encodeValue(value);
 
         //then:
         Assert.assertNotNull(encoded);
@@ -91,7 +91,7 @@ public class ValueEncoderTest {
         Object value = 42.9d;
 
         //when:
-        JsonElement encoded = ValueEncoder.encodeValue(value);
+        JsonElement encoded = JsonUtils.encodeValue(value);
 
         //then:
         Assert.assertNotNull(encoded);
@@ -105,7 +105,7 @@ public class ValueEncoderTest {
         Object value = 42.9f;
 
         //when:
-        JsonElement encoded = ValueEncoder.encodeValue(value);
+        JsonElement encoded = JsonUtils.encodeValue(value);
 
         //then:
         Assert.assertNotNull(encoded);
@@ -119,7 +119,7 @@ public class ValueEncoderTest {
         Object value = null;
 
         //when:
-        JsonElement encoded = ValueEncoder.encodeValue(value);
+        JsonElement encoded = JsonUtils.encodeValue(value);
 
         //then:
         Assert.assertNotNull(encoded);
@@ -132,7 +132,7 @@ public class ValueEncoderTest {
         Object value = new Date();
 
         //when:
-        JsonElement encoded = ValueEncoder.encodeValue(value);
+        JsonElement encoded = JsonUtils.encodeValue(value);
 
         //then:
         Assert.fail();
@@ -144,7 +144,7 @@ public class ValueEncoderTest {
         JsonElement value = JsonNull.INSTANCE;
 
         //when:
-        Object decoded = ValueEncoder.decodeValue(value);
+        Object decoded = JsonUtils.decodeValue(value);
 
         //then:
         Assert.assertNull(decoded);
@@ -156,7 +156,7 @@ public class ValueEncoderTest {
         JsonElement value = new JsonPrimitive("Hello");
 
         //when:
-        Object decoded = ValueEncoder.decodeValue(value);
+        Object decoded = JsonUtils.decodeValue(value);
 
         //then:
         Assert.assertNotNull(decoded);
@@ -170,7 +170,7 @@ public class ValueEncoderTest {
         JsonElement value = new JsonPrimitive(true);
 
         //when:
-        Object decoded = ValueEncoder.decodeValue(value);
+        Object decoded = JsonUtils.decodeValue(value);
 
         //then:
         Assert.assertNotNull(decoded);
@@ -184,7 +184,7 @@ public class ValueEncoderTest {
         JsonElement value = new JsonPrimitive(42);
 
         //when:
-        Object decoded = ValueEncoder.decodeValue(value);
+        Object decoded = JsonUtils.decodeValue(value);
 
         //then:
         Assert.assertNotNull(decoded);
@@ -198,7 +198,7 @@ public class ValueEncoderTest {
         JsonElement value = new JsonPrimitive(42.2d);
 
         //when:
-        Object decoded = ValueEncoder.decodeValue(value);
+        Object decoded = JsonUtils.decodeValue(value);
 
         //then:
         Assert.assertNotNull(decoded);
@@ -212,7 +212,7 @@ public class ValueEncoderTest {
         JsonElement value = new JsonPrimitive(42.2f);
 
         //when:
-        Object decoded = ValueEncoder.decodeValue(value);
+        Object decoded = JsonUtils.decodeValue(value);
 
         //then:
         Assert.assertNotNull(decoded);
@@ -226,7 +226,7 @@ public class ValueEncoderTest {
         JsonElement value = new JsonPrimitive(42L);
 
         //when:
-        Object decoded = ValueEncoder.decodeValue(value);
+        Object decoded = JsonUtils.decodeValue(value);
 
         //then:
         Assert.assertNotNull(decoded);
@@ -240,7 +240,7 @@ public class ValueEncoderTest {
         JsonElement value = new JsonObject();
 
         //when:
-        Object decoded = ValueEncoder.decodeValue(value);
+        Object decoded = JsonUtils.decodeValue(value);
 
         //then:
         Assert.fail();

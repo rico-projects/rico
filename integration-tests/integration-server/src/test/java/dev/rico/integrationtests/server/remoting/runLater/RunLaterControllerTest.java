@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.integrationtests.server.runLater;
+package dev.rico.integrationtests.server.remoting.runLater;
 
 import dev.rico.integrationtests.remoting.runlater.RunLaterTestBean;
 import dev.rico.integrationtests.server.TestConfiguration;

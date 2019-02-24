@@ -8,16 +8,22 @@ import dev.rico.client.remoting.Param;
 import dev.rico.integrationtests.AbstractIntegrationTest;
 import dev.rico.integrationtests.IntegrationTestToolkit;
 
+import java.io.Serializable;
 import java.net.URI;
 import java.time.Duration;
+import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class AbstractRemotingIntegrationTest extends AbstractIntegrationTest {
 
     protected <T> ControllerProxy<T> createController(final ClientContext clientContext, final String controllerName) {
+        return createController(clientContext, controllerName, Collections.emptyMap());
+    }
+
+    protected <T> ControllerProxy<T> createController(final ClientContext clientContext, final String controllerName, final Map<String, Serializable> parameters) {
         try {
-            return (ControllerProxy<T>) clientContext.createController(controllerName).get(getTimeoutInMinutes(), TimeUnit.MINUTES);
+            return (ControllerProxy<T>) clientContext.createController(controllerName, parameters).get(getTimeoutInMinutes(), TimeUnit.MINUTES);
         } catch (Exception e) {
             throw new RuntimeException("Can not create controller " + controllerName, e);
         }

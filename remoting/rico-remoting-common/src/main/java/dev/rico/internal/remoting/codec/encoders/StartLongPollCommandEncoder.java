@@ -26,7 +26,7 @@ import static dev.rico.internal.remoting.legacy.communication.CommandConstants.S
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
-public class StartLongPollCommandEncoder extends AbstractCommandTranscoder<StartLongPollCommand> {
+public class StartLongPollCommandEncoder implements CommandTranscoder<StartLongPollCommand> {
 
     @Override
     public JsonObject encode(final StartLongPollCommand command) {

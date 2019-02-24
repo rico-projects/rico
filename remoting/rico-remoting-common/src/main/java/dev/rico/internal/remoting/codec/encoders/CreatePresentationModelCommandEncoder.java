@@ -17,6 +17,7 @@
 package dev.rico.internal.remoting.codec.encoders;
 
 import dev.rico.internal.core.Assert;
+import dev.rico.internal.remoting.codec.JsonUtils;
 import dev.rico.internal.remoting.legacy.communication.CreatePresentationModelCommand;
 import dev.rico.internal.remoting.legacy.core.Attribute;
 import com.google.gson.JsonArray;
@@ -36,12 +37,12 @@ import static dev.rico.internal.remoting.legacy.communication.CommandConstants.I
 import static dev.rico.internal.remoting.legacy.communication.CommandConstants.NAME;
 import static dev.rico.internal.remoting.legacy.communication.CommandConstants.PM_ATTRIBUTES;
 import static dev.rico.internal.remoting.legacy.communication.CommandConstants.PM_ID;
-import static dev.rico.internal.remoting.legacy.communication.CommandConstants.PM_TYPE;
+import static dev.rico.internal.remoting.legacy.communication.CommandConstants.TYPE;
 import static dev.rico.internal.remoting.legacy.communication.CommandConstants.VALUE;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
-public class CreatePresentationModelCommandEncoder extends AbstractCommandTranscoder<CreatePresentationModelCommand> {
+public class CreatePresentationModelCommandEncoder implements CommandTranscoder<CreatePresentationModelCommand> {
 
     @Override
     public JsonObject encode(final CreatePresentationModelCommand command) {
@@ -49,14 +50,14 @@ public class CreatePresentationModelCommandEncoder extends AbstractCommandTransc
 
         final JsonObject jsonCommand = new JsonObject();
         jsonCommand.addProperty(PM_ID, command.getPmId());
-        jsonCommand.addProperty(PM_TYPE, command.getPmType());
+        jsonCommand.addProperty(TYPE, command.getPmType());
 
         final JsonArray jsonArray = new JsonArray();
         for (final Map<String, Object> attribute : command.getAttributes()) {
             final JsonObject jsonAttribute = new JsonObject();
             jsonAttribute.addProperty(NAME, String.valueOf(attribute.get(Attribute.PROPERTY_NAME)));
             jsonAttribute.addProperty(ATTRIBUTE_ID, String.valueOf(attribute.get(Attribute.ID)));
-            jsonAttribute.add(VALUE, ValueEncoder.encodeValue(attribute.get(Attribute.VALUE_NAME)));
+            jsonAttribute.add(VALUE, JsonUtils.encodeValue(attribute.get(Attribute.VALUE_NAME)));
             jsonArray.add(jsonAttribute);
         }
         jsonCommand.add(PM_ATTRIBUTES, jsonArray);
@@ -72,8 +73,8 @@ public class CreatePresentationModelCommandEncoder extends AbstractCommandTransc
         try {
             final CreatePresentationModelCommand command = new CreatePresentationModelCommand();
 
-            command.setPmId(getStringElement(jsonObject, PM_ID));
-            command.setPmType(getStringElement(jsonObject, PM_TYPE));
+            command.setPmId(JsonUtils.getStringElement(jsonObject, PM_ID));
+            command.setPmType(JsonUtils.getStringElement(jsonObject, TYPE));
             command.setClientSideOnly(false);
 
             final JsonArray jsonArray = jsonObject.getAsJsonArray(PM_ATTRIBUTES);
@@ -81,9 +82,9 @@ public class CreatePresentationModelCommandEncoder extends AbstractCommandTransc
             for (final JsonElement jsonElement : jsonArray) {
                 final JsonObject attribute = jsonElement.getAsJsonObject();
                 final HashMap<String, Object> map = new HashMap<>();
-                map.put(Attribute.PROPERTY_NAME, getStringElement(attribute, NAME));
-                map.put(Attribute.ID, getStringElement(attribute, ATTRIBUTE_ID));
-                final Object value = attribute.has(VALUE) ? ValueEncoder.decodeValue(attribute.get(VALUE)) : null;
+                map.put(Attribute.PROPERTY_NAME, JsonUtils.getStringElement(attribute, NAME));
+                map.put(Attribute.ID, JsonUtils.getStringElement(attribute, ATTRIBUTE_ID));
+                final Object value = attribute.has(VALUE) ? JsonUtils.decodeValue(attribute.get(VALUE)) : null;
                 map.put(Attribute.VALUE_NAME, value);
                 attributes.add(map);
             }

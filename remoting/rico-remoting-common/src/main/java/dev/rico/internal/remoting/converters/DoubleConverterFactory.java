@@ -42,12 +42,6 @@ public class DoubleConverterFactory extends AbstractConverterFactory {
         }
     };
 
-
-    @Override
-    public boolean supportsType(final Class<?> cls) {
-        return double.class.equals(cls) || Double.class.equals(cls);
-    }
-
     @Override
     public List<Class> getSupportedTypes() {
         return Arrays.asList(double.class, Double.class);

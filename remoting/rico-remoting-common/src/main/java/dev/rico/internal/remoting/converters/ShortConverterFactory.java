@@ -43,11 +43,6 @@ public class ShortConverterFactory extends AbstractConverterFactory {
     };
 
     @Override
-    public boolean supportsType(final Class<?> cls) {
-        return short.class.equals(cls) || Short.class.equals(cls);
-    }
-
-    @Override
     public List<Class> getSupportedTypes() {
         return Arrays.asList(short.class, Short.class);
     }

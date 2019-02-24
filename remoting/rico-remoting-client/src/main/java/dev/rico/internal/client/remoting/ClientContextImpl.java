@@ -44,7 +44,9 @@ import dev.rico.client.remoting.ControllerInitalizationException;
 import dev.rico.client.remoting.ControllerProxy;
 import org.apiguardian.api.API;
 
+import java.io.Serializable;
 import java.net.URI;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -105,14 +107,14 @@ public class ClientContextImpl implements ClientContext {
     }
 
     @Override
-    public synchronized <T> CompletableFuture<ControllerProxy<T>> createController(final String name) {
+    public <T> CompletableFuture<ControllerProxy<T>> createController(final String name, final Map<String, Serializable> parameters) {
         Assert.requireNonBlank(name, "name");
 
         if (controllerProxyFactory == null) {
             throw new IllegalStateException("connect was not called!");
         }
 
-        return controllerProxyFactory.<T>create(name).handle((ControllerProxy<T> controllerProxy, Throwable throwable) -> {
+        return controllerProxyFactory.<T>create(name, parameters).handle((ControllerProxy<T> controllerProxy, Throwable throwable) -> {
             if (throwable != null) {
                 throw new ControllerInitalizationException("Error while creating controller of type " + name, throwable);
             }

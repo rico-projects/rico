@@ -16,7 +16,6 @@
  */
 package dev.rico.integrationtests.remoting;
 
-import dev.rico.integrationtests.AbstractIntegrationTest;
 import dev.rico.integrationtests.remoting.action.ActionTestBean;
 import dev.rico.client.remoting.ClientContext;
 import dev.rico.client.remoting.ControllerProxy;

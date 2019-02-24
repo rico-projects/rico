@@ -32,6 +32,7 @@ import org.apiguardian.api.API;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -141,10 +142,10 @@ public class ControllerProxyImpl<T> implements ControllerProxy<T> {
     }
 
     @Override
-    public <C> CompletableFuture<ControllerProxy<C>> createController(final String name) {
+    public <C> CompletableFuture<ControllerProxy<C>> createController(final String name, final Map<String, Serializable> parameters) {
         Assert.requireNonBlank(name, "name");
 
-        return controllerProxyFactory.<C>create(name, controllerId).handle((ControllerProxy<C> cControllerProxy, Throwable throwable) -> {
+        return controllerProxyFactory.<C>create(name, controllerId, parameters).handle((ControllerProxy<C> cControllerProxy, Throwable throwable) -> {
             if (throwable != null) {
                 throw new ControllerInitalizationException("Error while creating controller of type " + name, throwable);
             }

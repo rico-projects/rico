@@ -112,7 +112,9 @@ public class ClientImpl {
             return service;
         }
         final ServiceProvider<S> serviceProvider = providers.get(serviceClass);
-        Assert.requireNonNull(serviceProvider, "serviceProvider");
+        if(serviceProvider == null) {
+            throw new IllegalStateException("Can ot find service provider for '" + serviceClass + "'");
+        }
         final S service = serviceProvider.getService(clientConfiguration);
         Assert.requireNonNull(service, "service");
         services.put(serviceClass, service);
