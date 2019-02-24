@@ -1,7 +1,8 @@
-package dev.rico.integrationtests;
+package dev.rico.integrationtests.remoting;
 
 import dev.rico.client.remoting.ClientContext;
 import dev.rico.client.remoting.ControllerProxy;
+import dev.rico.integrationtests.AbstractIntegrationTest;
 import dev.rico.integrationtests.modelhierarchy.RootModel;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -14,7 +15,7 @@ import static dev.rico.integrationtests.modelhierarchy.ModelHierarchyConstants.B
 import static dev.rico.integrationtests.modelhierarchy.ModelHierarchyConstants.CONTROLLER_NAME;
 import static dev.rico.integrationtests.modelhierarchy.ModelHierarchyConstants.SWITCH_CHILDREN_ACTION;
 
-public class ModelHierarchyControllerTest extends AbstractIntegrationTest {
+public class ModelHierarchyControllerTest extends AbstractRemotingIntegrationTest {
 
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER)
     public void testSetChildModels(final String containerType, final String endpoint) {
