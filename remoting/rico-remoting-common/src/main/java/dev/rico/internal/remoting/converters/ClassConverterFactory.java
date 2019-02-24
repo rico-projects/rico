@@ -32,11 +32,6 @@ public class ClassConverterFactory implements ConverterFactory {
     public void init(final BeanRepo beanRepository) {}
 
     @Override
-    public boolean supportsType(Class<?> cls) {
-        return cls.equals(Class.class);
-    }
-
-    @Override
     public List<Class> getSupportedTypes() {
         return Collections.singletonList(Class.class);
     }

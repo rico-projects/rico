@@ -63,12 +63,12 @@ public class Projector {
     public Parent create(final Object projectable, final ControllerProxy controllerProxy) {
         ProjectionFactory factory = projectionMapping.get(projectable.getClass());
         if(factory != null) {
-            return factory.createProjection(this, controllerProxy, projectable);
+            return factory.createProjection(this, clientContext, controllerProxy, projectable);
         }
         if(factory == null) {
             for(Class cls : projectionMapping.keySet()) {
                 if(cls.isAssignableFrom(projectable.getClass())) {
-                    return projectionMapping.get(cls).createProjection(this, controllerProxy, projectable);
+                    return projectionMapping.get(cls).createProjection(this, clientContext, controllerProxy, projectable);
                 }
             }
         }
@@ -106,7 +106,7 @@ public class Projector {
             if(e != null) {
                 //TODO
             }
-           return create((Projectable) c.getModel(), c);
+            return create((Projectable) c.getModel(), c);
         });
     }
 

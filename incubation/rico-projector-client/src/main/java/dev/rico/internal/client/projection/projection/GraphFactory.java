@@ -16,15 +16,16 @@
  */
 package dev.rico.internal.client.projection.projection;
 
-import dev.rico.client.remoting.ControllerProxy;
 import dev.rico.internal.client.projection.graph.GraphComponent;
 import dev.rico.internal.projection.graph.GraphDataBean;
+import dev.rico.client.remoting.ClientContext;
+import dev.rico.client.remoting.ControllerProxy;
 import javafx.scene.Parent;
 
 public class GraphFactory implements ProjectionFactory<GraphDataBean> {
 
     @Override
-    public Parent createProjection(Projector projector, ControllerProxy controllerProxy, GraphDataBean projectable) {
+    public Parent createProjection(Projector projector, ClientContext clientContext, ControllerProxy controllerProxy, GraphDataBean projectable) {
         return new GraphComponent(projectable);
     }
 }

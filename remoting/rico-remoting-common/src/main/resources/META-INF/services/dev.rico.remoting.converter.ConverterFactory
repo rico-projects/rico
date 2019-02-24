@@ -19,3 +19,4 @@ dev.rico.internal.remoting.converters.PeriodConverterFactory
 dev.rico.internal.remoting.converters.ZonedDateTimeConverterFactory
 dev.rico.internal.remoting.converters.LocalDateConverterFactory
 dev.rico.internal.remoting.converters.ClassConverterFactory
+dev.rico.internal.remoting.converters.CharacterConverterFactory

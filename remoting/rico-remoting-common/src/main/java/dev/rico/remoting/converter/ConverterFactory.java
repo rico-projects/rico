@@ -16,6 +16,7 @@
  */
 package dev.rico.remoting.converter;
 
+import dev.rico.internal.core.Assert;
 import dev.rico.remoting.RemotingBean;
 import org.apiguardian.api.API;
 
@@ -48,7 +49,10 @@ public interface ConverterFactory {
      * @param cls class of the custom data type that should be converted
      * @return true if this factory supports to convert the custom data type
      */
-    boolean supportsType(Class<?> cls);
+    default boolean supportsType(final Class<?> cls) {
+        Assert.requireNonNull(cls, "cls");
+        return Assert.requireNonNull(getSupportedTypes(), "supportedTypes").contains(cls);
+    }
 
     /**
      * This method will be called to get all supported types for conversion

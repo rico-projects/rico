@@ -20,14 +20,15 @@ import dev.rico.remoting.converter.Converter;
 import dev.rico.remoting.converter.ValueConverterException;
 import org.apiguardian.api.API;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
 
-import static dev.rico.internal.remoting.RemotingConstants.REMOTING_DATE_FORMAT_PATTERN;
 import static dev.rico.internal.core.RicoConstants.TIMEZONE_UTC;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
@@ -35,11 +36,6 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 public class LocalDateTimeConverterFactory extends AbstractConverterFactory {
 
     private final static Converter CONVERTER = new LocalDateTimeConverter();
-
-    @Override
-    public boolean supportsType(final Class<?> cls) {
-        return LocalDateTime.class.isAssignableFrom(cls);
-    }
 
     @Override
     public List<Class> getSupportedTypes() {

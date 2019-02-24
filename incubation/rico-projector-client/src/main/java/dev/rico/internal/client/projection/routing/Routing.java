@@ -16,89 +16,14 @@
  */
 package dev.rico.internal.client.projection.routing;
 
-import dev.rico.client.remoting.ControllerFactory;
-import dev.rico.client.remoting.ControllerProxy;
-import dev.rico.internal.client.projection.projection.Projector;
-import dev.rico.internal.client.projection.projection.ViewFactory;
-import dev.rico.internal.core.Assert;
-import dev.rico.internal.projection.base.View;
-import dev.rico.internal.projection.routing.Route;
-import dev.rico.internal.projection.routing.RoutingConstants;
 import javafx.scene.Parent;
-import javafx.scene.control.Label;
-import javafx.scene.layout.Pane;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.WeakHashMap;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 
 public class Routing {
 
-    private final Projector projector;
-
-    private final ViewFactory viewFactory;
-
-    private Map<Route, ControllerProxy> controllerMapping;
-
-    public Routing(final ViewFactory viewFactory, final Projector projector) {
-        this.projector = Assert.requireNonNull(projector, "projector");
-        this.viewFactory = Assert.requireNonNull(viewFactory, "viewFactory");
-        controllerMapping = new WeakHashMap<>();
-    }
-
-    public void addRoutingLayer(final Route route, final Pane viewWrapper, final ControllerFactory controllerFactory) {
-        Assert.requireNonNull(route, "route");
-        Assert.requireNonNull(viewWrapper, "viewWrapper");
-
-        final Consumer<Parent> handler = view -> {
-            viewWrapper.getChildren().clear();
-            viewWrapper.getChildren().add(view);
-        };
-        route.locationProperty().onChanged(e -> handleRouting(route, handler, controllerFactory));
-        if (route.getLocation() != null) {
-            handleRouting(route, handler, controllerFactory);
-        }
-    }
-
-    private void handleRouting(final Route route, final Consumer<Parent> handler, final ControllerFactory controllerFactory) {
-        Assert.requireNonNull(handler, "handler");
-        Assert.requireNonNull(route, "route");
-        Assert.requireNonNull(controllerFactory, "controllerFactory");
-
-        final String controllerName = route.getLocation();
-        Assert.requireNonNull(controllerName, "controllerName");
-
-        final Parent loadingScreen = createLoadingScreen(route);
-        handler.accept(loadingScreen);
-
-        final CompletableFuture<Void> destroyFuture = Optional.ofNullable(controllerMapping.get(route))
-                .map(p -> p.destroy())
-                .orElse(CompletableFuture.completedFuture(null));
-        destroyFuture.thenAccept((v) -> {
-            final Map<String, Object> parameters = new HashMap<>();
-            route.getParameters().stream().forEach(t -> parameters.put(t.getKey(), t.getValue()));
-            parameters.put(RoutingConstants.ANCHOR, route.getAnchor());
-            final CompletableFuture<ControllerProxy<View>> creation = controllerFactory.createController(controllerName, Collections.unmodifiableMap(parameters));
-            creation.thenApply(controllerProxy -> {
-                controllerMapping.put(route, controllerProxy);
-                return controllerProxy;
-            }).thenAccept(controllerProxy -> {
-                final Parent newView = viewFactory.createProjection(projector, controllerProxy, controllerProxy.getModel());
-                handler.accept(newView);
-            }).exceptionally(exception -> {
-                throw new RuntimeException("Error in Routing", exception);
-            });
-        }).exceptionally(exception -> {
-            throw new RuntimeException("Error in Routing", exception);
-        });
-    }
-
-    protected Parent createLoadingScreen(final Route route) {
-        return new Label("LOADING...");
+    public CompletableFuture<Void> addChild(String controllerName, Parent parent, Constraints constraints) {
+        return null;
     }
 
 }

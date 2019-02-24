@@ -2,18 +2,17 @@ package dev.rico.integrationtests.remoting;
 
 import dev.rico.client.remoting.ClientContext;
 import dev.rico.client.remoting.ControllerProxy;
-import dev.rico.integrationtests.AbstractIntegrationTest;
-import dev.rico.integrationtests.modelhierarchy.RootModel;
+import dev.rico.integrationtests.remoting.modelhierarchy.RootModel;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static dev.rico.integrationtests.modelhierarchy.ModelHierarchyConstants.ADD_COUNTER_LISTENER_ACTION;
-import static dev.rico.integrationtests.modelhierarchy.ModelHierarchyConstants.A_TO_RANDOM_ACTION;
-import static dev.rico.integrationtests.modelhierarchy.ModelHierarchyConstants.B_TO_RANDOM_ACTION;
-import static dev.rico.integrationtests.modelhierarchy.ModelHierarchyConstants.CONTROLLER_NAME;
-import static dev.rico.integrationtests.modelhierarchy.ModelHierarchyConstants.SWITCH_CHILDREN_ACTION;
+import static dev.rico.integrationtests.remoting.modelhierarchy.ModelHierarchyConstants.ADD_COUNTER_LISTENER_ACTION;
+import static dev.rico.integrationtests.remoting.modelhierarchy.ModelHierarchyConstants.A_TO_RANDOM_ACTION;
+import static dev.rico.integrationtests.remoting.modelhierarchy.ModelHierarchyConstants.B_TO_RANDOM_ACTION;
+import static dev.rico.integrationtests.remoting.modelhierarchy.ModelHierarchyConstants.CONTROLLER_NAME;
+import static dev.rico.integrationtests.remoting.modelhierarchy.ModelHierarchyConstants.SWITCH_CHILDREN_ACTION;
 
 public class ModelHierarchyControllerTest extends AbstractRemotingIntegrationTest {
 

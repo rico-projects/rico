@@ -42,12 +42,6 @@ public class ByteConverterFactory extends AbstractConverterFactory {
         }
     };
 
-
-    @Override
-    public boolean supportsType(final Class<?> cls) {
-        return byte.class.equals(cls) || Byte.class.equals(cls);
-    }
-
     @Override
     public List<Class> getSupportedTypes() {
         return Arrays.asList(byte.class, Byte.class);

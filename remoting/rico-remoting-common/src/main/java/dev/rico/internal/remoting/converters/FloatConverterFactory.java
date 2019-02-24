@@ -42,12 +42,6 @@ public class FloatConverterFactory extends AbstractConverterFactory {
         }
     };
 
-
-    @Override
-    public boolean supportsType(final Class<?> cls) {
-        return float.class.equals(cls) || Float.class.equals(cls);
-    }
-
     @Override
     public List<Class> getSupportedTypes() {
         return Arrays.asList(float.class, Float.class);

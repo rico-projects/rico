@@ -42,12 +42,6 @@ public class LongConverterFactory extends AbstractConverterFactory {
         }
     };
 
-
-    @Override
-    public boolean supportsType(final Class<?> cls) {
-        return long.class.equals(cls) || Long.class.equals(cls);
-    }
-
     @Override
     public List<Class> getSupportedTypes() {
         return Arrays.asList(long.class, Long.class);

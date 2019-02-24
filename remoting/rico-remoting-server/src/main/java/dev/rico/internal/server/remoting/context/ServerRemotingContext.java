@@ -227,7 +227,6 @@ public class ServerRemotingContext {
         }
         final String controllerId = controllerHandler.createController(controllerName, parentControllerId, parameters);
 
-
         final InternalAttributesBean bean = platformBeanRepository.getInternalAttributesBean();
         bean.setControllerId(controllerId);
         Object model = controllerHandler.getControllerModel(controllerId);
