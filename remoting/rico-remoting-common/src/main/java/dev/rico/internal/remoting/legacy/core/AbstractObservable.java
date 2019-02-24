@@ -25,7 +25,7 @@ import static org.apiguardian.api.API.Status.DEPRECATED;
 
 @API(since = "0.x", status = DEPRECATED)
 @Deprecated
-public class AbstractObservable implements Observable {
+public class AbstractObservable {
 
     private final PropertyChangeSupport pcs;
 
@@ -33,34 +33,28 @@ public class AbstractObservable implements Observable {
         pcs = new PropertyChangeSupport(this);
     }
 
-    @Override
     public void addPropertyChangeListener(final PropertyChangeListener listener) {
         if (listener == null || containsListener(listener, getPropertyChangeListeners())) return;
         pcs.addPropertyChangeListener(listener);
     }
 
-    @Override
     public void addPropertyChangeListener(final String propertyName, final PropertyChangeListener listener) {
         if (listener == null || containsListener(listener, getPropertyChangeListeners(propertyName))) return;
         pcs.addPropertyChangeListener(propertyName, listener);
     }
 
-    @Override
     public void removePropertyChangeListener(final PropertyChangeListener listener) {
         pcs.removePropertyChangeListener(listener);
     }
 
-    @Override
     public void removePropertyChangeListener(final String propertyName, final PropertyChangeListener listener) {
         pcs.removePropertyChangeListener(propertyName, listener);
     }
 
-    @Override
     public PropertyChangeListener[] getPropertyChangeListeners() {
         return pcs.getPropertyChangeListeners();
     }
 
-    @Override
     public PropertyChangeListener[] getPropertyChangeListeners(final String propertyName) {
         return pcs.getPropertyChangeListeners(propertyName);
     }

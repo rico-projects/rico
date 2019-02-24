@@ -24,6 +24,7 @@ import java.util.concurrent.Executor;
 import static org.apiguardian.api.API.Status.DEPRECATED;
 
 @API(since = "0.x", status = DEPRECATED)
+@Deprecated
 public class DirectExecutor implements Executor {
 
     private final static DirectExecutor INSTANCE = new DirectExecutor();

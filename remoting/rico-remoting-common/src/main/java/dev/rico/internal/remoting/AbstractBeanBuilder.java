@@ -19,8 +19,8 @@ package dev.rico.internal.remoting;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.remoting.info.ClassInfo;
 import dev.rico.internal.remoting.info.PropertyInfo;
-import dev.rico.internal.remoting.legacy.core.Attribute;
-import dev.rico.internal.remoting.legacy.core.PresentationModel;
+import dev.rico.internal.remoting.legacy.core.BaseAttribute;
+import dev.rico.internal.remoting.legacy.core.BasePresentationModel;
 import dev.rico.remoting.ObservableList;
 import dev.rico.remoting.Property;
 import org.apiguardian.api.API;
@@ -51,7 +51,7 @@ public abstract class AbstractBeanBuilder implements BeanBuilder {
 
         dispatcher.addAddedHandler(new RemotingEventHandler() {
             @Override
-            public void onEvent(final PresentationModel model) {
+            public void onEvent(final BasePresentationModel model) {
                 Assert.requireNonNull(model, "model");
                 final ClassInfo classInfo = classRepository.getClassInfo(model.getPresentationModelType());
 
@@ -65,12 +65,12 @@ public abstract class AbstractBeanBuilder implements BeanBuilder {
 
     public <T> T create(final Class<T> beanClass) {
         final ClassInfo classInfo = classRepository.getOrCreateClassInfo(beanClass);
-        final PresentationModel model = buildPresentationModel(classInfo);
+        final BasePresentationModel model = buildPresentationModel(classInfo);
 
         return createInstanceForClass(classInfo, beanClass, model, UpdateSource.SELF);
     }
 
-    private <T> T createInstanceForClass(final ClassInfo classInfo, final Class<T> beanClass, final PresentationModel model, final UpdateSource source) {
+    private <T> T createInstanceForClass(final ClassInfo classInfo, final Class<T> beanClass, final BasePresentationModel model, final UpdateSource source) {
         Assert.requireNonNull(beanClass, "beanClass");
         try {
             final T bean = beanClass.newInstance();
@@ -86,7 +86,7 @@ public abstract class AbstractBeanBuilder implements BeanBuilder {
         }
     }
 
-    private PresentationModel buildPresentationModel(final ClassInfo classInfo) {
+    private BasePresentationModel buildPresentationModel(final ClassInfo classInfo) {
         try {
             Assert.requireNonNull(classInfo, "classInfo");
             final PresentationModelBuilder builder = builderFactory.createBuilder()
@@ -104,7 +104,7 @@ public abstract class AbstractBeanBuilder implements BeanBuilder {
         }
     }
 
-    private void setupProperties(final ClassInfo classInfo, final Object bean, final PresentationModel model) {
+    private void setupProperties(final ClassInfo classInfo, final Object bean, final BasePresentationModel model) {
         Assert.requireNonNull(classInfo, "classInfo");
         Assert.requireNonNull(model, "model");
         classInfo.forEachProperty(new ClassInfo.PropertyIterator() {
@@ -112,7 +112,7 @@ public abstract class AbstractBeanBuilder implements BeanBuilder {
             public void call(final PropertyInfo propertyInfo) {
                 try {
                     Assert.requireNonNull(propertyInfo, "propertyInfo");
-                    final Attribute attribute = model.getAttribute(propertyInfo.getAttributeName());
+                    final BaseAttribute attribute = model.getAttribute(propertyInfo.getAttributeName());
                     final Property property = create(attribute, propertyInfo);
                     propertyInfo.setPriviliged(bean, property);
                 } catch (Exception e) {
@@ -122,7 +122,7 @@ public abstract class AbstractBeanBuilder implements BeanBuilder {
         });
     }
 
-    private void setupObservableLists(final ClassInfo classInfo, final Object bean, final PresentationModel model) {
+    private void setupObservableLists(final ClassInfo classInfo, final Object bean, final BasePresentationModel model) {
         Assert.requireNonNull(classInfo, "classInfo");
         classInfo.forEachObservableList(new ClassInfo.PropertyIterator() {
             @Override
@@ -138,8 +138,8 @@ public abstract class AbstractBeanBuilder implements BeanBuilder {
         });
     }
 
-    protected abstract <T> ObservableList<T> create(final PropertyInfo observableListInfo, final PresentationModel model, final ListMapper listMapper);
+    protected abstract <T> ObservableList<T> create(final PropertyInfo observableListInfo, final BasePresentationModel model, final ListMapper listMapper);
 
 
-    protected abstract <T> Property<T> create(final Attribute attribute, final PropertyInfo propertyInfo);
+    protected abstract <T> Property<T> create(final BaseAttribute attribute, final PropertyInfo propertyInfo);
 }

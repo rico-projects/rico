@@ -40,7 +40,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
-import dev.rico.internal.remoting.legacy.communication.Codec;
 import dev.rico.internal.remoting.legacy.communication.Command;
 import org.apiguardian.api.API;
 import org.slf4j.Logger;
@@ -55,7 +54,7 @@ import static dev.rico.internal.remoting.legacy.communication.CommandConstants.*
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
-public final class OptimizedJsonCodec implements Codec {
+public final class OptimizedJsonCodec {
 
     private static final Logger LOG = LoggerFactory.getLogger(OptimizedJsonCodec.class);
 
@@ -94,7 +93,6 @@ public final class OptimizedJsonCodec implements Codec {
         transcoders.put(commandId, transcoder);
     }
 
-    @Override
     @SuppressWarnings("unchecked")
     public String encode(final List<? extends Command> commands) {
         Assert.requireNonNull(commands, "commands");
@@ -125,7 +123,6 @@ public final class OptimizedJsonCodec implements Codec {
         return builder.toString();
     }
 
-    @Override
     public List<Command> decode(final String transmitted) {
         Assert.requireNonNull(transmitted, "transmitted");
         LOG.trace("Decoding message: {}", transmitted);

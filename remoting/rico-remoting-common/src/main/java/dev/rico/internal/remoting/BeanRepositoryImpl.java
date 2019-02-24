@@ -18,8 +18,8 @@ package dev.rico.internal.remoting;
 
 import dev.rico.core.functional.Subscription;
 import dev.rico.internal.core.Assert;
+import dev.rico.internal.remoting.legacy.core.BasePresentationModel;
 import dev.rico.internal.remoting.legacy.core.ModelStore;
-import dev.rico.internal.remoting.legacy.core.PresentationModel;
 import org.apiguardian.api.API;
 
 import java.util.*;
@@ -30,13 +30,13 @@ import static org.apiguardian.api.API.Status.INTERNAL;
  * A {@code BeanRepository} keeps a list of all registered remoting Beans and the mapping between remoting IDs and
  * the associated remoting Bean.
  * <p>
- * A new bean needs to be registered with the {@link #registerBean(Object, PresentationModel, UpdateSource)} method and can be deleted
+ * A new bean needs to be registered with the {@link #registerBean(Object, BasePresentationModel, UpdateSource)} method and can be deleted
  * with the {@link #delete(Object)} method.
  */
 @API(since = "0.x", status = INTERNAL)
 public class BeanRepositoryImpl implements BeanRepository {
 
-    private final Map<Object, PresentationModel> objectPmToRemotingPm = new IdentityHashMap<>();
+    private final Map<Object, BasePresentationModel> objectPmToRemotingPm = new IdentityHashMap<>();
     private final Map<String, Object> remotingIdToObjectPm = new HashMap<>();
     private final ModelStore modelStore;
     private final Map<Class<?>, List<BeanAddedListener<?>>> beanAddedListenerMap = new HashMap<>();
@@ -48,7 +48,7 @@ public class BeanRepositoryImpl implements BeanRepository {
     public BeanRepositoryImpl(final ModelStore modelStore, final EventDispatcher dispatcher) {
         this.modelStore = Assert.requireNonNull(modelStore, "modelStore");
 
-        dispatcher.addRemovedHandler((PresentationModel model) -> {
+        dispatcher.addRemovedHandler((BasePresentationModel model) -> {
             final Object bean = remotingIdToObjectPm.remove(model.getId());
             if (bean != null) {
                 objectPmToRemotingPm.remove(bean);
@@ -107,7 +107,7 @@ public class BeanRepositoryImpl implements BeanRepository {
     @Override
     public <T> void delete(T bean) {
         RemotingUtils.assertIsRemotingBean(bean);
-        final PresentationModel model = objectPmToRemotingPm.remove(bean);
+        final BasePresentationModel model = objectPmToRemotingPm.remove(bean);
         if (model != null) {
             remotingIdToObjectPm.remove(model.getId());
             modelStore.remove(model);
@@ -119,8 +119,8 @@ public class BeanRepositoryImpl implements BeanRepository {
     public <T> List<T> findAll(Class<T> beanClass) {
         RemotingUtils.assertIsRemotingBean(beanClass);
         final List<T> result = new ArrayList<>();
-        final List<PresentationModel> presentationModels = modelStore.findAllPresentationModelsByType(RemotingUtils.getPresentationModelTypeForClass(beanClass));
-        for (PresentationModel model : presentationModels) {
+        final List<BasePresentationModel> presentationModels = modelStore.findAllPresentationModelsByType(RemotingUtils.getPresentationModelTypeForClass(beanClass));
+        for (BasePresentationModel model : presentationModels) {
             result.add((T) remotingIdToObjectPm.get(model.getId()));
         }
         return result;
@@ -152,7 +152,7 @@ public class BeanRepositoryImpl implements BeanRepository {
 
     @Override
     @SuppressWarnings("unchecked")
-    public void registerBean(Object bean, PresentationModel model, UpdateSource source) {
+    public void registerBean(Object bean, BasePresentationModel model, UpdateSource source) {
         RemotingUtils.assertIsRemotingBean(bean);
         objectPmToRemotingPm.put(bean, model);
         remotingIdToObjectPm.put(model.getId(), bean);

@@ -18,7 +18,7 @@ package dev.rico.internal.remoting;
 
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.remoting.info.PropertyInfo;
-import dev.rico.internal.remoting.legacy.core.Attribute;
+import dev.rico.internal.remoting.legacy.core.BaseAttribute;
 import dev.rico.remoting.Property;
 import dev.rico.remoting.converter.ValueConverterException;
 import org.apiguardian.api.API;
@@ -36,15 +36,15 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class PropertyImpl<T> extends AbstractProperty<T> {
 
-    private final Attribute attribute;
+    private final BaseAttribute attribute;
 
     private final PropertyInfo propertyInfo;
 
-    public PropertyImpl(final Attribute attribute, final PropertyInfo propertyInfo) {
+    public PropertyImpl(final BaseAttribute attribute, final PropertyInfo propertyInfo) {
         this.attribute = Assert.requireNonNull(attribute, "attribute");
         this.propertyInfo = Assert.requireNonNull(propertyInfo, "propertyInfo");
 
-        attribute.addPropertyChangeListener(Attribute.VALUE_NAME, new PropertyChangeListener() {
+        attribute.addPropertyChangeListener(BaseAttribute.VALUE_NAME, new PropertyChangeListener() {
             @SuppressWarnings("unchecked")
             @Override
             public void propertyChange(final PropertyChangeEvent evt) {

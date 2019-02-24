@@ -24,7 +24,7 @@ import dev.rico.internal.remoting.legacy.communication.Command;
 import dev.rico.internal.remoting.legacy.communication.CreatePresentationModelCommand;
 import dev.rico.internal.remoting.legacy.communication.DeletePresentationModelCommand;
 import dev.rico.internal.remoting.legacy.communication.ValueChangedCommand;
-import dev.rico.internal.remoting.legacy.core.Attribute;
+import dev.rico.internal.remoting.legacy.core.BaseAttribute;
 import org.apiguardian.api.API;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -122,11 +122,11 @@ public class ClientResponseHandler {
             return;
         }
 
-        if (serverCommand.getMetadataName() != null && serverCommand.getMetadataName().equals(Attribute.VALUE_NAME)) {
+        if (serverCommand.getMetadataName() != null && serverCommand.getMetadataName().equals(BaseAttribute.VALUE_NAME)) {
             attribute.setValue(serverCommand.getValue());
         }
 
-        if (serverCommand.getMetadataName() != null && serverCommand.getMetadataName().equals(Attribute.QUALIFIER_NAME)) {
+        if (serverCommand.getMetadataName() != null && serverCommand.getMetadataName().equals(BaseAttribute.QUALIFIER_NAME)) {
             if (serverCommand.getValue() == null) {
                 attribute.setQualifier(null);
             } else {

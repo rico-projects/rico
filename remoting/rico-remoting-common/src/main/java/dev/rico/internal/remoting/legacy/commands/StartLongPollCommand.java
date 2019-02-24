@@ -23,6 +23,7 @@ import static dev.rico.internal.remoting.legacy.communication.CommandConstants.S
 import static org.apiguardian.api.API.Status.DEPRECATED;
 
 @API(since = "0.x", status = DEPRECATED)
+@Deprecated
 public final class StartLongPollCommand extends Command {
 
     public StartLongPollCommand() {

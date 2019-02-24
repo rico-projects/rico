@@ -14,13 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.remoting;
+package dev.rico.server.remoting;
 
-import dev.rico.internal.remoting.BeanAddedListener;
-import dev.rico.core.functional.Subscription;
+import dev.rico.remoting.RemotingBean;
 import org.apiguardian.api.API;
-
-import java.util.List;
 
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
@@ -55,17 +52,6 @@ import static org.apiguardian.api.API.Status.MAINTAINED;
  * </pre>
  * </blockquote>
  *
- * The {@link BeanManager} provides several methods to observe the creation and deletion of models.
- * One example is the {@link #onAdded(Class, BeanAddedListener)} method. All the methods are
- * for using lambdas and therefore a handler can be easily added with only one line if code:
- * <blockquote>
- * <pre>
- *     {@code beanManager.onAdded(MyModel.class, model -> System.out.println("Model of type MyModel added")); }
- * </pre>
- * </blockquote>
- * There are no method to removePresentationModel registered handler from the {@link BeanManager}. Here the remoting layer
- * implement an approach by using the Subscription Pattern: Each hander registration returns a {@link Subscription}
- * instance that provides the {@link Subscription#unsubscribe()} method to removePresentationModel the handler.
  *
  * @author Hendrik Ebbers
  */
@@ -81,28 +67,4 @@ public interface BeanManager {
      * @return the new bean instance
      */
     <T> T create(Class<T> beanClass);
-
-    /**
-     * Returns a list of all managed beans of the given type / class
-     *
-     * @param beanClass the bean type
-     * @param <T>       the bean type
-     * @return a list of all managed beans of the type
-     */
-    @Deprecated
-    <T> List<T> findAll(Class<T> beanClass);
-
-    /**
-     * Subscribe a listener to all bean creation events for a specific class. A listener that is added to a client side
-     * {@link BeanManager} will only fire events for beans that where created on the server side and vice versa. This means that the listener
-     * isn't fired for a bean that was created by the same {@link BeanManager}.
-     *
-     * @param beanClass the class for which creation events should be received
-     * @param listener the listener which receives the creation-events
-     * @param <T> the bean type
-     * @return the (@link com.canoo.platform.core.functional.Subscription} that can be used to unsubscribe the listener
-     */
-    @Deprecated
-    <T> Subscription onAdded(Class<T> beanClass, BeanAddedListener<? super T> listener);
-
 }

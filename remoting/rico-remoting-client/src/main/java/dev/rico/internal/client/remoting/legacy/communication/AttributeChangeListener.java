@@ -20,8 +20,8 @@ import dev.rico.internal.client.remoting.legacy.ClientAttribute;
 import dev.rico.internal.client.remoting.legacy.ClientModelStore;
 import dev.rico.internal.client.remoting.legacy.ClientPresentationModel;
 import dev.rico.internal.client.remoting.legacy.ModelSynchronizer;
-import dev.rico.internal.remoting.legacy.core.Attribute;
-import dev.rico.internal.remoting.legacy.core.PresentationModel;
+import dev.rico.internal.remoting.legacy.core.BaseAttribute;
+import dev.rico.internal.remoting.legacy.core.BasePresentationModel;
 import org.apiguardian.api.API;
 
 import java.beans.PropertyChangeEvent;
@@ -45,7 +45,7 @@ public class AttributeChangeListener implements PropertyChangeListener {
 
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals(Attribute.VALUE_NAME)) {
+        if (evt.getPropertyName().equals(BaseAttribute.VALUE_NAME)) {
             if (Objects.equals(evt.getOldValue(), evt.getNewValue())) {
                 return;
             }
@@ -54,7 +54,7 @@ public class AttributeChangeListener implements PropertyChangeListener {
                 modelSynchronizer.onPropertyChanged(evt);
             }
 
-            final List<ClientAttribute> attributes = clientModelStore.findAllAttributesByQualifier(((Attribute) evt.getSource()).getQualifier());
+            final List<ClientAttribute> attributes = clientModelStore.findAllAttributesByQualifier(((BaseAttribute) evt.getSource()).getQualifier());
             for (final ClientAttribute attribute : attributes) {
                 attribute.setValue(evt.getNewValue());
             }
@@ -68,7 +68,7 @@ public class AttributeChangeListener implements PropertyChangeListener {
     }
 
     private boolean isSendable(final PropertyChangeEvent evt) {
-        final PresentationModel pmOfAttribute = ((Attribute) evt.getSource()).getPresentationModel();
+        final BasePresentationModel pmOfAttribute = ((BaseAttribute) evt.getSource()).getPresentationModel();
         if (pmOfAttribute == null) {
             return true;
         }

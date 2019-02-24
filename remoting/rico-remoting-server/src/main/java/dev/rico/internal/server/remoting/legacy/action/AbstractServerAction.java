@@ -31,6 +31,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
  * the ServerModelStore, e.g. to work with the server model store.
  */
 @API(since = "0.x", status = INTERNAL)
+@Deprecated
 public abstract class AbstractServerAction implements ServerAction {
 
     private ServerModelStore serverModelStore;

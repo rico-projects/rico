@@ -33,8 +33,8 @@ import dev.rico.internal.remoting.converters.LongConverterFactory;
 import dev.rico.internal.remoting.converters.ShortConverterFactory;
 import dev.rico.internal.remoting.converters.StringConverterFactory;
 import dev.rico.internal.remoting.legacy.LegacyConstants;
-import dev.rico.internal.remoting.legacy.core.Attribute;
-import dev.rico.internal.remoting.legacy.core.PresentationModel;
+import dev.rico.internal.remoting.legacy.core.BaseAttribute;
+import dev.rico.internal.remoting.legacy.core.BasePresentationModel;
 import dev.rico.internal.server.remoting.legacy.ServerAttribute;
 import dev.rico.internal.server.remoting.legacy.ServerModelStore;
 import dev.rico.internal.server.remoting.legacy.ServerPresentationModel;
@@ -46,7 +46,6 @@ import dev.rico.server.remoting.util.PrimitiveDataTypesModel;
 import dev.rico.server.remoting.util.SimpleAnnotatedTestModel;
 import dev.rico.server.remoting.util.SimpleTestModel;
 import dev.rico.server.remoting.util.SingleReferenceModel;
-import dev.rico.remoting.BeanManager;
 import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
 
@@ -216,7 +215,7 @@ public class TestModelCreation extends AbstractRemotingTest {
         List<ServerAttribute> attributes = remotingModel.getAttributes();
         assertThat(attributes, hasSize(9));
 
-        for(Attribute attribute : attributes) {
+        for(BaseAttribute attribute : attributes) {
             if (LegacyConstants.SOURCE_SYSTEM.equals(attribute.getPropertyName())) {
                 assertThat(attribute.getValue(), Matchers.<Object>is(LegacyConstants.SOURCE_SYSTEM_SERVER));
             } else {
@@ -228,12 +227,12 @@ public class TestModelCreation extends AbstractRemotingTest {
         final List<ServerPresentationModel> classModels = serverModelStore.findAllPresentationModelsByType(RemotingConstants.REMOTING_BEAN);
         assertThat(classModels, hasSize(1));
 
-        final PresentationModel classModel = classModels.get(0);
+        final BasePresentationModel classModel = classModels.get(0);
 
-        final List<Attribute> classAttributes = classModel.getAttributes();
+        final List<BaseAttribute> classAttributes = classModel.getAttributes();
         assertThat(classAttributes, hasSize(10));
 
-        for(Attribute attribute : classAttributes) {
+        for(BaseAttribute attribute : classAttributes) {
             if (RemotingConstants.JAVA_CLASS.equals(attribute.getPropertyName())) {
                 assertThat(attribute.getValue(), Matchers.<Object>is(PrimitiveDataTypesModel.class.getName()));
             } else if (LegacyConstants.SOURCE_SYSTEM.equals(attribute.getPropertyName())) {
@@ -295,9 +294,9 @@ public class TestModelCreation extends AbstractRemotingTest {
         List<ServerPresentationModel> remotingModels = serverModelStore.findAllPresentationModelsByType(ComplexDataTypesModel.class.getName());
         assertThat(remotingModels, hasSize(1));
 
-        PresentationModel remotingModel = remotingModels.get(0);
+        BasePresentationModel remotingModel = remotingModels.get(0);
 
-        List<Attribute> attributes = remotingModel.getAttributes();
+        List<BaseAttribute> attributes = remotingModel.getAttributes();
 
         assertThat(attributes, containsInAnyOrder(
                 allOf(

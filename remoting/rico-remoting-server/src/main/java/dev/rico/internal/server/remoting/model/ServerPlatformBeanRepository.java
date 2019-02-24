@@ -23,8 +23,9 @@ import dev.rico.internal.remoting.RemotingEventHandler;
 import dev.rico.internal.remoting.EventDispatcher;
 import dev.rico.internal.remoting.InternalAttributesBean;
 import dev.rico.internal.remoting.RemotingConstants;
-import dev.rico.internal.remoting.legacy.core.PresentationModel;
+import dev.rico.internal.remoting.legacy.core.BasePresentationModel;
 import dev.rico.internal.server.remoting.legacy.ServerModelStore;
+import dev.rico.internal.server.remoting.legacy.ServerPresentationModelBuilder;
 import org.apiguardian.api.API;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
@@ -40,7 +41,7 @@ public class ServerPlatformBeanRepository {
         Assert.requireNonNull(dispatcher, "dispatcher");
         dispatcher.addControllerActionCallBeanAddedHandler(new RemotingEventHandler() {
             @Override
-            public void onEvent(PresentationModel model) {
+            public void onEvent(BasePresentationModel model) {
                 final String type = model.getPresentationModelType();
                 switch (type) {
                     case RemotingConstants.CONTROLLER_ACTION_CALL_BEAN_NAME:
@@ -52,7 +53,7 @@ public class ServerPlatformBeanRepository {
 
         dispatcher.addControllerActionCallBeanRemovedHandler(new RemotingEventHandler() {
             @Override
-            public void onEvent(PresentationModel model) {
+            public void onEvent(BasePresentationModel model) {
                 final String type = model.getPresentationModelType();
                 switch (type) {
                     case RemotingConstants.CONTROLLER_ACTION_CALL_BEAN_NAME:

@@ -14,21 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.internal.remoting;
+package dev.rico.internal.server.remoting.model;
 
-import dev.rico.remoting.BeanManager;
-import dev.rico.core.functional.Subscription;
+import dev.rico.internal.remoting.BeanBuilder;
+import dev.rico.internal.remoting.BeanRepository;
+import dev.rico.internal.remoting.RemotingUtils;
+import dev.rico.server.remoting.BeanManager;
 import dev.rico.internal.core.Assert;
 import org.apiguardian.api.API;
-
-import java.util.List;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
 public class BeanManagerImpl implements BeanManager {
 
-    protected final BeanRepository beanRepository;
+    private final BeanRepository beanRepository;
+
     private final BeanBuilder beanBuilder;
 
     public BeanManagerImpl(final BeanRepository beanRepository, final BeanBuilder beanBuilder) {
@@ -40,17 +41,5 @@ public class BeanManagerImpl implements BeanManager {
     public <T> T create(final Class<T> beanClass) {
         RemotingUtils.assertIsRemotingBean(beanClass);
         return beanBuilder.create(beanClass);
-    }
-
-    @Override
-    public <T> List<T> findAll(final Class<T> beanClass) {
-        RemotingUtils.assertIsRemotingBean(beanClass);
-        return beanRepository.findAll(beanClass);
-    }
-
-    @Override
-    public <T> Subscription onAdded(final Class<T> beanClass, final BeanAddedListener<? super T> listener) {
-        RemotingUtils.assertIsRemotingBean(beanClass);
-        return beanRepository.addOnAddedListener(beanClass, listener);
     }
 }

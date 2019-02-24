@@ -27,6 +27,7 @@ import java.util.List;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
+@Deprecated
 public class DeletePresentationModelAction extends AbstractServerAction {
 
     public void registerIn(final ActionRegistry registry) {

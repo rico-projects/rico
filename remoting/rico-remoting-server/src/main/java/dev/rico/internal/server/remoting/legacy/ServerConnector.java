@@ -17,8 +17,8 @@
 package dev.rico.internal.server.remoting.legacy;
 
 import dev.rico.internal.core.Assert;
+import dev.rico.internal.remoting.codec.OptimizedJsonCodec;
 import dev.rico.internal.remoting.legacy.commands.InterruptLongPollCommand;
-import dev.rico.internal.remoting.legacy.communication.Codec;
 import dev.rico.internal.remoting.legacy.communication.Command;
 import dev.rico.internal.server.remoting.legacy.action.CreatePresentationModelAction;
 import dev.rico.internal.server.remoting.legacy.action.DeletePresentationModelAction;
@@ -39,6 +39,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
+@Deprecated
 public class ServerConnector {
 
     private static final Logger LOG = LoggerFactory.getLogger(ServerConnector.class);
@@ -50,7 +51,7 @@ public class ServerConnector {
     private final AtomicBoolean initialized = new AtomicBoolean(false);
 
     @Deprecated
-    private Codec codec;
+    private OptimizedJsonCodec codec;
 
     private ServerModelStore serverModelStore;
 
@@ -112,12 +113,12 @@ public class ServerConnector {
     }
 
     @Deprecated
-    public Codec getCodec() {
+    public OptimizedJsonCodec getCodec() {
         return codec;
     }
 
     @Deprecated
-    public void setCodec(final Codec codec) {
+    public void setCodec(final OptimizedJsonCodec codec) {
         this.codec = codec;
     }
 

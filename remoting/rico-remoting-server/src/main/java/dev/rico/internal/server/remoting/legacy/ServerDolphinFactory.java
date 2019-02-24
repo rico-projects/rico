@@ -24,6 +24,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
  * A factory class to create a ServerDolphin object.
  */
 @API(since = "0.x", status = INTERNAL)
+@Deprecated
 public class ServerDolphinFactory {
 
     private ServerDolphinFactory() {}
@@ -31,7 +32,7 @@ public class ServerDolphinFactory {
     /**
      * Creates a default ServerDolphin object containing a default ServerModelStore and ServerConnector.
      */
-    public static ServerDolphin create() {
+    public static DefaultServerDolphin create() {
         return new DefaultServerDolphin();
     }
 
@@ -41,7 +42,7 @@ public class ServerDolphinFactory {
      * @param serverConnector
      * @return
      */
-    public static ServerDolphin create(final ServerModelStore serverModelStore, final ServerConnector serverConnector) {
+    public static DefaultServerDolphin create(final ServerModelStore serverModelStore, final ServerConnector serverConnector) {
         return new DefaultServerDolphin(serverModelStore, serverConnector);
     }
 }

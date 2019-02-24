@@ -33,6 +33,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
  * @see Slot
  */
 @API(since = "0.x", status = INTERNAL)
+@Deprecated
 public final class DTO {
 
     private List<Slot> slots;

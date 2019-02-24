@@ -30,13 +30,14 @@ import static org.apiguardian.api.API.Status.DEPRECATED;
  * a specialized "PersonPresentationModel" or so.
  */
 @API(since = "0.x", status = DEPRECATED)
-public class BasePresentationModel<A extends Attribute> extends AbstractObservable implements PresentationModel<A> {
+@Deprecated
+public abstract class BasePresentationModel<A extends BaseAttribute> extends AbstractObservable {
 
     protected final List<A> attributes = new LinkedList<A>();
 
     private final String id;
 
-    private       String presentationModelType;
+    private String presentationModelType;
 
 
     /**

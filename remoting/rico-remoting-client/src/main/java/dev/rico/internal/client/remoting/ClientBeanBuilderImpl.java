@@ -26,8 +26,8 @@ import dev.rico.internal.remoting.PresentationModelBuilderFactory;
 import dev.rico.internal.remoting.PropertyImpl;
 import dev.rico.internal.remoting.collections.ObservableArrayList;
 import dev.rico.internal.remoting.info.PropertyInfo;
-import dev.rico.internal.remoting.legacy.core.Attribute;
-import dev.rico.internal.remoting.legacy.core.PresentationModel;
+import dev.rico.internal.remoting.legacy.core.BaseAttribute;
+import dev.rico.internal.remoting.legacy.core.BasePresentationModel;
 import dev.rico.remoting.ListChangeEvent;
 import dev.rico.remoting.ObservableList;
 import dev.rico.remoting.Property;
@@ -42,7 +42,7 @@ public class ClientBeanBuilderImpl extends AbstractBeanBuilder {
         super(classRepository, beanRepository, listMapper, builderFactory, dispatcher);
     }
 
-    protected ObservableList create(final PropertyInfo observableListInfo, final PresentationModel model, final ListMapper listMapper) {
+    protected ObservableList create(final PropertyInfo observableListInfo, final BasePresentationModel model, final ListMapper listMapper) {
         Assert.requireNonNull(model, "model");
         Assert.requireNonNull(listMapper, "listMapper");
         return new ObservableArrayList() {
@@ -54,7 +54,7 @@ public class ClientBeanBuilderImpl extends AbstractBeanBuilder {
     }
 
 
-    protected Property create(final Attribute attribute, final PropertyInfo propertyInfo) {
+    protected Property create(final BaseAttribute attribute, final PropertyInfo propertyInfo) {
         return new PropertyImpl<>(attribute, propertyInfo);
     }
 }

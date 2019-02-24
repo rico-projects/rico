@@ -16,8 +16,8 @@
  */
 package dev.rico.server.remoting;
 
-import dev.rico.internal.remoting.legacy.core.Attribute;
-import dev.rico.internal.remoting.legacy.core.PresentationModel;
+import dev.rico.internal.remoting.legacy.core.BaseAttribute;
+import dev.rico.internal.remoting.legacy.core.BasePresentationModel;
 import dev.rico.internal.server.remoting.legacy.ServerModelStore;
 import dev.rico.internal.server.remoting.legacy.ServerPresentationModel;
 import dev.rico.server.remoting.util.AbstractRemotingTest;
@@ -27,7 +27,6 @@ import dev.rico.server.remoting.util.PrimitiveDataTypesModel;
 import dev.rico.server.remoting.util.SimpleAnnotatedTestModel;
 import dev.rico.server.remoting.util.SimpleTestModel;
 import dev.rico.server.remoting.util.SingleReferenceModel;
-import dev.rico.remoting.BeanManager;
 import org.testng.annotations.Test;
 
 import java.util.Calendar;
@@ -52,7 +51,7 @@ public class TestPropertyValue extends AbstractRemotingTest {
 
         ServerPresentationModel remotingModel = serverModelStore.findAllPresentationModelsByType(SimpleAnnotatedTestModel.class.getName()).get(0);
 
-        Attribute textAttribute = remotingModel.getAttribute("myProperty");
+        BaseAttribute textAttribute = remotingModel.getAttribute("myProperty");
         assertThat(textAttribute.getValue(), nullValue());
 
         model.getMyProperty().set("Hallo Platform");
@@ -73,7 +72,7 @@ public class TestPropertyValue extends AbstractRemotingTest {
 
         ServerPresentationModel remotingModel = serverModelStore.findAllPresentationModelsByType(SimpleTestModel.class.getName()).get(0);
 
-        Attribute textAttribute = remotingModel.getAttribute("text");
+        BaseAttribute textAttribute = remotingModel.getAttribute("text");
         assertThat(textAttribute.getValue(), nullValue());
 
         model.getTextProperty().set("Hallo Platform");
@@ -94,7 +93,7 @@ public class TestPropertyValue extends AbstractRemotingTest {
 
         ServerPresentationModel remotingModel = serverModelStore.findAllPresentationModelsByType(PrimitiveDataTypesModel.class.getName()).get(0);
 
-        Attribute textAttribute = remotingModel.getAttribute("textProperty");
+        BaseAttribute textAttribute = remotingModel.getAttribute("textProperty");
         assertThat(textAttribute.getValue(), nullValue());
 
         model.getTextProperty().set("Hallo Platform");
@@ -106,7 +105,7 @@ public class TestPropertyValue extends AbstractRemotingTest {
         assertThat(model.getTextProperty().get(), is("Hello endpoint"));
 
 
-        Attribute intAttribute = remotingModel.getAttribute("integerProperty");
+        BaseAttribute intAttribute = remotingModel.getAttribute("integerProperty");
         assertThat(intAttribute.getValue(), nullValue());
 
         model.getIntegerProperty().set(1);
@@ -118,7 +117,7 @@ public class TestPropertyValue extends AbstractRemotingTest {
         assertThat(model.getIntegerProperty().get(), is(2));
 
 
-        Attribute booleanAttribute = remotingModel.getAttribute("booleanProperty");
+        BaseAttribute booleanAttribute = remotingModel.getAttribute("booleanProperty");
         assertThat(booleanAttribute.getValue(), nullValue());
 
         model.getBooleanProperty().set(true);
@@ -146,10 +145,10 @@ public class TestPropertyValue extends AbstractRemotingTest {
 
         ComplexDataTypesModel model = manager.create(ComplexDataTypesModel.class);
 
-        PresentationModel remotingModel = serverModelStore.findAllPresentationModelsByType(ComplexDataTypesModel.class.getName()).get(0);
+        BasePresentationModel remotingModel = serverModelStore.findAllPresentationModelsByType(ComplexDataTypesModel.class.getName()).get(0);
 
 
-        Attribute dateAttribute = remotingModel.getAttribute("dateProperty");
+        BaseAttribute dateAttribute = remotingModel.getAttribute("dateProperty");
         assertThat(dateAttribute.getValue(), nullValue());
 
         model.getDateProperty().set(date1.getTime());
@@ -161,7 +160,7 @@ public class TestPropertyValue extends AbstractRemotingTest {
         assertThat(model.getDateProperty().get(), is(date2.getTime()));
 
 
-        Attribute calendarAttribute = remotingModel.getAttribute("calendarProperty");
+        BaseAttribute calendarAttribute = remotingModel.getAttribute("calendarProperty");
         assertThat(calendarAttribute.getValue(), nullValue());
 
         model.getCalendarProperty().set(date1);
@@ -173,7 +172,7 @@ public class TestPropertyValue extends AbstractRemotingTest {
         assertThat(model.getCalendarProperty().get(), is(date2));
 
 
-        Attribute enumAttribute = remotingModel.getAttribute("enumProperty");
+        BaseAttribute enumAttribute = remotingModel.getAttribute("enumProperty");
         assertThat(enumAttribute.getValue(), nullValue());
 
         model.getEnumProperty().set(VALUE_1);
@@ -203,7 +202,7 @@ public class TestPropertyValue extends AbstractRemotingTest {
 
         final ServerPresentationModel remotingModel = serverModelStore.findAllPresentationModelsByType(SingleReferenceModel.class.getName()).get(0);
 
-        final Attribute referenceAttribute = remotingModel.getAttribute("referenceProperty");
+        final BaseAttribute referenceAttribute = remotingModel.getAttribute("referenceProperty");
         assertThat(referenceAttribute.getValue(), nullValue());
 
         model.getReferenceProperty().set(ref1);
@@ -224,9 +223,9 @@ public class TestPropertyValue extends AbstractRemotingTest {
 
         ServerPresentationModel remotingModel = serverModelStore.findAllPresentationModelsByType(ChildModel.class.getName()).get(0);
 
-        Attribute childAttribute = remotingModel.getAttribute("childProperty");
+        BaseAttribute childAttribute = remotingModel.getAttribute("childProperty");
         assertThat(childAttribute.getValue(), nullValue());
-        Attribute parentAttribute = remotingModel.getAttribute("parentProperty");
+        BaseAttribute parentAttribute = remotingModel.getAttribute("parentProperty");
         assertThat(parentAttribute.getValue(), nullValue());
 
         model.getChildProperty().set("Hallo Platform");

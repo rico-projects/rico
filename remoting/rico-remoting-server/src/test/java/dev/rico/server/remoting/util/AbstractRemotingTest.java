@@ -17,7 +17,7 @@
 package dev.rico.server.remoting.util;
 
 import dev.rico.internal.remoting.BeanBuilder;
-import dev.rico.internal.remoting.BeanManagerImpl;
+import dev.rico.internal.server.remoting.model.BeanManagerImpl;
 import dev.rico.internal.remoting.BeanRepository;
 import dev.rico.internal.remoting.BeanRepositoryImpl;
 import dev.rico.internal.remoting.ClassRepository;
@@ -36,8 +36,8 @@ import dev.rico.internal.server.remoting.gc.Instance;
 import dev.rico.internal.server.remoting.legacy.ServerModelStore;
 import dev.rico.internal.server.remoting.model.ServerBeanBuilderImpl;
 import dev.rico.internal.server.remoting.model.ServerEventDispatcher;
-import dev.rico.internal.server.remoting.model.ServerPresentationModelBuilderFactory;
-import dev.rico.remoting.BeanManager;
+import dev.rico.internal.server.remoting.legacy.ServerPresentationModelBuilderFactory;
+import dev.rico.server.remoting.BeanManager;
 
 import java.util.ArrayList;
 import java.util.List;

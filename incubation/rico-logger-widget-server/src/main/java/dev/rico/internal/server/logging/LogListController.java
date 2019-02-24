@@ -22,7 +22,7 @@ import dev.rico.internal.logging.LogListBean;
 import dev.rico.internal.logging.LoggerSearchRequest;
 import dev.rico.internal.server.logging.service.LoggerRepository;
 import dev.rico.internal.logging.spi.LogMessage;
-import dev.rico.remoting.BeanManager;
+import dev.rico.server.remoting.BeanManager;
 import dev.rico.server.remoting.RemotingAction;
 import dev.rico.server.remoting.RemotingController;
 import dev.rico.server.remoting.RemotingModel;

@@ -19,7 +19,6 @@ package dev.rico.internal.client.remoting.legacy;
 import dev.rico.internal.client.remoting.legacy.communication.AbstractClientConnector;
 import dev.rico.internal.client.remoting.legacy.communication.OnFinishedHandler;
 import dev.rico.internal.remoting.legacy.communication.EmptyCommand;
-import dev.rico.internal.remoting.legacy.core.Dolphin;
 import org.apiguardian.api.API;
 
 import static org.apiguardian.api.API.Status.DEPRECATED;
@@ -29,16 +28,11 @@ import static org.apiguardian.api.API.Status.DEPRECATED;
  */
 @Deprecated
 @API(since = "0.x", status = DEPRECATED)
-public class ClientDolphin implements Dolphin<ClientAttribute, ClientPresentationModel> {
+public class ClientDolphin {
 
     private ClientModelStore clientModelStore;
 
     private AbstractClientConnector clientConnector;
-
-    @Override
-    public ClientModelStore getModelStore() {
-        return clientModelStore;
-    }
 
     public AbstractClientConnector getClientConnector() {
         return clientConnector;

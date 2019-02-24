@@ -19,7 +19,7 @@ package dev.rico.server.remoting;
 import dev.rico.internal.remoting.legacy.LegacyConstants;
 import dev.rico.internal.server.remoting.legacy.ServerModelStore;
 import dev.rico.internal.server.remoting.legacy.ServerPresentationModel;
-import dev.rico.internal.server.remoting.model.ServerPresentationModelBuilder;
+import dev.rico.internal.server.remoting.legacy.ServerPresentationModelBuilder;
 import dev.rico.server.remoting.util.AbstractRemotingTest;
 import org.testng.annotations.Test;
 

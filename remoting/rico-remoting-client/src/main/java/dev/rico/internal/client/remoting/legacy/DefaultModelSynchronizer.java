@@ -22,7 +22,7 @@ import dev.rico.internal.remoting.legacy.communication.Command;
 import dev.rico.internal.remoting.legacy.communication.CreatePresentationModelCommand;
 import dev.rico.internal.remoting.legacy.communication.PresentationModelDeletedCommand;
 import dev.rico.internal.remoting.legacy.communication.ValueChangedCommand;
-import dev.rico.internal.remoting.legacy.core.Attribute;
+import dev.rico.internal.remoting.legacy.core.BaseAttribute;
 import org.apiguardian.api.API;
 
 import java.beans.PropertyChangeEvent;
@@ -53,13 +53,13 @@ public class DefaultModelSynchronizer implements ModelSynchronizer {
 
     @Override
     public void onPropertyChanged(final PropertyChangeEvent evt) {
-        final Command command = new ValueChangedCommand(((Attribute) evt.getSource()).getId(),evt.getNewValue());
+        final Command command = new ValueChangedCommand(((BaseAttribute) evt.getSource()).getId(),evt.getNewValue());
         send(command);
     }
 
     @Override
     public void onMetadataChanged(final PropertyChangeEvent evt) {
-        final Command command = new ChangeAttributeMetadataCommand(((Attribute) evt.getSource()).getId(), evt.getPropertyName(), evt.getNewValue());
+        final Command command = new ChangeAttributeMetadataCommand(((BaseAttribute) evt.getSource()).getId(), evt.getPropertyName(), evt.getNewValue());
         send(command);
     }
 

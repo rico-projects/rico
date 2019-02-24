@@ -26,8 +26,8 @@ import dev.rico.internal.client.remoting.legacy.communication.AbstractClientConn
 import dev.rico.internal.client.remoting.legacy.communication.BlindCommandBatcher;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.http.HttpHeaderConstants;
+import dev.rico.internal.remoting.codec.OptimizedJsonCodec;
 import dev.rico.internal.remoting.commands.DestroyContextCommand;
-import dev.rico.internal.remoting.legacy.communication.Codec;
 import dev.rico.internal.remoting.legacy.communication.Command;
 import dev.rico.remoting.RemotingException;
 import org.apiguardian.api.API;
@@ -51,13 +51,13 @@ public class HttpClientConnector extends AbstractClientConnector {
 
     private final URI servletUrl;
 
-    private final Codec codec;
+    private final OptimizedJsonCodec codec;
 
     private final HttpClient client;
 
     private final AtomicBoolean disconnecting = new AtomicBoolean(false);
 
-    public HttpClientConnector(final URI servletUrl, final UiExecutor uiExecutor, final BackgroundExecutor backgroundExecutor, final ClientModelStore clientModelStore, final Codec codec, final RemotingExceptionHandler onException, final HttpClient client) {
+    public HttpClientConnector(final URI servletUrl, final UiExecutor uiExecutor, final BackgroundExecutor backgroundExecutor, final ClientModelStore clientModelStore, final OptimizedJsonCodec codec, final RemotingExceptionHandler onException, final HttpClient client) {
         super(clientModelStore, uiExecutor, new BlindCommandBatcher(), onException, backgroundExecutor);
         this.servletUrl = Assert.requireNonNull(servletUrl, "servletUrl");
         this.codec = Assert.requireNonNull(codec, "codec");

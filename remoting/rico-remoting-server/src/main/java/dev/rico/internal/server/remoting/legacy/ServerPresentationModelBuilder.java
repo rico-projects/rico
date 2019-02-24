@@ -14,15 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.internal.server.remoting.model;
+package dev.rico.internal.server.remoting.legacy;
 
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.remoting.AbstractPresentationModelBuilder;
 import dev.rico.internal.remoting.legacy.LegacyConstants;
-import dev.rico.internal.server.remoting.legacy.DTO;
-import dev.rico.internal.server.remoting.legacy.ServerModelStore;
-import dev.rico.internal.server.remoting.legacy.ServerPresentationModel;
-import dev.rico.internal.server.remoting.legacy.Slot;
 import org.apiguardian.api.API;
 
 import java.util.ArrayList;
@@ -31,6 +27,7 @@ import java.util.List;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
+@Deprecated
 public class ServerPresentationModelBuilder extends AbstractPresentationModelBuilder<ServerPresentationModel> {
 
     private final List<Slot> slots = new ArrayList<>();

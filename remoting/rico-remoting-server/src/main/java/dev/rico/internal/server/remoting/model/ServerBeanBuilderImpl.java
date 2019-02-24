@@ -16,6 +16,8 @@
  */
 package dev.rico.internal.server.remoting.model;
 
+import dev.rico.internal.remoting.legacy.core.BaseAttribute;
+import dev.rico.internal.remoting.legacy.core.BasePresentationModel;
 import dev.rico.remoting.ListChangeEvent;
 import dev.rico.remoting.ListChangeListener;
 import dev.rico.remoting.ObservableList;
@@ -32,8 +34,6 @@ import dev.rico.internal.remoting.info.PropertyInfo;
 import dev.rico.remoting.Property;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.server.remoting.gc.GarbageCollector;
-import dev.rico.internal.remoting.legacy.core.Attribute;
-import dev.rico.internal.remoting.legacy.core.PresentationModel;
 import org.apiguardian.api.API;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
@@ -61,7 +61,7 @@ public class ServerBeanBuilderImpl extends AbstractBeanBuilder implements Server
         return bean;
     }
 
-    protected <T> ObservableList<T> create(final PropertyInfo observableListInfo, final PresentationModel model, final ListMapper listMapper) {
+    protected <T> ObservableList<T> create(final PropertyInfo observableListInfo, final BasePresentationModel model, final ListMapper listMapper) {
         Assert.requireNonNull(model, "model");
         Assert.requireNonNull(listMapper, "listMapper");
         final ObservableList<T> list = new ObservableArrayList<T>() {
@@ -95,7 +95,7 @@ public class ServerBeanBuilderImpl extends AbstractBeanBuilder implements Server
         return list;
     }
 
-    protected <T> Property<T> create(final Attribute attribute, final PropertyInfo propertyInfo) {
+    protected <T> Property<T> create(final BaseAttribute attribute, final PropertyInfo propertyInfo) {
         return new PropertyImpl<T>(attribute, propertyInfo) {
 
             @Override

@@ -24,7 +24,7 @@ import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.IdentitySet;
 import dev.rico.internal.core.ReflectionHelper;
 import dev.rico.internal.server.remoting.config.RemotingConfiguration;
-import dev.rico.remoting.BeanManager;
+import dev.rico.server.remoting.BeanManager;
 import dev.rico.server.remoting.RemotingModel;
 import org.apiguardian.api.API;
 import org.slf4j.Logger;

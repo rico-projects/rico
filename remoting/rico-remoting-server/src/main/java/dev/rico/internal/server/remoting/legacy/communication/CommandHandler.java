@@ -25,6 +25,7 @@ import java.util.List;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
+@Deprecated
 public interface CommandHandler<T extends Command> {
 
     void handleCommand(T command, List<Command> response);

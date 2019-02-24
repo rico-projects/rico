@@ -19,7 +19,7 @@ package dev.rico.internal.server.projection.projection;
 import dev.rico.internal.projection.action.ClientAction;
 import dev.rico.internal.projection.action.StringClientActionBean;
 import dev.rico.internal.server.projection.i18n.BeanLocalization;
-import dev.rico.remoting.BeanManager;
+import dev.rico.server.remoting.BeanManager;
 
 public class ClientActionBuilder<T, U extends ClientAction<T>> extends ActionBuilder<U> {
 

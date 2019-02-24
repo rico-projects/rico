@@ -16,7 +16,7 @@
  */
 package dev.rico.internal.remoting;
 
-import dev.rico.internal.remoting.legacy.core.PresentationModel;
+import dev.rico.internal.remoting.legacy.core.BasePresentationModel;
 import org.apiguardian.api.API;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
@@ -24,5 +24,5 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public interface RemotingEventHandler {
 
-    void onEvent(PresentationModel model);
+    void onEvent(BasePresentationModel model);
 }

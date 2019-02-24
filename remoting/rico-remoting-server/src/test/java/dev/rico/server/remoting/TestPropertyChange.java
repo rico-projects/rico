@@ -23,7 +23,6 @@ import dev.rico.server.remoting.util.SimpleAnnotatedTestModel;
 import dev.rico.server.remoting.util.SimpleTestModel;
 import dev.rico.server.remoting.util.SingleReferenceModel;
 import dev.rico.core.functional.Subscription;
-import dev.rico.remoting.BeanManager;
 import dev.rico.remoting.Property;
 import dev.rico.remoting.ValueChangeEvent;
 import dev.rico.remoting.ValueChangeListener;
