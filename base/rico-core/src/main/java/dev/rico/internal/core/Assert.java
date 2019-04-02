@@ -45,10 +45,10 @@ public final class Assert {
      */
     public static <T> T requireNonNull(final T value, final String argumentName) {
         if (argumentName == null) {
-            throw new NullPointerException(String.format(NOT_NULL_MSG_FORMAT, argumentName));
+            throw new NullPointerException(String.format(NOT_NULL_MSG_FORMAT, "argumentName"));
         }
         if (value == null) {
-            throw new NullPointerException(String.format(NOT_NULL_MSG_FORMAT, value));
+            throw new NullPointerException(String.format(NOT_NULL_MSG_FORMAT, argumentName));
         }
         return value;
     }
