@@ -47,7 +47,7 @@ public final class Assert {
         if (argumentName == null) {
             throw new NullPointerException(String.format(NOT_NULL_MSG_FORMAT, argumentName));
         }
-        if (argumentName == null) {
+        if (value == null) {
             throw new NullPointerException(String.format(NOT_NULL_MSG_FORMAT, value));
         }
         return value;
