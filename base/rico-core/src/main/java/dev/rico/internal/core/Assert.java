@@ -20,7 +20,6 @@ import org.apiguardian.api.API;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
@@ -45,8 +44,13 @@ public final class Assert {
      * @return the {@code value}.
      */
     public static <T> T requireNonNull(final T value, final String argumentName) {
-        Objects.requireNonNull(argumentName, String.format(NOT_NULL_MSG_FORMAT, "argumentName"));
-        return Objects.requireNonNull(value, String.format(NOT_NULL_MSG_FORMAT, argumentName));
+        if (argumentName == null) {
+            throw new NullPointerException(String.format(NOT_NULL_MSG_FORMAT, argumentName));
+        }
+        if (argumentName == null) {
+            throw new NullPointerException(String.format(NOT_NULL_MSG_FORMAT, value));
+        }
+        return value;
     }
 
     /**
@@ -102,9 +106,8 @@ public final class Assert {
      */
     public static <T, L extends List<T>> L requireNonNullEntries(final L collection, final String argumentName) {
         requireNonNull(collection, argumentName);
-        final String msg = String.format(NOT_NULL_ENTRIES_MSG_FORMAT, argumentName);
         for (final Object value : collection) {
-            requireState(value != null, msg);
+            requireState(value != null, NOT_NULL_ENTRIES_MSG_FORMAT, argumentName);
         }
         return collection;
     }
@@ -123,18 +126,9 @@ public final class Assert {
         return array;
     }
 
-    /**
-     * Checks that the specified condition is met and throws a customized
-     * {@link IllegalStateException} if it is.
-     *
-     * @param condition the condition to check
-     * @param message   detail message to be used in the event that a {@code
-     *                  IllegalStateException} is thrown
-     * @throws IllegalStateException if {@code condition} evaluates to false
-     */
-    public static void requireState(final boolean condition, final String message) {
+    public static void requireState(final boolean condition, final String unformatedMessage, final Object... messageArgs) {
         if (!condition) {
-            throw new IllegalStateException(requireNonBlank(message, "message"));
+            throw new IllegalStateException(requireNonBlank(String.format(unformatedMessage, messageArgs), "message"));
         }
     }
 
