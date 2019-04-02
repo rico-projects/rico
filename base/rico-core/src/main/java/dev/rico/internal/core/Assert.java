@@ -126,6 +126,17 @@ public final class Assert {
         return array;
     }
 
+    /**
+     * Checks that the specified condition is met and throws a customized
+     * {@link IllegalStateException} if it is.
+     *
+     * @param condition the condition to check
+     * @param unformatedMessage the unformated message of the possible {@code IllegalStateException}.
+     * {@code String.format(unformatedMessage, messageArgs)} will be called to create the message of the exception.
+     * @param messageArgs the arguments of the message of the possible {@code IllegalStateException}.
+     * {@code String.format(unformatedMessage, messageArgs)} will be called to create the message of the exception.
+     * @throws IllegalStateException if {@code condition} evaluates to false
+     */
     public static void requireState(final boolean condition, final String unformatedMessage, final Object... messageArgs) {
         if (!condition) {
             throw new IllegalStateException(requireNonBlank(String.format(unformatedMessage, messageArgs), "message"));
