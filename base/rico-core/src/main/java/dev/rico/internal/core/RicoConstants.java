@@ -52,4 +52,8 @@ public interface RicoConstants {
     String THREAD_GROUP_NAME = "Rico executors";
 
     String PLATFORM_VERSION_CONTEXT = "platform.version";
+
+    String OS_NAME = "os.name";
+
+    String WIN = "win";
 }
