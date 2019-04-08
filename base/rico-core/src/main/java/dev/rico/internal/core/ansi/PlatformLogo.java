@@ -17,14 +17,18 @@
 package dev.rico.internal.core.ansi;
 
 import dev.rico.internal.core.PlatformVersion;
+import org.apiguardian.api.API;
 
 import java.util.Optional;
 
-/**
- * Created by hendrikebbers on 23.01.18.
- */
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+@API(since = "0.x", status = INTERNAL)
 public class PlatformLogo {
 
+    /**
+     * Prints the Rico logo
+     */
     public static void printLogo() {
         final String version = PlatformVersion.getVersion();
         final String versionString = Optional.of(version).map(v -> "Version " + version + " | ").orElse("");
@@ -57,6 +61,11 @@ public class PlatformLogo {
         System.out.println("");
     }
 
+    /**
+     * Returns the given ansi code if ANSI commands are supported or an empty String
+     * @param ansiCode the ansi code
+     * @return ansi code or empty string
+     */
     private static String getIfAnsiSupported(final String ansiCode) {
         if(AnsiOut.isSupported()) {
             return ansiCode;

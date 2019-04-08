@@ -45,6 +45,10 @@ public interface AnsiOut {
     String ANSI_CYAN_BACKGROUND = "\u001B[46m";
     String ANSI_WHITE_BACKGROUND = "\u001B[47m";
 
+    /**
+     * Returns true if the current platform supports ANSI codes
+     * @return true if the current platform supports ANSI codes
+     */
     static boolean isSupported() {
         return !OsUtil.isWindows();
     }
