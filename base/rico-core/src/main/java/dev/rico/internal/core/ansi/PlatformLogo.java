@@ -17,33 +17,36 @@
 package dev.rico.internal.core.ansi;
 
 import dev.rico.internal.core.PlatformVersion;
+import org.apiguardian.api.API;
 
 import java.util.Optional;
 
-/**
- * Created by hendrikebbers on 23.01.18.
- */
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+@API(since = "0.x", status = INTERNAL)
 public class PlatformLogo {
 
-
+    /**
+     * Prints the Rico logo
+     */
     public static void printLogo() {
         final String version = PlatformVersion.getVersion();
         final String versionString = Optional.of(version).map(v -> "Version " + version + " | ").orElse("");
         final String versionEndSuffix = "                       ".substring(Math.min(20,versionString.length()));
 
-        final String strokeColor = AnsiOut.ANSI_BLUE;
-        final String textColor = AnsiOut.ANSI_RED;
-        final String borderColor = AnsiOut.ANSI_GREEN;
+        final String strokeColor = getIfAnsiSupported(AnsiOut.ANSI_BLUE);
+        final String textColor = getIfAnsiSupported(AnsiOut.ANSI_RED);
+        final String borderColor = getIfAnsiSupported(AnsiOut.ANSI_GREEN);
 
 
-        final String borderStart = AnsiOut.ANSI_BOLD + borderColor;
-        final String borderEnd = AnsiOut.ANSI_RESET;
+        final String borderStart = getIfAnsiSupported(AnsiOut.ANSI_BOLD) + borderColor;
+        final String borderEnd = getIfAnsiSupported(AnsiOut.ANSI_RESET);
         final String borderPipe = borderStart + "|" + borderEnd;
-        final String logoStart = AnsiOut.ANSI_BOLD + strokeColor;
+        final String logoStart = getIfAnsiSupported(AnsiOut.ANSI_BOLD) + strokeColor;
         final String textStart = textColor;
-        final String textEnd = AnsiOut.ANSI_RESET;
-        final String boldTextStart = AnsiOut.ANSI_BOLD + textColor;
-        final String boldTextEnd = AnsiOut.ANSI_RESET;
+        final String textEnd = getIfAnsiSupported(AnsiOut.ANSI_RESET);
+        final String boldTextStart = getIfAnsiSupported(AnsiOut.ANSI_BOLD) + textColor;
+        final String boldTextEnd = getIfAnsiSupported(AnsiOut.ANSI_RESET);
 
         System.out.println("");
         System.out.println("  " + borderStart + "____________________________________________________________________________________" + borderEnd);
@@ -58,6 +61,18 @@ public class PlatformLogo {
         System.out.println("");
     }
 
+    /**
+     * Returns the given ansi code if ANSI commands are supported or an empty String
+     * @param ansiCode the ansi code
+     * @return ansi code or empty string
+     */
+    private static String getIfAnsiSupported(final String ansiCode) {
+        if(AnsiOut.isSupported()) {
+            return ansiCode;
+        } else {
+            return "";
+        }
+    }
 
     public static void main(String[] args) {
         printLogo();

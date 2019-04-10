@@ -16,6 +16,7 @@
  */
 package dev.rico.internal.core.ansi;
 
+import dev.rico.internal.core.OsUtil;
 import org.apiguardian.api.API;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
@@ -43,4 +44,13 @@ public interface AnsiOut {
     String ANSI_PURPLE_BACKGROUND = "\u001B[45m";
     String ANSI_CYAN_BACKGROUND = "\u001B[46m";
     String ANSI_WHITE_BACKGROUND = "\u001B[47m";
+
+    /**
+     * Returns true if the current platform supports ANSI codes
+     * @return true if the current platform supports ANSI codes
+     */
+    static boolean isSupported() {
+        return !OsUtil.isWindows();
+    }
+
 }
