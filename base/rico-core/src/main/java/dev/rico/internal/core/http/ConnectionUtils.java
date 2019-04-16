@@ -34,6 +34,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static dev.rico.internal.core.RicoConstants.HASH_ALGORITHM;
 import static dev.rico.internal.core.http.HttpHeaderConstants.CHARSET;
@@ -46,6 +47,10 @@ public class ConnectionUtils {
 
     public static String toBase64(final byte[] bytes) {
         return Base64.getEncoder().encodeToString(bytes);
+    }
+
+    public static byte[] fromBase64(final String content) {
+        return Base64.getDecoder().decode(content);
     }
 
     public static String toHex(final byte[] bytes) {
@@ -178,6 +183,16 @@ public class ConnectionUtils {
             finalLength = finalLength  + len;
         }
         return finalLength;
+    }
+
+    public static byte[] unbox(final Byte[] array) {
+        Assert.requireNonNull(array, "array");
+        final byte[] result = new byte[array.length];
+        int j=0;
+        for(Byte b: array) {
+            result[j++] = b.byteValue();
+        }
+        return result;
     }
 
 }
