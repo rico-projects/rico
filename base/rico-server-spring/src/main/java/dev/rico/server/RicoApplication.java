@@ -34,9 +34,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
 /**
- * Annotation can be used to annotate a Spring based Rico annotation.
- * This annotation does mainly the same as {@link org.springframework.boot.autoconfigure.SpringBootApplication} but adds the
- * Rico bootstrap (see {@link EnableRico}).
+ * Annotation to mark an Rico enhanced Spring application.
+ * This annotation extends {@link org.springframework.boot.autoconfigure.SpringBootApplication} by adding the
+ * Rico bootstrap (via {@link EnableRico}).
  *
  * @author Hendrik Ebbers
  */
