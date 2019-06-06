@@ -21,6 +21,8 @@ import org.apiguardian.api.API;
 
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
+import java.util.Objects;
+
 /**
  * The class defines a param that can be used as a action param when calling a remoting action on the server side
  * controller. Each param is defined by a name and a value. The name must be unique for a specific action.
@@ -37,7 +39,10 @@ public class Param {
      * Default constructor
      * @param name name of the param
      * @param value value of the param
+     *
+     * @deprecated Please of {@link #of(String, Object)}
      */
+    @Deprecated
     public Param(final String name, final Object value) {
         this.name = Assert.requireNonBlank(name, "name");
         this.value = value;
@@ -67,9 +72,8 @@ public class Param {
         final Param param = (Param) o;
 
         if (!name.equals(param.name)) return false;
-        if (value != null ? !value.equals(param.value) : param.value != null) return false;
+        return Objects.equals(value, param.value);
 
-        return true;
     }
 
     @Override
@@ -77,5 +81,15 @@ public class Param {
         int result = name.hashCode();
         result = 31 * result + (value != null ? value.hashCode() : 0);
         return result;
+    }
+
+    /**
+     * Creates a parameter
+     * @param name name of the parameter
+     * @param value value  of the parameter
+     * @return the parameter
+     */
+    public static Param of(final String name, final Object value) {
+        return new Param(name, value);
     }
 }
