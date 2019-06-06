@@ -40,7 +40,7 @@ public class Param {
      * @param name name of the param
      * @param value value of the param
      *
-     * @deprecated Please of {@link #of(String, Object)}
+     * @deprecated Please use {@link #of(String, Object)}
      */
     @Deprecated
     public Param(final String name, final Object value) {
