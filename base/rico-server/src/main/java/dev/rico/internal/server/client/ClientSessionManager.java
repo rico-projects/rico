@@ -83,7 +83,12 @@ public class ClientSessionManager {
         try {
             final Map<String, ClientSession> map = getOrCreateClientSessionMapInHttpSession(httpSession);
             for(ClientSession session : map.values()) {
-                lifecycleHandler.onSessionDestroyed(session);
+                setClientSessionForThread(httpSession, session.getId());
+                try {
+                    lifecycleHandler.onSessionDestroyed(session);
+                } finally {
+                    resetClientSessionForThread();
+                }
             }
             map.clear();
         } finally {
