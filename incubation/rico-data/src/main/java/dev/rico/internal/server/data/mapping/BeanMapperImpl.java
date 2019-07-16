@@ -89,6 +89,24 @@ public class BeanMapperImpl implements BeanMapper {
 
     @Override
     public <ID extends Serializable, B, E extends DataWithId<ID>> B toBean(final E entity, final Class<B> beanClass) {
-        throw new RuntimeException("Not yet implemented!");
+        Assert.requireNonNull(entity, "entity");
+        Assert.requireNonNull(beanClass, "beanClass");
+
+        final Class<E> entityClass = (Class<E>) entity.getClass();
+
+        B bean = beanManager.create(beanClass);
+
+        Map<Class<?>, BeanConverter> converterMap = converters.computeIfAbsent(entityClass, c -> new HashMap<>());
+        BeanConverter beanConverter = converterMap.get(beanClass);
+
+        if (beanConverter == null) {
+            throw new IllegalStateException("No converter for " + beanClass.getSimpleName() + " to " + entityClass + " registered!");
+        }
+
+        bean = (B) beanConverter.enrichtBeanByEntity(bean, entity);
+
+        beanToIdMapper.computeIfAbsent(bean, b -> new HashMap<>()).put(entityClass, entity.getId());
+
+        return bean;
     }
 }
