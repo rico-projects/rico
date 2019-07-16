@@ -73,7 +73,7 @@ public class BeanMapperImpl implements BeanMapper {
         final ID id = entity.getId();
         final BeanConverter<ID, B, E> converter = getConverter(entityClass, beanClass);
         addMapping(bean, entityClass, id);
-        return converter.enrichtBeanByEntity(bean, entity);
+        return converter.enrichBeanByEntity(bean, entity);
     }
 
     @Override
@@ -84,7 +84,7 @@ public class BeanMapperImpl implements BeanMapper {
         final E entity = Optional.ofNullable(getEntityIdForBean(bean, entityClass))
                 .map(id -> service.findById(id))
                 .orElse(service.createNewInstance());
-        return converter.enrichtEntityByBean(entity, bean);
+        return converter.enrichEntityByBean(entity, bean);
     }
 
     @Override
@@ -103,7 +103,7 @@ public class BeanMapperImpl implements BeanMapper {
             throw new IllegalStateException("No converter for " + beanClass.getSimpleName() + " to " + entityClass + " registered!");
         }
 
-        bean = (B) beanConverter.enrichtBeanByEntity(bean, entity);
+        bean = (B) beanConverter.enrichBeanByEntity(bean, entity);
 
         beanToIdMapper.computeIfAbsent(bean, b -> new HashMap<>()).put(entityClass, entity.getId());
 
