@@ -1,11 +1,9 @@
 <p align="right">
-<a href="https://dev.karakun.com" target="_blank"><img src="readme/supported_by_karakun.png?raw=true" alt="Supported by Karakun"/></a>
+<a href="https://dev.karakun.com" target="_blank"><img src="metadata/supported-karakun-small.png?raw=true" alt="Supported by Karakun"/></a>
 </p>
 
 # Rico [![Build Status](https://travis-ci.org/rico-projects/rico.svg?branch=master)](https://travis-ci.org/rico-project/rico)
 This repository contains all Java related sources of Rico. Clients for other languages will be provided in seperate repositories (JavaScript, AngularJS, Polymer and Android).
-
-![Rico Logo](readme/rico_logo.png)
 
 ## About Rico
 Rico is a client-server-framework that provides several functionalities and APIs to create enterprise applications. This
@@ -47,9 +45,6 @@ APIs for the following functionalities:
 * projection
 * tracing
 
-An introduction of Rico can be found in the [Karakun DevHub](https://dev.karakun.com/rico/).
-
-
 ## Development origin
 The Rico framework is the successor of the [Dolphin Platform](https://github.com/canoo/dolphin-platform) that provided 
 functionality like an asynchronous remoting layer for enterprise applications based on generic APIs. While Rico shares 
@@ -60,5 +55,3 @@ At Karakun we ❤️ open source. Based on this we develop the complete Rico fra
 
 ## License
 The project is released as open source under the Apache License Version 2.0
-
-![Rico Open Source](readme/rico_os.png)
