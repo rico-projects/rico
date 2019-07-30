@@ -5,6 +5,8 @@
 # Rico [![Build Status](https://travis-ci.org/rico-projects/rico.svg?branch=master)](https://travis-ci.org/rico-project/rico)
 This repository contains all Java related sources of Rico. Clients for other languages will be provided in seperate repositories (JavaScript, AngularJS, Polymer and Android).
 
+![Rico Logo](doc/rico_logo.png)
+
 ## About Rico
 Rico is a client-server-framework that provides several functionalities and APIs to create enterprise applications. This
 includes features like tracing pr monitoring that are critical in developing applications, escpecially in modern cloud based 
