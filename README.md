@@ -1,5 +1,5 @@
 <p align="right">
-<a href="https://dev.karakun.com" target="_blank"><img src="metadata/supported-karakun-small.png?raw=true" alt="Supported by Karakun"/></a>
+<a href="https://dev.karakun.com" target="_blank"><img src="readme/supported_karakun.png?raw=true" alt="Supported by Karakun"/></a>
 </p>
 
 # Rico [![Build Status](https://travis-ci.org/rico-projects/rico.svg?branch=master)](https://travis-ci.org/rico-project/rico)
