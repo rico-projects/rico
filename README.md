@@ -58,4 +58,4 @@ At Karakun we ❤️ open source. Based on this we develop the complete Rico fra
 ## License
 The project is released as open source under the Apache License Version 2.0
 
-![Rico Open Source](readme/rico_os_50.png)
+![Rico Open Source](readme/rico_os_25.png)
