@@ -47,7 +47,7 @@ APIs for the following functionalities:
 * projection
 * tracing
 
-A general introduction of Rico can be found in the [Karakun DevHub](https://dev.karakun.com/rico/).
+An introduction of Rico can be found in the [Karakun DevHub](https://dev.karakun.com/rico/).
 
 
 ## Development origin
