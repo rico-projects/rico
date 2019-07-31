@@ -21,6 +21,7 @@ import dev.rico.internal.remoting.ClassRepository;
 import dev.rico.internal.remoting.RemotingEventHandler;
 import dev.rico.internal.remoting.EventDispatcher;
 import dev.rico.internal.remoting.PresentationModelBuilder;
+import dev.rico.internal.remoting.legacy.core.BasePresentationModel;
 import dev.rico.remoting.ListChangeEvent;
 import dev.rico.internal.remoting.RemotingConstants;
 import dev.rico.internal.remoting.PresentationModelBuilderFactory;
@@ -29,7 +30,6 @@ import dev.rico.internal.remoting.info.ClassInfo;
 import dev.rico.internal.remoting.info.PropertyInfo;
 import dev.rico.internal.remoting.MappingException;
 import dev.rico.internal.remoting.legacy.core.ModelStore;
-import dev.rico.internal.remoting.legacy.core.PresentationModel;
 import org.apiguardian.api.API;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,7 +56,7 @@ public class ListMapperImpl implements ListMapper {
         dispatcher.addListSpliceHandler(new RemotingEventHandler() {
             @Override
             @SuppressWarnings("unchecked")
-            public void onEvent(PresentationModel model) {
+            public void onEvent(BasePresentationModel model) {
                 try {
                     final String sourceId = model.getAttribute("source").getValue().toString();
                     final String attributeName = model.getAttribute("attribute").getValue().toString();

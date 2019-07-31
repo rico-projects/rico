@@ -28,6 +28,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
  * @see DTO
  */
 @API(since = "0.x", status = INTERNAL)
+@Deprecated
 public final class Slot {
 
     private final String propertyName;

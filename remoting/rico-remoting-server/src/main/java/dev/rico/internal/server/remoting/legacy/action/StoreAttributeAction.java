@@ -17,7 +17,7 @@
 package dev.rico.internal.server.remoting.legacy.action;
 
 import dev.rico.internal.remoting.legacy.communication.ChangeAttributeMetadataCommand;
-import dev.rico.internal.remoting.legacy.core.Attribute;
+import dev.rico.internal.remoting.legacy.core.BaseAttribute;
 import dev.rico.internal.server.remoting.legacy.ServerAttribute;
 import dev.rico.internal.server.remoting.legacy.communication.ActionRegistry;
 import dev.rico.internal.server.remoting.legacy.communication.CommandHandler;
@@ -30,6 +30,7 @@ import java.util.List;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
+@Deprecated
 public class StoreAttributeAction extends AbstractServerAction {
 
     private static final Logger LOG = LoggerFactory.getLogger(StoreAttributeAction.class);
@@ -38,7 +39,7 @@ public class StoreAttributeAction extends AbstractServerAction {
         registry.register(ChangeAttributeMetadataCommand.class, new CommandHandler<ChangeAttributeMetadataCommand>() {
             @Override
             public void handleCommand(final ChangeAttributeMetadataCommand command, final List response) {
-                final Attribute attribute = getServerModelStore().findAttributeById(command.getAttributeId());
+                final BaseAttribute attribute = getServerModelStore().findAttributeById(command.getAttributeId());
                 if (attribute == null) {
                     LOG.warn("Cannot find attribute with id '{}'. Metadata remains unchanged.", command.getAttributeId());
                     return;
@@ -47,9 +48,9 @@ public class StoreAttributeAction extends AbstractServerAction {
                 ((ServerAttribute) attribute).silently(new Runnable() {
                     @Override
                     public void run() {
-                        if(command.getMetadataName().equals(Attribute.VALUE_NAME)) {
+                        if(command.getMetadataName().equals(BaseAttribute.VALUE_NAME)) {
                             attribute.setValue(command.getValue());
-                        } else if(command.getMetadataName().equals(Attribute.QUALIFIER_NAME)) {
+                        } else if(command.getMetadataName().equals(BaseAttribute.QUALIFIER_NAME)) {
                             if(command.getValue() == null) {
                                 ((ServerAttribute) attribute).setQualifier(null);
                             } else {

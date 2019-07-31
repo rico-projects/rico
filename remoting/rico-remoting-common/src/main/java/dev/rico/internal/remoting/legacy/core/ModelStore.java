@@ -50,7 +50,8 @@ import static org.apiguardian.api.API.Status.DEPRECATED;
  * In addition, the model store provides methods to listen for changes to the model store.
  */
 @API(since = "0.x", status = DEPRECATED)
-public class ModelStore<A extends Attribute, P extends PresentationModel<A>> {
+@Deprecated
+public class ModelStore<A extends BaseAttribute, P extends BasePresentationModel<A>> {
 
     // We maintain four indexes in this data structure in order to efficiently access
     // - presentation models: by id; by type
@@ -136,7 +137,7 @@ public class ModelStore<A extends Attribute, P extends PresentationModel<A>> {
             addPresentationModelByType(model);
             for (A attribute : model.getAttributes()) {
                 addAttributeById(attribute);
-                attribute.addPropertyChangeListener(Attribute.QUALIFIER_NAME, ATTRIBUTE_WORKER);
+                attribute.addPropertyChangeListener(BaseAttribute.QUALIFIER_NAME, ATTRIBUTE_WORKER);
                 if (!Assert.isBlank(attribute.getQualifier())) addAttributeByQualifier(attribute);
             }
             fireModelStoreChangedEvent(model, ModelStoreEvent.Type.ADDED);
@@ -160,7 +161,7 @@ public class ModelStore<A extends Attribute, P extends PresentationModel<A>> {
             for (final A attribute : model.getAttributes()) {
                 removeAttributeById(attribute);
                 removeAttributeByQualifier(attribute);
-                attribute.removePropertyChangeListener(Attribute.QUALIFIER_NAME, ATTRIBUTE_WORKER);
+                attribute.removePropertyChangeListener(BaseAttribute.QUALIFIER_NAME, ATTRIBUTE_WORKER);
             }
             fireModelStoreChangedEvent(model, ModelStoreEvent.Type.REMOVED);
             removed = true;
@@ -294,13 +295,13 @@ public class ModelStore<A extends Attribute, P extends PresentationModel<A>> {
      * <p/>Note: attributes belonging to a given presentation model are automatically added to the model store
      * when the presentation model is added.
      * @param attribute attribute to be added to the model store
-     * @see #add(PresentationModel)
+     * @see #add(BasePresentationModel)
      */
     @Deprecated
     public void registerAttribute(final A attribute) {
         if (null == attribute) return;
         boolean listeningAlready = false;
-        for (PropertyChangeListener listener : attribute.getPropertyChangeListeners(Attribute.QUALIFIER_NAME)) {
+        for (PropertyChangeListener listener : attribute.getPropertyChangeListeners(BaseAttribute.QUALIFIER_NAME)) {
             if (ATTRIBUTE_WORKER == listener) {
                 listeningAlready = true;
                 break;
@@ -308,7 +309,7 @@ public class ModelStore<A extends Attribute, P extends PresentationModel<A>> {
         }
 
         if (!listeningAlready) {
-            attribute.addPropertyChangeListener(Attribute.QUALIFIER_NAME, ATTRIBUTE_WORKER);
+            attribute.addPropertyChangeListener(BaseAttribute.QUALIFIER_NAME, ATTRIBUTE_WORKER);
         }
 
         addAttributeByQualifier(attribute);

@@ -18,8 +18,8 @@ package dev.rico.remoting.impl.codec;
 
 import dev.rico.internal.remoting.codec.OptimizedJsonCodec;
 import dev.rico.internal.remoting.commands.CallActionCommand;
+import dev.rico.internal.remoting.legacy.core.BaseAttribute;
 import org.hamcrest.Matchers;
-import dev.rico.internal.remoting.legacy.core.Attribute;
 import dev.rico.internal.remoting.legacy.communication.Command;
 import dev.rico.internal.remoting.legacy.communication.CreatePresentationModelCommand;
 import dev.rico.internal.remoting.legacy.communication.EmptyCommand;
@@ -353,34 +353,34 @@ public class TestOptimizedJsonCodec {
         command.setPmType("com.canoo.icos.casemanager.model.casedetails.CaseInfoBean");
 
         final Map<String, Object> sourceSystem = new HashMap<>();
-        sourceSystem.put(Attribute.PROPERTY_NAME, "@@@ SOURCE_SYSTEM @@@");
-        sourceSystem.put(Attribute.ID, "3204S");
-        sourceSystem.put(Attribute.QUALIFIER_NAME, null);
-        sourceSystem.put(Attribute.VALUE_NAME, "server");
+        sourceSystem.put(BaseAttribute.PROPERTY_NAME, "@@@ SOURCE_SYSTEM @@@");
+        sourceSystem.put(BaseAttribute.ID, "3204S");
+        sourceSystem.put(BaseAttribute.QUALIFIER_NAME, null);
+        sourceSystem.put(BaseAttribute.VALUE_NAME, "server");
 
         final Map<String, Object> caseDetailsLabel = new HashMap<>();
-        caseDetailsLabel.put(Attribute.PROPERTY_NAME, "caseDetailsLabel");
-        caseDetailsLabel.put(Attribute.ID, "3205S");
-        caseDetailsLabel.put(Attribute.QUALIFIER_NAME, null);
-        caseDetailsLabel.put(Attribute.VALUE_NAME, null);
+        caseDetailsLabel.put(BaseAttribute.PROPERTY_NAME, "caseDetailsLabel");
+        caseDetailsLabel.put(BaseAttribute.ID, "3205S");
+        caseDetailsLabel.put(BaseAttribute.QUALIFIER_NAME, null);
+        caseDetailsLabel.put(BaseAttribute.VALUE_NAME, null);
 
         final Map<String, Object> caseIdLabel = new HashMap<>();
-        caseIdLabel.put(Attribute.PROPERTY_NAME, "caseIdLabel");
-        caseIdLabel.put(Attribute.ID, "3206S");
-        caseIdLabel.put(Attribute.QUALIFIER_NAME, null);
-        caseIdLabel.put(Attribute.VALUE_NAME, null);
+        caseIdLabel.put(BaseAttribute.PROPERTY_NAME, "caseIdLabel");
+        caseIdLabel.put(BaseAttribute.ID, "3206S");
+        caseIdLabel.put(BaseAttribute.QUALIFIER_NAME, null);
+        caseIdLabel.put(BaseAttribute.VALUE_NAME, null);
 
         final Map<String, Object> statusLabel = new HashMap<>();
-        statusLabel.put(Attribute.PROPERTY_NAME, "statusLabel");
-        statusLabel.put(Attribute.ID, "3207S");
-        statusLabel.put(Attribute.QUALIFIER_NAME, null);
-        statusLabel.put(Attribute.VALUE_NAME, null);
+        statusLabel.put(BaseAttribute.PROPERTY_NAME, "statusLabel");
+        statusLabel.put(BaseAttribute.ID, "3207S");
+        statusLabel.put(BaseAttribute.QUALIFIER_NAME, null);
+        statusLabel.put(BaseAttribute.VALUE_NAME, null);
 
         final Map<String, Object> status = new HashMap<>();
-        status.put(Attribute.PROPERTY_NAME, "status");
-        status.put(Attribute.ID, "3208S");
-        status.put(Attribute.QUALIFIER_NAME, null);
-        status.put(Attribute.VALUE_NAME, null);
+        status.put(BaseAttribute.PROPERTY_NAME, "status");
+        status.put(BaseAttribute.ID, "3208S");
+        status.put(BaseAttribute.QUALIFIER_NAME, null);
+        status.put(BaseAttribute.VALUE_NAME, null);
 
         command.setAttributes(Arrays.asList(sourceSystem, caseDetailsLabel, caseIdLabel, statusLabel, status));
 

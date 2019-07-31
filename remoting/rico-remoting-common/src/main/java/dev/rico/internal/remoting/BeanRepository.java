@@ -16,7 +16,7 @@
  */
 package dev.rico.internal.remoting;
 
-import dev.rico.internal.remoting.legacy.core.PresentationModel;
+import dev.rico.internal.remoting.legacy.core.BasePresentationModel;
 import dev.rico.core.functional.Subscription;
 import dev.rico.remoting.converter.BeanRepo;
 import org.apiguardian.api.API;
@@ -42,5 +42,5 @@ public interface BeanRepository extends BeanRepo {
 
     <T> List<T> findAll(Class<T> beanClass);
 
-    void registerBean(Object bean, PresentationModel model, UpdateSource source);
+    void registerBean(Object bean, BasePresentationModel model, UpdateSource source);
 }

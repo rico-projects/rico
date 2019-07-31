@@ -28,7 +28,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
  */
 @Deprecated
 @API(since = "0.x", status = INTERNAL)
-public class DefaultServerDolphin implements ServerDolphin {
+public class DefaultServerDolphin {
 
     /**
      * the server model store is unique per user session
@@ -52,12 +52,10 @@ public class DefaultServerDolphin implements ServerDolphin {
         this(new ServerModelStore(), new ServerConnector());
     }
 
-    @Override
     public ServerModelStore getModelStore() {
         return serverModelStore;
     }
 
-    @Override
     public ServerConnector getServerConnector() {
         return serverConnector;
     }

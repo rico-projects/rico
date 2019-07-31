@@ -17,7 +17,7 @@
 package dev.rico.internal.server.remoting.context;
 
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.remoting.BeanManagerImpl;
+import dev.rico.internal.server.remoting.model.BeanManagerImpl;
 import dev.rico.internal.remoting.ClassRepository;
 import dev.rico.internal.remoting.ClassRepositoryImpl;
 import dev.rico.internal.remoting.Converters;
@@ -54,9 +54,9 @@ import dev.rico.internal.server.remoting.model.ServerBeanRepositoryImpl;
 import dev.rico.internal.server.remoting.model.ServerControllerActionCallBean;
 import dev.rico.internal.server.remoting.model.ServerEventDispatcher;
 import dev.rico.internal.server.remoting.model.ServerPlatformBeanRepository;
-import dev.rico.internal.server.remoting.model.ServerPresentationModelBuilderFactory;
+import dev.rico.internal.server.remoting.legacy.ServerPresentationModelBuilderFactory;
 import dev.rico.internal.server.remoting.servlet.ServerTimingFilter;
-import dev.rico.remoting.BeanManager;
+import dev.rico.server.remoting.BeanManager;
 import dev.rico.server.client.ClientSession;
 import dev.rico.server.spi.components.ManagedBeanFactory;
 import dev.rico.server.timing.Metric;

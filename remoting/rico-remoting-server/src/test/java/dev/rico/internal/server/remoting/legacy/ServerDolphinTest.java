@@ -17,9 +17,9 @@
 package dev.rico.internal.server.remoting.legacy;
 
 import dev.rico.internal.remoting.legacy.communication.Command;
+import dev.rico.internal.remoting.legacy.core.BasePresentationModel;
 import dev.rico.internal.remoting.legacy.core.ModelStoreEvent;
 import dev.rico.internal.remoting.legacy.core.ModelStoreListener;
-import dev.rico.internal.remoting.legacy.core.PresentationModel;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -60,7 +60,7 @@ public class ServerDolphinTest {
 
 
         for (String id : serverInstance.getModelStore().listPresentationModelIds()) {
-            PresentationModel model = serverInstance.getModelStore().findPresentationModelById(id);
+            BasePresentationModel model = serverInstance.getModelStore().findPresentationModelById(id);
             Assert.assertNotNull(model);
             Assert.assertTrue(serverInstance.getModelStore().listPresentationModels().contains(model));
         }

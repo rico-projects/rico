@@ -19,7 +19,7 @@ package dev.rico.server.remoting;
 import dev.rico.internal.remoting.RemotingConstants;
 import dev.rico.internal.remoting.converters.BeanConverterFactory;
 import dev.rico.internal.remoting.legacy.LegacyConstants;
-import dev.rico.internal.remoting.legacy.core.PresentationModel;
+import dev.rico.internal.remoting.legacy.core.BasePresentationModel;
 import dev.rico.internal.server.remoting.legacy.DTO;
 import dev.rico.internal.server.remoting.legacy.ServerModelStore;
 import dev.rico.internal.server.remoting.legacy.ServerPresentationModel;
@@ -27,7 +27,6 @@ import dev.rico.internal.server.remoting.legacy.Slot;
 import dev.rico.server.remoting.util.AbstractRemotingTest;
 import dev.rico.server.remoting.util.ListReferenceModel;
 import dev.rico.server.remoting.util.SimpleTestModel;
-import dev.rico.remoting.BeanManager;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
@@ -63,7 +62,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
             return this;
         }
 
-        public PresentationModel create() {
+        public BasePresentationModel create() {
             return serverModelStore.presentationModel(UUID.randomUUID().toString(), type, new DTO(slots));
         }
 
@@ -79,9 +78,9 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
         final SimpleTestModel object = manager.create(SimpleTestModel.class);
-        final PresentationModel objectModel = serverModelStore.findAllPresentationModelsByType(SimpleTestModel.class.getName()).get(0);
+        final BasePresentationModel objectModel = serverModelStore.findAllPresentationModelsByType(SimpleTestModel.class.getName()).get(0);
 
         // when :
         model.getObjectList().add(object);
@@ -90,7 +89,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final List<ServerPresentationModel> changes = serverModelStore.findAllPresentationModelsByType(RemotingConstants.LIST_SPLICE);
         assertThat(changes, hasSize(1));
 
-        final PresentationModel change = changes.get(0);
+        final BasePresentationModel change = changes.get(0);
         assertThat(change.getAttribute("source").getValue(), allOf(instanceOf(String.class), is((Object) sourceModel.getId())));
         assertThat(change.getAttribute("attribute").getValue(), allOf(instanceOf(String.class), is((Object) "objectList")));
         assertThat(change.getAttribute("from").getValue(), allOf(instanceOf(Integer.class), is((Object) 0)));
@@ -106,7 +105,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
 
         // when :
         model.getObjectList().add(null);
@@ -115,7 +114,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final List<ServerPresentationModel> changes = serverModelStore.findAllPresentationModelsByType(RemotingConstants.LIST_SPLICE);
         assertThat(changes, hasSize(1));
 
-        final PresentationModel change = changes.get(0);
+        final BasePresentationModel change = changes.get(0);
         assertThat(change.getAttribute("source").getValue(), allOf(instanceOf(String.class), is((Object) sourceModel.getId())));
         assertThat(change.getAttribute("attribute").getValue(), allOf(instanceOf(String.class), is((Object) "objectList")));
         assertThat(change.getAttribute("from").getValue(), allOf(instanceOf(Integer.class), is((Object) 0)));
@@ -131,7 +130,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
         final String value = "Hello";
 
         // when :
@@ -141,7 +140,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final List<ServerPresentationModel> changes = serverModelStore.findAllPresentationModelsByType(RemotingConstants.LIST_SPLICE);
         assertThat(changes, hasSize(1));
 
-        final PresentationModel change = changes.get(0);
+        final BasePresentationModel change = changes.get(0);
         assertThat(change.getAttribute("source").getValue(), allOf(instanceOf(String.class), is((Object) sourceModel.getId())));
         assertThat(change.getAttribute("attribute").getValue(), allOf(instanceOf(String.class), is((Object) "primitiveList")));
         assertThat(change.getAttribute("from").getValue(), allOf(instanceOf(Integer.class), is((Object) 0)));
@@ -157,7 +156,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
 
         // when :
         model.getPrimitiveList().add(null);
@@ -166,7 +165,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final List<ServerPresentationModel> changes = serverModelStore.findAllPresentationModelsByType(RemotingConstants.LIST_SPLICE);
         assertThat(changes, hasSize(1));
 
-        final PresentationModel change = changes.get(0);
+        final BasePresentationModel change = changes.get(0);
         assertThat(change.getAttribute("source").getValue(), allOf(instanceOf(String.class), is((Object) sourceModel.getId())));
         assertThat(change.getAttribute("attribute").getValue(), allOf(instanceOf(String.class), is((Object) "primitiveList")));
         assertThat(change.getAttribute("from").getValue(), allOf(instanceOf(Integer.class), is((Object) 0)));
@@ -182,7 +181,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
         final SimpleTestModel object = manager.create(SimpleTestModel.class);
 
         model.getObjectList().add(object);
@@ -195,7 +194,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final List<ServerPresentationModel> changes = serverModelStore.findAllPresentationModelsByType(RemotingConstants.LIST_SPLICE);
         assertThat(changes, hasSize(1));
 
-        final PresentationModel change = changes.get(0);
+        final BasePresentationModel change = changes.get(0);
         assertThat(change.getAttribute("source").getValue(), allOf(instanceOf(String.class), is((Object) sourceModel.getId())));
         assertThat(change.getAttribute("attribute").getValue(), allOf(instanceOf(String.class), is((Object) "objectList")));
         assertThat(change.getAttribute("from").getValue(), allOf(instanceOf(Integer.class), is((Object) 0)));
@@ -210,7 +209,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
 
         model.getObjectList().add(null);
         removeAllPresentationModelsOfType(serverModelStore, RemotingConstants.LIST_SPLICE);
@@ -222,7 +221,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final List<ServerPresentationModel> changes = serverModelStore.findAllPresentationModelsByType(RemotingConstants.LIST_SPLICE);
         assertThat(changes, hasSize(1));
 
-        final PresentationModel change = changes.get(0);
+        final BasePresentationModel change = changes.get(0);
         assertThat(change.getAttribute("source").getValue(), allOf(instanceOf(String.class), is((Object) sourceModel.getId())));
         assertThat(change.getAttribute("attribute").getValue(), allOf(instanceOf(String.class), is((Object) "objectList")));
         assertThat(change.getAttribute("from").getValue(), allOf(instanceOf(Integer.class), is((Object) 0)));
@@ -237,7 +236,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
 
         model.getPrimitiveList().add("Hello");
         removeAllPresentationModelsOfType(serverModelStore, RemotingConstants.LIST_SPLICE);
@@ -249,7 +248,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final List<ServerPresentationModel> changes = serverModelStore.findAllPresentationModelsByType(RemotingConstants.LIST_SPLICE);
         assertThat(changes, hasSize(1));
 
-        final PresentationModel change = changes.get(0);
+        final BasePresentationModel change = changes.get(0);
         assertThat(change.getAttribute("source").getValue(), allOf(instanceOf(String.class), is((Object) sourceModel.getId())));
         assertThat(change.getAttribute("attribute").getValue(), allOf(instanceOf(String.class), is((Object) "primitiveList")));
         assertThat(change.getAttribute("from").getValue(), allOf(instanceOf(Integer.class), is((Object) 0)));
@@ -264,7 +263,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
 
         model.getPrimitiveList().add(null);
         removeAllPresentationModelsOfType(serverModelStore, RemotingConstants.LIST_SPLICE);
@@ -276,7 +275,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final List<ServerPresentationModel> changes = serverModelStore.findAllPresentationModelsByType(RemotingConstants.LIST_SPLICE);
         assertThat(changes, hasSize(1));
 
-        final PresentationModel change = changes.get(0);
+        final BasePresentationModel change = changes.get(0);
         assertThat(change.getAttribute("source").getValue(), allOf(instanceOf(String.class), is((Object) sourceModel.getId())));
         assertThat(change.getAttribute("attribute").getValue(), allOf(instanceOf(String.class), is((Object) "primitiveList")));
         assertThat(change.getAttribute("from").getValue(), allOf(instanceOf(Integer.class), is((Object) 0)));
@@ -291,9 +290,9 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
         final SimpleTestModel newObject = manager.create(SimpleTestModel.class);
-        final PresentationModel newObjectModel = serverModelStore.findAllPresentationModelsByType(SimpleTestModel.class.getName()).get(0);
+        final BasePresentationModel newObjectModel = serverModelStore.findAllPresentationModelsByType(SimpleTestModel.class.getName()).get(0);
         final SimpleTestModel oldObject = manager.create(SimpleTestModel.class);
 
         model.getObjectList().add(oldObject);
@@ -306,7 +305,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final List<ServerPresentationModel> changes = serverModelStore.findAllPresentationModelsByType(RemotingConstants.LIST_SPLICE);
         assertThat(changes, hasSize(1));
 
-        final PresentationModel change = changes.get(0);
+        final BasePresentationModel change = changes.get(0);
         assertThat(change.getAttribute("source").getValue(), allOf(instanceOf(String.class), is((Object) sourceModel.getId())));
         assertThat(change.getAttribute("attribute").getValue(), allOf(instanceOf(String.class), is((Object) "objectList")));
         assertThat(change.getAttribute("from").getValue(), allOf(instanceOf(Integer.class), is((Object) 0)));
@@ -322,7 +321,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
         final SimpleTestModel oldObject = manager.create(SimpleTestModel.class);
 
         model.getObjectList().add(oldObject);
@@ -335,7 +334,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final List<ServerPresentationModel> changes = serverModelStore.findAllPresentationModelsByType(RemotingConstants.LIST_SPLICE);
         assertThat(changes, hasSize(1));
 
-        final PresentationModel change = changes.get(0);
+        final BasePresentationModel change = changes.get(0);
         assertThat(change.getAttribute("source").getValue(), allOf(instanceOf(String.class), is((Object) sourceModel.getId())));
         assertThat(change.getAttribute("attribute").getValue(), allOf(instanceOf(String.class), is((Object) "objectList")));
         assertThat(change.getAttribute("from").getValue(), allOf(instanceOf(Integer.class), is((Object) 0)));
@@ -351,9 +350,9 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
         final SimpleTestModel newObject = manager.create(SimpleTestModel.class);
-        final PresentationModel newObjectModel = serverModelStore.findAllPresentationModelsByType(SimpleTestModel.class.getName()).get(0);
+        final BasePresentationModel newObjectModel = serverModelStore.findAllPresentationModelsByType(SimpleTestModel.class.getName()).get(0);
 
         model.getObjectList().add(null);
         removeAllPresentationModelsOfType(serverModelStore, RemotingConstants.LIST_SPLICE);
@@ -365,7 +364,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final List<ServerPresentationModel> changes = serverModelStore.findAllPresentationModelsByType(RemotingConstants.LIST_SPLICE);
         assertThat(changes, hasSize(1));
 
-        final PresentationModel change = changes.get(0);
+        final BasePresentationModel change = changes.get(0);
         assertThat(change.getAttribute("source").getValue(), allOf(instanceOf(String.class), is((Object) sourceModel.getId())));
         assertThat(change.getAttribute("attribute").getValue(), allOf(instanceOf(String.class), is((Object) "objectList")));
         assertThat(change.getAttribute("from").getValue(), allOf(instanceOf(Integer.class), is((Object) 0)));
@@ -381,7 +380,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
         final String newValue = "Goodbye World";
 
         model.getPrimitiveList().add("Hello World");
@@ -394,7 +393,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final List<ServerPresentationModel> changes = serverModelStore.findAllPresentationModelsByType(RemotingConstants.LIST_SPLICE);
         assertThat(changes, hasSize(1));
 
-        final PresentationModel change = changes.get(0);
+        final BasePresentationModel change = changes.get(0);
         assertThat(change.getAttribute("source").getValue(), allOf(instanceOf(String.class), is((Object) sourceModel.getId())));
         assertThat(change.getAttribute("attribute").getValue(), allOf(instanceOf(String.class), is((Object) "primitiveList")));
         assertThat(change.getAttribute("from").getValue(), allOf(instanceOf(Integer.class), is((Object) 0)));
@@ -410,7 +409,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
 
         model.getPrimitiveList().add("Hello World");
         removeAllPresentationModelsOfType(serverModelStore, RemotingConstants.LIST_SPLICE);
@@ -422,7 +421,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final List<ServerPresentationModel> changes = serverModelStore.findAllPresentationModelsByType(RemotingConstants.LIST_SPLICE);
         assertThat(changes, hasSize(1));
 
-        final PresentationModel change = changes.get(0);
+        final BasePresentationModel change = changes.get(0);
         assertThat(change.getAttribute("source").getValue(), allOf(instanceOf(String.class), is((Object) sourceModel.getId())));
         assertThat(change.getAttribute("attribute").getValue(), allOf(instanceOf(String.class), is((Object) "primitiveList")));
         assertThat(change.getAttribute("from").getValue(), allOf(instanceOf(Integer.class), is((Object) 0)));
@@ -438,7 +437,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
         final String newValue = "Goodbye World";
 
         model.getPrimitiveList().add(null);
@@ -451,7 +450,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final List<ServerPresentationModel> changes = serverModelStore.findAllPresentationModelsByType(RemotingConstants.LIST_SPLICE);
         assertThat(changes, hasSize(1));
 
-        final PresentationModel change = changes.get(0);
+        final BasePresentationModel change = changes.get(0);
         assertThat(change.getAttribute("source").getValue(), allOf(instanceOf(String.class), is((Object) sourceModel.getId())));
         assertThat(change.getAttribute("attribute").getValue(), allOf(instanceOf(String.class), is((Object) "primitiveList")));
         assertThat(change.getAttribute("from").getValue(), allOf(instanceOf(Integer.class), is((Object) 0)));
@@ -471,7 +470,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
         final String[] newElement = new String[]{"42", "4711", "Hello World"};
 
         // when :
@@ -481,7 +480,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final List<ServerPresentationModel> changes = serverModelStore.findAllPresentationModelsByType(RemotingConstants.LIST_SPLICE);
         assertThat(changes, hasSize(1));
 
-        final PresentationModel change = changes.get(0);
+        final BasePresentationModel change = changes.get(0);
         assertThat(change.getAttribute("source").getValue(), allOf(instanceOf(String.class), is((Object) sourceModel.getId())));
         assertThat(change.getAttribute("attribute").getValue(), allOf(instanceOf(String.class), is((Object) "primitiveList")));
         assertThat(change.getAttribute("from").getValue(), allOf(instanceOf(Integer.class), is((Object) 0)));
@@ -499,7 +498,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
         final String newElement = "42";
 
         model.getPrimitiveList().addAll(Arrays.asList("1", "2", "3"));
@@ -512,7 +511,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final List<ServerPresentationModel> changes = serverModelStore.findAllPresentationModelsByType(RemotingConstants.LIST_SPLICE);
         assertThat(changes, hasSize(1));
 
-        final PresentationModel change = changes.get(0);
+        final BasePresentationModel change = changes.get(0);
         assertThat(change.getAttribute("source").getValue(), allOf(instanceOf(String.class), is((Object) sourceModel.getId())));
         assertThat(change.getAttribute("attribute").getValue(), allOf(instanceOf(String.class), is((Object) "primitiveList")));
         assertThat(change.getAttribute("from").getValue(), allOf(instanceOf(Integer.class), is((Object) 0)));
@@ -528,7 +527,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
         final String[] newElement = new String[]{"42", "4711", "Hello World"};
 
         model.getPrimitiveList().addAll(Arrays.asList("1", "2", "3"));
@@ -541,7 +540,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final List<ServerPresentationModel> changes = serverModelStore.findAllPresentationModelsByType(RemotingConstants.LIST_SPLICE);
         assertThat(changes, hasSize(1));
 
-        final PresentationModel change = changes.get(0);
+        final BasePresentationModel change = changes.get(0);
         assertThat(change.getAttribute("source").getValue(), allOf(instanceOf(String.class), is((Object) sourceModel.getId())));
         assertThat(change.getAttribute("attribute").getValue(), allOf(instanceOf(String.class), is((Object) "primitiveList")));
         assertThat(change.getAttribute("from").getValue(), allOf(instanceOf(Integer.class), is((Object) 0)));
@@ -559,7 +558,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
         final String newElement = "42";
 
         model.getPrimitiveList().addAll(Arrays.asList("1", "2", "3"));
@@ -572,7 +571,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final List<ServerPresentationModel> changes = serverModelStore.findAllPresentationModelsByType(RemotingConstants.LIST_SPLICE);
         assertThat(changes, hasSize(1));
 
-        final PresentationModel change = changes.get(0);
+        final BasePresentationModel change = changes.get(0);
         assertThat(change.getAttribute("source").getValue(), allOf(instanceOf(String.class), is((Object) sourceModel.getId())));
         assertThat(change.getAttribute("attribute").getValue(), allOf(instanceOf(String.class), is((Object) "primitiveList")));
         assertThat(change.getAttribute("from").getValue(), allOf(instanceOf(Integer.class), is((Object) 1)));
@@ -588,7 +587,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
         final String[] newElement = new String[]{"42", "4711", "Hello World"};
 
         model.getPrimitiveList().addAll(Arrays.asList("1", "2", "3"));
@@ -601,7 +600,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final List<ServerPresentationModel> changes = serverModelStore.findAllPresentationModelsByType(RemotingConstants.LIST_SPLICE);
         assertThat(changes, hasSize(1));
 
-        final PresentationModel change = changes.get(0);
+        final BasePresentationModel change = changes.get(0);
         assertThat(change.getAttribute("source").getValue(), allOf(instanceOf(String.class), is((Object) sourceModel.getId())));
         assertThat(change.getAttribute("attribute").getValue(), allOf(instanceOf(String.class), is((Object) "primitiveList")));
         assertThat(change.getAttribute("from").getValue(), allOf(instanceOf(Integer.class), is((Object) 1)));
@@ -619,7 +618,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
         final String newElement = "42";
 
         model.getPrimitiveList().addAll(Arrays.asList("1", "2", "3"));
@@ -632,7 +631,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final List<ServerPresentationModel> changes = serverModelStore.findAllPresentationModelsByType(RemotingConstants.LIST_SPLICE);
         assertThat(changes, hasSize(1));
 
-        final PresentationModel change = changes.get(0);
+        final BasePresentationModel change = changes.get(0);
         assertThat(change.getAttribute("source").getValue(), allOf(instanceOf(String.class), is((Object) sourceModel.getId())));
         assertThat(change.getAttribute("attribute").getValue(), allOf(instanceOf(String.class), is((Object) "primitiveList")));
         assertThat(change.getAttribute("from").getValue(), allOf(instanceOf(Integer.class), is((Object) 3)));
@@ -648,7 +647,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
         final String[] newElement = new String[]{"42", "4711", "Hello World"};
 
         model.getPrimitiveList().addAll(Arrays.asList("1", "2", "3"));
@@ -661,7 +660,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final List<ServerPresentationModel> changes = serverModelStore.findAllPresentationModelsByType(RemotingConstants.LIST_SPLICE);
         assertThat(changes, hasSize(1));
 
-        final PresentationModel change = changes.get(0);
+        final BasePresentationModel change = changes.get(0);
         assertThat(change.getAttribute("source").getValue(), allOf(instanceOf(String.class), is((Object) sourceModel.getId())));
         assertThat(change.getAttribute("attribute").getValue(), allOf(instanceOf(String.class), is((Object) "primitiveList")));
         assertThat(change.getAttribute("from").getValue(), allOf(instanceOf(Integer.class), is((Object) 3)));
@@ -693,7 +692,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
 
         model.getPrimitiveList().addAll(Arrays.asList("1", "2", "3"));
         removeAllPresentationModelsOfType(serverModelStore, RemotingConstants.LIST_SPLICE);
@@ -705,7 +704,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final List<ServerPresentationModel> changes = serverModelStore.findAllPresentationModelsByType(RemotingConstants.LIST_SPLICE);
         assertThat(changes, hasSize(1));
 
-        final PresentationModel change = changes.get(0);
+        final BasePresentationModel change = changes.get(0);
         assertThat(change.getAttribute("source").getValue(), allOf(instanceOf(String.class), is((Object) sourceModel.getId())));
         assertThat(change.getAttribute("attribute").getValue(), allOf(instanceOf(String.class), is((Object) "primitiveList")));
         assertThat(change.getAttribute("from").getValue(), allOf(instanceOf(Integer.class), is((Object) 0)));
@@ -721,7 +720,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
 
         model.getPrimitiveList().addAll(Arrays.asList("1", "2", "3", "4", "5", "6"));
         removeAllPresentationModelsOfType(serverModelStore, RemotingConstants.LIST_SPLICE);
@@ -733,7 +732,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final List<ServerPresentationModel> changes = serverModelStore.findAllPresentationModelsByType(RemotingConstants.LIST_SPLICE);
         assertThat(changes, hasSize(1));
 
-        final PresentationModel change = changes.get(0);
+        final BasePresentationModel change = changes.get(0);
         assertThat(change.getAttribute("source").getValue(), allOf(instanceOf(String.class), is((Object) sourceModel.getId())));
         assertThat(change.getAttribute("attribute").getValue(), allOf(instanceOf(String.class), is((Object) "primitiveList")));
         assertThat(change.getAttribute("from").getValue(), allOf(instanceOf(Integer.class), is((Object) 0)));
@@ -748,7 +747,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
 
         model.getPrimitiveList().addAll(Arrays.asList("1", "2", "3"));
         removeAllPresentationModelsOfType(serverModelStore, RemotingConstants.LIST_SPLICE);
@@ -760,7 +759,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final List<ServerPresentationModel> changes = serverModelStore.findAllPresentationModelsByType(RemotingConstants.LIST_SPLICE);
         assertThat(changes, hasSize(1));
 
-        final PresentationModel change = changes.get(0);
+        final BasePresentationModel change = changes.get(0);
         assertThat(change.getAttribute("source").getValue(), allOf(instanceOf(String.class), is((Object) sourceModel.getId())));
         assertThat(change.getAttribute("attribute").getValue(), allOf(instanceOf(String.class), is((Object) "primitiveList")));
         assertThat(change.getAttribute("from").getValue(), allOf(instanceOf(Integer.class), is((Object) 1)));
@@ -776,7 +775,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
 
         model.getPrimitiveList().addAll(Arrays.asList("1", "2", "3", "4", "5", "6"));
         removeAllPresentationModelsOfType(serverModelStore, RemotingConstants.LIST_SPLICE);
@@ -788,7 +787,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final List<ServerPresentationModel> changes = serverModelStore.findAllPresentationModelsByType(RemotingConstants.LIST_SPLICE);
         assertThat(changes, hasSize(1));
 
-        final PresentationModel change = changes.get(0);
+        final BasePresentationModel change = changes.get(0);
         assertThat(change.getAttribute("source").getValue(), allOf(instanceOf(String.class), is((Object) sourceModel.getId())));
         assertThat(change.getAttribute("attribute").getValue(), allOf(instanceOf(String.class), is((Object) "primitiveList")));
         assertThat(change.getAttribute("from").getValue(), allOf(instanceOf(Integer.class), is((Object) 1)));
@@ -803,7 +802,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
 
         model.getPrimitiveList().addAll(Arrays.asList("1", "2", "3"));
         removeAllPresentationModelsOfType(serverModelStore, RemotingConstants.LIST_SPLICE);
@@ -815,7 +814,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final List<ServerPresentationModel> changes = serverModelStore.findAllPresentationModelsByType(RemotingConstants.LIST_SPLICE);
         assertThat(changes, hasSize(1));
 
-        final PresentationModel change = changes.get(0);
+        final BasePresentationModel change = changes.get(0);
         assertThat(change.getAttribute("source").getValue(), allOf(instanceOf(String.class), is((Object) sourceModel.getId())));
         assertThat(change.getAttribute("attribute").getValue(), allOf(instanceOf(String.class), is((Object) "primitiveList")));
         assertThat(change.getAttribute("from").getValue(), allOf(instanceOf(Integer.class), is((Object) 2)));
@@ -831,7 +830,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
 
         model.getPrimitiveList().addAll(Arrays.asList("1", "2", "3", "4", "5", "6"));
         removeAllPresentationModelsOfType(serverModelStore, RemotingConstants.LIST_SPLICE);
@@ -843,7 +842,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final List<ServerPresentationModel> changes = serverModelStore.findAllPresentationModelsByType(RemotingConstants.LIST_SPLICE);
         assertThat(changes, hasSize(1));
 
-        final PresentationModel change = changes.get(0);
+        final BasePresentationModel change = changes.get(0);
         assertThat(change.getAttribute("source").getValue(), allOf(instanceOf(String.class), is((Object) sourceModel.getId())));
         assertThat(change.getAttribute("attribute").getValue(), allOf(instanceOf(String.class), is((Object) "primitiveList")));
         assertThat(change.getAttribute("from").getValue(), allOf(instanceOf(Integer.class), is((Object) 3)));
@@ -862,7 +861,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
         final String newValue = "42";
 
         model.getPrimitiveList().addAll(Arrays.asList("1", "2", "3"));
@@ -875,7 +874,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final List<ServerPresentationModel> changes = serverModelStore.findAllPresentationModelsByType(RemotingConstants.LIST_SPLICE);
         assertThat(changes, hasSize(1));
 
-        final PresentationModel change = changes.get(0);
+        final BasePresentationModel change = changes.get(0);
         assertThat(change.getAttribute("source").getValue(), allOf(instanceOf(String.class), is((Object) sourceModel.getId())));
         assertThat(change.getAttribute("attribute").getValue(), allOf(instanceOf(String.class), is((Object) "primitiveList")));
         assertThat(change.getAttribute("from").getValue(), allOf(instanceOf(Integer.class), is((Object) 0)));
@@ -891,7 +890,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
         final String newValue = "42";
 
         model.getPrimitiveList().addAll(Arrays.asList("1", "2", "3"));
@@ -904,7 +903,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final List<ServerPresentationModel> changes = serverModelStore.findAllPresentationModelsByType(RemotingConstants.LIST_SPLICE);
         assertThat(changes, hasSize(1));
 
-        final PresentationModel change = changes.get(0);
+        final BasePresentationModel change = changes.get(0);
         assertThat(change.getAttribute("source").getValue(), allOf(instanceOf(String.class), is((Object) sourceModel.getId())));
         assertThat(change.getAttribute("attribute").getValue(), allOf(instanceOf(String.class), is((Object) "primitiveList")));
         assertThat(change.getAttribute("from").getValue(), allOf(instanceOf(Integer.class), is((Object) 1)));
@@ -920,7 +919,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
         final String newValue = "42";
 
         model.getPrimitiveList().addAll(Arrays.asList("1", "2", "3"));
@@ -933,7 +932,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final List<ServerPresentationModel> changes = serverModelStore.findAllPresentationModelsByType(RemotingConstants.LIST_SPLICE);
         assertThat(changes, hasSize(1));
 
-        final PresentationModel change = changes.get(0);
+        final BasePresentationModel change = changes.get(0);
         assertThat(change.getAttribute("source").getValue(), allOf(instanceOf(String.class), is((Object) sourceModel.getId())));
         assertThat(change.getAttribute("attribute").getValue(), allOf(instanceOf(String.class), is((Object) "primitiveList")));
         assertThat(change.getAttribute("from").getValue(), allOf(instanceOf(Integer.class), is((Object) 2)));
@@ -953,11 +952,11 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
-        final PresentationModel classDescription = serverModelStore.findAllPresentationModelsByType(RemotingConstants.REMOTING_BEAN).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel classDescription = serverModelStore.findAllPresentationModelsByType(RemotingConstants.REMOTING_BEAN).get(0);
         classDescription.getAttribute("objectList").setValue(BeanConverterFactory.FIELD_TYPE_REMOTING_BEAN);
         final SimpleTestModel object = manager.create(SimpleTestModel.class);
-        final PresentationModel objectModel = serverModelStore.findAllPresentationModelsByType(SimpleTestModel.class.getName()).get(0);
+        final BasePresentationModel objectModel = serverModelStore.findAllPresentationModelsByType(SimpleTestModel.class.getName()).get(0);
 
         // when :
         new PresentationModelBuilder(serverModelStore, RemotingConstants.LIST_SPLICE)
@@ -981,8 +980,8 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
-        final PresentationModel classDescription = serverModelStore.findAllPresentationModelsByType(RemotingConstants.REMOTING_BEAN).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel classDescription = serverModelStore.findAllPresentationModelsByType(RemotingConstants.REMOTING_BEAN).get(0);
         classDescription.getAttribute("objectList").setValue(BeanConverterFactory.FIELD_TYPE_REMOTING_BEAN);
 
         // when :
@@ -1007,7 +1006,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
         final String value = "Hello";
 
         // when :
@@ -1032,7 +1031,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
 
         // when :
         new PresentationModelBuilder(serverModelStore, RemotingConstants.LIST_SPLICE)
@@ -1056,9 +1055,9 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
         manager.create(SimpleTestModel.class);
-        final PresentationModel objectModel = serverModelStore.findAllPresentationModelsByType(SimpleTestModel.class.getName()).get(0);
+        final BasePresentationModel objectModel = serverModelStore.findAllPresentationModelsByType(SimpleTestModel.class.getName()).get(0);
 
         new PresentationModelBuilder(serverModelStore, RemotingConstants.LIST_SPLICE)
                 .withAttribute("source", sourceModel.getId())
@@ -1091,7 +1090,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
 
         new PresentationModelBuilder(serverModelStore, RemotingConstants.LIST_SPLICE)
                 .withAttribute("source", sourceModel.getId())
@@ -1124,7 +1123,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
         final String value = "Hello";
 
         new PresentationModelBuilder(serverModelStore, RemotingConstants.LIST_SPLICE)
@@ -1158,7 +1157,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
 
         new PresentationModelBuilder(serverModelStore, RemotingConstants.LIST_SPLICE)
                 .withAttribute("source", sourceModel.getId())
@@ -1191,14 +1190,14 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
-        final PresentationModel classDescription = serverModelStore.findAllPresentationModelsByType(RemotingConstants.REMOTING_BEAN).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel classDescription = serverModelStore.findAllPresentationModelsByType(RemotingConstants.REMOTING_BEAN).get(0);
         classDescription.getAttribute("objectList").setValue(BeanConverterFactory.FIELD_TYPE_REMOTING_BEAN);
         final SimpleTestModel oldObject = manager.create(SimpleTestModel.class);
-        final PresentationModel oldObjectModel = serverModelStore.findAllPresentationModelsByType(SimpleTestModel.class.getName()).get(0);
+        final BasePresentationModel oldObjectModel = serverModelStore.findAllPresentationModelsByType(SimpleTestModel.class.getName()).get(0);
         final SimpleTestModel newObject = manager.create(SimpleTestModel.class);
         final List<ServerPresentationModel> models = serverModelStore.findAllPresentationModelsByType(SimpleTestModel.class.getName());
-        final PresentationModel newObjectModel = oldObjectModel == models.get(1) ? models.get(0) : models.get(1);
+        final BasePresentationModel newObjectModel = oldObjectModel == models.get(1) ? models.get(0) : models.get(1);
 
         new PresentationModelBuilder(serverModelStore, RemotingConstants.LIST_SPLICE)
                 .withAttribute("source", sourceModel.getId())
@@ -1233,11 +1232,11 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
-        final PresentationModel classDescription = serverModelStore.findAllPresentationModelsByType(RemotingConstants.REMOTING_BEAN).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel classDescription = serverModelStore.findAllPresentationModelsByType(RemotingConstants.REMOTING_BEAN).get(0);
         classDescription.getAttribute("objectList").setValue(BeanConverterFactory.FIELD_TYPE_REMOTING_BEAN);
         final SimpleTestModel oldObject = manager.create(SimpleTestModel.class);
-        final PresentationModel oldObjectModel = serverModelStore.findAllPresentationModelsByType(SimpleTestModel.class.getName()).get(0);
+        final BasePresentationModel oldObjectModel = serverModelStore.findAllPresentationModelsByType(SimpleTestModel.class.getName()).get(0);
 
         new PresentationModelBuilder(serverModelStore, RemotingConstants.LIST_SPLICE)
                 .withAttribute("source", sourceModel.getId())
@@ -1271,11 +1270,11 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
-        final PresentationModel classDescription = serverModelStore.findAllPresentationModelsByType(RemotingConstants.REMOTING_BEAN).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel classDescription = serverModelStore.findAllPresentationModelsByType(RemotingConstants.REMOTING_BEAN).get(0);
         classDescription.getAttribute("objectList").setValue(BeanConverterFactory.FIELD_TYPE_REMOTING_BEAN);
         final SimpleTestModel newObject = manager.create(SimpleTestModel.class);
-        final PresentationModel newObjectModel = serverModelStore.findAllPresentationModelsByType(SimpleTestModel.class.getName()).get(0);
+        final BasePresentationModel newObjectModel = serverModelStore.findAllPresentationModelsByType(SimpleTestModel.class.getName()).get(0);
 
         new PresentationModelBuilder(serverModelStore, RemotingConstants.LIST_SPLICE)
                 .withAttribute("source", sourceModel.getId())
@@ -1309,7 +1308,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
         final String oldValue = "Hello";
         final String newValue = "Goodbye";
 
@@ -1345,7 +1344,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
         final String oldValue = "Hello";
 
         new PresentationModelBuilder(serverModelStore, RemotingConstants.LIST_SPLICE)
@@ -1380,7 +1379,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
         final String newValue = "Goodbye";
 
         new PresentationModelBuilder(serverModelStore, RemotingConstants.LIST_SPLICE)
@@ -1419,7 +1418,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
 
         // when :
         new PresentationModelBuilder(serverModelStore, RemotingConstants.LIST_SPLICE)
@@ -1445,7 +1444,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
         final String newElement = "42";
 
         model.getPrimitiveList().addAll(Arrays.asList("1", "2", "3"));
@@ -1473,7 +1472,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
 
         model.getPrimitiveList().addAll(Arrays.asList("1", "2", "3"));
         removeAllPresentationModelsOfType(serverModelStore, RemotingConstants.LIST_SPLICE);
@@ -1502,7 +1501,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
         final String newElement = "42";
 
         model.getPrimitiveList().addAll(Arrays.asList("1", "2", "3"));
@@ -1530,7 +1529,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
 
         model.getPrimitiveList().addAll(Arrays.asList("1", "2", "3"));
         removeAllPresentationModelsOfType(serverModelStore, RemotingConstants.LIST_SPLICE);
@@ -1559,7 +1558,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
         final String newElement = "42";
 
         model.getPrimitiveList().addAll(Arrays.asList("1", "2", "3"));
@@ -1585,7 +1584,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
 
         model.getPrimitiveList().addAll(Arrays.asList("1", "2", "3"));
         removeAllPresentationModelsOfType(serverModelStore, RemotingConstants.LIST_SPLICE);
@@ -1618,7 +1617,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
 
         model.getPrimitiveList().addAll(Arrays.asList("1", "2", "3"));
         removeAllPresentationModelsOfType(serverModelStore, RemotingConstants.LIST_SPLICE);
@@ -1644,7 +1643,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
 
         model.getPrimitiveList().addAll(Arrays.asList("1", "2", "3", "4", "5", "6"));
         removeAllPresentationModelsOfType(serverModelStore, RemotingConstants.LIST_SPLICE);
@@ -1670,7 +1669,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
 
         model.getPrimitiveList().addAll(Arrays.asList("1", "2", "3"));
         removeAllPresentationModelsOfType(serverModelStore, RemotingConstants.LIST_SPLICE);
@@ -1696,7 +1695,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
 
         model.getPrimitiveList().addAll(Arrays.asList("1", "2", "3", "4", "5", "6"));
         removeAllPresentationModelsOfType(serverModelStore, RemotingConstants.LIST_SPLICE);
@@ -1722,7 +1721,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
 
         model.getPrimitiveList().addAll(Arrays.asList("1", "2", "3"));
         removeAllPresentationModelsOfType(serverModelStore, RemotingConstants.LIST_SPLICE);
@@ -1748,7 +1747,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
 
         model.getPrimitiveList().addAll(Arrays.asList("1", "2", "3", "4", "5", "6"));
         removeAllPresentationModelsOfType(serverModelStore, RemotingConstants.LIST_SPLICE);
@@ -1778,7 +1777,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
         final String newValue = "42";
 
         model.getPrimitiveList().addAll(Arrays.asList("1", "2", "3"));
@@ -1805,7 +1804,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
 
         model.getPrimitiveList().addAll(Arrays.asList("1", "2", "3", "4"));
         removeAllPresentationModelsOfType(serverModelStore, RemotingConstants.LIST_SPLICE);
@@ -1833,7 +1832,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
         final String newValue = "42";
 
         model.getPrimitiveList().addAll(Arrays.asList("1", "2", "3"));
@@ -1861,7 +1860,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
 
         model.getPrimitiveList().addAll(Arrays.asList("1", "2", "3", "4"));
         removeAllPresentationModelsOfType(serverModelStore, RemotingConstants.LIST_SPLICE);
@@ -1889,7 +1888,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
         final String newValue = "42";
 
         model.getPrimitiveList().addAll(Arrays.asList("1", "2", "3"));
@@ -1918,7 +1917,7 @@ public class TestObservableListSync extends AbstractRemotingTest {
         final BeanManager manager = createBeanManager(serverModelStore);
 
         final ListReferenceModel model = manager.create(ListReferenceModel.class);
-        final PresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
+        final BasePresentationModel sourceModel = serverModelStore.findAllPresentationModelsByType(ListReferenceModel.class.getName()).get(0);
 
         model.getPrimitiveList().addAll(Arrays.asList("1", "2", "3", "4"));
         removeAllPresentationModelsOfType(serverModelStore, RemotingConstants.LIST_SPLICE);

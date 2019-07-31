@@ -41,6 +41,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
  * The ServerModelStore self-assigns a unique ID which identifies each user session.
  */
 @API(since = "0.x", status = INTERNAL)
+@Deprecated
 public class ServerModelStore extends ModelStore<ServerAttribute, ServerPresentationModel> {
 
     private static final Logger LOG = LoggerFactory.getLogger(ServerModelStore.class);

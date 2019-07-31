@@ -19,7 +19,6 @@ package dev.rico.internal.server.remoting.context;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.remoting.codec.OptimizedJsonCodec;
 import dev.rico.internal.remoting.commands.CreateContextCommand;
-import dev.rico.internal.remoting.legacy.communication.Codec;
 import dev.rico.internal.remoting.legacy.communication.Command;
 import dev.rico.internal.server.client.ClientSessionProvider;
 import dev.rico.server.client.ClientSession;
@@ -48,7 +47,7 @@ public class RemotingCommunicationHandler {
 
     private final ClientSessionProvider sessionProvider;
 
-    private final Codec codec = OptimizedJsonCodec.getInstance();
+    private final OptimizedJsonCodec codec = OptimizedJsonCodec.getInstance();
 
     private final RemotingContextFactory contextFactory;
 

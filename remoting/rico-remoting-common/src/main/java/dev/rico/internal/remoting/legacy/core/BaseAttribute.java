@@ -28,15 +28,19 @@ import static org.apiguardian.api.API.Status.DEPRECATED;
  */
 @API(since = "0.x", status = DEPRECATED)
 @Deprecated
-public abstract class BaseAttribute extends AbstractObservable implements Attribute {
+public abstract class BaseAttribute extends AbstractObservable {
 
+    public static final String QUALIFIER_NAME = "qualifier";
+    public static final String VALUE_NAME = "value";
+    public static final String PROPERTY_NAME = "propertyName";
+    public static final String ID = "id";
     private static AtomicLong instanceCount = new AtomicLong();
 
     private final String propertyName;
 
     private Object value;
 
-    private PresentationModel presentationModel;
+    private BasePresentationModel presentationModel;
 
     private String id ;
 
@@ -58,15 +62,14 @@ public abstract class BaseAttribute extends AbstractObservable implements Attrib
      */
     public abstract String getOrigin();
 
-    public void setPresentationModel(final PresentationModel presentationModel) {
+    public void setPresentationModel(final BasePresentationModel presentationModel) {
         if (this.presentationModel != null) {
             throw new IllegalStateException("You can not set a presentation model for an attribute that is already bound.");
         }
         this.presentationModel = presentationModel;
     }
 
-    @Override
-    public PresentationModel getPresentationModel() {
+    public BasePresentationModel getPresentationModel() {
         return this.presentationModel;
     }
 

@@ -34,6 +34,7 @@ import java.util.Map;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
+@Deprecated
 public class CreatePresentationModelAction extends AbstractServerAction {
 
     private static final Logger LOG = LoggerFactory.getLogger(CreatePresentationModelAction.class);

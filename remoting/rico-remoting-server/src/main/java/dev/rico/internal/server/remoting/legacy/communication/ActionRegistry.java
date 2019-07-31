@@ -31,6 +31,7 @@ import java.util.Objects;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
+@Deprecated
 public class ActionRegistry {
 
     private static final Logger LOG = LoggerFactory.getLogger(ActionRegistry.class);

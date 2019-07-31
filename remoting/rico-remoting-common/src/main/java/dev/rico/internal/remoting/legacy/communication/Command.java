@@ -33,6 +33,7 @@ import static org.apiguardian.api.API.Status.DEPRECATED;
  * The receiving side is responsible for finding the appropriate action.
  */
 @API(since = "0.x", status = DEPRECATED)
+@Deprecated
 public abstract class Command implements Serializable {
 
     private final String id;

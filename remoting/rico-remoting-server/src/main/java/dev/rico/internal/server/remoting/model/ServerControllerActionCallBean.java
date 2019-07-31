@@ -16,13 +16,13 @@
  */
 package dev.rico.internal.server.remoting.model;
 
+import dev.rico.internal.remoting.legacy.core.BaseAttribute;
+import dev.rico.internal.remoting.legacy.core.BasePresentationModel;
 import dev.rico.remoting.converter.ValueConverterException;
 import dev.rico.internal.remoting.AbstractControllerActionCallBean;
 import dev.rico.internal.remoting.Converters;
 import dev.rico.internal.remoting.MappingException;
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.remoting.legacy.core.Attribute;
-import dev.rico.internal.remoting.legacy.core.PresentationModel;
 import org.apiguardian.api.API;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
@@ -31,9 +31,9 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 public class ServerControllerActionCallBean extends AbstractControllerActionCallBean {
 
     private final Converters converters;
-    private final PresentationModel pm;
+    private final BasePresentationModel pm;
 
-    public ServerControllerActionCallBean(Converters converters, PresentationModel pm) {
+    public ServerControllerActionCallBean(Converters converters, BasePresentationModel pm) {
         this.converters = Assert.requireNonNull(converters, "converters");
         this.pm = Assert.requireNonNull(pm, "pm");
     }
@@ -52,7 +52,7 @@ public class ServerControllerActionCallBean extends AbstractControllerActionCall
 
     public Object getParam(String name, Class<?> type) {
         final String internalName = PARAM_PREFIX + name;
-        final Attribute valueAttribute = pm.getAttribute(internalName);
+        final BaseAttribute valueAttribute = pm.getAttribute(internalName);
         if (valueAttribute == null) {
             throw new IllegalArgumentException(String.format("Invoking RemotingAction requires parameter '%s', but it was not withContent", name));
         }

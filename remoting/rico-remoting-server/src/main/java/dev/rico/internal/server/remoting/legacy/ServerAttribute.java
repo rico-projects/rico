@@ -19,7 +19,6 @@ package dev.rico.internal.server.remoting.legacy;
 
 import dev.rico.internal.remoting.legacy.LegacyConstants;
 import dev.rico.internal.remoting.legacy.communication.AttributeMetadataChangedCommand;
-import dev.rico.internal.remoting.legacy.core.Attribute;
 import dev.rico.internal.remoting.legacy.core.BaseAttribute;
 import org.apiguardian.api.API;
 
@@ -29,6 +28,7 @@ import java.util.Objects;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
+@Deprecated
 public class ServerAttribute extends BaseAttribute {
 
     private boolean notifyClient = true;
@@ -81,7 +81,7 @@ public class ServerAttribute extends BaseAttribute {
     public void setQualifier(final String value) {
         super.setQualifier(value);
         if (notifyClient) {
-            getPresentationModel().getModelStore().getCurrentResponse().add(new AttributeMetadataChangedCommand(getId(), Attribute.QUALIFIER_NAME, value));
+            getPresentationModel().getModelStore().getCurrentResponse().add(new AttributeMetadataChangedCommand(getId(), BaseAttribute.QUALIFIER_NAME, value));
         }
 
     }

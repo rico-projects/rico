@@ -27,6 +27,7 @@ import java.util.List;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
+@Deprecated
 public class ServerPresentationModel extends BasePresentationModel<ServerAttribute> {
 
     private static final Logger LOG = LoggerFactory.getLogger(ServerPresentationModel.class);

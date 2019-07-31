@@ -16,9 +16,8 @@
  */
 package dev.rico.internal.remoting.legacy.communication;
 
-
-import dev.rico.internal.remoting.legacy.core.Attribute;
-import dev.rico.internal.remoting.legacy.core.PresentationModel;
+import dev.rico.internal.remoting.legacy.core.BaseAttribute;
+import dev.rico.internal.remoting.legacy.core.BasePresentationModel;
 import org.apiguardian.api.API;
 
 import java.util.ArrayList;
@@ -29,6 +28,7 @@ import java.util.Map;
 import static org.apiguardian.api.API.Status.DEPRECATED;
 
 @API(since = "0.x", status = DEPRECATED)
+@Deprecated
 public final class CreatePresentationModelCommand extends Command {
 
     private String pmId;
@@ -61,7 +61,7 @@ public final class CreatePresentationModelCommand extends Command {
     /**
      * @deprecated use ServerFacade convenience methods (it is ok to use it from the client atm)
      */
-    public static <T extends Attribute> CreatePresentationModelCommand makeFrom(final PresentationModel<T> model) {
+    public static <T extends BaseAttribute> CreatePresentationModelCommand makeFrom(final BasePresentationModel<T> model) {
         final CreatePresentationModelCommand result = new CreatePresentationModelCommand();
         result.setPmId(model.getId());
         result.setPmType(model.getPresentationModelType());

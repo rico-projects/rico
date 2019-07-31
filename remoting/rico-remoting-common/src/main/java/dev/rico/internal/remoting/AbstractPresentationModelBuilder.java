@@ -16,7 +16,7 @@
  */
 package dev.rico.internal.remoting;
 
-import dev.rico.internal.remoting.legacy.core.PresentationModel;
+import dev.rico.internal.remoting.legacy.core.BasePresentationModel;
 import org.apiguardian.api.API;
 
 import java.util.UUID;
@@ -24,7 +24,7 @@ import java.util.UUID;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
-public abstract class AbstractPresentationModelBuilder<T extends PresentationModel> implements PresentationModelBuilder<T> {
+public abstract class AbstractPresentationModelBuilder<T extends BasePresentationModel> implements PresentationModelBuilder<T> {
 
     private String type;
 

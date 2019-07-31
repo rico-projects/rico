@@ -14,18 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.internal.server.remoting.model;
+package dev.rico.internal.server.remoting.legacy;
 
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.remoting.PresentationModelBuilder;
 import dev.rico.internal.remoting.PresentationModelBuilderFactory;
 import dev.rico.internal.server.remoting.legacy.ServerModelStore;
 import dev.rico.internal.server.remoting.legacy.ServerPresentationModel;
+import dev.rico.internal.server.remoting.legacy.ServerPresentationModelBuilder;
 import org.apiguardian.api.API;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
+@Deprecated
 public class ServerPresentationModelBuilderFactory implements PresentationModelBuilderFactory<ServerPresentationModel> {
 
     private final ServerModelStore serverModelStore;

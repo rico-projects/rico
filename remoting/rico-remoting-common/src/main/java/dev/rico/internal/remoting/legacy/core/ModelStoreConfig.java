@@ -32,6 +32,7 @@ import static org.apiguardian.api.API.Status.DEPRECATED;
  * <li>qualifierCapacity: map of attributes (key: qualifier, returns a list of all attributes with that qualifier); default 1024</li></ol>
  */
 @API(since = "0.x", status = DEPRECATED)
+@Deprecated
 public class ModelStoreConfig {
 
     private static final Logger LOG  = LoggerFactory.getLogger(ModelStoreConfig.class);

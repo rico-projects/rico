@@ -22,7 +22,7 @@ import dev.rico.internal.remoting.InternalAttributesBean;
 import dev.rico.internal.remoting.BeanRepository;
 import dev.rico.internal.remoting.RemotingEventHandler;
 import dev.rico.internal.remoting.EventDispatcher;
-import dev.rico.internal.remoting.legacy.core.PresentationModel;
+import dev.rico.internal.remoting.legacy.core.BasePresentationModel;
 import dev.rico.internal.client.remoting.legacy.ClientModelStore;
 import org.apiguardian.api.API;
 
@@ -42,7 +42,7 @@ public class ClientPlatformBeanRepository {
 
         dispatcher.onceInternalAttributesBeanAddedHandler(new RemotingEventHandler() {
             @Override
-            public void onEvent(PresentationModel model) {
+            public void onEvent(BasePresentationModel model) {
                 internalAttributesBean = new InternalAttributesBean(beanRepository, model);
             }
         });

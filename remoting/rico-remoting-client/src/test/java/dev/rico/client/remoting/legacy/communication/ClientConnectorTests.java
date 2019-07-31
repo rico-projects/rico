@@ -36,7 +36,7 @@ import dev.rico.internal.remoting.legacy.communication.DeletePresentationModelCo
 import dev.rico.internal.remoting.legacy.communication.EmptyCommand;
 import dev.rico.internal.remoting.legacy.communication.PresentationModelDeletedCommand;
 import dev.rico.internal.remoting.legacy.communication.ValueChangedCommand;
-import dev.rico.internal.remoting.legacy.core.Attribute;
+import dev.rico.internal.remoting.legacy.core.BaseAttribute;
 import dev.rico.internal.remoting.legacy.util.DirectExecutor;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -126,7 +126,7 @@ public class ClientConnectorTests {
 
     @Test
     public void testValueChange_OldAndNewValueSame() {
-        attributeChangeListener.propertyChange(new PropertyChangeEvent("dummy", Attribute.VALUE_NAME, "sameValue", "sameValue"));
+        attributeChangeListener.propertyChange(new PropertyChangeEvent("dummy", BaseAttribute.VALUE_NAME, "sameValue", "sameValue"));
         syncAndWaitUntilDone();
         assertOnlySyncCommandWasTransmitted();
     }
@@ -135,7 +135,7 @@ public class ClientConnectorTests {
     public void testValueChange_noQualifier() {
         ClientAttribute attribute = new ClientAttribute("attr", "initialValue");
         clientModelStore.registerAttribute(attribute);
-        attributeChangeListener.propertyChange(new PropertyChangeEvent(attribute, Attribute.VALUE_NAME, attribute.getValue(), "newValue"));
+        attributeChangeListener.propertyChange(new PropertyChangeEvent(attribute, BaseAttribute.VALUE_NAME, attribute.getValue(), "newValue"));
         syncAndWaitUntilDone();
         assertCommandsTransmitted(2);
         Assert.assertEquals("initialValue", attribute.getValue());
@@ -156,7 +156,7 @@ public class ClientConnectorTests {
         syncDone = new CountDownLatch(1);
         ClientAttribute attribute = new ClientAttribute("attr", "initialValue", "qualifier");
         clientModelStore.registerAttribute(attribute);
-        attributeChangeListener.propertyChange(new PropertyChangeEvent(attribute, Attribute.VALUE_NAME, attribute.getValue(), "newValue"));
+        attributeChangeListener.propertyChange(new PropertyChangeEvent(attribute, BaseAttribute.VALUE_NAME, attribute.getValue(), "newValue"));
         syncAndWaitUntilDone();
         assertCommandsTransmitted(3);
         Assert.assertEquals("newValue", attribute.getValue());

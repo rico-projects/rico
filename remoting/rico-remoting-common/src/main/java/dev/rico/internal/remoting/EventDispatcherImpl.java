@@ -18,9 +18,9 @@ package dev.rico.internal.remoting;
 
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.remoting.legacy.LegacyConstants;
+import dev.rico.internal.remoting.legacy.core.BasePresentationModel;
 import dev.rico.internal.remoting.legacy.core.ModelStore;
 import dev.rico.internal.remoting.legacy.core.ModelStoreEvent;
-import dev.rico.internal.remoting.legacy.core.PresentationModel;
 import org.apiguardian.api.API;
 
 import java.util.ArrayList;
@@ -75,7 +75,7 @@ public abstract class EventDispatcherImpl implements EventDispatcher {
     @Override
     public void modelStoreChanged(ModelStoreEvent event) {
         Assert.requireNonNull(event, "event");
-        final PresentationModel model = event.getPresentationModel();
+        final BasePresentationModel model = event.getPresentationModel();
         if (!isLocalChange(model)) {
             if (ModelStoreEvent.Type.ADDED == event.getType()) {
                 onAddedHandler(model);
@@ -85,7 +85,7 @@ public abstract class EventDispatcherImpl implements EventDispatcher {
         }
     }
 
-    private void onAddedHandler(PresentationModel model) {
+    private void onAddedHandler(BasePresentationModel model) {
         Assert.requireNonNull(model, "model");
         final String type = model.getPresentationModelType();
         switch (type) {
@@ -116,7 +116,7 @@ public abstract class EventDispatcherImpl implements EventDispatcher {
         }
     }
 
-    private void onRemovedHandler(PresentationModel model) {
+    private void onRemovedHandler(BasePresentationModel model) {
         Assert.requireNonNull(model, "model");
         final String type = model.getPresentationModelType();
         switch (type) {
@@ -138,7 +138,7 @@ public abstract class EventDispatcherImpl implements EventDispatcher {
         }
     }
 
-    private boolean isLocalChange(PresentationModel model) {
+    private boolean isLocalChange(BasePresentationModel model) {
         Assert.requireNonNull(model, "model");
         final Object value = model.getAttribute(LegacyConstants.SOURCE_SYSTEM).getValue();
         return getLocalSystemIdentifier().equals(value);

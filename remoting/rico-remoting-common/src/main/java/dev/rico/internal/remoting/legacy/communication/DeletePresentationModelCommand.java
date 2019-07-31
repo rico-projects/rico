@@ -21,6 +21,7 @@ import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.DEPRECATED;
 
 @API(since = "0.x", status = DEPRECATED)
+@Deprecated
 public final class DeletePresentationModelCommand extends Command {
 
     private String pmId;

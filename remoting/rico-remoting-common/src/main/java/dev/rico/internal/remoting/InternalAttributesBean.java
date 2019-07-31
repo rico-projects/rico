@@ -17,8 +17,8 @@
 package dev.rico.internal.remoting;
 
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.remoting.legacy.core.Attribute;
-import dev.rico.internal.remoting.legacy.core.PresentationModel;
+import dev.rico.internal.remoting.legacy.core.BaseAttribute;
+import dev.rico.internal.remoting.legacy.core.BasePresentationModel;
 import org.apiguardian.api.API;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
@@ -31,11 +31,11 @@ public class InternalAttributesBean {
     private static final String MODEL = "model";
 
     private final BeanRepository beanRepository;
-    private final Attribute controllerNameAttribute;
-    private final Attribute controllerIdAttribute;
-    private final Attribute modelAttribute;
+    private final BaseAttribute controllerNameAttribute;
+    private final BaseAttribute controllerIdAttribute;
+    private final BaseAttribute modelAttribute;
 
-    public InternalAttributesBean(final BeanRepository beanRepository, final PresentationModel pm) {
+    public InternalAttributesBean(final BeanRepository beanRepository, final BasePresentationModel pm) {
         this.beanRepository = Assert.requireNonNull(beanRepository, "beanRepository");
         Assert.requireNonNull(pm, "pm");
         controllerNameAttribute = pm.getAttribute(CONTROLLER_NAME);

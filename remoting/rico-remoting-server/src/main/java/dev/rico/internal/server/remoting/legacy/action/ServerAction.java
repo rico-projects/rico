@@ -22,6 +22,7 @@ import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
+@Deprecated
 public interface ServerAction {
 
     void registerIn(ActionRegistry registry);
