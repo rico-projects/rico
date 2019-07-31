@@ -100,7 +100,7 @@ public class PropertyControllerTest extends AbstractRemotingIntegrationTest {
         }
     }
 
-    @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Test if all property values are snychronized")
+    @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Test if all property values are synchronized")
     public void testPropertyValueSet(String containerType, String endpoint) {
         try {
             ClientContext context = connect(endpoint);

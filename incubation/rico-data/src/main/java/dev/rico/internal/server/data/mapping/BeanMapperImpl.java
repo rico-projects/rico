@@ -73,7 +73,7 @@ public class BeanMapperImpl implements BeanMapper {
         final ID id = entity.getId();
         final BeanConverter<ID, B, E> converter = getConverter(entityClass, beanClass);
         addMapping(bean, entityClass, id);
-        return converter.enrichtBeanByEntity(bean, entity);
+        return converter.enrichBeanByEntity(bean, entity);
     }
 
     @Override
@@ -84,11 +84,27 @@ public class BeanMapperImpl implements BeanMapper {
         final E entity = Optional.ofNullable(getEntityIdForBean(bean, entityClass))
                 .map(id -> service.findById(id))
                 .orElse(service.createNewInstance());
-        return converter.enrichtEntityByBean(entity, bean);
+        return converter.enrichEntityByBean(entity, bean);
     }
 
     @Override
     public <ID extends Serializable, B, E extends DataWithId<ID>> B toBean(final E entity, final Class<B> beanClass) {
-        throw new RuntimeException("Not yet implemented!");
+        Assert.requireNonNull(entity, "entity");
+        Assert.requireNonNull(beanClass, "beanClass");
+
+        final Class<E> entityClass = (Class<E>) entity.getClass();
+
+        final Map<Class<?>, BeanConverter> converterMap = converters.computeIfAbsent(entityClass, c -> new HashMap<>());
+        final BeanConverter beanConverter = converterMap.get(beanClass);
+
+        if (beanConverter == null) {
+            throw new IllegalStateException("No converter for " + beanClass.getSimpleName() + " to " + entityClass + " registered!");
+        }
+
+        final B bean = (B) beanConverter.enrichBeanByEntity(beanManager.create(beanClass), entity);
+
+        beanToIdMapper.computeIfAbsent(bean, b -> new HashMap<>()).put(entityClass, entity.getId());
+
+        return bean;
     }
 }

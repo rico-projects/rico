@@ -22,8 +22,8 @@ import java.io.Serializable;
 
 public interface BeanConverter<ID extends Serializable, B, E extends DataWithId<ID>> {
 
-    E enrichtEntityByBean(E entity, B bean);
+    E enrichEntityByBean(E entity, B bean);
 
-    B enrichtBeanByEntity(B bean, E entity);
+    B enrichBeanByEntity(B bean, E entity);
 
 }
