@@ -94,16 +94,14 @@ public class BeanMapperImpl implements BeanMapper {
 
         final Class<E> entityClass = (Class<E>) entity.getClass();
 
-        B bean = beanManager.create(beanClass);
-
-        Map<Class<?>, BeanConverter> converterMap = converters.computeIfAbsent(entityClass, c -> new HashMap<>());
-        BeanConverter beanConverter = converterMap.get(beanClass);
+        final Map<Class<?>, BeanConverter> converterMap = converters.computeIfAbsent(entityClass, c -> new HashMap<>());
+        final BeanConverter beanConverter = converterMap.get(beanClass);
 
         if (beanConverter == null) {
             throw new IllegalStateException("No converter for " + beanClass.getSimpleName() + " to " + entityClass + " registered!");
         }
 
-        bean = (B) beanConverter.enrichBeanByEntity(bean, entity);
+        final B bean = (B) beanConverter.enrichBeanByEntity(beanManager.create(beanClass), entity);
 
         beanToIdMapper.computeIfAbsent(bean, b -> new HashMap<>()).put(entityClass, entity.getId());
 
