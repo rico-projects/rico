@@ -44,12 +44,11 @@ public interface Result<R> {
     boolean isSuccessful();
 
     /**
-     * Returns the exception of the based functional call or throws an {@link IllegalStateException} if the
+     * Returns the exception of the based functional call or {@code null} if the
      * function was executed successfully. Such behavior can easily be checked by calling {@link Result#isSuccessful()}
-     * @return the exception
-     * @throws IllegalStateException the exception if the based function was executed sucessfully
+     * @return the exception or {@code null}
      */
-    Exception getException() throws IllegalStateException;
+    Exception getException();
 
     /**
      * Returns a successful result with the given value

@@ -14,12 +14,7 @@ public class ResultTest {
         // then
         Assert.assertTrue(result.isSuccessful());
         Assert.assertEquals(result.getResult(), "Hello");
-        try {
-            result.getException();
-            Assert.fail("A success should not have an error");
-        } catch (final Exception e) {
-            Assert.assertEquals(e.getClass(), IllegalStateException.class);
-        }
+        Assert.assertNull(result.getException());
     }
 
     @Test
