@@ -41,7 +41,7 @@ public class Sucess<T, R> implements ResultWithInput<T, R> {
     }
 
     @Override
-    public boolean iSuccessful() {
+    public boolean isSuccessful() {
         return true;
     }
 

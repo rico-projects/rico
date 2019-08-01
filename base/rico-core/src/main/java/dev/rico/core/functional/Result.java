@@ -19,34 +19,33 @@ package dev.rico.core.functional;
 import dev.rico.internal.core.functional.Fail;
 import dev.rico.internal.core.functional.Sucess;
 
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
  * Wrapper for a result of a functional call (like {@link CheckedFunction}). The result can hold the outcome of a function
- * or an excepton if the function was aborted exeptionally.
+ * or an exception if the function was aborted exceptionally.
  * @param <R> type of the outcome
  */
 public interface Result<R> {
 
     /**
      * Returns the outcome /result of the based functional call or throws an {@link IllegalStateException} if the
-     * function was aborded by an exception. Such behavior can easily be checked by calling {@link Result#iSuccessful()}
+     * function was aborted by an exception. Such behavior can easily be checked by calling {@link Result#isSuccessful()}
      * @return the outcome
      * @throws IllegalStateException the exception if the based function was not executed sucessfully
      */
     R getResult() throws IllegalStateException;
 
     /**
-     * Returns true if the based function was executed sucessfully, otherwise false.
-     * @return true if the based function was executed sucessfully, otherwise false.
+     * Returns true if the based function was executed successfully, otherwise false.
+     * @return true if the based function was executed successfully, otherwise false.
      */
-    boolean iSuccessful();
+    boolean isSuccessful();
 
     /**
      * Returns the exception of the based functional call or throws an {@link IllegalStateException} if the
-     * function was executed sucessfully. Such behavior can easily be checked by calling {@link Result#iSuccessful()}
+     * function was executed successfully. Such behavior can easily be checked by calling {@link Result#isSuccessful()}
      * @return the exception
      * @throws IllegalStateException the exception if the based function was executed sucessfully
      */

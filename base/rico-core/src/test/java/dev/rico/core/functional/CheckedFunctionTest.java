@@ -19,7 +19,7 @@ public class CheckedFunctionTest {
 
         //than
         Assert.assertNotNull(result);
-        Assert.assertTrue(result.iSuccessful());
+        Assert.assertTrue(result.isSuccessful());
         Assert.assertEquals(result.getResult(), "Hello World");
         try {
             result.getException();
@@ -38,7 +38,7 @@ public class CheckedFunctionTest {
 
         //than
         Assert.assertNotNull(result);
-        Assert.assertFalse(result.iSuccessful());
+        Assert.assertFalse(result.isSuccessful());
         Assert.assertNotNull(result.getException());
         Assert.assertEquals(result.getException().getClass(), RuntimeException.class);
         Assert.assertEquals(result.getException().getMessage(), "ERROR");
@@ -61,7 +61,7 @@ public class CheckedFunctionTest {
         //than
         Assert.assertNotNull(results);
         Assert.assertEquals(results.size(), 10);
-        Assert.assertEquals(results.stream().filter(r -> r.iSuccessful()).count(), 5);
+        Assert.assertEquals(results.stream().filter(r -> r.isSuccessful()).count(), 5);
     }
 
     private <A> A throwException() {

@@ -12,7 +12,7 @@ public class ResultTest {
         final Result<String> result = Result.sucess("Hello");
 
         //than
-        Assert.assertTrue(result.iSuccessful());
+        Assert.assertTrue(result.isSuccessful());
         Assert.assertEquals(result.getResult(), "Hello");
         try {
             result.getException();
@@ -28,7 +28,7 @@ public class ResultTest {
         final Result<String> result = Result.fail(new RuntimeException("ERROR"));
 
         //than
-        Assert.assertFalse(result.iSuccessful());
+        Assert.assertFalse(result.isSuccessful());
         Assert.assertNotNull(result.getException());
         Assert.assertEquals(result.getException().getClass(), RuntimeException.class);
         Assert.assertEquals(result.getException().getMessage(), "ERROR");

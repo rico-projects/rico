@@ -42,7 +42,7 @@ public class Fail<T, R> implements ResultWithInput<T, R> {
     }
 
     @Override
-    public boolean iSuccessful() {
+    public boolean isSuccessful() {
         return false;
     }
 
