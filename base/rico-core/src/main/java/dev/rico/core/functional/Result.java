@@ -19,7 +19,9 @@ package dev.rico.core.functional;
 import dev.rico.internal.core.functional.Fail;
 import dev.rico.internal.core.functional.Sucess;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Wrapper for a result of a functional call (like {@link CheckedFunction}). The result can hold the outcome of a function
@@ -61,6 +63,23 @@ public interface Result<R> {
         return (a) -> {
             try {
                 final B result = function.apply(a);
+                return new Sucess<>(result);
+            } catch (Exception e) {
+                return new Fail<>(e);
+            }
+        };
+    }
+
+    /**
+     * Wraps a given {@link CheckedSupplier} in a {@link Supplier} that returns the {@link Result} of the given {@link CheckedSupplier}
+     * @param supplier the supplier
+     * @param <B> type of the result
+     * @return a {@link Supplier} that returns the {@link Result} of the given {@link CheckedSupplier}
+     */
+    static <B> Supplier<Result<B>> of(final CheckedSupplier<B> supplier) {
+        return () -> {
+            try {
+                final B result = supplier.get();
                 return new Sucess<>(result);
             } catch (Exception e) {
                 return new Fail<>(e);
