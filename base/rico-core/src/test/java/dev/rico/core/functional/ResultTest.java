@@ -8,10 +8,10 @@ public class ResultTest {
 
     @Test
     public void testSucess() {
-        //given
+        // when
         final Result<String> result = Result.sucess("Hello");
 
-        //than
+        // then
         Assert.assertTrue(result.isSuccessful());
         Assert.assertEquals(result.getResult(), "Hello");
         try {
@@ -24,10 +24,10 @@ public class ResultTest {
 
     @Test
     public void testFail() {
-        //given
+        // when
         final Result<String> result = Result.fail(new RuntimeException("ERROR"));
 
-        //than
+        // then
         Assert.assertFalse(result.isSuccessful());
         Assert.assertNotNull(result.getException());
         Assert.assertEquals(result.getException().getClass(), RuntimeException.class);

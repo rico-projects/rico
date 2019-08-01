@@ -9,10 +9,10 @@ public class CheckedSupplierTest {
 
     @Test
     public void testSuccess() {
-        //given
+        // when
         final Result<String> result = Optional.ofNullable((Result<String>) null).orElseGet(Result.of(() -> "Hello"));
 
-        //than
+        // then
         Assert.assertNotNull(result);
         Assert.assertTrue(result.isSuccessful());
         Assert.assertEquals(result.getResult(), "Hello");
@@ -26,10 +26,10 @@ public class CheckedSupplierTest {
 
     @Test
     public void testFail() {
-        //given
+        // when
         final Result<String> result = Optional.ofNullable((Result<String>) null).orElseGet(Result.of(() -> throwException()));
 
-        //than
+        // then
         Assert.assertNotNull(result);
         Assert.assertFalse(result.isSuccessful());
         Assert.assertNotNull(result.getException());

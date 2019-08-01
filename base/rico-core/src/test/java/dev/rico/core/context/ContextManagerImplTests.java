@@ -27,11 +27,11 @@ public class ContextManagerImplTests {
 
     @Test
     public void testGlobalContextDefaults() {
-        //given:
+        // when:
         final ContextManager manager = new ContextManagerImpl();
 
 
-        //then:
+        // then:
         Assert.assertEquals(manager.getGlobalContexts().size(), 5);
         checkForGlobalContext(manager, "hostName");
         checkForGlobalContext(manager, "platform.version");
