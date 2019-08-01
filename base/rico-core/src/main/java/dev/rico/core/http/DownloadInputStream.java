@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 /**
- * A {@link InputStream} that adds functionallity to handle downloads.
+ * A {@link InputStream} that adds functionality to handle downloads.
  */
 @API(since = "0.x", status = EXPERIMENTAL)
 public abstract class DownloadInputStream extends InputStream {
@@ -41,4 +41,31 @@ public abstract class DownloadInputStream extends InputStream {
      * @return the subscription
      */
     public abstract Subscription addDownloadDoneListener(final Consumer<Long> listener);
+
+    /**
+     * Adds a listener that is triggered if the download ends with an error
+     * (like a {@link java.io.IOException} while reading from the stream)
+     * @param listener the listener
+     * @return the subscription
+     */
+    public abstract Subscription addDownloadErrorListener(final Consumer<Exception> listener);
+
+    /**
+     * Returns the type of the download
+     * @return the type of the download
+     */
+    public abstract DownloadType getDownloadType();
+
+    /**
+     * Returns the count of bytes that was already downloaded.
+     * @return count of bytes that was already downloaded
+     */
+    public abstract long getDownloaded();
+
+    /**
+     * Returns the data size of the complete download (if that is known), otherwise -1. If the size is not known the
+     * download is defined as indeterminate (see {@link #getDownloadType()}).
+     * @return the data size of the complete download (if that is known), otherwise -1.
+     */
+    public abstract long getDataSize();
 }
