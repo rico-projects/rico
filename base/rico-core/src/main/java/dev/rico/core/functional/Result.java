@@ -44,6 +44,14 @@ public interface Result<R> {
     boolean isSuccessful();
 
     /**
+     * Returns false if the based function was executed successfully, otherwise true.
+      @return false if the based function was executed successfully, otherwise true.
+     */
+    default boolean isFailed() {
+        return !isSuccessful();
+    }
+
+    /**
      * Returns the exception of the based functional call or {@code null} if the
      * function was executed successfully. Such behavior can easily be checked by calling {@link Result#isSuccessful()}
      * @return the exception or {@code null}

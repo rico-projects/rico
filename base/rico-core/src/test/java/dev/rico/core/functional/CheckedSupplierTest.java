@@ -15,6 +15,8 @@ public class CheckedSupplierTest {
         // then
         Assert.assertNotNull(result);
         Assert.assertTrue(result.isSuccessful());
+        Assert.assertFalse(result.isFailed());
+
         Assert.assertEquals(result.getResult(), "Hello");
         Assert.assertNull(result.getException());
     }
@@ -27,6 +29,7 @@ public class CheckedSupplierTest {
         // then
         Assert.assertNotNull(result);
         Assert.assertFalse(result.isSuccessful());
+        Assert.assertTrue(result.isFailed());
         Assert.assertNotNull(result.getException());
         Assert.assertEquals(result.getException().getClass(), RuntimeException.class);
         Assert.assertEquals(result.getException().getMessage(), "ERROR");
