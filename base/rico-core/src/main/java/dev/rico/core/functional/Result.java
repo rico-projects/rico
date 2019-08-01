@@ -53,6 +53,26 @@ public interface Result<R> {
     Exception getException() throws IllegalStateException;
 
     /**
+     * Returns a successful result with the given value
+     * @param value the value of the result
+     * @param <B> the type of the result
+     * @return the successful result
+     */
+    static <B> Result<B> sucess(final B value) {
+        return new Sucess<>(value);
+    }
+
+    /**
+     * Returns a failed result with the given exception
+     * @param e the exception of the result
+     * @param <B> the type of the result
+     * @return the failed result
+     */
+    static <B> Result<B> fail(final Exception e) {
+        return new Fail<>(e);
+    }
+
+    /**
      * Wraps a given {@link CheckedFunction} in a {@link Function} that returns the {@link Result} of the given {@link CheckedFunction}
      * @param function the function
      * @param <A> type of the input parameter
