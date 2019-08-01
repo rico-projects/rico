@@ -41,7 +41,7 @@ public class Sucess<T, R> implements ResultWithInput<T, R> {
     }
 
     @Override
-    public boolean iSuccessful() {
+    public boolean isSuccessful() {
         return true;
     }
 
@@ -52,7 +52,7 @@ public class Sucess<T, R> implements ResultWithInput<T, R> {
 
     @Override
     public Exception getException() {
-        throw new IllegalStateException("No exception since call was sucessfull");
+        return null;
     }
 
     @Override
