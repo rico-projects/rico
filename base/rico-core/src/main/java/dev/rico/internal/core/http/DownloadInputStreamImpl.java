@@ -39,7 +39,7 @@ public class DownloadInputStreamImpl extends DownloadInputStream {
 
     private final long dataSize;
 
-    private final long updateChunkSize;
+    private final AtomicLong updateChunkSize;
 
     private final AtomicLong downloaded;
 
@@ -64,10 +64,9 @@ public class DownloadInputStreamImpl extends DownloadInputStream {
         this.downloadStartListeners = new CopyOnWriteArrayList<>();
         this.downloadDoneListeners = new CopyOnWriteArrayList<>();
         this.onErrorListeners = new CopyOnWriteArrayList<>();
+        this.updateChunkSize = new AtomicLong(1000);
         if (dataSize > 0) {
-            this.updateChunkSize = dataSize / 1000;
-        } else {
-            this.updateChunkSize = 1000;
+            this.updateChunkSize.set(dataSize / 1000);
         }
 
         try {
@@ -75,6 +74,13 @@ public class DownloadInputStreamImpl extends DownloadInputStream {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("No HASH_ALGORITHM support");
         }
+    }
+
+    public void setUpdateChunkSize(final long updateChunkSize) {
+        if(updateChunkSize <= 0) {
+            throw new IllegalArgumentException("chunk size must be > 0");
+        }
+        this.updateChunkSize.set(updateChunkSize);
     }
 
     public CompletableFuture<String> getHash() {
@@ -198,7 +204,7 @@ public class DownloadInputStreamImpl extends DownloadInputStream {
 
     private synchronized void update(final int len) {
         final long currentSize = downloaded.addAndGet(len);
-        if (lastUpdateSize.get() + updateChunkSize <= currentSize) {
+        if (lastUpdateSize.get() + updateChunkSize.get() <= currentSize) {
             LOG.trace("Downloaded {} bytes of {}", currentSize, dataSize);
             lastUpdateSize.set(currentSize);
             updateExecutor.execute(() -> {

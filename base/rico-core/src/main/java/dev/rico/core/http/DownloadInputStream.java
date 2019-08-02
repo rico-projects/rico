@@ -22,10 +22,18 @@ public abstract class DownloadInputStream extends InputStream {
     public abstract CompletableFuture<String> getHash();
 
     /**
-     * Adds a listener that is triggered once the download starts
-     * @param listener the listener
-     * @return the subscription
+     * Sets the chunk size that is used to check for updates of listeners. While the stream is used listeners
+     * (see {@link #addDownloadPercentageListener(Consumer)}) will be called several times. The chunk size defines
+     * after what byte count the listener will be called again.
+     * @param updateChunkSize the new chunk size
      */
+    public abstract void setUpdateChunkSize(final long updateChunkSize);
+
+        /**
+         * Adds a listener that is triggered once the download starts
+         * @param listener the listener
+         * @return the subscription
+         */
     public abstract Subscription addDownloadStartListener(final Consumer<Long> listener);
 
     /**
