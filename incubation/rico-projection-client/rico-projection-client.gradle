@@ -17,6 +17,6 @@
 
 dependencies {
     compile project(':rico-remoting-client-javafx')
-    compile project(':rico-projector-common')
+    compile project(':rico-projection-common')
     compile "org.controlsfx:controlsfx:$controlFxVersion"
 }
