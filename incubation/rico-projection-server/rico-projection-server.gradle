@@ -17,6 +17,6 @@
 
 dependencies {
     compile project(':rico-remoting-server')
-    compile project(':rico-projector-common')
+    compile project(':rico-projection-common')
     compile "javax.inject:javax.inject:$javaxInjectVersion"
 }
