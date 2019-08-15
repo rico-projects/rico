@@ -2,6 +2,7 @@ package dev.rico.internal.core.http;
 
 import dev.rico.core.functional.Subscription;
 import dev.rico.core.http.DownloadInputStream;
+import dev.rico.core.http.DownloadType;
 import dev.rico.core.http.HttpResponse;
 import dev.rico.internal.core.Assert;
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import java.io.InputStream;
 import java.security.DigestInputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executor;
@@ -29,13 +31,15 @@ public class DownloadInputStreamImpl extends DownloadInputStream {
 
     private final List<Consumer<Long>> downloadDoneListeners;
 
+    private final List<Consumer<Exception>> onErrorListeners;
+
     private final Executor updateExecutor;
 
     private final DigestInputStream wrappedStream;
 
     private final long dataSize;
 
-    private final long updateChunkSize;
+    private final AtomicLong updateChunkSize;
 
     private final AtomicLong downloaded;
 
@@ -43,21 +47,40 @@ public class DownloadInputStreamImpl extends DownloadInputStream {
 
     private final AtomicBoolean firstRead;
 
+    private final DownloadType downloadType;
+
     public DownloadInputStreamImpl(final InputStream inputStream, final long dataSize, final Executor updateExecutor) {
         this.updateExecutor = Assert.requireNonNull(updateExecutor, "updateExecutor");
-        this.dataSize = dataSize;
+        this.dataSize = dataSize > 0 ? dataSize : -1;
+        if (dataSize > 0) {
+            downloadType = DownloadType.NORMAL;
+        } else {
+            downloadType = DownloadType.INDETERMINATE;
+        }
         this.downloaded = new AtomicLong(0);
         this.lastUpdateSize = new AtomicLong(0);
         this.firstRead = new AtomicBoolean(true);
         this.downloadPercentageListeners = new CopyOnWriteArrayList<>();
         this.downloadStartListeners = new CopyOnWriteArrayList<>();
         this.downloadDoneListeners = new CopyOnWriteArrayList<>();
-        this.updateChunkSize = dataSize / 100;
+        this.onErrorListeners = new CopyOnWriteArrayList<>();
+        this.updateChunkSize = new AtomicLong(1000);
+        if (dataSize > 0) {
+            this.updateChunkSize.set(dataSize / 1000);
+        }
+
         try {
             this.wrappedStream = ConnectionUtils.createMD5HashStream(inputStream);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("No HASH_ALGORITHM support");
         }
+    }
+
+    public void setUpdateChunkSize(final long updateChunkSize) {
+        if(updateChunkSize <= 0) {
+            throw new IllegalArgumentException("chunk size must be > 0");
+        }
+        this.updateChunkSize.set(updateChunkSize);
     }
 
     public CompletableFuture<String> getHash() {
@@ -68,40 +91,76 @@ public class DownloadInputStreamImpl extends DownloadInputStream {
         return future;
     }
 
+    public DownloadType getDownloadType() {
+        return downloadType;
+    }
+
     @Override
     public int read(final byte[] b, final int off, final int len) throws IOException {
-        final int count = super.read(b, off, len);
-        if(count < 0) {
-            onDone();
+        try {
+            final int count = super.read(b, off, len);
+            if (count < 0) {
+                onDone();
+            }
+            return count;
+        } catch (final Exception e) {
+            try {
+                onError(e);
+            } finally {
+                throw e;
+            }
         }
-        return count;
     }
 
     @Override
     public void close() throws IOException {
-        super.close();
+        try {
+            super.close();
+        } catch (final Exception e) {
+            try {
+                onError(e);
+            } finally {
+                throw e;
+            }
+        }
         onDone();
     }
 
     public int read() throws IOException {
-        if (firstRead.get()) {
-            onStart();
-            firstRead.set(false);
+        try {
+            if (firstRead.get()) {
+                onStart();
+                firstRead.set(false);
+            }
+            final int value = wrappedStream.read();
+            if (value >= 0) {
+                update(1);
+            }
+            return value;
+        } catch (final Exception e) {
+            try {
+                onError(e);
+            } finally {
+                throw e;
+            }
         }
-        final int value = wrappedStream.read();
-        if(value >= 0) {
-            update(1);
-        }
-        return value;
     }
 
     @Override
     public int available() throws IOException {
-        final int available = super.available();
-        if (available < 0) {
-            onDone();
+        try {
+            final int available = super.available();
+            if (available < 0) {
+                onDone();
+            }
+            return available;
+        } catch (final Exception e) {
+            try {
+                onError(e);
+            } finally {
+                throw e;
+            }
         }
-        return available;
     }
 
     public Subscription addDownloadStartListener(final Consumer<Long> listener) {
@@ -122,9 +181,14 @@ public class DownloadInputStreamImpl extends DownloadInputStream {
         return () -> downloadDoneListeners.remove(listener);
     }
 
+    public Subscription addDownloadErrorListener(final Consumer<Exception> listener) {
+        Assert.requireNonNull(listener, "listener");
+        onErrorListeners.add(listener);
+        return () -> onErrorListeners.remove(listener);
+    }
+
     private void onDone() {
         LOG.trace("Download of size {} done", dataSize);
-
         updateExecutor.execute(() -> downloadDoneListeners.forEach(l -> l.accept(dataSize)));
     }
 
@@ -133,17 +197,34 @@ public class DownloadInputStreamImpl extends DownloadInputStream {
         updateExecutor.execute(() -> downloadStartListeners.forEach(l -> l.accept(dataSize)));
     }
 
+    private void onError(final Exception e) {
+        LOG.trace("Downloaded of size {} started", dataSize);
+        updateExecutor.execute(() -> onErrorListeners.forEach(l -> l.accept(e)));
+    }
+
     private synchronized void update(final int len) {
         final long currentSize = downloaded.addAndGet(len);
-        if (lastUpdateSize.get() + updateChunkSize <= currentSize) {
+        if (lastUpdateSize.get() + updateChunkSize.get() <= currentSize) {
             LOG.trace("Downloaded {} bytes of {}", currentSize, dataSize);
+            lastUpdateSize.set(currentSize);
             updateExecutor.execute(() -> {
-                lastUpdateSize.set(currentSize);
-                final double percentageDone = (((double) currentSize) / ((double) dataSize / 100.0)) / 100.0;
-                LOG.trace("Downloaded {} %", percentageDone);
-                downloadPercentageListeners.forEach(l -> l.accept(percentageDone));
+                if(Objects.equals(downloadType, DownloadType.NORMAL)) {
+                    final double percentageDone = (((double) currentSize) / ((double) dataSize / 100.0)) / 100.0;
+                    LOG.trace("Downloaded {} %", percentageDone);
+                    downloadPercentageListeners.forEach(l -> l.accept(percentageDone));
+                } else {
+                    downloadPercentageListeners.forEach(l -> l.accept(-1d));
+                }
             });
         }
+    }
+
+    public long getDownloaded() {
+        return downloaded.get();
+    }
+
+    public long getDataSize() {
+        return dataSize;
     }
 
     public static DownloadInputStreamImpl map(final HttpResponse<InputStream> response, final Executor executor) {
