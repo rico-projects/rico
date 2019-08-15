@@ -179,5 +179,4 @@ public class ConnectionUtils {
         }
         return finalLength;
     }
-
 }
