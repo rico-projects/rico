@@ -16,10 +16,10 @@
  */
 package dev.rico.internal.remoting.eventbus.distributed;
 
+import dev.rico.event.MessageEventContext;
+import dev.rico.event.Topic;
 import dev.rico.internal.server.remoting.event.MessageEventImpl;
 import dev.rico.internal.core.Assert;
-import dev.rico.server.remoting.event.MessageEventContext;
-import dev.rico.server.remoting.event.Topic;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;

@@ -16,9 +16,9 @@
  */
 package dev.rico.internal.server.remoting.event;
 
-import dev.rico.server.remoting.event.MessageEvent;
-import dev.rico.server.remoting.event.MessageEventContext;
-import dev.rico.server.remoting.event.Topic;
+import dev.rico.event.MessageEvent;
+import dev.rico.event.MessageEventContext;
+import dev.rico.event.Topic;
 import org.apiguardian.api.API;
 
 import java.io.Serializable;

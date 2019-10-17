@@ -16,8 +16,8 @@
  */
 package dev.rico.internal.server.projection.notifications;
 
+import dev.rico.event.Topic;
 import dev.rico.internal.projection.notifications.NotificationData;
-import dev.rico.server.remoting.event.Topic;
 
 /**
  * Created by hendrikebbers on 31.05.16.

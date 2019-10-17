@@ -18,6 +18,7 @@
 rootProject.name = 'rico'
 
 include 'base/rico-core'
+include 'base/rico-eventbus'
 include 'base/rico-client'
 include 'base/rico-client-swing'
 include 'base/rico-client-javafx'

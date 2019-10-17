@@ -14,13 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.server.remoting.test.eventbus;
+package dev.rico.event;
 
-import dev.rico.event.Topic;
+import org.apiguardian.api.API;
 
-public interface EventBusTestConstants {
-    String EVENT_BUS_SUBSCIBER_CONTROLLER_NAME = "EventBusSubscriberController";
-    String EVENT_BUS_PUBLISHER_CONTROLLER_NAME = "EventBusPublisherController";
-    String CALL_ACTION = "call";
-    Topic<String> TEST_TOPIC = Topic.create();
+import java.io.Serializable;
+
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+@API(since = "1.0.0.RC1", status = EXPERIMENTAL)
+public interface MessageEvent<T extends Serializable> extends Serializable {
+    
+    /**
+     * Returns the data of the message
+     * 
+     * @return the data
+     */
+    T getData();
+
+    /**
+     * Returns the context of the message
+     * 
+     * @return the EventContext
+     */
+    MessageEventContext<T> getMessageEventContext();
 }
