@@ -139,7 +139,7 @@ public interface Result<R> {
      * @param <A> type of the input parameter
      * @return a {@link Function} that returns the {@link Result} of the given {@link CheckedConsumer}
      */
-    static <A, Void> Function<A, Result<Void>> of(final CheckedConsumer<A> consumer) {
+    static <A, Void> Function<A, Result<Void>> ofConsumer(final CheckedConsumer<A> consumer) {
         return (a) -> {
             try {
                 consumer.accept(a);
