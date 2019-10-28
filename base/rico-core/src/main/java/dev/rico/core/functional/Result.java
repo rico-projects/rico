@@ -131,4 +131,23 @@ public interface Result<R> {
         };
     }
 
+    /**
+     * Wraps a given {@link CheckedConsumer} in a {@link Function} that returns the {@link Result} of the
+     * given {@link CheckedConsumer}. Since an {@link CheckedConsumer} has no return value the {@link Result} is
+     * defined as {@code Result<Void>} and will contain a {@code null} value as result value.
+     * @param consumer the consumer
+     * @param <A> type of the input parameter
+     * @return a {@link Function} that returns the {@link Result} of the given {@link CheckedConsumer}
+     */
+    static <A, Void> Function<A, Result<Void>> ofConsumer(final CheckedConsumer<A> consumer) {
+        return (a) -> {
+            try {
+                consumer.accept(a);
+                return new Sucess<>(null);
+            } catch (Exception e) {
+                return new Fail<>(e);
+            }
+        };
+    }
+
  }
