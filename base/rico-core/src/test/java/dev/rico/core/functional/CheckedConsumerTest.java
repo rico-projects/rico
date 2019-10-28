@@ -28,7 +28,7 @@ public class CheckedConsumerTest {
 
     private void saveDataMockMethod(final String data) throws Exception {
         if(data == null || data.length() == 0) {
-            throw new Exception("Data must be > 0");
+            throw new IllegalStateException("Data must be > 0");
         }
     }
 
