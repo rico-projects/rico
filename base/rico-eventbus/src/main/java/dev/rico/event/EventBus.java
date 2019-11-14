@@ -14,14 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.server.remoting.event;
+package dev.rico.event;
 
 import dev.rico.core.functional.Subscription;
-import dev.rico.event.EventBus;
-import dev.rico.event.MessageEventContext;
-import dev.rico.event.MessageListener;
-import dev.rico.event.Topic;
-import dev.rico.server.remoting.RemotingController;
 import org.apiguardian.api.API;
 
 import java.io.Serializable;
@@ -30,18 +25,12 @@ import java.util.function.Predicate;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 /**
- * The remoting event bus that can be used to withContent messages to client sessions.
- * The {@link RemotingEventBus} can be injected in any
- * managed bean and will automatically publish the given data in the client session.
- * This means that you ca subscribe your remoting controller (see {@link RemotingController})
- * to the event bus and publish messages from any other bean like an REST endpoint.
- * <br>
- * <center><img src="doc-files/event-bus.png" alt="Notification MVC Widget example"></center>
+ * A event bus interface as basic API for event based workflows.
  *
  * @author Hendrik Ebbers
  */
 @API(since = "1.0.0.RC1", status = EXPERIMENTAL)
-public interface RemotingEventBus extends EventBus {
+public interface EventBus {
 
     /**
      * Publish a message to the given topic
@@ -53,8 +42,7 @@ public interface RemotingEventBus extends EventBus {
     <T extends Serializable> void publish(Topic<T> topic, T data);
 
     /**
-     * Register as a listener for a given topic. All messages that will be published for the given address
-     * by any client session will trigger the given handler in the correct client session.
+     * Register as a listener for a given topic.
      *
      * @param topic    the topic
      * @param listener the listener
@@ -62,8 +50,7 @@ public interface RemotingEventBus extends EventBus {
     <T extends Serializable> Subscription subscribe(Topic<T> topic, MessageListener<? super T> listener);
 
     /**
-     * Register as a listener for a given topic. All messages that will be published for the given address
-     * by any cllient session will trigger the given handler in the correct client session.
+     * Register as a listener for a given topic.
      *
      * @param topic    the topic
      * @param listener the listener

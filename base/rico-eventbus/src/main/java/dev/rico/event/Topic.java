@@ -14,8 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.server.remoting.event;
+package dev.rico.event;
 
+import dev.rico.internal.core.Assert;
 import org.apiguardian.api.API;
 
 import java.io.Serializable;
@@ -24,7 +25,7 @@ import java.util.UUID;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
 /**
- * This class defines a topic for the {@link RemotingEventBus}. By using the event bus data messages can be withContent to
+ * This class defines a topic for an {@link EventBus}. By using the event bus data messages can be withContent to
  * a specific topic. A topic is defined by it's name that means that each topic needs a unique name.
  *
  * @param <T> the type of data that can be withContent to this topic
@@ -50,7 +51,7 @@ public class Topic<T extends Serializable> implements Serializable {
      * @param name the name
      */
     public Topic(String name) {
-        this.name = name;
+        this.name = Assert.requireNonBlank(name, "name");
     }
 
     /**

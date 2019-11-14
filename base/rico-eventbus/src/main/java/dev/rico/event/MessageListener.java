@@ -14,13 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.server.remoting.test.eventbus;
+package dev.rico.event;
 
-import dev.rico.event.Topic;
+import org.apiguardian.api.API;
 
-public interface EventBusTestConstants {
-    String EVENT_BUS_SUBSCIBER_CONTROLLER_NAME = "EventBusSubscriberController";
-    String EVENT_BUS_PUBLISHER_CONTROLLER_NAME = "EventBusPublisherController";
-    String CALL_ACTION = "call";
-    Topic<String> TEST_TOPIC = Topic.create();
+import java.io.Serializable;
+
+import static org.apiguardian.api.API.Status.MAINTAINED;
+
+/**
+ * A handler that can be registered to an event bus (see {@link EventBus})
+ * to receive publish messages (see {@link MessageEvent}).
+ *
+ * @author Hendrik Ebbers
+ */
+@API(since = "0.x", status = MAINTAINED)
+public interface MessageListener<T extends Serializable> {
+
+    /**
+     * Method will be called whenever a message is received
+     * @param message the new message
+     */
+    void onMessage(MessageEvent<T> message);
 }

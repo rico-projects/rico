@@ -16,8 +16,8 @@
  */
 package dev.rico.internal.server.remoting.event;
 
+import dev.rico.event.MessageEventContext;
 import dev.rico.internal.core.Assert;
-import dev.rico.server.remoting.event.MessageEventContext;
 import org.apiguardian.api.API;
 
 import java.io.Serializable;

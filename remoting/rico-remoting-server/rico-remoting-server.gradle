@@ -17,6 +17,7 @@
 
 dependencies {
     compile project(':rico-server')
+    compile project(':rico-eventbus')
     compile project(':rico-remoting-common')
     compileOnly "javax.servlet:javax.servlet-api:$servletApiVersion"
 

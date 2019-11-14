@@ -16,11 +16,11 @@
  */
 package dev.rico.integrationtests.server.remoting.enterprise;
 
+import dev.rico.event.Topic;
 import dev.rico.integrationtests.remoting.enterprise.EnterpriseTestBean;
 import dev.rico.server.remoting.RemotingController;
 import dev.rico.server.remoting.RemotingModel;
 import dev.rico.server.remoting.event.RemotingEventBus;
-import dev.rico.server.remoting.event.Topic;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;

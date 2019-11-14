@@ -16,7 +16,7 @@
  */
 package dev.rico.internal.server.crud;
 
-import dev.rico.server.remoting.event.Topic;
+import dev.rico.event.Topic;
 
 public interface CrudConstants {
 

@@ -14,26 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.server.remoting.event;
+package dev.rico.event;
 
 import org.apiguardian.api.API;
 
 import java.io.Serializable;
+import java.util.Map;
 
-import static org.apiguardian.api.API.Status.MAINTAINED;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
-/**
- * A handler that can be registered to the remoting event bus (see {@link RemotingEventBus})
- * to receive publish messages (see {@link MessageEvent}).
- *
- * @author Hendrik Ebbers
- */
-@API(since = "0.x", status = MAINTAINED)
-public interface MessageListener<T extends Serializable> {
+@API(since = "1.0.0.RC1", status = EXPERIMENTAL)
+public interface MessageEventContext<T extends Serializable> extends Serializable {
+    
+    Topic<T> getTopic();
 
-    /**
-     * Method will be called whenever a message is received
-     * @param message the new message
-     */
-    void onMessage(MessageEvent<T> message);
+    Map<String, Serializable> getMetadata();
+    
+    long getTimestamp();
 }
