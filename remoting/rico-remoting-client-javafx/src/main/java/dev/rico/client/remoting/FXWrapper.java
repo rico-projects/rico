@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -126,7 +126,7 @@ public class FXWrapper {
      */
     public static StringProperty wrapStringProperty(final Property<String> remotingProperty) {
         Assert.requireNonNull(remotingProperty, "remotingProperty");
-        StringProperty property = new SimpleStringProperty();
+        final StringProperty property = new SimpleStringProperty();
         FXBinder.bind(property).bidirectionalTo(remotingProperty);
         return property;
     }
@@ -151,7 +151,7 @@ public class FXWrapper {
      * @param <T>         type of the list content
      * @return the JavaFX list
      */
-    public static <T> ObservableList<T> wrapList(dev.rico.remoting.ObservableList<T> remotingList) {
+    public static <T> ObservableList<T> wrapList(final dev.rico.remoting.ObservableList<T> remotingList) {
         Assert.requireNonNull(remotingList, "remotingList");
         final ObservableList<T> list = FXCollections.observableArrayList(remotingList);
 
@@ -160,10 +160,10 @@ public class FXWrapper {
                 listenToRemoting = false;
                 while (c.next()) {
                     if (c.wasAdded() || c.wasRemoved() || c.wasReplaced()) {
-                        for (T removed : c.getRemoved()) {
+                        for (final T removed : c.getRemoved()) {
                             remotingList.remove(removed);
                         }
-                        for (T added : c.getAddedSubList()) {
+                        for (final T added : c.getAddedSubList()) {
                             remotingList.add(list.indexOf(added), added);
                         }
                     }
@@ -175,7 +175,7 @@ public class FXWrapper {
         remotingList.onChanged(e -> {
             if (listenToRemoting) {
                 listenToFx = false;
-                for (ListChangeEvent.Change<? extends T> c : e.getChanges()) {
+                for (final ListChangeEvent.Change<? extends T> c : e.getChanges()) {
                     if (c.isAdded()) {
                         for (int i = c.getFrom(); i < c.getTo(); i++) {
                             list.add(i, remotingList.get(i));

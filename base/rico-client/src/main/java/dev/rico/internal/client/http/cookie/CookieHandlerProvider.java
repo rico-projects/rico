@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,6 +18,7 @@ package dev.rico.internal.client.http.cookie;
 
 import dev.rico.internal.client.AbstractServiceProvider;
 import dev.rico.client.ClientConfiguration;
+import dev.rico.internal.core.Assert;
 import org.apiguardian.api.API;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
@@ -30,7 +31,8 @@ public class CookieHandlerProvider extends AbstractServiceProvider<HttpClientCoo
     }
 
     @Override
-    protected HttpClientCookieHandler createService(ClientConfiguration configuration) {
+    protected HttpClientCookieHandler createService(final ClientConfiguration configuration) {
+        Assert.requireNonNull(configuration, "configuration");
         return new HttpClientCookieHandler(configuration.getCookieStore());
     }
 }

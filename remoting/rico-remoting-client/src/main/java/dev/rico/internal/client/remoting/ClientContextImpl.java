@@ -31,7 +31,9 @@ import org.apiguardian.api.API;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
 import java.net.URI;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
@@ -99,9 +101,9 @@ public class ClientContextImpl implements ClientContext {
     }
 
     @Override
-    public <T> CompletableFuture<ControllerProxy<T>> createController(final String name) {
+    public <T> CompletableFuture<ControllerProxy<T>> createController(final String name, final Map<String, Serializable> parameters) {
         Assert.requireNonBlank(name, "name");
-        return controllerProxyFactory.<T>create(name);
+        return controllerProxyFactory.<T>create(name, parameters);
     }
 
     @Override

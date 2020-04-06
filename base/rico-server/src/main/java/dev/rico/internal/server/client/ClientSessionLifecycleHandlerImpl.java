@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -59,7 +59,7 @@ public final class ClientSessionLifecycleHandlerImpl implements ClientSessionLif
 
     @Override
     public void onSessionCreated(final ClientSession session) {
-        for (Consumer<ClientSession> listener : onCreateCallbacks) {
+        for (final Consumer<ClientSession> listener : onCreateCallbacks) {
             try {
                 listener.accept(session);
             } catch (Exception e) {
@@ -70,7 +70,7 @@ public final class ClientSessionLifecycleHandlerImpl implements ClientSessionLif
 
     @Override
     public void onSessionDestroyed(final ClientSession session) {
-        for (Consumer<ClientSession> listener : onDestroyCallbacks) {
+        for (final Consumer<ClientSession> listener : onDestroyCallbacks) {
             try {
                 listener.accept(session);
             } catch (Exception e) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,27 +26,27 @@ public class ContextImplTest {
 
     @Test(expectedExceptions = RuntimeException.class)
     public void testNullKey() {
-        //given:
+        // when:
         final Context context1 = new ContextImpl(null, "SOME_VALUE");
     }
 
     @Test
     public void testNullValue() {
-        //given:
+        // when:
         final Context context1 = new ContextImpl("KEY", null);
 
-        //then:
+        // then:
         Assert.assertNull(context1.getValue());
     }
 
     @Test
     public void testEquals() {
-        //given:
+        // when:
         final Context context1 = new ContextImpl("KEY", "SOME_VALUE");
         final Context context2 = new ContextImpl("KEY", "SOME_OTHER_VALUE");
         final Context context3 = new ContextImpl("OTHER_KEY", "SOME_OTHER_VALUE");
 
-        //then:
+        // then:
         Assert.assertTrue(context1.equals(context2));
         Assert.assertTrue(context2.equals(context1));
         Assert.assertFalse(context1.equals(context3));
@@ -57,18 +57,18 @@ public class ContextImplTest {
 
     @Test
     public void testHash() {
-        //given:
+        // given:
         final Context context1 = new ContextImpl("KEY", "SOME_VALUE");
         final Context context2 = new ContextImpl("KEY", "SOME_OTHER_VALUE");
         final Context context3 = new ContextImpl("OTHER_KEY", "SOME_OTHER_VALUE");
         final HashSet<Context> set = new HashSet<>();
 
-        //when:
+        // when:
         set.add(context1);
         set.add(context2);
         set.add(context3);
 
-        //then:
+        // then:
         Assert.assertEquals(set.size(), 2);
     }
 

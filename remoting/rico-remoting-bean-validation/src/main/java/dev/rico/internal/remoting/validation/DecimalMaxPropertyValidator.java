@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -41,22 +41,22 @@ public final class DecimalMaxPropertyValidator extends AbstractNumberValidator<D
     }
 
     @Override
-    protected boolean checkValidLong(Long value) {
+    protected boolean checkValidLong(final Long value) {
         return checkValidBigDecimal(BigDecimal.valueOf(value) );
     }
 
     @Override
-    protected boolean checkValidCharSequence(CharSequence value) {
+    protected boolean checkValidCharSequence(final CharSequence value) {
         return checkValidBigDecimal(new BigDecimal(value.toString() ) );
     }
 
     @Override
-    protected boolean checkValidBigInteger(BigInteger value) {
+    protected boolean checkValidBigInteger(final BigInteger value) {
         return checkValidBigDecimal(new BigDecimal(value) );
     }
 
     @Override
-    protected boolean checkValidBigDecimal(BigDecimal value) {
+    protected boolean checkValidBigDecimal(final BigDecimal value) {
         return inclusive ? value.compareTo(maxValue) != 1 : value.compareTo(maxValue) == -1;
     }
 

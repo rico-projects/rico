@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -47,7 +47,7 @@ public class URLTemplateTests {
 
     @Test(expectedExceptions = NullPointerException.class)
     public void testNullUrl() {
-        //given:
+        //when:
         final String value = null;
 
         //when:
@@ -173,6 +173,7 @@ public class URLTemplateTests {
         final String value = "http://www.example.org/{type}/id={id}";
         final URLTemplate template = URLTemplate.of(value);
         final URLParams params = URLParams.of("type", "data").and("id", 123);
+
         //when:
         final String urlString = template.createString(params);
         final URL url = template.create(params);

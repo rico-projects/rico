@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,11 +27,11 @@ public class ContextManagerImplTests {
 
     @Test
     public void testGlobalContextDefaults() {
-        //given:
+        // when:
         final ContextManager manager = new ContextManagerImpl();
 
 
-        //then:
+        // then:
         Assert.assertEquals(manager.getGlobalContexts().size(), 5);
         checkForGlobalContext(manager, "hostName");
         checkForGlobalContext(manager, "platform.version");

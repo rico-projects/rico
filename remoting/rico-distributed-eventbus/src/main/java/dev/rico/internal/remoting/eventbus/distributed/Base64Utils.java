@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,7 +30,7 @@ public class Base64Utils {
         final ByteArrayOutputStream rawOutputStream = new ByteArrayOutputStream();
         final ObjectOutputStream dataOutputStream = new ObjectOutputStream(rawOutputStream);
         dataOutputStream.writeObject(data);
-        Base64.Encoder encoder = Base64.getEncoder();
+        final Base64.Encoder encoder = Base64.getEncoder();
         return encoder.encodeToString(rawOutputStream.toByteArray());
     }
 

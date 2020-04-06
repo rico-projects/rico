@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -81,9 +81,14 @@ public class ClientSessionManager {
         Assert.requireNonNull(lock, "lock");
         lock.lock();
         try {
-            Map<String, ClientSession> map = getOrCreateClientSessionMapInHttpSession(httpSession);
+            final Map<String, ClientSession> map = getOrCreateClientSessionMapInHttpSession(httpSession);
             for(ClientSession session : map.values()) {
-                lifecycleHandler.onSessionDestroyed(session);
+                setClientSessionForThread(httpSession, session.getId());
+                try {
+                    lifecycleHandler.onSessionDestroyed(session);
+                } finally {
+                    resetClientSessionForThread();
+                }
             }
             map.clear();
         } finally {

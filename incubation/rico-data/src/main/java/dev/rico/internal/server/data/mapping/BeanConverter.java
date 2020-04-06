@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,8 +22,8 @@ import java.io.Serializable;
 
 public interface BeanConverter<ID extends Serializable, B, E extends DataWithId<ID>> {
 
-    E enrichtEntityByBean(E entity, B bean);
+    E enrichEntityByBean(E entity, B bean);
 
-    B enrichtBeanByEntity(B bean, E entity);
+    B enrichBeanByEntity(B bean, E entity);
 
 }

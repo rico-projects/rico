@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -36,15 +36,15 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 public class ContextListenerCdi implements ClientSessionListener {
 
     @Override
-    public void sessionCreated(ClientSession clientSession) {
+    public void sessionCreated(final ClientSession clientSession) {
 
     }
 
     @Override
-    public void sessionDestroyed(ClientSession clientSession) {
+    public void sessionDestroyed(final ClientSession clientSession) {
         Assert.requireNonNull(clientSession, "clientSession");
-        BeanManager bm = BeanManagerProvider.getInstance().getBeanManager();
-        ClientScopeContext clientContext = (ClientScopeContext) bm.getContext(ClientScoped.class);
+        final BeanManager bm = BeanManagerProvider.getInstance().getBeanManager();
+        final ClientScopeContext clientContext = (ClientScopeContext) bm.getContext(ClientScoped.class);
         clientContext.destroy();
     }
 }

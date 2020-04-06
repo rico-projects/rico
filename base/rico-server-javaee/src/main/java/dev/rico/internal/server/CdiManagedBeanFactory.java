@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -45,18 +45,18 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class CdiManagedBeanFactory implements ManagedBeanFactory {
 
-    private Map<Object, CreationalContext> contextMap = new HashMap<>();
+    private final Map<Object, CreationalContext> contextMap = new HashMap<>();
 
-    private Map<Object, Bean> beanMap = new HashMap<>();
-
-    @Override
-    public void init(ServletContext servletContext) {}
+    private final Map<Object, Bean> beanMap = new HashMap<>();
 
     @Override
-    public <T> T createDependentInstance(Class<T> cls) {
+    public void init(final ServletContext servletContext) {}
+
+    @Override
+    public <T> T createDependentInstance(final Class<T> cls) {
         Assert.requireNonNull(cls, "cls");
-        BeanManager bm = BeanManagerProvider.getInstance().getBeanManager();
-        AnnotatedType annotatedType = bm.createAnnotatedType(cls);
+        final BeanManager bm = BeanManagerProvider.getInstance().getBeanManager();
+        final AnnotatedType annotatedType = bm.createAnnotatedType(cls);
         final InjectionTarget<T> injectionTarget = bm.createInjectionTarget(annotatedType);
         final Bean<T> bean = new BeanBuilder<T>(bm)
                 .beanClass(cls)
@@ -64,20 +64,20 @@ public class CdiManagedBeanFactory implements ManagedBeanFactory {
                 .scope(Dependent.class)
                 .beanLifecycle(new DelegatingContextualLifecycle<T>(injectionTarget))
                 .create();
-        Class<?> beanClass = bean.getBeanClass();
-        CreationalContext<T> creationalContext = bm.createCreationalContext(bean);
-        T instance = (T) bm.getReference(bean, beanClass, creationalContext);
+        final Class<?> beanClass = bean.getBeanClass();
+        final CreationalContext<T> creationalContext = bm.createCreationalContext(bean);
+        final T instance = (T) bm.getReference(bean, beanClass, creationalContext);
         contextMap.put(instance, creationalContext);
         beanMap.put(instance, bean);
         return instance;
     }
 
     @Override
-    public <T> T createDependentInstance(Class<T> cls, PostConstructInterceptor<T> interceptor) {
+    public <T> T createDependentInstance(final Class<T> cls, final PostConstructInterceptor<T> interceptor) {
         Assert.requireNonNull(cls, "cls");
         Assert.requireNonNull(interceptor, "interceptor");
         BeanManager bm = BeanManagerProvider.getInstance().getBeanManager();
-        AnnotatedType annotatedType = bm.createAnnotatedType(cls);
+        final AnnotatedType annotatedType = bm.createAnnotatedType(cls);
         final InjectionTarget<T> injectionTarget = bm.createInjectionTarget(annotatedType);
         final Bean<T> bean = new BeanBuilder<T>(bm)
                 .beanClass(cls)
@@ -85,19 +85,19 @@ public class CdiManagedBeanFactory implements ManagedBeanFactory {
                 .scope(Dependent.class)
                 .beanLifecycle(new RicoContextualLifecycle<T>(injectionTarget, interceptor))
                 .create();
-        Class<?> beanClass = bean.getBeanClass();
-        CreationalContext<T> creationalContext = bm.createCreationalContext(bean);
-        T instance = (T) bm.getReference(bean, beanClass, creationalContext);
+        final Class<?> beanClass = bean.getBeanClass();
+        final CreationalContext<T> creationalContext = bm.createCreationalContext(bean);
+        final T instance = (T) bm.getReference(bean, beanClass, creationalContext);
         contextMap.put(instance, creationalContext);
         beanMap.put(instance, bean);
         return instance;
     }
 
     @Override
-    public <T> void destroyDependentInstance(T instance, Class<T> cls) {
+    public <T> void destroyDependentInstance(final T instance, final Class<T> cls) {
         Assert.requireNonNull(instance, "instance");
-        Bean bean = beanMap.remove(instance);
-        CreationalContext context = contextMap.remove(instance);
+        final Bean bean = beanMap.remove(instance);
+        final CreationalContext context = contextMap.remove(instance);
         bean.destroy(instance, context);
     }
 

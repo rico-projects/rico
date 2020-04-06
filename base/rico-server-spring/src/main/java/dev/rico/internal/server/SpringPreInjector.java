@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -51,9 +51,9 @@ public class SpringPreInjector extends InstantiationAwareBeanPostProcessorAdapte
     @Override
     public boolean postProcessAfterInstantiation(final Object bean, final String beanName) throws BeansException {
         Assert.requireNonNull(bean, "bean");
-        Class controllerClass = currentControllerClass.get();
+        final Class controllerClass = currentControllerClass.get();
         if (controllerClass != null && controllerClass.isAssignableFrom(bean.getClass())) {
-            PostConstructInterceptor modelInjector = currentInterceptor.get();
+            final PostConstructInterceptor modelInjector = currentInterceptor.get();
             if (modelInjector != null) {
                 modelInjector.intercept(bean);
             }

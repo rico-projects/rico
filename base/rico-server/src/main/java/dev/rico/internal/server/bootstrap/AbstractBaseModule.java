@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -40,7 +40,7 @@ public abstract class AbstractBaseModule implements ServerModule {
     }
 
     @Override
-    public boolean shouldBoot(Configuration configuration) {
+    public boolean shouldBoot(final Configuration configuration) {
         return Assert.requireNonNull(configuration, "configuration").getBooleanProperty(getActivePropertyName(), true);
     }
 

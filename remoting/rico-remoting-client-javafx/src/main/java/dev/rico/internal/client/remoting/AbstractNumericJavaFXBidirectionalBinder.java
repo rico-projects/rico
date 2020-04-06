@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -37,7 +37,7 @@ public abstract class AbstractNumericJavaFXBidirectionalBinder<S extends Number>
     }
 
     @Override
-    public <T> Binding bidirectionalTo(final Property<T> property, BidirectionalConverter<T, Number> converter) {
+    public <T> Binding bidirectionalTo(final Property<T> property, final BidirectionalConverter<T, Number> converter) {
         final Binding unidirectionalBinding = to(property, converter);
         final ChangeListener<Number> listener = (obs, oldVal, newVal) -> property.set(converter.convertBack(newVal));
         javaFxProperty.addListener(listener);

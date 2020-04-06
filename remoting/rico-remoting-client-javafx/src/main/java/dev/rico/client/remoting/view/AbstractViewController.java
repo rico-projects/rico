@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -57,7 +57,7 @@ public abstract class AbstractViewController<M> {
      * @param clientContext  the client context
      * @param controllerName name of the controller (see annotation RemotingController in the Java server lib).
      */
-    public AbstractViewController(ClientContext clientContext, String controllerName) {
+    public AbstractViewController(final ClientContext clientContext, final String controllerName) {
         Assert.requireNonBlank(controllerName, "controllerName");
         this.clientContext = Assert.requireNonNull(clientContext, "clientContext");
         clientContext.<M>createController(controllerName).whenComplete((c, e) -> {
@@ -68,7 +68,7 @@ public abstract class AbstractViewController<M> {
                     controllerProxy = c;
                     model.set(c.getModel());
                     init();
-                } catch (Exception exception) {
+                } catch (final Exception exception) {
                     onInitializationException(exception);
                 }
             }
@@ -111,7 +111,7 @@ public abstract class AbstractViewController<M> {
      * @param params     any parameters that should be passed to the action
      * @return a future can be used to check if the action invocation is still running
      */
-    protected CompletableFuture<Void> invoke(String actionName, Param... params) {
+    protected CompletableFuture<Void> invoke(final String actionName, final Param... params) {
         Assert.requireNonBlank(actionName, "actionName");
         actionInProcess.set(true);
         return controllerProxy.invoke(actionName, params).whenComplete((v, e) -> {
@@ -167,7 +167,7 @@ public abstract class AbstractViewController<M> {
      *
      * @param t the exception
      */
-    protected void onInitializationException(Throwable t) {
+    protected void onInitializationException(final Throwable t) {
 
     }
 
@@ -176,7 +176,7 @@ public abstract class AbstractViewController<M> {
      *
      * @param e the exception
      */
-    protected void onInvocationException(Throwable e) {
+    protected void onInvocationException(final Throwable e) {
 
     }
 
@@ -204,7 +204,7 @@ public abstract class AbstractViewController<M> {
      * @return the root node
      */
     public Parent getParent() {
-        Node rootNode = getRootNode();
+        final Node rootNode = getRootNode();
         if (rootNode == null) {
             throw new NullPointerException("The root node is null");
         }

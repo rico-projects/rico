@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,6 +16,7 @@
  */
 package dev.rico.remoting.converter;
 
+import dev.rico.internal.core.Assert;
 import dev.rico.remoting.RemotingBean;
 import org.apiguardian.api.API;
 
@@ -48,7 +49,15 @@ public interface ConverterFactory {
      * @param cls class of the custom data type that should be converted
      * @return true if this factory supports to convert the custom data type
      */
-    boolean supportsType(Class<?> cls);
+    default boolean supportsType(final Class<?> cls) {
+        Assert.requireNonNull(cls, "cls");
+        List<Class> supportedTypes = Assert.requireNonNull(getSupportedTypes(), "supportedTypes");
+
+        return supportedTypes.stream()
+                .filter(c -> c.isAssignableFrom(cls))
+                .findFirst()
+                .isPresent();
+    }
 
     /**
      * This method will be called to get all supported types for conversion

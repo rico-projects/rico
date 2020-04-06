@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,7 +35,7 @@ public interface ClientSessionExecutor {
 
     /**
      * Executes the given task later in the given client session
-     * @param task the task
+     * @param runnable the task
      * @return a future that is finished once the task is finished.
      */
     CompletableFuture<Void> runLaterInClientSession(final Runnable runnable);
@@ -43,7 +43,6 @@ public interface ClientSessionExecutor {
     /**
      * Executes the given task later in the given client session
      * @param callable the task
-     * @param <T> the return type of the task
      * @return a future that can be used to check the result of the task
      */
     <T> CompletableFuture<T> callLaterInClientSession(final Callable<T> callable);

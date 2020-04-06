@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -41,12 +41,6 @@ public class FloatConverterFactory extends AbstractConverterFactory {
             return value;
         }
     };
-
-
-    @Override
-    public boolean supportsType(final Class<?> cls) {
-        return float.class.equals(cls) || Float.class.equals(cls);
-    }
 
     @Override
     public List<Class> getSupportedTypes() {

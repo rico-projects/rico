@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,6 +18,9 @@ package dev.rico.client.remoting;
 
 import org.apiguardian.api.API;
 
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import static org.apiguardian.api.API.Status.MAINTAINED;
@@ -36,6 +39,35 @@ public interface ControllerFactory {
      * @param <T> the type of the model that is bound to the controller and view
      * @return a {@link CompletableFuture} that defines the creation of the controller.
      */
-    <T> CompletableFuture<ControllerProxy<T>> createController(String name);
+    default <T> CompletableFuture<ControllerProxy<T>> createController(final String name) {
+        return createController(name, Collections.emptyMap());
+    }
+
+    /**
+     * Creates a {@link ControllerProxy} instance for the controller with the given name and parameters.
+     * By doing so a new instance of the matching controller class will be created on the server.
+     * This controller istance will be parameterized with the given parameters. The follwing types can be used as
+     * parameters (values) for the parameters map:
+     * - BigDecimal
+     * - BigInteger
+     * - String
+     * - Boolean
+     * - Integer
+     * - Long
+     * - Float
+     * - Double
+     * - Short
+     * - Byte
+     * - Character
+     *
+     * The {@link ControllerProxy} can be used to communicate with the controller instance on the
+     * server. The method don't block. To get the created {@link ControllerProxy} instance {@link CompletableFuture#get()}
+     * must be called on the return value.
+     * @param name the unique name of the controller type
+     * @param parameters
+     * @param <T> the type of the model that is bound to the controller and view
+     * @return a {@link CompletableFuture} that defines the creation of the controller.
+     */
+    <T> CompletableFuture<ControllerProxy<T>> createController(String name, Map<String, Serializable> parameters);
 
 }

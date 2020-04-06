@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -39,14 +39,14 @@ public class ClientScopeContext extends AbstractContext {
 
     private final BeanManager beanManager;
 
-    public ClientScopeContext(BeanManager beanManager) {
+    public ClientScopeContext(final BeanManager beanManager) {
         super(beanManager);
         this.beanManager = beanManager;
     }
 
     @Override
-    protected ContextualStorage getContextualStorage(Contextual<?> contextual, boolean createIfNotExist) {
-        Object val = getClientSession().getAttribute(CLIENT_STORAGE_ATTRIBUTE);
+    protected ContextualStorage getContextualStorage(final Contextual<?> contextual, final boolean createIfNotExist) {
+        final Object val = getClientSession().getAttribute(CLIENT_STORAGE_ATTRIBUTE);
         if(val != null) {
             if(val instanceof ContextualStorage) {
                 return (ContextualStorage) val;
@@ -55,7 +55,7 @@ public class ClientScopeContext extends AbstractContext {
             }
         } else {
             if(createIfNotExist) {
-                ContextualStorage contextualStorage = new ContextualStorage(beanManager, false, false);
+                final ContextualStorage contextualStorage = new ContextualStorage(beanManager, false, false);
                 getClientSession().setAttribute(CLIENT_STORAGE_ATTRIBUTE, contextualStorage);
                 return contextualStorage;
             } else {
@@ -80,7 +80,7 @@ public class ClientScopeContext extends AbstractContext {
     }
 
     public void destroy() {
-        Object val = getClientSession().getAttribute(CLIENT_STORAGE_ATTRIBUTE);
+        final Object val = getClientSession().getAttribute(CLIENT_STORAGE_ATTRIBUTE);
         if(val != null && val instanceof ContextualStorage) {
             AbstractContext.destroyAllActive((ContextualStorage) val);
         }

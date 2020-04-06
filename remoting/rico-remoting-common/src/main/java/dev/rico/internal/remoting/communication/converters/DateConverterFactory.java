@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,8 +22,9 @@ import org.apiguardian.api.API;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.DateFormat;
-import java.util.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
@@ -33,11 +34,6 @@ public class DateConverterFactory extends AbstractConverterFactory {
     public final static int FIELD_TYPE_DATE = 9;
 
     private final static Converter CONVERTER = new DateConverter();
-
-    @Override
-    public boolean supportsType(final Class<?> cls) {
-        return Date.class.isAssignableFrom(cls);
-    }
 
     @Override
     public List<Class> getSupportedTypes() {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,6 +22,8 @@ import dev.rico.internal.remoting.communication.commands.impl.CreateControllerCo
 import dev.rico.internal.core.Assert;
 import org.apiguardian.api.API;
 
+import java.io.Serializable;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
@@ -46,11 +48,11 @@ public class ControllerProxyFactory {
         this.modelIdCounter = new AtomicLong();
     }
 
-    public <T> CompletableFuture<ControllerProxy<T>> create(String name) {
-       return create(name, null);
+    public <T> CompletableFuture<ControllerProxy<T>> create(final String name, final Map<String, Serializable> parameters) {
+       return create(name, null, parameters);
     }
 
-    public <T> CompletableFuture<ControllerProxy<T>> create(String name, String parentControllerId) {
+    public <T> CompletableFuture<ControllerProxy<T>> create(final String name, final String parentControllerId, final Map<String, Serializable> parameters) {
         Assert.requireNonBlank(name, "name");
         final String controllerId = controllerIdCounter.incrementAndGet() + "";
         final String modelId = modelIdCounter.incrementAndGet() + "";
@@ -61,6 +63,9 @@ public class ControllerProxyFactory {
         if(parentControllerId != null) {
             createControllerCommand.setParentControllerId(parentControllerId);
         }
+
+        // TODO: Comment out for master merge. Must be reimplemented!
+        //createControllerCommand.setParameters(parameters);
 
         return commandHandler.sendAndReact(createControllerCommand).thenApply(new Function<Void, ControllerProxy<T>>() {
             @Override

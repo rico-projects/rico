@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -45,7 +45,7 @@ public class DistributedEventBusProvider implements EventBusProvider {
         LOG.debug("creating distributed event bus");
 
         HazelcastProvider hazelcastProvider = null;
-        Iterator<HazelcastProvider> iterator = ServiceLoader.load(HazelcastProvider.class).iterator();
+        final Iterator<HazelcastProvider> iterator = ServiceLoader.load(HazelcastProvider.class).iterator();
 
         //TODO: configurable
         if(iterator.hasNext()) {

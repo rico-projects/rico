@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,13 +27,13 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class ClientScopeInstanceHolder<T> {
 
-    private Bean<T> bean;
+    private final Bean<T> bean;
 
-    private CreationalContext<T> creationalContext;
+    private final CreationalContext<T> creationalContext;
 
-    private T instance;
+    private final T instance;
 
-    public ClientScopeInstanceHolder(Bean<T> bean, CreationalContext<T> creationalContext, T instance) {
+    public ClientScopeInstanceHolder(final Bean<T> bean, final CreationalContext<T> creationalContext, final T instance) {
         this.bean = Assert.requireNonNull(bean, "bean");
         this.creationalContext = Assert.requireNonNull(creationalContext, "creationalContext");
         this.instance = Assert.requireNonNull(instance, "instance");

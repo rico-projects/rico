@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -41,20 +41,20 @@ public class RicoContextualLifecycle<T> implements ContextualLifecycle<T> {
 
     private PostConstructInterceptor<T> interceptor;
 
-    public RicoContextualLifecycle(InjectionTarget<T> injectionTarget, PostConstructInterceptor<T> interceptor) {
+    public RicoContextualLifecycle(final InjectionTarget<T> injectionTarget, final PostConstructInterceptor<T> interceptor) {
         this.injectionTarget = Assert.requireNonNull(injectionTarget, "injectionTarget");
         this.interceptor = Assert.requireNonNull(interceptor, "interceptor");
     }
 
     @Override
-    public T create(Bean<T> bean, CreationalContext<T> creationalContext) {
+    public T create(final Bean<T> bean, final CreationalContext<T> creationalContext) {
         Assert.requireNonNull(bean, "bean");
         Assert.requireNonNull(creationalContext, "creationalContext");
         if(interceptor == null) {
             throw new ModelInjectionException("No interceptor defined!");
         }
         try {
-            T instance = injectionTarget.produce(creationalContext);
+            final T instance = injectionTarget.produce(creationalContext);
             interceptor.intercept(instance);
             injectionTarget.inject(instance, creationalContext);
             injectionTarget.postConstruct(instance);
@@ -65,7 +65,7 @@ public class RicoContextualLifecycle<T> implements ContextualLifecycle<T> {
     }
 
     @Override
-    public void destroy(Bean<T> bean, T instance, CreationalContext<T> creationalContext) {
+    public void destroy(final Bean<T> bean, final T instance, final CreationalContext<T> creationalContext) {
         Assert.requireNonNull(bean, "bean");
         Assert.requireNonNull(creationalContext, "creationalContext");
         injectionTarget.preDestroy(instance);

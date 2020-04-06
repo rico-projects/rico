@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,7 +28,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class ClientSessionRequestHandlerProvider implements RequestHandlerProvider {
     @Override
-    public HttpURLConnectionHandler getHandler(Configuration configuration) {
+    public HttpURLConnectionHandler getHandler(final Configuration configuration) {
         return new ClientSessionRequestHandler(Client.getService(ClientSessionStore.class));
     }
 }

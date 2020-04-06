@@ -30,9 +30,9 @@ public enum IntegrationEndpoint {
         return port;
     }
 
-    public URI getHeathEndpoint() {
+    public URI getHealthEndpoint() {
         try {
-            return new URI(ENDPOINT_URI_PREFIX + port + CONTEXT_PATH + HEALTH_PATH);
+            return new URI(getBasicEndpoint() + CONTEXT_PATH + HEALTH_PATH);
         } catch (URISyntaxException e) {
             throw new RuntimeException("Error creating endpoint", e);
         }
@@ -40,7 +40,7 @@ public enum IntegrationEndpoint {
 
     public URI getRemotingEndpoint() {
         try {
-            return new URI(ENDPOINT_URI_PREFIX + port + CONTEXT_PATH + REMOTING_PATH);
+            return new URI(getBasicEndpoint() + CONTEXT_PATH + REMOTING_PATH);
         } catch (URISyntaxException e) {
             throw new RuntimeException("Error creating endpoint", e);
         }
@@ -48,9 +48,13 @@ public enum IntegrationEndpoint {
 
     public URI getEndpoint() {
         try {
-            return new URI(ENDPOINT_URI_PREFIX + port + CONTEXT_PATH);
+            return new URI(getBasicEndpoint() + CONTEXT_PATH);
         } catch (URISyntaxException e) {
             throw new RuntimeException("Error creating endpoint", e);
         }
+    }
+
+    private String getBasicEndpoint() {
+        return ENDPOINT_URI_PREFIX + getPort();
     }
 }

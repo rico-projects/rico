@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -42,7 +42,7 @@ public abstract class AbstractServiceProvider<S> implements ServiceProvider<S> {
     protected abstract S createService(final ClientConfiguration configuration);
 
     @Override
-    public boolean isActive(ClientConfiguration configuration) {
+    public boolean isActive(final ClientConfiguration configuration) {
         return true;
     }
 

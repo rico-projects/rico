@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,6 +29,10 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.Map;
+
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
 /**
@@ -53,6 +57,7 @@ public abstract class SpringTestNGControllerTest extends AbstractTestNGSpringCon
      */
     @BeforeMethod(alwaysRun = true)
     protected void connectClientContext() {
+        Assert.requireNonNull(clientContext, "clientContext");
         try {
             clientContext.connect().get();
         } catch (Exception e) {
@@ -65,17 +70,23 @@ public abstract class SpringTestNGControllerTest extends AbstractTestNGSpringCon
      */
     @AfterMethod(alwaysRun = true)
     protected void disconnectClientContext() {
-        try {
-            clientContext.disconnect().get();
-        } catch (Exception e) {
-            throw new ControllerTestException("Can not disconnect client context!", e);
+        if (clientContext != null) {
+            try {
+                clientContext.disconnect().get();
+            } catch (Exception e) {
+                throw new ControllerTestException("Can not disconnect client context!", e);
+            }
         }
     }
 
     public <T> ControllerUnderTest<T> createController(final String controllerName) {
+        return createController(controllerName, Collections.emptyMap());
+    }
+
+    public <T> ControllerUnderTest<T> createController(final String controllerName, final Map<String, Serializable> parameters) {
         Assert.requireNonBlank(controllerName, "controllerName");
         try {
-            return ClientTestFactory.createController(clientContext, controllerName);
+            return ClientTestFactory.createController(clientContext, controllerName, parameters);
         } catch (Exception e) {
             throw new ControllerTestException("Can't createList controller proxy", e);
         }

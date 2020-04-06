@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -43,9 +43,8 @@ public class ClientSessionRequestHandler implements HttpURLConnectionHandler {
     @Override
     public void handle(final HttpURLConnection request){
         Assert.requireNonNull(request, "request");
-        final String clientId;
         try {
-            clientId = clientSessionStore.getClientIdentifierForUrl(request.getURL().toURI());
+            final String  clientId = clientSessionStore.getClientIdentifierForUrl(request.getURL().toURI());
             if (clientId != null) {
                 LOG.debug("Adding client id {} to http request at {}", clientId, request.getURL());
                 request.setRequestProperty(RicoConstants.CLIENT_ID_HTTP_HEADER_NAME, clientId);

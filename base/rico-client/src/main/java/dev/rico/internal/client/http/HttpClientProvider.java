@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,6 +24,7 @@ import dev.rico.core.http.HttpURLConnectionFactory;
 import dev.rico.core.http.spi.RequestHandlerProvider;
 import dev.rico.core.http.spi.ResponseHandlerProvider;
 import com.google.gson.Gson;
+import dev.rico.internal.core.Assert;
 import org.apiguardian.api.API;
 
 import java.util.Iterator;
@@ -39,7 +40,8 @@ public class HttpClientProvider extends AbstractServiceProvider<HttpClient> {
     }
 
     @Override
-    protected HttpClient createService(ClientConfiguration configuration) {
+    protected HttpClient createService(final ClientConfiguration configuration) {
+        Assert.requireNonNull(configuration, "configuration");
         final HttpURLConnectionFactory connectionFactory = configuration.getHttpURLConnectionFactory();
         final HttpClientImpl client = new HttpClientImpl(Client.getService(Gson.class), connectionFactory, configuration);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -176,7 +176,7 @@ public abstract class AbstractRemotingApplication extends Application {
         if (clientContext != null) {
             return clientContext.disconnect();
         } else {
-            CompletableFuture<Void> result = new CompletableFuture<>();
+            final CompletableFuture<Void> result = new CompletableFuture<>();
             result.complete(null);
             return result;
         }
@@ -238,7 +238,7 @@ public abstract class AbstractRemotingApplication extends Application {
     }
 
     private final void handleInitializationError(final Stage primaryStage, final ClientInitializationException initializationException) {
-        Iterable<RuntimeException> possibleCauses = Collections.unmodifiableList(runtimeExceptionsAtInitialization);
+        final Iterable<RuntimeException> possibleCauses = Collections.unmodifiableList(runtimeExceptionsAtInitialization);
         runtimeExceptionsAtInitialization.clear();
         onInitializationError(primaryStage, initializationException, possibleCauses);
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,11 +30,6 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 public class DurationConverterFactory extends AbstractConverterFactory {
 
     private final static Converter CONVERTER = new DurationConverter();
-
-    @Override
-    public boolean supportsType(final Class<?> cls) {
-        return Duration.class.isAssignableFrom(cls);
-    }
 
     @Override
     public List<Class> getSupportedTypes() {

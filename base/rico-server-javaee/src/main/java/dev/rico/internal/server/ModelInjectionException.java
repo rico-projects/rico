@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,15 +31,15 @@ public class ModelInjectionException extends RuntimeException {
     public ModelInjectionException() {
     }
 
-    public ModelInjectionException(String message) {
+    public ModelInjectionException(final String message) {
         super(message);
     }
 
-    public ModelInjectionException(String message, Throwable cause) {
+    public ModelInjectionException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
-    public ModelInjectionException(Throwable cause) {
+    public ModelInjectionException(final Throwable cause) {
         super(cause);
     }
 }

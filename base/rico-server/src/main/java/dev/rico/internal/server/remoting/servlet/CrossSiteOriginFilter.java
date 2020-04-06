@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -90,7 +90,7 @@ public class CrossSiteOriginFilter implements Filter {
 
     public String getAsCommaSeparatedList(final List<String> headers) {
         Assert.requireNonNull(headers, "headers");
-        StringBuilder values = new StringBuilder("");
+        final StringBuilder values = new StringBuilder("");
         if (headers.size() > 0) {
             for (int i = 0; i < headers.size(); i++) {
                 values.append(headers.get(i));

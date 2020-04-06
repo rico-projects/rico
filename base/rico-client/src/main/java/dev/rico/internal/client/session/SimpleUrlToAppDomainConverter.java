@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,7 +28,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 public class SimpleUrlToAppDomainConverter implements Function<URI, String> {
 
     @Override
-    public String apply(URI uri) {
+    public String apply(final URI uri) {
         return Assert.requireNonNull(uri, "uri").getHost() + ":" + uri.getPort();
     }
 }

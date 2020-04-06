@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -44,11 +44,11 @@ public class ConnectionUtils {
     private ConnectionUtils() {
     }
 
-    public static String toBase64(byte[] bytes) {
+    public static String toBase64(final byte[] bytes) {
         return Base64.getEncoder().encodeToString(bytes);
     }
 
-    public static String toHex(byte[] bytes) {
+    public static String toHex(final byte[] bytes) {
         return DatatypeConverter.printHexBinary(bytes).toUpperCase();
     }
 
@@ -148,7 +148,7 @@ public class ConnectionUtils {
                 .orElse(null);
     }
 
-    public static boolean doesURLExist(URI uri) {
+    public static boolean doesURLExist(final URI uri) {
         Assert.requireNonNull(uri, "uri");
         try {
             final HttpClientConnection clientConnection = new HttpClientConnection(uri, RequestMethod.HEAD);
@@ -179,5 +179,4 @@ public class ConnectionUtils {
         }
         return finalLength;
     }
-
 }

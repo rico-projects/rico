@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,25 +20,19 @@ import dev.rico.remoting.converter.Converter;
 import dev.rico.remoting.converter.ValueConverterException;
 import org.apiguardian.api.API;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.GregorianCalendar;
+import java.util.List;
 
-import static dev.rico.internal.remoting.RemotingConstants.REMOTING_DATE_FORMAT_PATTERN;
-import static dev.rico.internal.core.RicoConstants.TIMEZONE_UTC;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
 public class ZonedDateTimeConverterFactory extends AbstractConverterFactory {
 
     private final static Converter CONVERTER = new ZonedDateTimeConverter();
-
-    @Override
-    public boolean supportsType(final Class<?> cls) {
-        return ZonedDateTime.class.isAssignableFrom(cls);
-    }
 
     @Override
     public List<Class> getSupportedTypes() {

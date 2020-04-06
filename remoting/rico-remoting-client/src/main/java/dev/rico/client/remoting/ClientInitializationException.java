@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,7 +32,7 @@ public class ClientInitializationException extends RuntimeException {
      * constructor
      * @param message the error message
      */
-    public ClientInitializationException(String message) {
+    public ClientInitializationException(final String message) {
         super(message);
     }
 
@@ -41,7 +41,7 @@ public class ClientInitializationException extends RuntimeException {
      * @param message the error message
      * @param cause the cause
      */
-    public ClientInitializationException(String message, Throwable cause) {
+    public ClientInitializationException(final String message, final Throwable cause) {
         super(message, cause);
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -38,15 +38,15 @@ public interface JavaFXBidirectionalBinder<S> extends JavaFXBinder<S> {
      * @param remotingProperty the remoting property
      * @return the binding
      */
-    default Binding bidirectionalTo(Property<S> remotingProperty) {
+    default Binding bidirectionalTo(final Property<S> remotingProperty) {
         return bidirectionalTo(remotingProperty, new BidirectionalConverter<S, S>() {
             @Override
-            public S convertBack(S value) {
+            public S convertBack(final S value) {
                 return value;
             }
 
             @Override
-            public S convert(S value) {
+            public S convert(final S value) {
                 return value;
             }
         });
@@ -59,6 +59,6 @@ public interface JavaFXBidirectionalBinder<S> extends JavaFXBinder<S> {
      * @param <T> converted type
      * @return the binding.
      */
-    <T> Binding bidirectionalTo(final Property<T> property, BidirectionalConverter<T, S> converter);
+    <T> Binding bidirectionalTo(final Property<T> property, final BidirectionalConverter<T, S> converter);
 
 }

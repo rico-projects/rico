@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -44,12 +44,12 @@ public interface BidirectionalConverter<T, U>  extends Converter<T, U> {
         final BidirectionalConverter<T, U> converter = this;
         return new BidirectionalConverter<U, T>() {
             @Override
-            public U convertBack(T value) {
+            public U convertBack(final T value) {
                 return converter.convert(value);
             }
 
             @Override
-            public T convert(U value) {
+            public T convert(final U value) {
                 return converter.convertBack(value);
             }
         };

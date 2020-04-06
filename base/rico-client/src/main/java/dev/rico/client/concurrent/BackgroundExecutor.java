@@ -5,6 +5,7 @@ import dev.rico.internal.core.Assert;
 
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 
@@ -34,4 +35,30 @@ public interface BackgroundExecutor extends Executor {
         TaskHelper.getInstance().setTaskDescription(description);
     }
 
+    default <T> CompletableFuture<T> executeTask(final Callable<T> task) {
+        Assert.requireNonNull(task, "task");
+        CompletableFuture<T> future = new CompletableFuture<>();
+        submit(() -> {
+            try {
+                future.complete(task.call());
+            } catch (Exception e) {
+                future.completeExceptionally(e);
+            }
+        });
+        return future;
+    }
+
+    default CompletableFuture<Void> executeTask(final Runnable task) {
+        Assert.requireNonNull(task, "task");
+        CompletableFuture<Void> future = new CompletableFuture<>();
+        submit(() -> {
+            try {
+                task.run();
+                future.complete(null);
+            } catch (Exception e) {
+                future.completeExceptionally(e);
+            }
+        });
+        return future;
+    }
 }

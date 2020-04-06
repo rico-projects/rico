@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -52,4 +52,8 @@ public interface RicoConstants {
     String THREAD_GROUP_NAME = "Rico executors";
 
     String PLATFORM_VERSION_CONTEXT = "platform.version";
+
+    String OS_NAME = "os.name";
+
+    String WIN = "win";
 }

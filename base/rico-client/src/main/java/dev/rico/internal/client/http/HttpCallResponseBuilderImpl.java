@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Karakun AG.
+ * Copyright 2018-2019 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,12 @@
  */
 package dev.rico.internal.client.http;
 
+import dev.rico.client.Client;
+import dev.rico.client.concurrent.UiExecutor;
+import dev.rico.core.http.DownloadInputStream;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.http.ConnectionUtils;
+import dev.rico.internal.core.http.DownloadInputStreamImpl;
 import dev.rico.internal.core.http.HttpClientConnection;
 import dev.rico.internal.core.http.HttpHeaderImpl;
 import dev.rico.client.ClientConfiguration;
@@ -77,6 +81,16 @@ public class HttpCallResponseBuilderImpl implements HttpCallResponseBuilder {
     @Override
     public Promise<HttpResponse<InputStream>, HttpException> streamBytes() {
         return createExecutor();
+    }
+
+    @Override
+    public Promise<HttpResponse<DownloadInputStream>, HttpException> streamDownload() {
+        return new HttpCallExecutorImpl<>(configuration, () -> {
+            final HttpResponse<InputStream> response = handleRequest();
+            final UiExecutor uiExecutor = Client.getService(UiExecutor.class);
+            final DownloadInputStream stream = DownloadInputStreamImpl.map(response, uiExecutor);
+            return new HttpResponseImpl<>(response.getHeaders(), response.getStatusCode(), stream, response.getContentSize());
+        });
     }
 
     @Override
@@ -161,7 +175,7 @@ public class HttpCallResponseBuilderImpl implements HttpCallResponseBuilder {
         }
 
         try {
-            int responseCode = connection.readResponseCode();
+            final int responseCode = connection.readResponseCode();
             responseHandlers.forEach(h -> h.handle(connection.getConnection()));
             final List<HttpHeader> headers = connection.getResponseHeaders();
             return new HttpResponseImpl<>(headers, responseCode, connection.getContentStream(), connection.getContentSize());
