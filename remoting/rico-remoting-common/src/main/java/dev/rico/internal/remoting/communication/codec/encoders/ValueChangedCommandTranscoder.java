@@ -9,7 +9,6 @@ import static dev.rico.internal.remoting.communication.codec.CodecConstants.*;
 
 public class ValueChangedCommandTranscoder extends AbstractCommandTranscoder<ValueChangedCommand> {
 
-
     public ValueChangedCommandTranscoder() {
         super(CodecConstants.VALUE_CHANGED_COMMAND_ID, ValueChangedCommand.class);
     }

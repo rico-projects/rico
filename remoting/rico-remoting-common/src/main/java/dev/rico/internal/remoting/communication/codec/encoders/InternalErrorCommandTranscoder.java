@@ -9,7 +9,6 @@ import static dev.rico.internal.remoting.communication.codec.CodecConstants.ID_A
 
 public class InternalErrorCommandTranscoder extends AbstractCommandTranscoder<InternalErrorCommand> {
 
-
     public InternalErrorCommandTranscoder() {
         super(CodecConstants.INTERNAL_ERROR_COMMAND_ID, InternalErrorCommand.class);
     }

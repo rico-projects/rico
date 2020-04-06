@@ -9,7 +9,6 @@ import static dev.rico.internal.remoting.communication.codec.CodecConstants.ID_A
 
 public final class DeleteBeanCommandTranscoder extends AbstractCommandTranscoder<DeleteBeanCommand> {
 
-
     public DeleteBeanCommandTranscoder() {
         super(BEAN_REMOVED_COMMAND_ID, DeleteBeanCommand.class);
     }

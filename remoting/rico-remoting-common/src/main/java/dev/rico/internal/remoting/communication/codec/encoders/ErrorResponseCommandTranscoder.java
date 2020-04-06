@@ -9,7 +9,6 @@ import static dev.rico.internal.remoting.communication.codec.CodecConstants.ID_A
 
 public class ErrorResponseCommandTranscoder extends AbstractCommandTranscoder<ErrorResponseCommand> {
 
-
     public ErrorResponseCommandTranscoder() {
         super(CodecConstants.ERROR_RESPONSE_COMMAND_ID, ErrorResponseCommand.class);
     }

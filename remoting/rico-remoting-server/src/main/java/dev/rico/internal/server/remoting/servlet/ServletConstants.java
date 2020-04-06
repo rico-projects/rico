@@ -23,6 +23,4 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public interface ServletConstants {
     String REMOTING_SERVLET_NAME = "remoting-servlet";
-
-    String INTERRUPT_SERVLET_NAME = "remoting-interrupt-servlet";
 }
