@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 /**
- * This package provides all functionallity that is needed to create unit tests for remoting controllers. By creating a unit tests that is based on the API a custom controller can easily be tested. The package provides support to write controller tests in JUnit (see {@link dev.rico.server.remoting.test.SpringJUnitControllerTest}) or TestNG (see {@link dev.rico.server.remoting.test.SpringTestNGControllerTest}).
+ * This package provides all functionallity that is needed to createList unit tests for remoting controllers. By creating a unit tests that is based on the API a custom controller can easily be tested. The package provides support to write controller tests in JUnit (see {@link dev.rico.server.remoting.test.SpringJUnitControllerTest}) or TestNG (see {@link dev.rico.server.remoting.test.SpringTestNGControllerTest}).
  *
  *
  */

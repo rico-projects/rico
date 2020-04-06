@@ -51,7 +51,12 @@ public interface ConverterFactory {
      */
     default boolean supportsType(final Class<?> cls) {
         Assert.requireNonNull(cls, "cls");
-        return Assert.requireNonNull(getSupportedTypes(), "supportedTypes").contains(cls);
+        List<Class> supportedTypes = Assert.requireNonNull(getSupportedTypes(), "supportedTypes");
+
+        return supportedTypes.stream()
+                .filter(c -> c.isAssignableFrom(cls))
+                .findFirst()
+                .isPresent();
     }
 
     /**

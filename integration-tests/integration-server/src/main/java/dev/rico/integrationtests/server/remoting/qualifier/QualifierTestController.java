@@ -1,5 +1,5 @@
-/*
- * Copyright 2018-2019 Karakun AG.
+package dev.rico.integrationtests.server.remoting.qualifier;/*
+ * Copyright 2018 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,11 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.integrationtests.server.remoting.qualifier;
+
 
 import dev.rico.integrationtests.remoting.qualifier.QualifierTestBean;
 import dev.rico.integrationtests.remoting.qualifier.QualifierTestSubBean;
-import dev.rico.remoting.BeanManager;
+import dev.rico.server.remoting.BeanManager;
 import dev.rico.core.functional.Binding;
 import dev.rico.server.remoting.RemotingAction;
 import dev.rico.server.remoting.RemotingController;

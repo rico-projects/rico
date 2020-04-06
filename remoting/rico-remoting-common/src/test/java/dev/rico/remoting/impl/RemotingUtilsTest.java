@@ -18,7 +18,6 @@ package dev.rico.remoting.impl;
 
 import dev.rico.internal.remoting.RemotingUtils;
 import dev.rico.internal.remoting.collections.ObservableArrayList;
-import dev.rico.internal.remoting.MockedProperty;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -54,9 +53,6 @@ public class RemotingUtilsTest {
         //Enum
         assertTrue(RemotingUtils.isAllowedForUnmanaged(RetentionPolicy.class));
 
-        //Property
-        assertTrue(RemotingUtils.isAllowedForUnmanaged(MockedProperty.class));
-
         //Other
         assertFalse(RemotingUtils.isAllowedForUnmanaged(Date.class));
         assertFalse(RemotingUtils.isAllowedForUnmanaged(LocalDateTime.class));
@@ -84,8 +80,6 @@ public class RemotingUtilsTest {
 
     @Test
     public void testIsProperty() throws Exception {
-        assertTrue(RemotingUtils.isProperty(MockedProperty.class));
-
         try {
             RemotingUtils.isProperty((Class<?>) null);
             Assert.fail("Null check not working");

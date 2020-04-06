@@ -18,7 +18,6 @@ package dev.rico.server.remoting;
 
 import dev.rico.internal.remoting.legacy.LegacyConstants;
 import dev.rico.internal.server.remoting.legacy.ServerModelStore;
-import dev.rico.internal.server.remoting.model.ServerEventDispatcher;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;

@@ -41,7 +41,7 @@ import static org.apiguardian.api.API.Status.MAINTAINED;
  * <center><img src="doc-files/model-sync.png" alt="model is synchronized between client and server"></center>
  *</p>
  * <p>
- * A model that is injected by using {@link RemotingModel} will automatically be create when the
+ * A model that is injected by using {@link RemotingModel} will automatically be createList when the
  * server controller is created and will be destroyed with the controller. By doing so the complete MVC group (shared
  * model, controller on server side and the view on client side) will have the same lifecycle and the model can easily
  * be accessed from client and server.

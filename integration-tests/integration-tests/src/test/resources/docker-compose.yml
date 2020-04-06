@@ -12,3 +12,9 @@ services:
     build: ./docker-base/wildfly-integration/
     ports:
       - "8083:8080"
+
+  spring-integration:
+      image: rico-integration-tests-spring
+      build: ./docker-base/spring-integration/
+      ports:
+        - "8084:8080"

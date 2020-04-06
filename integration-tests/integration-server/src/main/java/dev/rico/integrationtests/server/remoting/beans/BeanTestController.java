@@ -1,5 +1,5 @@
-/*
- * Copyright 2018-2019 Karakun AG.
+package dev.rico.integrationtests.server.remoting.beans;/*
+ * Copyright 2018 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,11 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.integrationtests.server.remoting.beans;
 
 import dev.rico.integrationtests.remoting.bean.BeanTestBean;
 import dev.rico.integrationtests.remoting.bean.BeanTestConstants;
-import dev.rico.remoting.BeanManager;
+import dev.rico.server.remoting.BeanManager;
 import dev.rico.server.remoting.RemotingController;
 import dev.rico.server.remoting.RemotingModel;
 import dev.rico.server.remoting.RemotingContext;

@@ -16,7 +16,6 @@
  */
 package dev.rico.server.remoting;
 
-import dev.rico.remoting.BeanManager;
 import dev.rico.server.remoting.binding.PropertyBinder;
 import dev.rico.server.remoting.event.RemotingEventBus;
 import dev.rico.server.client.ClientSession;
@@ -69,10 +68,4 @@ public interface RemotingContext {
      * @return the client session
      */
     ClientSession getClientSession();
-
-    /**
-     * Returns {@code true} if the current thread is in a remoting request of this context, otherwise false;
-     * @return {@code true} if the current thread is in a request of this context
-     */
-    boolean isActive();
 }

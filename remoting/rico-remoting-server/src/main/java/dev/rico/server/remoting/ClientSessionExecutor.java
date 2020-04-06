@@ -35,7 +35,7 @@ public interface ClientSessionExecutor {
 
     /**
      * Executes the given task later in the given client session
-     * @param task the task
+     * @param runnable the task
      * @return a future that is finished once the task is finished.
      */
     CompletableFuture<Void> runLaterInClientSession(final Runnable runnable);
@@ -43,7 +43,6 @@ public interface ClientSessionExecutor {
     /**
      * Executes the given task later in the given client session
      * @param callable the task
-     * @param <T> the return type of the task
      * @return a future that can be used to check the result of the task
      */
     <T> CompletableFuture<T> callLaterInClientSession(final Callable<T> callable);

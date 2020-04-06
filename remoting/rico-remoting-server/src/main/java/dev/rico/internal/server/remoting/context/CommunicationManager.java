@@ -26,9 +26,5 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public interface CommunicationManager {
 
-    /**
-     * Returns true if commands should be send back to the client. This means that the server has some commands (see {@link dev.rico.internal.remoting.legacy.communication.Command}) in the send queue.
-     * @return true if commands should be send back to the client, otherwise false
-     */
     boolean hasResponseCommands();
 }

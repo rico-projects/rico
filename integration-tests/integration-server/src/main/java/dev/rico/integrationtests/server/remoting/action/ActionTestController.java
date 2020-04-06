@@ -1,5 +1,5 @@
-/*
- * Copyright 2018-2019 Karakun AG.
+package dev.rico.integrationtests.server.remoting.action;/*
+ * Copyright 2018 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,11 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.integrationtests.server.remoting.action;
 
 import dev.rico.integrationtests.remoting.action.ActionErrorBean;
 import dev.rico.integrationtests.remoting.action.ActionTestBean;
-import dev.rico.remoting.BeanManager;
+import dev.rico.server.remoting.BeanManager;
 import dev.rico.server.remoting.Param;
 import dev.rico.server.remoting.RemotingAction;
 import dev.rico.server.remoting.RemotingController;
@@ -35,7 +34,58 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
-import static dev.rico.integrationtests.remoting.action.ActionTestConstants.*;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.ACTION_CONTROLLER_NAME;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PARAM_NAME;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PARAM_NAME_1;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PARAM_NAME_2;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PARAM_NAME_3;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PRIVATE_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PRIVATE_WITH_BIGDECIMAL_PARAM_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PRIVATE_WITH_BIGINTEGER_PARAM_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PRIVATE_WITH_BYTE_PARAM_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PRIVATE_WITH_CALENDER_PARAM_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PRIVATE_WITH_DATE_PARAM_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PRIVATE_WITH_DOUBLE_PARAM_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PRIVATE_WITH_ELEMENT_TYPE_PARAM_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PRIVATE_WITH_FLOAT_PARAM_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PRIVATE_WITH_INTEGER_PARAM_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PRIVATE_WITH_LONG_PARAM_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PRIVATE_WITH_SEVERAL_BIGDECIMAL_PARAMS_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PRIVATE_WITH_SEVERAL_BIGINTEGER_PARAMS_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PRIVATE_WITH_SEVERAL_BYTE_PARAMS_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PRIVATE_WITH_SEVERAL_DOUBLE_PARAMS_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PRIVATE_WITH_SEVERAL_FLOAT_PARAMS_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PRIVATE_WITH_SEVERAL_INTEGER_PARAMS_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PRIVATE_WITH_SEVERAL_LONG_PARAMS_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PRIVATE_WITH_SEVERAL_PARAMS_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PRIVATE_WITH_SEVERAL_SHORT_PARAMS_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PRIVATE_WITH_SHORT_PARAM_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PRIVATE_WITH_STRING_PARAM_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PRIVATE_WITH_UUID_PARAM_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PUBLIC_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PUBLIC_WITH_BIGDECIMAL_PARAM_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PUBLIC_WITH_BIGINTEGER_PARAM_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PUBLIC_WITH_BOOLEAN_PARAM_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PUBLIC_WITH_BYTE_PARAM_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PUBLIC_WITH_CALENDER_PARAM_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PUBLIC_WITH_DATE_PARAM_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PUBLIC_WITH_DOUBLE_PARAM_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PUBLIC_WITH_ELEMENT_TYPE_PARAM_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PUBLIC_WITH_FLOAT_PARAM_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PUBLIC_WITH_INTEGER_PARAM_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PUBLIC_WITH_LONG_PARAM_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PUBLIC_WITH_SEVERAL_BIGDECIMAL_PARAMS_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PUBLIC_WITH_SEVERAL_BIGINTEGER_PARAMS_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PUBLIC_WITH_SEVERAL_BYTE_PARAMS_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PUBLIC_WITH_SEVERAL_DOUBLE_PARAMS_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PUBLIC_WITH_SEVERAL_FLOAT_PARAMS_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PUBLIC_WITH_SEVERAL_INTEGER_PARAMS_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PUBLIC_WITH_SEVERAL_LONG_PARAMS_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PUBLIC_WITH_SEVERAL_SHORT_PARAMS_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PUBLIC_WITH_SHORT_PARAM_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.PUBLIC_WITH_UUID_PARAM_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.RESET_MODEL_ACTION;
+import static dev.rico.integrationtests.remoting.action.ActionTestConstants.WITH_EXCEPTION_ACTION;
 
 @RemotingController(ACTION_CONTROLLER_NAME)
 public class ActionTestController {

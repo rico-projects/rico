@@ -29,6 +29,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 public class ListChangeEventImpl<E> implements ListChangeEvent<E> {
 
     private final ObservableList<E> source;
+
     private final List<Change<E>> changes;
 
     public ListChangeEventImpl(final ObservableList<E> source, final int from, final int to, final List<E> removedElements) {

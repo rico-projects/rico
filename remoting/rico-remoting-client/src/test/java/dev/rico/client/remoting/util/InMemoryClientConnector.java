@@ -17,7 +17,6 @@
 package dev.rico.client.remoting.util;
 
 import dev.rico.internal.client.remoting.legacy.ClientModelStore;
-import dev.rico.internal.client.remoting.legacy.communication.AbstractClientConnector;
 import dev.rico.internal.client.remoting.legacy.communication.ICommandBatcher;
 import dev.rico.internal.client.remoting.legacy.communication.SimpleExceptionHandler;
 import dev.rico.internal.remoting.legacy.communication.Command;

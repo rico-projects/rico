@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 Karakun AG.
+ * Copyright 2018 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,6 +18,10 @@ package dev.rico.integrationtests;
 
 import dev.rico.client.Client;
 import dev.rico.client.concurrent.BackgroundExecutor;
+import dev.rico.client.remoting.ClientContext;
+import dev.rico.client.remoting.ClientContextFactory;
+import dev.rico.client.remoting.ControllerProxy;
+import dev.rico.client.remoting.Param;
 import dev.rico.docker.DockerCompose;
 import dev.rico.docker.Wait;
 import dev.rico.internal.core.Assert;
@@ -30,11 +34,16 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.net.URI;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -56,6 +65,11 @@ public class AbstractIntegrationTest {
 
     private final List<IntegrationEndpoint> endpoints;
 
+    private final boolean isLocal = Optional.ofNullable(System.getenv("test-environment"))
+            .filter(v -> Objects.equals("local", v))
+            .map(v -> v != null)
+            .orElse(false);
+
     public AbstractIntegrationTest() {
         endpoints = Arrays.asList(IntegrationEndpoint.values());
         try {
@@ -70,16 +84,20 @@ public class AbstractIntegrationTest {
 
     @BeforeGroups(INTEGRATION_TESTS_TEST_GROUP)
     protected void startDockerContainers() {
-        final Wait[] waits = endpoints.stream()
-                .map(e -> Wait.forHttp(e.getHealthEndpoint(), HTTP_OK))
-                .collect(Collectors.toList())
-                .toArray(new Wait[]{});
-        dockerCompose.start(timeoutInMinutes, TimeUnit.MINUTES, waits);
+        if(!isLocal) {
+            final Wait[] waits = endpoints.stream()
+                    .map(e -> Wait.forHttp(e.getHealthEndpoint(), HTTP_OK))
+                    .collect(Collectors.toList())
+                    .toArray(new Wait[]{});
+            dockerCompose.start(timeoutInMinutes, TimeUnit.MINUTES, waits);
+        }
     }
 
     @AfterGroups(INTEGRATION_TESTS_TEST_GROUP)
     protected void stopDockerContainers() {
-        dockerCompose.kill();
+        if(!isLocal) {
+            dockerCompose.kill();
+        }
     }
 
     @BeforeMethod
@@ -91,13 +109,17 @@ public class AbstractIntegrationTest {
 
     @DataProvider(name = ENDPOINTS_DATAPROVIDER, parallel = false)
     public Object[][] getEndpoints() {
-        return endpoints.stream()
-                .map(e -> new String[]{e.getName(), e.getEndpoint().toString()})
-                .collect(Collectors.toList())
-                .toArray(new String[][]{});
+        if(isLocal) {
+            return new Object[][]{new String[]{"Local Spring Boot app", "http://localhost:8080/remoting"}};
+        } else {
+            return endpoints.stream()
+                    .map(e -> new String[]{e.getName(), e.getRemotingEndpoint().toString()})
+                    .collect(Collectors.toList())
+                    .toArray(new String[][]{});
+        }
     }
 
-    public int getTimeoutInMinutes() {
+    protected int getTimeoutInMinutes() {
         return timeoutInMinutes;
     }
 }

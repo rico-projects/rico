@@ -16,7 +16,7 @@
  */
 package dev.rico.internal.server.remoting.context;
 
-import dev.rico.remoting.BeanManager;
+import dev.rico.server.remoting.BeanManager;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.server.remoting.binding.PropertyBinderImpl;
 import dev.rico.server.remoting.ClientSessionExecutor;
@@ -82,8 +82,4 @@ public class RemotingContextImpl implements RemotingContext {
         return serverRemotingContext.getClientSession();
     }
 
-    @Override
-    public boolean isActive() {
-        return serverRemotingContext.isActive();
-    }
 }

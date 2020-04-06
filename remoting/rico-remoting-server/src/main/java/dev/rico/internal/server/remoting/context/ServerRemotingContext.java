@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 Karakun AG.
+ * Copyright 2018 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,24 +17,10 @@
 package dev.rico.internal.server.remoting.context;
 
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.remoting.BeanManagerImpl;
-import dev.rico.internal.remoting.ClassRepository;
-import dev.rico.internal.remoting.ClassRepositoryImpl;
-import dev.rico.internal.remoting.Converters;
-import dev.rico.internal.remoting.EventDispatcher;
-import dev.rico.internal.remoting.InternalAttributesBean;
-import dev.rico.internal.remoting.ListMapper;
-import dev.rico.internal.remoting.PresentationModelBuilderFactory;
-import dev.rico.internal.remoting.codec.OptimizedJsonCodec;
-import dev.rico.internal.remoting.collections.ListMapperImpl;
-import dev.rico.internal.remoting.commands.CallActionCommand;
-import dev.rico.internal.remoting.commands.CreateContextCommand;
-import dev.rico.internal.remoting.commands.CreateControllerCommand;
-import dev.rico.internal.remoting.commands.DestroyContextCommand;
-import dev.rico.internal.remoting.commands.DestroyControllerCommand;
-import dev.rico.internal.remoting.legacy.commands.InterruptLongPollCommand;
-import dev.rico.internal.remoting.legacy.commands.StartLongPollCommand;
-import dev.rico.internal.remoting.legacy.communication.Command;
+import dev.rico.internal.remoting.communication.commands.impl.*;
+import dev.rico.internal.remoting.communication.merge.CommandMergeUtils;
+import dev.rico.internal.server.remoting.model.BeanManagerImpl;
+import dev.rico.internal.remoting.communication.commands.*;
 import dev.rico.internal.server.client.ClientSessionProvider;
 import dev.rico.internal.server.remoting.config.RemotingConfiguration;
 import dev.rico.internal.server.remoting.controller.ControllerHandler;
@@ -42,21 +28,9 @@ import dev.rico.internal.server.remoting.controller.ControllerRepository;
 import dev.rico.internal.server.remoting.gc.GarbageCollectionCallback;
 import dev.rico.internal.server.remoting.gc.GarbageCollector;
 import dev.rico.internal.server.remoting.gc.Instance;
-import dev.rico.internal.server.remoting.legacy.ServerConnector;
-import dev.rico.internal.server.remoting.legacy.ServerModelStore;
-import dev.rico.internal.server.remoting.legacy.action.AbstractServerAction;
-import dev.rico.internal.server.remoting.legacy.communication.ActionRegistry;
-import dev.rico.internal.server.remoting.legacy.communication.CommandHandler;
-import dev.rico.internal.server.remoting.model.ServerBeanBuilder;
-import dev.rico.internal.server.remoting.model.ServerBeanBuilderImpl;
-import dev.rico.internal.server.remoting.model.ServerBeanRepository;
-import dev.rico.internal.server.remoting.model.ServerBeanRepositoryImpl;
-import dev.rico.internal.server.remoting.model.ServerControllerActionCallBean;
-import dev.rico.internal.server.remoting.model.ServerEventDispatcher;
-import dev.rico.internal.server.remoting.model.ServerPlatformBeanRepository;
-import dev.rico.internal.server.remoting.model.ServerPresentationModelBuilderFactory;
+import dev.rico.internal.server.remoting.model.ServerRepository;
 import dev.rico.internal.server.remoting.servlet.ServerTimingFilter;
-import dev.rico.remoting.BeanManager;
+import dev.rico.server.remoting.BeanManager;
 import dev.rico.server.client.ClientSession;
 import dev.rico.server.spi.components.ManagedBeanFactory;
 import dev.rico.server.timing.Metric;
@@ -64,11 +38,7 @@ import org.apiguardian.api.API;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -87,21 +57,9 @@ public class ServerRemotingContext {
 
     private final RemotingConfiguration configuration;
 
-    private final ServerModelStore serverModelStore;
-
-    private final ServerConnector serverConnector;
-
-    private final ServerBeanRepository beanRepository;
-
-    private final Converters converters;
-
     private final BeanManager beanManager;
 
     private final ControllerHandler controllerHandler;
-
-    private final EventDispatcher dispatcher;
-
-    private ServerPlatformBeanRepository platformBeanRepository;
 
     private final Consumer<ServerRemotingContext> onDestroyCallback;
 
@@ -111,9 +69,11 @@ public class ServerRemotingContext {
 
     private final ClientSession clientSession;
 
-    private boolean hasResponseCommands = false;
+    private final ServerRepository beanRepository;
 
-    private boolean active = false;
+    private final Map<Class, CommandHandler> commandHandlers;
+
+    private final Queue<Command> toSendQueue;
 
     public ServerRemotingContext(final RemotingConfiguration configuration, ClientSession clientSession, ClientSessionProvider clientSessionProvider, ManagedBeanFactory beanFactory, ControllerRepository controllerRepository, Consumer<ServerRemotingContext> onDestroyCallback) {
         this.configuration = Assert.requireNonNull(configuration, "configuration");
@@ -122,20 +82,22 @@ public class ServerRemotingContext {
         this.onDestroyCallback = Assert.requireNonNull(onDestroyCallback, "onDestroyCallback");
         this.clientSession = Assert.requireNonNull(clientSession, "clientSession");
 
-        serverModelStore = new ServerModelStore();
 
-        //Init Server Connector
-        serverConnector = new ServerConnector();
-        serverConnector.setCodec(OptimizedJsonCodec.getInstance());
-        serverConnector.setServerModelStore(serverModelStore);
-        serverConnector.registerDefaultActions();
+        this.commandHandlers = new HashMap<>();
+
+        beanRepository = new ServerRepository(() -> getGarbageCollector(), command -> sendCommand(command));
 
         //Init Garbage Collection
         garbageCollector = new GarbageCollector(configuration, new GarbageCollectionCallback() {
             @Override
             public void onReject(Set<Instance> instances) {
                 for (Instance instance : instances) {
-                    beanRepository.onGarbageCollectionRejection(instance.getBean());
+                    try {
+                        beanRepository.deleteBean(instance.getBean());
+                    } catch (Exception e) {
+                        LOG.error("Error in bean garbage collection!", e);
+                        throw new RuntimeException("Error in bean garbage collection!", e);
+                    }
                 }
             }
         });
@@ -143,70 +105,120 @@ public class ServerRemotingContext {
         CommunicationManager manager = new CommunicationManager() {
             @Override
             public boolean hasResponseCommands() {
-                return hasResponseCommands || serverModelStore.hasResponseCommands();
+                return !toSendQueue.isEmpty();
             }
         };
         taskQueue = new RemotingContextTaskQueue(clientSession.getId(), clientSessionProvider, manager, configuration.getMaxPollTime(), TimeUnit.MILLISECONDS);
 
-        //Init BeanRepository
-        dispatcher = new ServerEventDispatcher(serverModelStore);
-        beanRepository = new ServerBeanRepositoryImpl(serverModelStore, dispatcher, garbageCollector);
-        converters = new Converters(beanRepository);
 
-        //Init BeanManager
-        final PresentationModelBuilderFactory builderFactory = new ServerPresentationModelBuilderFactory(serverModelStore);
-        final ClassRepository classRepository = new ClassRepositoryImpl(serverModelStore, converters, builderFactory);
-        final ListMapper listMapper = new ListMapperImpl(serverModelStore, classRepository, beanRepository, builderFactory, dispatcher);
-        final ServerBeanBuilder beanBuilder = new ServerBeanBuilderImpl(classRepository, beanRepository, listMapper, builderFactory, dispatcher, garbageCollector);
-        beanManager = new BeanManagerImpl(beanRepository, beanBuilder);
+        beanManager = new BeanManagerImpl(beanRepository);
 
 
         //Init ControllerHandler
-        controllerHandler = new ControllerHandler(beanFactory, beanBuilder, beanRepository, controllerRepository, converters);
+        controllerHandler = new ControllerHandler(beanFactory, beanRepository, controllerRepository);
 
-        //Register commands
-        registerDefaultCommands();
+        toSendQueue = new LinkedList<>();
+
+        registerCommand(CreateContextCommand.class, command -> onInitContext());
+
+        registerCommand(DestroyContextCommand.class, command -> onDestroyContext());
+
+        registerCommand(CreateControllerCommand.class, command -> {
+            Assert.requireNonNull(command, "command");
+            onCreateController(command.getControllerName(), command.getControllerId(), command.getParentControllerId());
+        });
+
+        registerCommand(DestroyControllerCommand.class, command -> {
+            Assert.requireNonNull(command, "command");
+            onDestroyController(command.getControllerId());
+        });
+
+        registerCommand(CallActionCommand.class, command -> {
+            Assert.requireNonNull(command, "command");
+            onCallControllerAction(command.getControllerId(), command.getActionName(), command.getParams());
+        });
+
+        registerCommand(ValueChangedCommand.class, command -> beanRepository.onValueChangedCommand(command));
+
+        registerCommand(ListAddCommand.class, command -> beanRepository.onListAddCommand(command));
+
+        registerCommand(ListReplaceCommand.class, command -> beanRepository.onListReplaceCommand(command));
+
+        registerCommand(ListRemoveCommand.class, command -> beanRepository.onListRemoveCommand(command));
     }
 
-    protected <T extends Command> void registerCommand(final ActionRegistry registry, final Class<T> commandClass, final Consumer<T> handler) {
-        Assert.requireNonNull(registry, "registry");
+    private void sendCommand(final Command c) {
+        toSendQueue.offer(c);
+    }
+
+    protected  <T extends Command> void registerCommand(final Class<T> commandClass, final CommandHandler<T> handler) {
         Assert.requireNonNull(commandClass, "commandClass");
         Assert.requireNonNull(handler, "handler");
-        registry.register(commandClass, new CommandHandler() {
-            @Override
-            public void handleCommand(final Command command, final List response) {
-                LOG.trace("Handling {} for ServerRemotingContext {}", commandClass.getSimpleName(), getId());
-                handler.accept((T) command);
-            }
-        });
+        commandHandlers.put(commandClass, handler);
     }
 
-    private void registerDefaultCommands() {
-        serverConnector.register(new AbstractServerAction() {
-            @Override
-            public void registerIn(ActionRegistry registry) {
-                registerCommand(registry, CreateContextCommand.class, (c) -> onInitContext());
-                registerCommand(registry, DestroyContextCommand.class, (c) -> onDestroyContext());
-                registerCommand(registry, CreateControllerCommand.class, (createControllerCommand) -> {
-                    Assert.requireNonNull(createControllerCommand, "createControllerCommand");
-                    onCreateController(createControllerCommand.getControllerName(), createControllerCommand.getParentControllerId(), createControllerCommand.getParameters());
-                });
-                registerCommand(registry, DestroyControllerCommand.class, (destroyControllerCommand) -> {
-                    Assert.requireNonNull(destroyControllerCommand, "destroyControllerCommand");
-                    onDestroyController(destroyControllerCommand.getControllerId());
-                });
-                registerCommand(registry, CallActionCommand.class, (callActionCommand) -> {
-                    Assert.requireNonNull(callActionCommand, "callActionCommand");
-                    onCallControllerAction(callActionCommand.getControllerId(), callActionCommand.getActionName(), callActionCommand.getParams());
-                });
-                registerCommand(registry, StartLongPollCommand.class, (c) -> onLongPoll());
-                registerCommand(registry, InterruptLongPollCommand.class, (c) -> interrupt());
+    public List<Command> handle(final List<Command> commands) {
+        for (final Command command : commands) {
+            final Class<?> commandClass = command.getClass();
+            final CommandHandler handler = commandHandlers.get(commandClass);
+            Assert.requireNonNull(handler, "handler");
+            try {
+                handler.handle(command);
+            } catch (final Exception e) {
+                //TODO:
+                throw new RuntimeException("Error in command handling", e);
             }
-        });
+        }
+
+        onLongPoll();
+
+        final List<Command> results = new LinkedList<>();
+        while (!toSendQueue.isEmpty()) {
+            final Command nextCommand = toSendQueue.poll();
+            doPossibleMerge(results, nextCommand);
+            results.add(nextCommand);
+        }
+        return results;
     }
+
+    private void doPossibleMerge(final List<Command> current, final Command nextCommand) {
+        if(nextCommand instanceof ValueChangedCommand) {
+            ListIterator<Command> iterator = current.listIterator();
+            while (iterator.hasNext()) {
+                final Command command = iterator.next();
+                if(command instanceof ValueChangedCommand) {
+                    CommandMergeUtils.checkValueChangedCommand((ValueChangedCommand)command, () -> iterator.remove(), (ValueChangedCommand)nextCommand);
+                }
+            }
+        } else if(nextCommand instanceof ListAddCommand) {
+            ListIterator<Command> iterator = current.listIterator();
+            while (iterator.hasNext()) {
+                final Command command = iterator.next();
+                if(command instanceof ListAddCommand) {
+                    CommandMergeUtils.checkListAddCommand((ListAddCommand)command, () -> iterator.remove(), (ListAddCommand)nextCommand);
+                }
+            }
+        } else if(nextCommand instanceof ListReplaceCommand) {
+            ListIterator<Command> iterator = current.listIterator();
+            while (iterator.hasNext()) {
+                final Command command = iterator.next();
+                if(command instanceof ListReplaceCommand) {
+                    CommandMergeUtils.checkListReplaceCommand((ListReplaceCommand)command, () -> iterator.remove(), (ListReplaceCommand)nextCommand);
+                }
+            }
+        } else if(nextCommand instanceof ListRemoveCommand) {
+            ListIterator<Command> iterator = current.listIterator();
+            while (iterator.hasNext()) {
+                final Command command = iterator.next();
+                if(command instanceof ListRemoveCommand) {
+                    CommandMergeUtils.checkListRemoveCommand((ListRemoveCommand)command, () -> iterator.remove(), (ListRemoveCommand)nextCommand);
+                }
+            }
+        }
+    }
+
 
     private void onInitContext() {
-        platformBeanRepository = new ServerPlatformBeanRepository(serverModelStore, beanRepository, dispatcher, converters);
     }
 
     private void onDestroyContext() {
@@ -214,32 +226,30 @@ public class ServerRemotingContext {
     }
 
     public void destroy() {
-        controllerHandler.destroyAllControllers();
-
-        onDestroyCallback.accept(this);
+        try {
+            controllerHandler.destroyAllControllers();
+        } catch (Exception e) {
+            LOG.error("Error in destroying remoting context!", e);
+        } finally {
+            onDestroyCallback.accept(this);
+        }
     }
 
-    private void onCreateController(final String controllerName, final String parentControllerId, final Map<String, Serializable> parameters) {
+    private void onCreateController(final String controllerName, final String controllerId, final String parentControllerId) {
         Assert.requireNonBlank(controllerName, "controllerName");
 
-        if (platformBeanRepository == null) {
-            throw new IllegalStateException("An action was called before the init-command was sent.");
-        }
-        final String controllerId = controllerHandler.createController(controllerName, parentControllerId, parameters);
+        // final InternalAttributesBean bean = platformBeanRepository.getInternalAttributesBean();
+        controllerHandler.createController(controllerName, controllerId, parentControllerId);
 
-        final InternalAttributesBean bean = platformBeanRepository.getInternalAttributesBean();
-        bean.setControllerId(controllerId);
+        //bean.setControllerId(controllerId);
         Object model = controllerHandler.getControllerModel(controllerId);
         if (model != null) {
-            bean.setModel(model);
+            //  bean.setModel(model);
         }
     }
 
-    private void onDestroyController(final String controllerId) {
+    private void onDestroyController(final String controllerId) throws Exception {
         Assert.requireNonBlank(controllerId, "controllerId");
-        if (platformBeanRepository == null) {
-            throw new IllegalStateException("An action was called before the init-command was sent.");
-        }
         controllerHandler.destroyController(controllerId);
     }
 
@@ -248,20 +258,12 @@ public class ServerRemotingContext {
         Assert.requireNonBlank(actionName, "actionName");
         Assert.requireNonNull(params, "params");
 
-        //TODO: Remove this. Should bve handled by commands.
-        final ServerControllerActionCallBean bean = platformBeanRepository.getControllerActionCallBean();
-        Assert.requireNonNull(bean, "bean");
-
-        if (platformBeanRepository == null) {
-            throw new IllegalStateException("An action was called before the init-command was sent.");
-        }
-        final Metric metric = ServerTimingFilter.getCurrentTiming().start("RemotingActionCall:"+actionName, "Remote action call");
+        final Metric metric = ServerTimingFilter.getCurrentTiming().start("RemotingActionCall:" + actionName, "Remote action call");
         try {
             controllerHandler.invokeAction(controllerId, actionName, params);
         } catch (final Exception e) {
-            LOG.error("Unexpected exception while invoking action {} on controller {}",
+            LOG.error("Unexpected exception while invoking action '{}' on controller {}",
                     actionName, controllerId, e);
-            bean.setError(true);
         } finally {
             metric.stop();
         }
@@ -284,7 +286,7 @@ public class ServerRemotingContext {
         }
     }
 
-    private void onGarbageCollection() {
+    protected void onGarbageCollection() {
         final Metric metric = ServerTimingFilter.getCurrentTiming().start("RemotingGc", "Garbage collection for the remoting model");
         try {
             garbageCollector.gc();
@@ -293,34 +295,12 @@ public class ServerRemotingContext {
         }
     }
 
-    public ServerModelStore getServerModelStore() {
-        return serverModelStore;
-    }
-
-    public ServerConnector getServerConnector() {
-        return serverConnector;
-    }
-
     public BeanManager getBeanManager() {
         return beanManager;
     }
 
     public String getId() {
         return clientSession.getId();
-    }
-
-    public List<Command> handle(final List<Command> commands) {
-        active = true;
-        try {
-        final List<Command> results = new LinkedList<>();
-            for (final Command command : commands) {
-                results.addAll(serverConnector.receive(command));
-                hasResponseCommands = !results.isEmpty();
-            }
-            return results;
-        } finally {
-            active = false;
-        }
     }
 
     public ClientSession getClientSession() {
@@ -357,7 +337,7 @@ public class ServerRemotingContext {
         return taskQueue.addTask(callable);
     }
 
-    public boolean isActive() {
-        return active;
+    private GarbageCollector getGarbageCollector() {
+        return garbageCollector;
     }
 }

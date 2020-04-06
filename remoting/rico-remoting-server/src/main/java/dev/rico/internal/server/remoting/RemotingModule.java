@@ -27,7 +27,6 @@ import dev.rico.internal.server.remoting.context.ServerRemotingContext;
 import dev.rico.internal.server.remoting.controller.ControllerValidationException;
 import dev.rico.internal.server.remoting.event.AbstractEventBus;
 import dev.rico.internal.server.remoting.servlet.RemotingServlet;
-import dev.rico.internal.server.remoting.servlet.InterruptServlet;
 import dev.rico.server.remoting.event.RemotingEventBus;
 import dev.rico.server.remoting.event.spi.EventBusProvider;
 import dev.rico.server.client.ClientSession;
@@ -47,7 +46,6 @@ import java.util.List;
 import java.util.ServiceLoader;
 
 import static dev.rico.internal.server.remoting.servlet.ServletConstants.REMOTING_SERVLET_NAME;
-import static dev.rico.internal.server.remoting.servlet.ServletConstants.INTERRUPT_SERVLET_NAME;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @ModuleDefinition(order = 101)
@@ -106,9 +104,7 @@ public class RemotingModule implements ServerModule {
 
             final ClientSessionLifecycleHandler lifecycleHandler = coreComponents.getInstance(ClientSessionLifecycleHandler.class);
 
-            servletContext.addServlet(REMOTING_SERVLET_NAME, new RemotingServlet(communicationHandler)).addMapping(configuration.getServletMapping());
-
-            servletContext.addServlet(INTERRUPT_SERVLET_NAME, new InterruptServlet(contextProvider)).addMapping(configuration.getInterruptServletMapping());
+            servletContext.addServlet(REMOTING_SERVLET_NAME, new RemotingServlet(communicationHandler, contextProvider)).addMapping(configuration.getServletMapping());
 
             LOG.debug("Rico remoting initialized under context \"" + servletContext.getContextPath() + "\"");
             LOG.debug("Rico remoting endpoint defined as " + configuration.getServletMapping());

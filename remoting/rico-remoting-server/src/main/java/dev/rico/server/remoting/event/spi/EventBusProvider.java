@@ -34,7 +34,7 @@ public interface EventBusProvider {
 
     /**
      * Returns the event bus.
-     * @param configuration the configuration that can be used internally to create the event bus
+     * @param configuration the configuration that can be used internally to createList the event bus
      * @return the event bus
      */
     RemotingEventBus create(RemotingConfiguration configuration);

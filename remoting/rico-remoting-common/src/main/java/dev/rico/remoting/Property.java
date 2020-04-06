@@ -72,7 +72,7 @@ import static org.apiguardian.api.API.Status.MAINTAINED;
  * </blockquote>
  * <p>
  * Currently remoting models support only the {@link Property} and {@link ObservableList}
- * interfaces to define attributes and collections in models. But by just using this 2 interfaces it's easy to create
+ * interfaces to define attributes and collections in models. But by just using this 2 interfaces it's easy to createList
  * hierarchical models because a {@link Property} can contain another bean, for example. The following class shows this
  * design by a simple example:
  * <p>

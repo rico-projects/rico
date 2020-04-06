@@ -16,29 +16,17 @@
  */
 package dev.rico.client.remoting.util;
 
-import dev.rico.internal.client.remoting.ClientBeanBuilderImpl;
-import dev.rico.internal.client.remoting.ClientEventDispatcher;
-import dev.rico.internal.client.remoting.ClientPresentationModelBuilderFactory;
 import dev.rico.internal.client.remoting.legacy.ClientModelStore;
 import dev.rico.internal.client.remoting.legacy.DefaultModelSynchronizer;
 import dev.rico.internal.client.remoting.legacy.ModelSynchronizer;
-import dev.rico.internal.client.remoting.legacy.communication.AbstractClientConnector;
-import dev.rico.internal.remoting.BeanBuilder;
-import dev.rico.internal.remoting.BeanManagerImpl;
-import dev.rico.internal.remoting.BeanRepository;
-import dev.rico.internal.remoting.BeanRepositoryImpl;
-import dev.rico.internal.remoting.ClassRepository;
-import dev.rico.internal.remoting.ClassRepositoryImpl;
-import dev.rico.internal.remoting.Converters;
-import dev.rico.internal.remoting.EventDispatcher;
-import dev.rico.internal.remoting.ListMapper;
-import dev.rico.internal.remoting.PresentationModelBuilderFactory;
-import dev.rico.internal.remoting.collections.ListMapperImpl;
+import dev.rico.internal.remoting.*;
+import dev.rico.internal.remoting.communication.converters.Converters;
 import dev.rico.internal.remoting.legacy.communication.Command;
 import dev.rico.internal.remoting.legacy.util.DirectExecutor;
 import dev.rico.internal.server.remoting.legacy.ServerConnector;
 import dev.rico.internal.server.remoting.legacy.ServerModelStore;
-import dev.rico.remoting.BeanManager;
+import dev.rico.internal.server.remoting.model.BeanManagerImpl;
+import dev.rico.server.remoting.BeanManager;
 
 import java.util.ArrayList;
 
@@ -101,16 +89,16 @@ public abstract class AbstractRemotingTest {
     }
 
     protected BeanRepository createBeanRepository(final ClientModelStore clientModelStore, final EventDispatcher dispatcher) {
-        final BeanRepositoryImpl beanRepository = new BeanRepositoryImpl(clientModelStore, dispatcher);
+        final BeanRepository beanRepository = new BeanRepository(clientModelStore, dispatcher);
         return beanRepository;
     }
 
     protected BeanManager createBeanManager(final ClientModelStore clientModelStore, final BeanRepository beanRepository, final EventDispatcher dispatcher) {
         final Converters converters = new Converters(beanRepository);
         final PresentationModelBuilderFactory builderFactory = new ClientPresentationModelBuilderFactory(clientModelStore);
-        final ClassRepository classRepository = new ClassRepositoryImpl(clientModelStore, converters, builderFactory);
+        final ClassRepository classRepository = new ClassRepository(clientModelStore, converters, builderFactory);
         final ListMapper listMapper = new ListMapperImpl(clientModelStore, classRepository, beanRepository, builderFactory, dispatcher);
-        final BeanBuilder beanBuilder = new ClientBeanBuilderImpl(classRepository, beanRepository, listMapper, builderFactory, dispatcher);
+        final BeanBuilder beanBuilder = new BeanBuilder(classRepository, beanRepository);
         return new BeanManagerImpl(beanRepository, beanBuilder);
     }
 

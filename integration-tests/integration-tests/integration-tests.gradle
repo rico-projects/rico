@@ -21,7 +21,7 @@ dependencies {
     testCompile project(':integration-common')
 }
 
-task copyWar(dependsOn: [':integration-tests-jee:war']) {
+task copyWar(dependsOn: [':integration-tests-jee:war', ':integration-tests-spring:bootRepackage']) {
     doLast {
         copy {
             into file("src/test/resources/docker-base/payara-integration")
@@ -34,6 +34,10 @@ task copyWar(dependsOn: [':integration-tests-jee:war']) {
         copy {
             into file("src/test/resources/docker-base/wildfly-integration")
             from(file("../integration-tests-jee/build/libs/integration-tests.war"))
+        }
+        copy {
+            into file("src/test/resources/docker-base/spring-integration")
+            from(file("../integration-tests-spring/build/libs/integration-tests.jar"))
         }
     }
 }

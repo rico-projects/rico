@@ -16,20 +16,18 @@
  */
 package dev.rico.internal.server.remoting.test;
 
-import dev.rico.internal.client.remoting.legacy.ClientModelStore;
-import dev.rico.internal.client.remoting.legacy.communication.AbstractClientConnector;
+import dev.rico.client.Client;
 import dev.rico.internal.client.session.ClientSessionStoreImpl;
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.remoting.legacy.communication.Command;
+import dev.rico.internal.remoting.communication.commands.Command;
 import dev.rico.internal.server.client.ClientSessionProvider;
 import dev.rico.internal.server.client.HttpClientSessionImpl;
 import dev.rico.internal.server.remoting.config.ConfigurationFileLoader;
-import dev.rico.internal.server.remoting.config.ServerConfiguration;
 import dev.rico.internal.server.remoting.config.RemotingConfiguration;
+import dev.rico.internal.server.remoting.config.ServerConfiguration;
 import dev.rico.internal.server.remoting.context.ServerRemotingContext;
 import dev.rico.internal.server.remoting.controller.ControllerRepository;
 import dev.rico.internal.server.scanner.DefaultClasspathScanner;
-import dev.rico.client.Client;
 import dev.rico.server.client.ClientSession;
 import org.apiguardian.api.API;
 import org.springframework.web.context.WebApplicationContext;
@@ -40,7 +38,6 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 import static dev.rico.internal.server.bootstrap.BasicConfigurationProvider.ROOT_PACKAGE_FOR_CLASSPATH_SCAN;
 import static org.apiguardian.api.API.Status.INTERNAL;
@@ -63,8 +60,7 @@ public class TestConfiguration {
         final ExecutorService clientExecutor = Executors.newSingleThreadExecutor();
 
         final ClientSessionStoreImpl clientSessionStore = new ClientSessionStoreImpl();
-        final Function<ClientModelStore, AbstractClientConnector> connectorProvider = s -> new TestClientConnectorImpl(s, clientExecutor, c -> sendToServer(c));
-        clientContext = new TestClientContextImpl(Client.getClientConfiguration(), new URI("http://dummy"), connectorProvider, clientSessionStore);
+        clientContext = new TestClientContextImpl(Client.getClientConfiguration(), new URI("http://dummy"), clientSessionStore);
 
         //Server
         final ControllerRepository controllerRepository = new ControllerRepository(new DefaultClasspathScanner(defaultPlatformConfiguration.getListProperty(ROOT_PACKAGE_FOR_CLASSPATH_SCAN)));

@@ -34,7 +34,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Helper class to create Styleable properties and CSSMetaData instances
+ * Helper class to create styleable properties and CSSMetaData instances
  *
  * @author Hendrik Ebbers
  */

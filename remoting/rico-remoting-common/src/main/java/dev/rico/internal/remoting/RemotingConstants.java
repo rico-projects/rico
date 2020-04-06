@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 Karakun AG.
+ * Copyright 2018 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,16 +23,6 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public interface RemotingConstants {
 
-    String REMOTING_BEAN = "@@@ R_BEAN @@@";
-
-    String JAVA_CLASS = "@@@ JAVA_CLASS @@@";
-
-    String LIST_SPLICE = "@R:LS@";
-
-    String CONTROLLER_ACTION_CALL_BEAN_NAME = "@@@ CONTROLLER_ACTION_CALL_BEAN @@@";
-
-    String INTERNAL_ATTRIBUTES_BEAN_NAME = "@@@ HIGHLANDER_BEAN @@@";
-
-    String REMOTING_DATE_FORMAT_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
+    String REMOTING_DATE_FORMAT_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 
 }

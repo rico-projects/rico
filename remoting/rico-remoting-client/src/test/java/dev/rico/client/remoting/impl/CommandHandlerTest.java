@@ -17,7 +17,7 @@
 package dev.rico.client.remoting.impl;
 
 import dev.rico.client.remoting.util.AbstractRemotingTest;
-import dev.rico.internal.client.remoting.RicoCommandHandler;
+import dev.rico.internal.client.remoting.communication.RemotingCommandHandler;
 import dev.rico.internal.client.remoting.legacy.ClientAttribute;
 import dev.rico.internal.client.remoting.legacy.ClientModelStore;
 import dev.rico.internal.remoting.legacy.communication.Command;
@@ -46,7 +46,7 @@ public class CommandHandlerTest extends AbstractRemotingTest {
         final TestConfiguration configuration = createTestConfiguration();
         final ServerModelStore serverModelStore = configuration.getServerModelStore();
         final ClientModelStore clientModelStore = configuration.getClientModelStore();
-        final RicoCommandHandler commandHandler = new RicoCommandHandler(configuration.getClientConnector());
+        final RemotingCommandHandler commandHandler = new RemotingCommandHandler(configuration.getClientConnector());
         final String modelId = UUID.randomUUID().toString();
         clientModelStore.createModel(modelId, null, new ClientAttribute("myAttribute", "UNKNOWN"));
         configuration.getServerConnector().register(new AbstractServerAction() {

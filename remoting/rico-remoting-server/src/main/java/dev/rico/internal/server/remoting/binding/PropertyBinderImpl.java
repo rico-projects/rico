@@ -24,7 +24,6 @@ import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.ReflectionHelper;
 import dev.rico.server.remoting.binding.PropertyBinder;
 import dev.rico.server.remoting.binding.Qualifier;
-import dev.rico.internal.server.remoting.legacy.ServerAttribute;
 import org.apiguardian.api.API;
 
 import java.lang.reflect.Field;
@@ -43,15 +42,15 @@ public class PropertyBinderImpl implements PropertyBinder {
                 final PropertyImpl p = (PropertyImpl) property;
 
                 final Field attributeField = ReflectionHelper.getInheritedDeclaredField(PropertyImpl.class, "attribute");
-                final ServerAttribute attribute = (ServerAttribute) ReflectionHelper.getPrivileged(attributeField, p);
-                if(attribute == null) {
-                    throw new NullPointerException("attribute == null");
-                }
-                attribute.setQualifier(qualifier.getIdentifier());
+                //final ServerAttribute attribute = (ServerAttribute) ReflectionHelper.getPrivileged(attributeField, p);
+                //if(attribute == null) {
+                //    throw new NullPointerException("attribute == null");
+               // }
+               // attribute.setQualifier(qualifier.getIdentifier());
                 return new Binding() {
                     @Override
                     public void unbind() {
-                        attribute.setQualifier(null);
+       //                 attribute.setQualifier(null);
                     }
                 };
             } catch (Exception e) {

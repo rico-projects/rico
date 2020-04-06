@@ -18,7 +18,7 @@ package dev.rico.internal.server.projection.notifications;
 
 import dev.rico.internal.projection.notifications.NotificationBean;
 import dev.rico.internal.projection.notifications.NotificationWrapperBean;
-import dev.rico.remoting.BeanManager;
+import dev.rico.server.remoting.BeanManager;
 import dev.rico.server.remoting.RemotingController;
 import dev.rico.server.remoting.RemotingModel;
 import dev.rico.server.remoting.event.RemotingEventBus;

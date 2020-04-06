@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2019 Karakun AG.
+ * Copyright 2018 Karakun AG.
  * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,15 +16,16 @@
  */
 package dev.rico.internal.remoting;
 
+import dev.rico.core.functional.Subscription;
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.remoting.info.PropertyInfo;
-import dev.rico.internal.remoting.legacy.core.Attribute;
 import dev.rico.remoting.Property;
-import dev.rico.remoting.converter.ValueConverterException;
+import dev.rico.remoting.ValueChangeEvent;
+import dev.rico.remoting.ValueChangeListener;
 import org.apiguardian.api.API;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
@@ -34,52 +35,101 @@ import static org.apiguardian.api.API.Status.INTERNAL;
  * @param <T> The type of the wrapped property.
  */
 @API(since = "0.x", status = INTERNAL)
-public class PropertyImpl<T> extends AbstractProperty<T> {
+public class PropertyImpl<T> implements Property<T> {
 
-    private final Attribute attribute;
+    private T internalValue;
 
-    private final PropertyInfo propertyInfo;
+    private final ValueChangeListener<? super T> internalListener;
 
-    public PropertyImpl(final Attribute attribute, final PropertyInfo propertyInfo) {
-        this.attribute = Assert.requireNonNull(attribute, "attribute");
-        this.propertyInfo = Assert.requireNonNull(propertyInfo, "propertyInfo");
+    private final List<ValueChangeListener<? super T>> listeners = new CopyOnWriteArrayList<>();
 
-        attribute.addPropertyChangeListener(Attribute.VALUE_NAME, new PropertyChangeListener() {
-            @SuppressWarnings("unchecked")
+    private boolean internalValueChange = false;
+
+    public PropertyImpl(final ValueChangeListener<? super T> internalListener) {
+        this.internalListener = Assert.requireNonNull(internalListener, "internalListener");
+    }
+
+    @Override
+    public Subscription onChanged(final ValueChangeListener<? super T> listener) {
+        listeners.add(listener);
+        return new Subscription() {
             @Override
-            public void propertyChange(final PropertyChangeEvent evt) {
-                Assert.requireNonNull(evt, "evt");
-                try {
-                    final T oldValue = (T) PropertyImpl.this.propertyInfo.convertFromRemoting(evt.getOldValue());
-                    final T newValue = (T) PropertyImpl.this.propertyInfo.convertFromRemoting(evt.getNewValue());
-                    if (oldValue == null && newValue != null ||
-                            oldValue != null && newValue == null ||
-                            (oldValue != null && newValue != null && !oldValue.equals(newValue))) {
-                       firePropertyChanged(oldValue, newValue);
-                    }
-                } catch (final Exception e) {
-                    throw new MappingException("Error in property change handling for property: " + attribute.getPropertyName() + " in attribute with name: " + propertyInfo.getAttributeName() + " and Id: " + attribute.getId() + " - old value: " + evt.getOldValue() +" new value: " + evt.getNewValue(), e);
-                }
+            public void unsubscribe() {
+                listeners.remove(listener);
             }
-        });
+        };
+    }
+
+    protected void firePropertyChanged(final T oldValue, final T newValue) {
+        final ValueChangeEvent<T> event = new ValueChangeEvent<T>() {
+            @Override
+            public Property<T> getSource() {
+                return PropertyImpl.this;
+            }
+
+            @Override
+            public T getOldValue() {
+                return oldValue;
+            }
+
+            @Override
+            public T getNewValue() {
+                return newValue;
+            }
+        };
+        notifyInternalListeners(event);
+        notifyExternalListeners(event);
+    }
+
+    protected void notifyExternalListeners(ValueChangeEvent<T> event) {
+        for(final ValueChangeListener<? super T> listener : listeners) {
+            listener.valueChanged(event);
+        }
+    }
+
+    protected void notifyInternalListeners(ValueChangeEvent<T> event) {
+        if (!internalValueChange) {
+            internalListener.valueChanged(event);
+        }
+    }
+
+    public String toString() {
+        return "Remoting " + getClass().getSimpleName() + "[value: " + get() + "]";
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(get());
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final PropertyImpl<?> that = (PropertyImpl<?>) o;
+        return Objects.equals(get(), that.get());
     }
 
     @Override
     public void set(final T value) {
-        try {
-            attribute.setValue(propertyInfo.convertToRemoting(value));
-        } catch (final ValueConverterException e) {
-            throw new MappingException("Error in mutating property value!", e);
-        }
+        final T oldValue = internalValue;
+        internalValue = value;
+        firePropertyChanged(oldValue, internalValue);
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public T get() {
+        return internalValue;
+    }
+
+
+    public void internalSet(T value) {
+        internalValueChange = true;
         try {
-            return (T) propertyInfo.convertFromRemoting(attribute.getValue());
-        } catch (final ValueConverterException e) {
-            throw new MappingException("Error in accessing property value!", e);
+            set(value);
+        } finally {
+            internalValueChange = false;
         }
     }
 }

@@ -21,7 +21,7 @@ import dev.rico.server.data.DataService;
 import dev.rico.server.data.DataWithId;
 import dev.rico.internal.server.data.mapping.BeanConverter;
 import dev.rico.internal.server.data.mapping.BeanMapperImpl;
-import dev.rico.remoting.BeanManager;
+import dev.rico.server.remoting.BeanManager;
 import dev.rico.server.remoting.event.RemotingEventBus;
 
 import javax.annotation.PostConstruct;
