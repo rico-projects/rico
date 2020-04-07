@@ -15,11 +15,15 @@
  * limitations under the License.
  */
 
+//TODO: THIS MODULE IS CURRENTLY EXCLUDED
+
 dependencies {
     compile project(':rico-remoting-client-javafx')
     compile project(':rico-logger-widget-common')
 
     compile "org.controlsfx:controlsfx:$controlFxVersion"
+    compile "org.openjfx:javafx-controls:11.0.2:mac"
+
 
     compile "de.jensd:fontawesomefx-emojione:$fontAwesomeEmonjioneVersion"
     compile "de.jensd:fontawesomefx-fontawesome:$fontAwesomeVersion"

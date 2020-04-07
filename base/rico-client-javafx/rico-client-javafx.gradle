@@ -17,4 +17,5 @@
 
 dependencies {
     compile project(':rico-client')
+    compile "org.openjfx:javafx-graphics:11.0.2:mac"
 }

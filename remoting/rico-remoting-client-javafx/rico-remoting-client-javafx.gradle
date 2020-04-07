@@ -17,5 +17,7 @@
 
 dependencies {
     compile project(':rico-client-javafx')
+    compile "org.openjfx:javafx-base:11.0.2:mac"
+    compile "org.openjfx:javafx-fxml:11.0.2:mac"
     compile project(':rico-remoting-client')
 }

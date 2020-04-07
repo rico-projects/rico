@@ -16,13 +16,6 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 public abstract class DownloadInputStream extends InputStream {
 
     /**
-     * Returns a {@link CompletableFuture} to access the hash once the download is done
-     *
-     * @return a {@link CompletableFuture} to access the hash once the download is done
-     */
-    public abstract CompletableFuture<String> getHash();
-
-    /**
      * Sets the chunk size that is used to check for updates of listeners. While the stream is used listeners
      * (see {@link #addDownloadPercentageListener(Consumer)}) will be called several times. The chunk size defines
      * after what byte count the listener will be called again.

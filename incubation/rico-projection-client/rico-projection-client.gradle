@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+//TODO: This Module is currently not used
+
 dependencies {
     compile project(':rico-remoting-client-javafx')
     compile project(':rico-projection-common')
