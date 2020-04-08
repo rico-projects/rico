@@ -23,6 +23,8 @@ import org.apiguardian.api.API;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -30,6 +32,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 import static dev.rico.internal.core.RicoConstants.TIMEZONE_UTC;
+import static dev.rico.internal.remoting.RemotingConstants.JAVA_DATE_AND_TIME_FORMATTER;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
@@ -52,7 +55,7 @@ public class LocalDateTimeConverterFactory extends AbstractConverterFactory {
         return CONVERTER;
     }
 
-    private static class LocalDateTimeConverter extends AbstractDateConverter<LocalDateTime> {
+    private static class LocalDateTimeConverter extends AbstractStringConverter<LocalDateTime> {
 
         @Override
         public LocalDateTime convertFromRemoting(final String value) throws ValueConverterException {
@@ -60,9 +63,8 @@ public class LocalDateTimeConverterFactory extends AbstractConverterFactory {
                 return null;
             }
             try {
-                final Calendar result = Calendar.getInstance(TimeZone.getTimeZone(TIMEZONE_UTC));
-                result.setTime(getDateFormat().parse(value));
-                return result.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+                final TemporalAccessor parsed = JAVA_DATE_AND_TIME_FORMATTER.parse(value);
+                return LocalDateTime.from(parsed);
             } catch (final Exception e) {
                 throw new ValueConverterException("Can not convert to LocalDateTime", e);
             }
@@ -74,8 +76,7 @@ public class LocalDateTimeConverterFactory extends AbstractConverterFactory {
                 return null;
             }
             try {
-                final Date date = Date.from(value.toInstant(OffsetDateTime.now().getOffset()));
-                return getDateFormat().format(date);
+                return JAVA_DATE_AND_TIME_FORMATTER.format(value);
             } catch (final Exception e) {
                 throw new ValueConverterException("Can not convert from LocalDateTime", e);
             }

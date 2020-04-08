@@ -18,6 +18,8 @@ package dev.rico.internal.remoting;
 
 import org.apiguardian.api.API;
 
+import java.time.format.DateTimeFormatter;
+
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
@@ -34,5 +36,11 @@ public interface RemotingConstants {
     String INTERNAL_ATTRIBUTES_BEAN_NAME = "@@@ HIGHLANDER_BEAN @@@";
 
     String REMOTING_DATE_FORMAT_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
+
+    DateTimeFormatter JAVA_DATE_AND_TIME_FORMATTER = DateTimeFormatter.ISO_DATE_TIME;
+
+    DateTimeFormatter JAVA_DATE_FORMATTER = DateTimeFormatter.ISO_DATE;
+
+    DateTimeFormatter JAVA_TIME_FORMATTER = DateTimeFormatter.ISO_TIME;
 
 }

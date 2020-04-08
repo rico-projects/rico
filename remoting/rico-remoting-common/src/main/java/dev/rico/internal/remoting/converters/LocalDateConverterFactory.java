@@ -21,14 +21,18 @@ import dev.rico.remoting.converter.ValueConverterException;
 import org.apiguardian.api.API;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import static dev.rico.internal.remoting.RemotingConstants.JAVA_DATE_AND_TIME_FORMATTER;
+import static dev.rico.internal.remoting.RemotingConstants.JAVA_DATE_FORMATTER;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
@@ -52,7 +56,7 @@ public class LocalDateConverterFactory extends AbstractConverterFactory {
     }
 
     private static class LocalDateConverter
-            extends AbstractDateConverter<LocalDate> {
+            extends AbstractStringConverter<LocalDate> {
 
         @Override
         public LocalDate convertFromRemoting(final String value)
@@ -61,9 +65,8 @@ public class LocalDateConverterFactory extends AbstractConverterFactory {
                 return null;
             }
             try {
-                final Calendar result = Calendar.getInstance(TimeZone.getDefault());
-                result.setTime(getDateFormat().parse(value));
-                return result.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                final TemporalAccessor parsed = JAVA_DATE_FORMATTER.parse(value);
+                return LocalDate.from(parsed);
             } catch (final Exception e) {
                 throw new ValueConverterException(
                         "Can not convert to LocalDate", e);
@@ -77,8 +80,7 @@ public class LocalDateConverterFactory extends AbstractConverterFactory {
                 return null;
             }
             try {
-                final Date date = Date.from(value.atStartOfDay().toInstant(ZoneOffset.ofHours(0)));
-                return getDateFormat().format(date);
+                return JAVA_DATE_FORMATTER.format(value);
             } catch (final Exception e) {
                 throw new ValueConverterException(
                         "Can not convert from LocalDate", e);

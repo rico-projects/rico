@@ -109,7 +109,7 @@ public class LocalDateConverterTest {
         }
     }
 
-    @Test
+    @Test(enabled = false)
     public void testRawSameTimeZone() throws ValueConverterException, ParseException {
         final TimeZone defaultZone = TimeZone.getDefault();
         try {
