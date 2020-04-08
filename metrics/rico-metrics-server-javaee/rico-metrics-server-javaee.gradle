@@ -16,6 +16,6 @@
  */
 
 dependencies {
-    compile project(':rico-metrics-server')
+    api project(':rico-metrics-server')
     compileOnly "javax.enterprise:cdi-api:$javaxCDIVersion"
 }

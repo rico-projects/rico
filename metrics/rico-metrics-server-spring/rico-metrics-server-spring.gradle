@@ -16,6 +16,7 @@
  */
 
 dependencies {
-    compile project(':rico-metrics-server')
-    compile project(':rico-server-spring')
+    api project(':rico-metrics-server')
+    api project(':rico-server-spring')
+    implementation "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
 }

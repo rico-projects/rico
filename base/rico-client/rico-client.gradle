@@ -16,8 +16,9 @@
  */
 
 dependencies {
-    compile project(':rico-core')
-    compile "com.google.code.gson:gson:$gsonVersion"
-    testCompile "com.sparkjava:spark-core:$sparkjavaVersion"
+    api project(':rico-core')
+    implementation "com.google.code.gson:gson:$gsonVersion"
+
+    testImplementation "com.sparkjava:spark-core:$sparkjavaVersion"
     testRuntime "org.slf4j:slf4j-simple:$slf4jVersion"
 }

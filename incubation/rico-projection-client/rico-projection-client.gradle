@@ -18,7 +18,7 @@
 //TODO: This Module is currently not used
 
 dependencies {
-    compile project(':rico-remoting-client-javafx')
-    compile project(':rico-projection-common')
-    compile "org.controlsfx:controlsfx:$controlFxVersion"
+    api project(':rico-remoting-client-javafx')
+    api project(':rico-projection-common')
+    implementation "org.controlsfx:controlsfx:$controlFxVersion"
 }

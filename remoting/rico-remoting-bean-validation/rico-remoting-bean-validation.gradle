@@ -16,12 +16,11 @@
  */
 
 dependencies {
-    compile project(':rico-remoting-common')
-    compile "javax.validation:validation-api:$javaxValidationVersion"
-    compile "javax.xml.bind:jaxb-api:2.3.1"
-
-
-    testCompile "org.hibernate:hibernate-validator:$hibernateValidatorVersion"
-    testCompile "org.glassfish:javax.el:$javaxElVersion"
-    testCompile "org.glassfish.jaxb:jaxb-runtime:2.3.1"
+    api project(':rico-remoting-common')
+    implementation "javax.validation:validation-api:$javaxValidationVersion"
+    implementation "javax.xml.bind:jaxb-api:2.3.1"
+    
+    testImplementation "org.hibernate:hibernate-validator:$hibernateValidatorVersion"
+    testImplementation "org.glassfish:javax.el:$javaxElVersion"
+    testImplementation "org.glassfish.jaxb:jaxb-runtime:2.3.1"
 }

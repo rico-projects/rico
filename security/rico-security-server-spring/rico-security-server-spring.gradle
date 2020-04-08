@@ -16,6 +16,9 @@
  */
 
 dependencies {
-    compile project(':rico-security-server')
-    compile project(':rico-server-spring')
+    api project(':rico-security-server')
+    api project(':rico-server-spring')
+    implementation "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
+    implementation "org.springframework:spring-web:4.3.13.RELEASE"
+    implementation "org.apache.httpcomponents:httpclient:4.5.12"
 }

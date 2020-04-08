@@ -16,5 +16,5 @@
  */
 
 dependencies {
-    compile project(':rico-remoting-common')
+    api project(':rico-remoting-common')
 }

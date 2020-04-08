@@ -215,7 +215,6 @@ public class ReflectionHelper {
                 .filter(m -> Arrays.equals(m.getParameterTypes(), paramTypes)).findFirst();
     }
 
-
     public static boolean isProxyInstance(final Object bean) {
         Assert.requireNonNull(bean, "bean");
         return Proxy.isProxyClass(bean.getClass());

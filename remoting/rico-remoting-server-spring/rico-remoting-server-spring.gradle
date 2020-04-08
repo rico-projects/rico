@@ -16,6 +16,7 @@
  */
 
 dependencies {
-    compile project(':rico-server-spring')
-    compile project(':rico-remoting-server')
+    api project(':rico-server-spring')
+    api project(':rico-remoting-server')
+    implementation "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
 }

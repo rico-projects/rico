@@ -18,8 +18,8 @@
 apply plugin: 'war'
 
 dependencies {
-    compile project(':integration-server')
-    compile project(':rico-remoting-server-javaee')
+    implementation project(':integration-server')
+    implementation project(':rico-remoting-server-javaee')
     compileOnly "javax:javaee-api:$javaeeApiVersion"
 }
 

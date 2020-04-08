@@ -16,7 +16,7 @@
  */
 
 dependencies {
-    compile project(':rico-core')
-    compile "com.google.code.gson:gson:$gsonVersion"
-    compile "org.reflections:reflections:$reflectionsVersion"
+    api project(':rico-core')
+    implementation "com.google.code.gson:gson:$gsonVersion"
+    implementation "org.reflections:reflections:$reflectionsVersion"
 }

@@ -16,12 +16,12 @@
  */
 
 dependencies {
-    compile project(':rico-server')
-    compile project(':rico-remoting-common')
-    compile "javax.annotation:javax.annotation-api:1.3.2"
+    api project(':rico-server')
+    api project(':rico-remoting-common')
+    implementation "javax.annotation:javax.annotation-api:1.3.2"
     compileOnly "javax.servlet:javax.servlet-api:$servletApiVersion"
 
-    testCompile project(':rico-remoting-client')
-    testCompile "javax.servlet:javax.servlet-api:$servletApiVersion"
+    testImplementation project(':rico-remoting-client')
+    testImplementation "javax.servlet:javax.servlet-api:$servletApiVersion"
 
 }

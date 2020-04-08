@@ -16,6 +16,7 @@
  */
 
 dependencies {
-    compile project(':rico-remoting-server')
-    compile "com.hazelcast:hazelcast-client:$hazelcastVersion"
+    api project(':rico-remoting-server')
+    implementation "com.hazelcast:hazelcast-client:$hazelcastVersion"
+    implementation "com.google.code.gson:gson:$gsonVersion"
 }

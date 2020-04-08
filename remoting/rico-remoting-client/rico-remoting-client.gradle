@@ -16,7 +16,9 @@
  */
 
 dependencies {
-    compile project(':rico-remoting-common')
-    compile project(':rico-client')
-    testCompile project(':rico-remoting-server')
+    api project(':rico-remoting-common')
+    api project(':rico-client')
+
+    testImplementation "com.google.code.gson:gson:$gsonVersion"
+    testImplementation project(':rico-remoting-server')
 }

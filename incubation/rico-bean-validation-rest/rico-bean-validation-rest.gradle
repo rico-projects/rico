@@ -16,11 +16,11 @@
  */
 
 dependencies {
-    compile project(':rico-server')
-    compile "javax.validation:validation-api:$javaxValidationVersion"
+    api project(':rico-server')
+    implementation "javax.validation:validation-api:$javaxValidationVersion"
     compileOnly "javax.servlet:javax.servlet-api:$servletApiVersion"
-    compile "com.google.code.gson:gson:$gsonVersion"
+    implementation "com.google.code.gson:gson:$gsonVersion"
 
-    testCompile "org.hibernate:hibernate-validator:$hibernateValidatorVersion"
-    testCompile "org.glassfish:javax.el:$javaxElVersion"
+    testImplementation "org.hibernate:hibernate-validator:$hibernateValidatorVersion"
+    testImplementation "org.glassfish:javax.el:$javaxElVersion"
 }

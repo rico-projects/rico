@@ -16,6 +16,6 @@
  */
 
 dependencies {
-    compile project(':rico-data')
-    compile "org.hibernate.javax.persistence:hibernate-jpa-2.1-api:$hibernateJpaVersion"
+    api project(':rico-data')
+    implementation "org.hibernate.javax.persistence:hibernate-jpa-2.1-api:$hibernateJpaVersion"
 }

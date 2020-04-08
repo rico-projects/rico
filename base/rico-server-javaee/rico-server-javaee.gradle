@@ -16,12 +16,12 @@
  */
 
 dependencies {
-    compile project(':rico-server')
-    compile "org.apache.deltaspike.core:deltaspike-core-api:$deltaSpikeVersion"
+    api project(':rico-server')
+    implementation "org.apache.deltaspike.core:deltaspike-core-api:$deltaSpikeVersion"
     runtime "org.apache.deltaspike.core:deltaspike-core-impl:$deltaSpikeVersion"
     compileOnly "javax.enterprise:cdi-api:$javaxCDIVersion"
     compileOnly "javax.servlet:javax.servlet-api:$servletApiVersion"
 
-    testCompile "javax.enterprise:cdi-api:$javaxCDIVersion"
-    testCompile "javax.servlet:javax.servlet-api:$servletApiVersion"
+    testImplementation "javax.enterprise:cdi-api:$javaxCDIVersion"
+    testImplementation "javax.servlet:javax.servlet-api:$servletApiVersion"
 }

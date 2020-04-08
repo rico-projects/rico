@@ -16,7 +16,7 @@
  */
 
 dependencies {
-    compile project(':rico-core')
-    compile "io.micrometer:micrometer-core:$micrometerVersion"
+    api project(':rico-core')
+    implementation "io.micrometer:micrometer-core:$micrometerVersion"
 
 }

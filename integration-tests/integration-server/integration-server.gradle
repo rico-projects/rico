@@ -16,9 +16,17 @@
  */
 
 dependencies {
-    compile project(':rico-remoting-server')
-    compile project(':integration-common')
-    compile "javax.inject:javax.inject:$javaxInjectVersion"
+    api project(':rico-remoting-server')
+    api project(':integration-common')
+    implementation "javax.inject:javax.inject:$javaxInjectVersion"
+    implementation "javax.annotation:javax.annotation-api:1.3.2"
 
-    testCompile project(':rico-remoting-server-spring-test')
+    testImplementation project(':rico-remoting-server-spring-test')
+    testImplementation "org.springframework.boot:spring-boot-starter-test:$springBootVersion"
+}
+
+configurations {
+    testImplementation {
+        exclude group: 'ch.qos.logback', module: ''
+    }
 }
