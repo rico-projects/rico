@@ -33,7 +33,7 @@ subprojects { proj ->
         sourceCompatibility = proj.sourceCompatibility
         targetCompatibility = proj.targetCompatibility
 
-        options.compilerArgs << '-Xlint:deprecation'
+        //options.compilerArgs << '-Xlint:deprecation'
         //options.compilerArgs << '-Xlint:unchecked'
     }
 
