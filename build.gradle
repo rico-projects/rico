@@ -23,12 +23,18 @@ buildscript {
             url 'https://plugins.gradle.org/m2/'
         }
     }
+
+    dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.5'
+        classpath 'com.adarshr:gradle-test-logger-plugin:2.0.0'
+        classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:4.15.1'
+    }
 }
 
 subprojects { proj ->
     apply plugin: 'idea'
     apply plugin: 'java-library'
-    apply plugin: 'maven-publish'
+    apply plugin: 'com.adarshr.test-logger'
 
     proj.tasks.withType(JavaCompile) {
         sourceCompatibility = proj.sourceCompatibility
@@ -36,14 +42,6 @@ subprojects { proj ->
 
         //options.compilerArgs << '-Xlint:deprecation'
         //options.compilerArgs << '-Xlint:unchecked'
-    }
-
-    publishing {
-        publications {
-            mavenCustom(MavenPublication) {
-                from components.java
-            }
-        }
     }
 
     test.useTestNG()
@@ -85,4 +83,50 @@ subprojects { proj ->
     
     jar.finalizedBy sourcesJar
     jar.finalizedBy javadocJar
+
+    if(proj.publishJars.toBoolean()) {
+        apply plugin: 'maven-publish'
+        apply plugin: 'com.jfrog.bintray'
+        apply plugin: 'com.jfrog.artifactory'
+
+        publishing {
+            publications {
+                mavenCustom(MavenPublication) {
+                    from components.java
+                    artifact sourcesJar
+                    artifact javadocJar
+                }
+            }
+        }
+
+        project.ext.setProperty('bintrayUser', project.hasProperty('bintrayUsername') ? project.property('bintrayUsername') : System.getenv('BINTRAY_USERNAME'))
+        project.ext.setProperty('bintrayKey', project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY'))
+
+        bintray {
+            user = proj.bintrayUser
+            key = proj.bintrayKey
+            publications = ['mavenCustom']
+            pkg {
+                repo = 'Rico'
+                name = 'Rico'
+                userOrg = 'karakun'
+                licenses = ['Apache-2.0']
+                vcsUrl = 'https://github.com/rico-project/rico.git'
+            }
+        }
+
+        artifactory {
+            contextUrl = 'https://oss.jfrog.org'
+            publish {
+                repository {
+                    repoKey = 'oss-snapshot-local'
+                    username = project.bintrayUser
+                    password = project.bintrayKey
+                }
+                defaults{
+                    publications('mavenCustom')
+                }
+            }
+        }
+    }
 }
