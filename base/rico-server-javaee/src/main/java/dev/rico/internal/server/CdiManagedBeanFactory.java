@@ -52,6 +52,7 @@ public class CdiManagedBeanFactory implements ManagedBeanFactory {
     @Override
     public void init(final ServletContext servletContext) {}
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T> T createDependentInstance(final Class<T> cls) {
         Assert.requireNonNull(cls, "cls");

@@ -106,6 +106,7 @@ public class EventStreamSerializer implements StreamSerializer<MessageEventImpl<
         return root;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public MessageEventImpl<?> read(final ObjectDataInput in) throws IOException {
         final JsonElement root = new JsonParser().parse(in.readUTF());

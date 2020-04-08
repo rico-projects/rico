@@ -53,6 +53,7 @@ import static org.apiguardian.api.API.Status.MAINTAINED;
 /**
  * Utility class to create unidirectional and bidirectional bindings between JavaFX and remoting properties.
  */
+@SuppressWarnings("unused")
 @API(since = "0.x", status = MAINTAINED)
 public final class FXBinder {
 

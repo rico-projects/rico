@@ -33,6 +33,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class ClientTestFactory {
 
+    @SuppressWarnings("unchecked")
     public static <T> ControllerUnderTest<T> createController(final TestClientContext clientContext, final String controllerName, final Map<String, Serializable> parameters) {
         Assert.requireNonNull(clientContext, "clientContext");
         Assert.requireNonBlank(controllerName, "controllerName");

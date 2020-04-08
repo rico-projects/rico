@@ -61,6 +61,7 @@ public final class CreatePresentationModelCommand extends Command {
     /**
      * @deprecated use ServerFacade convenience methods (it is ok to use it from the client atm)
      */
+    @Deprecated
     public static <T extends Attribute> CreatePresentationModelCommand makeFrom(final PresentationModel<T> model) {
         final CreatePresentationModelCommand result = new CreatePresentationModelCommand();
         result.setPmId(model.getId());

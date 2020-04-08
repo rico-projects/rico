@@ -35,7 +35,7 @@ public interface ClientSessionExecutor {
 
     /**
      * Executes the given task later in the given client session
-     * @param task the task
+     * @param runnable the task
      * @return a future that is finished once the task is finished.
      */
     CompletableFuture<Void> runLaterInClientSession(final Runnable runnable);

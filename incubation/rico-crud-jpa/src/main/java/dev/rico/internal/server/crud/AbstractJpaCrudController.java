@@ -29,6 +29,7 @@ import dev.rico.server.remoting.RemotingContext;
 
 import javax.annotation.PostConstruct;
 
+@SuppressWarnings("unchecked")
 public abstract class AbstractJpaCrudController<B, E extends AbstractEntity> extends AbstractCrudController<Long, B, E> {
 
     private final ClientSessionExecutor clientSessionExecutor;

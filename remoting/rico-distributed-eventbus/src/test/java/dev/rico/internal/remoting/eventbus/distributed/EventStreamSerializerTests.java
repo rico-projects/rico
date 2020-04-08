@@ -47,6 +47,7 @@ import static dev.rico.internal.remoting.eventbus.distributed.DistributedEventCo
 import static dev.rico.internal.remoting.eventbus.distributed.DistributedEventConstants.TIMESTAMP_PARAM;
 import static dev.rico.internal.remoting.eventbus.distributed.DistributedEventConstants.TOPIC_PARAM;
 
+@SuppressWarnings("unchecked")
 public class EventStreamSerializerTests {
 
     @Test

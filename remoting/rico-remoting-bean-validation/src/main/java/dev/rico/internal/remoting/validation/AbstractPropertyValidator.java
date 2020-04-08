@@ -31,6 +31,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
  * @param <T> defines the annotation of the constraints
  * @param <U> the data type that can be validated by this class
  */
+@SuppressWarnings("SingleStatementInBlock")
 @API(since = "0.19.0", status = INTERNAL)
 public abstract class AbstractPropertyValidator<T extends Annotation, U> implements ConstraintValidator<T, Property> {
 

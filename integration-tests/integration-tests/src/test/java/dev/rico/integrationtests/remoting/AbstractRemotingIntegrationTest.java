@@ -21,6 +21,7 @@ public class AbstractRemotingIntegrationTest extends AbstractIntegrationTest {
         return createController(clientContext, controllerName, Collections.emptyMap());
     }
 
+    @SuppressWarnings("unchecked")
     protected <T> ControllerProxy<T> createController(final ClientContext clientContext, final String controllerName, final Map<String, Serializable> parameters) {
         try {
             return (ControllerProxy<T>) clientContext.createController(controllerName, parameters).get(getTimeoutInMinutes(), TimeUnit.MINUTES);

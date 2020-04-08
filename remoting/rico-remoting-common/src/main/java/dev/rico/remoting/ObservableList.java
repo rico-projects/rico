@@ -109,7 +109,7 @@ public interface ObservableList<E> extends List<E> {
     boolean retainAll(E... elements);
 
     /**
-     * Removes all elements from the list from {@param from} inclusive up to {@param to} exclusive;
+     * Removes all elements from the list from {@code from} inclusive up to {@code to} exclusive;
      * Essentially a convenience method for sublist(from, to).clear()
      * @param from the start of the range to remove (inclusive)
      * @param to the end of the range to remove (exclusive)

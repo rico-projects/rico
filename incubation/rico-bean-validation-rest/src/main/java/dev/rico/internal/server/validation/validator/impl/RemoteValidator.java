@@ -46,6 +46,7 @@ public class RemoteValidator {
         this.classLoader = Assert.requireNonNull(classLoader, "classLoader");
     }
 
+    @SuppressWarnings("unchecked")
     public Set<ConstraintViolation<?>> validateValue(final String typeName, final String property, final Object value) {
         Assert.requireNonNull(typeName, "typeName");
         Assert.requireNonNull(property, "property");

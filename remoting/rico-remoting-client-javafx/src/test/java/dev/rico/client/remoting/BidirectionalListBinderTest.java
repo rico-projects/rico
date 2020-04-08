@@ -81,6 +81,7 @@ public class BidirectionalListBinderTest {
     ////////////////////////////////
     // Parameter check
     ////////////////////////////////
+    @SuppressWarnings("unchecked")
     @Test(expectedExceptions = NullPointerException.class)
     public void shouldThrowNPEIfJavaFXListIsNull() {
         // when:
