@@ -50,6 +50,7 @@ import static org.apiguardian.api.API.Status.DEPRECATED;
  * In addition, the model store provides methods to listen for changes to the model store.
  */
 @API(since = "0.x", status = DEPRECATED)
+@SuppressWarnings("deprecation")
 public class ModelStore<A extends Attribute, P extends PresentationModel<A>> {
 
     // We maintain four indexes in this data structure in order to efficiently access

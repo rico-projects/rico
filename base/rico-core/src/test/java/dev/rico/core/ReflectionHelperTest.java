@@ -67,7 +67,7 @@ public class ReflectionHelperTest {
 
     @Test
     public void testIsProxyInstance() {
-        Assert.assertFalse(ReflectionHelper.isProxyInstance(new Integer(0)));
+        Assert.assertFalse(ReflectionHelper.isProxyInstance(Integer.valueOf(0)));
         Assert.assertFalse(ReflectionHelper.isProxyInstance(""));
     }
 

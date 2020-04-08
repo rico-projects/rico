@@ -66,6 +66,7 @@ public abstract class AbstractPropertyValidator<T extends Annotation, U> impleme
         return true;
     }
 
+    @SuppressWarnings({"SingleStatementInBlock", "unchecked"})
     @Override
     public boolean isValid(final Property property,
                            final ConstraintValidatorContext context) {

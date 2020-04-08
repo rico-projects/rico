@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
 
 public class LoggerConfiguration {
 
-    private final ConcurrentMap<String, Level> loggerLevelMap = new ConcurrentHashMap();
+    private final ConcurrentMap<String, Level> loggerLevelMap = new ConcurrentHashMap<>();
 
     private URI remoteUrl;
 

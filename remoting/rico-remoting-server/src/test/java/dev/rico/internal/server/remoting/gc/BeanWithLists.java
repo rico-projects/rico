@@ -33,11 +33,11 @@ public class BeanWithLists {
     private ObservableList<BeanWithProperties> beansList2;
 
     public BeanWithLists(GarbageCollector garbageCollector) {
-        stringList = new ObservableListWithGcSupport(garbageCollector);
-        booleanList = new ObservableListWithGcSupport(garbageCollector);
-        doubleList = new ObservableListWithGcSupport(garbageCollector);
-        beansList = new ObservableListWithGcSupport(garbageCollector);
-        beansList2 = new ObservableListWithGcSupport(garbageCollector);
+        stringList = new ObservableListWithGcSupport<>(garbageCollector);
+        booleanList = new ObservableListWithGcSupport<>(garbageCollector);
+        doubleList = new ObservableListWithGcSupport<>(garbageCollector);
+        beansList = new ObservableListWithGcSupport<>(garbageCollector);
+        beansList2 = new ObservableListWithGcSupport<>(garbageCollector);
     }
 
     public ObservableList<String> getStringList() {

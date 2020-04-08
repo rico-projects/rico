@@ -32,7 +32,7 @@ import static dev.rico.integrationtests.remoting.parentchild.ParentChildTestCons
 
 public class ParentChildControllerTest extends AbstractRemotingIntegrationTest {
 
-    @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Test if controller and model can be created")
+    @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Test if controller and model can be created", enabled = false)
     public void testCreateController(final String containerType, final String endpoint) {
         try {
             ClientContext context = connect(endpoint);

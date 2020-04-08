@@ -38,7 +38,7 @@ public class AbstractServerActionTests {
             }
 
         };
-        action.setResponse(new ArrayList());
+        action.setResponse(new ArrayList<>());
     }
 
     @Test

@@ -30,6 +30,7 @@ import java.util.List;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
+@SuppressWarnings("deprecation")
 public class StoreAttributeAction extends AbstractServerAction {
 
     private static final Logger LOG = LoggerFactory.getLogger(StoreAttributeAction.class);

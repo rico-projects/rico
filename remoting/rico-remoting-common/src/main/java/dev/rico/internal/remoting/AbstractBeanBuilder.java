@@ -73,7 +73,7 @@ public abstract class AbstractBeanBuilder implements BeanBuilder {
     private <T> T createInstanceForClass(final ClassInfo classInfo, final Class<T> beanClass, final PresentationModel model, final UpdateSource source) {
         Assert.requireNonNull(beanClass, "beanClass");
         try {
-            final T bean = beanClass.newInstance();
+            final T bean = beanClass.getConstructor().newInstance();
 
             setupProperties(classInfo, bean, model);
             setupObservableLists(classInfo, bean, model);
@@ -104,6 +104,7 @@ public abstract class AbstractBeanBuilder implements BeanBuilder {
         }
     }
 
+    @SuppressWarnings("deprecation")
     private void setupProperties(final ClassInfo classInfo, final Object bean, final PresentationModel model) {
         Assert.requireNonNull(classInfo, "classInfo");
         Assert.requireNonNull(model, "model");
@@ -141,5 +142,6 @@ public abstract class AbstractBeanBuilder implements BeanBuilder {
     protected abstract <T> ObservableList<T> create(final PropertyInfo observableListInfo, final PresentationModel model, final ListMapper listMapper);
 
 
+    @SuppressWarnings("deprecation")
     protected abstract <T> Property<T> create(final Attribute attribute, final PropertyInfo propertyInfo);
 }

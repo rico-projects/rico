@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.TimeZone;
 
+@SuppressWarnings("unchecked")
 public class LocalDateConverterTest {
 
     @Test

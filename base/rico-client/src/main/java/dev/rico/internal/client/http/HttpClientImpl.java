@@ -64,6 +64,7 @@ public class HttpClientImpl implements HttpClient {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void addResponseHandler(final HttpURLConnectionHandler handler) {
         Assert.requireNonNull(handler, "handler");
         responseHandlers.add(handler);

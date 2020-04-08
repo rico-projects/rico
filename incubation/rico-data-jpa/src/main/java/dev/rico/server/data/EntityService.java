@@ -38,7 +38,7 @@ public class EntityService<E extends AbstractEntity> implements DataService<Long
     @Override
     public E createNewInstance() {
         try {
-            return entityType.newInstance();
+            return entityType.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             throw new RuntimeException("TODO");
         }

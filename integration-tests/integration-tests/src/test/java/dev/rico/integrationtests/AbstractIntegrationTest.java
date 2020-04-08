@@ -46,7 +46,7 @@ public class AbstractIntegrationTest {
 
     private final static Logger LOG = LoggerFactory.getLogger(AbstractIntegrationTest.class);
 
-    private int timeoutInMinutes = 3;
+    private int timeoutInMinutes = 1;
 
     public final static String ENDPOINTS_DATAPROVIDER = "endpoints";
 

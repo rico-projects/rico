@@ -32,6 +32,9 @@ subprojects { proj ->
     proj.tasks.withType(JavaCompile) {
         sourceCompatibility = proj.sourceCompatibility
         targetCompatibility = proj.targetCompatibility
+
+        options.compilerArgs << '-Xlint:deprecation'
+        //options.compilerArgs << '-Xlint:unchecked'
     }
 
     test.useTestNG()

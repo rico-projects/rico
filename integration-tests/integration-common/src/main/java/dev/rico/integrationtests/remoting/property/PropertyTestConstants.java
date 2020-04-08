@@ -64,11 +64,11 @@ public interface PropertyTestConstants {
 
     Integer INTEGER_VALUE = 4711;
 
-    Long LONG_VALUE = new Long(Integer.MAX_VALUE * 2);
+    Long LONG_VALUE = Long.valueOf(Integer.MAX_VALUE * 2);
 
-    Float FLOAT_VALUE = new Float(1.01);
+    Float FLOAT_VALUE = Float.valueOf(1.01f);
 
-    Double DOUBLE_VALUE = new Double(1.00001);
+    Double DOUBLE_VALUE = Double.valueOf(1.00001);
 
     Number NUMBER_VALUE = Double.MAX_VALUE;
 
@@ -76,13 +76,13 @@ public interface PropertyTestConstants {
 
     BigInteger BIG_INTEGER_VALUE= BigInteger.valueOf(12475);
 
-    Byte BYTE_VALUE = new Byte((byte) 12);
+    Byte BYTE_VALUE = Byte.valueOf((byte) 12);
 
     Calendar CALENDAR_VALUE = createInZone(2017, 2, 3,4, 8, getUtcZone());
 
     Date DATE_VALUE = createInZone(2017, 2, 3,4, 5, getUtcZone()).getTime();
 
-    Short SHORT_VALUE = new Short((short) 3);
+    Short SHORT_VALUE = Short.valueOf((short) 3);
 
     UUID UUID_VALUE = new UUID(1235, 43567);
 

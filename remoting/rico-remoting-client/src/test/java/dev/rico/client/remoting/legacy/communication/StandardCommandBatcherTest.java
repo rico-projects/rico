@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+@SuppressWarnings("deprecation")
 public class StandardCommandBatcherTest {
     @BeforeMethod
     public void setUp() throws Exception {

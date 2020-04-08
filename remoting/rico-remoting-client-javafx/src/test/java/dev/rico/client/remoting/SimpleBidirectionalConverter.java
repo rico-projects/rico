@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.internal.client.remoting;
+package dev.rico.client.remoting;
 
 import dev.rico.internal.core.Assert;
 import dev.rico.client.remoting.BidirectionalConverter;
@@ -23,15 +23,14 @@ import org.apiguardian.api.API;
 
 import static org.apiguardian.api.API.Status.DEPRECATED;
 
-@Deprecated
 @API(since = "0.x", status = DEPRECATED)
-public class DefaultBidirectionalConverter<T, U> implements BidirectionalConverter<T, U> {
+public class SimpleBidirectionalConverter<T, U> implements BidirectionalConverter<T, U> {
 
     private final Converter<T, U> converter;
 
     private final Converter<U, T> backConverter;
 
-    public DefaultBidirectionalConverter(final Converter<T, U> converter, final Converter<U, T> backConverter) {
+    public SimpleBidirectionalConverter(final Converter<T, U> converter, final Converter<U, T> backConverter) {
         this.converter = Assert.requireNonNull(converter, "converter");
         this.backConverter = Assert.requireNonNull(backConverter, "backConverter");
     }

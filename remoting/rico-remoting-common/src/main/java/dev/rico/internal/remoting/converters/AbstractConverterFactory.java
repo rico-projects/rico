@@ -26,6 +26,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 public abstract class AbstractConverterFactory implements ConverterFactory {
 
     @Override
+    @SuppressWarnings("deprecation")
     public void init(final BeanRepo beanRepository) {
 
     }

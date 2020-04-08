@@ -58,6 +58,7 @@ public enum JsonPrimitiveType {
         return type;
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T getValueOfElement(final JsonElement element) {
         Assert.requireNonNull(element, "element");
 
@@ -72,28 +73,28 @@ public enum JsonPrimitiveType {
             return (T) element.getAsBigInteger();
         }
         if(Objects.equals(this, BOOLEAN)) {
-            return (T) new Boolean(element.getAsBoolean());
+            return (T) Boolean.valueOf(element.getAsBoolean());
         }
         if(Objects.equals(this, BYTE)) {
-            return (T) new Byte(element.getAsByte());
+            return (T) Byte.valueOf(element.getAsByte());
         }
         if(Objects.equals(this, CHARACTER)) {
-            return (T) new Character(element.getAsCharacter());
+            return (T) Character.valueOf(element.getAsCharacter());
         }
         if(Objects.equals(this, DOUBLE)) {
-            return (T) new Double(element.getAsDouble());
+            return (T) Double.valueOf(element.getAsDouble());
         }
         if(Objects.equals(this, FLOAT)) {
-            return (T) new Float(element.getAsFloat());
+            return (T) Float.valueOf(element.getAsFloat());
         }
         if(Objects.equals(this, INT)) {
-            return (T) new Integer(element.getAsInt());
+            return (T) Integer.valueOf(element.getAsInt());
         }
         if(Objects.equals(this, LONG)) {
-            return (T) new Long(element.getAsLong());
+            return (T) Long.valueOf(element.getAsLong());
         }
         if(Objects.equals(this, SHORT)) {
-            return (T) new Short(element.getAsShort());
+            return (T) Short.valueOf(element.getAsShort());
         }
         if(Objects.equals(this, STRING)) {
             return (T) element.getAsString();

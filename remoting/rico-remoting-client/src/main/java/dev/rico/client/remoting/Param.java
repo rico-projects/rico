@@ -89,6 +89,7 @@ public class Param {
      * @param value value  of the parameter
      * @return the parameter
      */
+    @SuppressWarnings("deprecation")
     public static Param of(final String name, final Object value) {
         return new Param(name, value);
     }

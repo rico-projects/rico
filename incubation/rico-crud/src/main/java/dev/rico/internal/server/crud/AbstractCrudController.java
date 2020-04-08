@@ -55,7 +55,7 @@ public abstract class AbstractCrudController<ID extends Serializable, B, E exten
     @PostConstruct
     protected void onDestroy() {
         if(entity != null && entity.getId() != null) {
-            eventBus.publish(CrudConstants.CRUD_EVENT_TOPIC, new CrudEvent(entityClass, entity.getId(), CrudEventType.CLOSE));
+            eventBus.publish(CrudConstants.CRUD_EVENT_TOPIC, new CrudEvent<>(entityClass, entity.getId(), CrudEventType.CLOSE));
         }
     }
 
@@ -66,7 +66,7 @@ public abstract class AbstractCrudController<ID extends Serializable, B, E exten
 
     protected void save() {
         final E updatedEntity = mapper.toEntity(getModel(), entityClass);
-        eventBus.publish(CrudConstants.CRUD_EVENT_TOPIC, new CrudEvent(entityClass, updatedEntity.getId(), CrudEventType.SAVE));
+        eventBus.publish(CrudConstants.CRUD_EVENT_TOPIC, new CrudEvent<>(entityClass, updatedEntity.getId(), CrudEventType.SAVE));
         setEntity(dataService.save(updatedEntity));
         updateModel();
     }
@@ -88,11 +88,11 @@ public abstract class AbstractCrudController<ID extends Serializable, B, E exten
 
     protected void setEntity(final E entity) {
         if(this.entity != null && this.entity.getId() != null) {
-            eventBus.publish(CrudConstants.CRUD_EVENT_TOPIC, new CrudEvent(entityClass, this.entity.getId(), CrudEventType.CLOSE));
+            eventBus.publish(CrudConstants.CRUD_EVENT_TOPIC, new CrudEvent<>(entityClass, this.entity.getId(), CrudEventType.CLOSE));
         }
         this.entity = entity;
         if(this.entity != null && this.entity.getId() != null) {
-            eventBus.publish(CrudConstants.CRUD_EVENT_TOPIC, new CrudEvent(entityClass, this.entity.getId(), CrudEventType.SHOW));
+            eventBus.publish(CrudConstants.CRUD_EVENT_TOPIC, new CrudEvent<>(entityClass, this.entity.getId(), CrudEventType.SHOW));
         }
         updateModel();
     }

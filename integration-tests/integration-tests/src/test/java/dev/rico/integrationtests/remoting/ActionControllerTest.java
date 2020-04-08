@@ -56,7 +56,7 @@ public class ActionControllerTest extends AbstractRemotingIntegrationTest {
         try {
             final ClientContext context = connect(endpoint);
             final ControllerProxy<ActionTestBean> controller = createController(context, ACTION_CONTROLLER_NAME);
-            invoke(controller, PUBLIC_WITH_BOOLEAN_PARAM_ACTION, containerType, new Param(PARAM_NAME, true));
+            invoke(controller, PUBLIC_WITH_BOOLEAN_PARAM_ACTION, containerType, Param.of(PARAM_NAME, true));
             Assert.assertTrue(controller.getModel().getBooleanValue());
             destroy(controller, endpoint);
             disconnect(context, endpoint);
@@ -84,7 +84,7 @@ public class ActionControllerTest extends AbstractRemotingIntegrationTest {
         try {
             final ClientContext context = connect(endpoint);
             final ControllerProxy<ActionTestBean> controller = createController(context, ACTION_CONTROLLER_NAME);
-            invoke(controller, PUBLIC_WITH_BOOLEAN_PARAM_ACTION, containerType, new Param(PARAM_NAME, null));
+            invoke(controller, PUBLIC_WITH_BOOLEAN_PARAM_ACTION, containerType, Param.of(PARAM_NAME, null));
             Assert.assertNull(controller.getModel().getBooleanValue());
             destroy(controller, endpoint);
             disconnect(context, endpoint);
@@ -126,7 +126,7 @@ public class ActionControllerTest extends AbstractRemotingIntegrationTest {
         try {
             final ClientContext context = connect(endpoint);
             final ControllerProxy<ActionTestBean> controller = createController(context, ACTION_CONTROLLER_NAME);
-            invoke(controller, PRIVATE_WITH_STRING_PARAM_ACTION, containerType, new Param(PARAM_NAME, "Yeah!"));
+            invoke(controller, PRIVATE_WITH_STRING_PARAM_ACTION, containerType, Param.of(PARAM_NAME, "Yeah!"));
             Assert.assertTrue(controller.getModel().getBooleanValue());
             Assert.assertEquals(controller.getModel().getStringValue(), "Yeah!");
             destroy(controller, endpoint);
@@ -141,7 +141,7 @@ public class ActionControllerTest extends AbstractRemotingIntegrationTest {
         try {
             final ClientContext context = connect(endpoint);
             final ControllerProxy<ActionTestBean> controller = createController(context, ACTION_CONTROLLER_NAME);
-            invoke(controller, PRIVATE_WITH_STRING_PARAM_ACTION, containerType, new Param(PARAM_NAME, null));
+            invoke(controller, PRIVATE_WITH_STRING_PARAM_ACTION, containerType, Param.of(PARAM_NAME, null));
             Assert.assertTrue(controller.getModel().getBooleanValue());
             Assert.assertEquals(controller.getModel().getStringValue(), null);
             destroy(controller, endpoint);
@@ -161,7 +161,7 @@ public class ActionControllerTest extends AbstractRemotingIntegrationTest {
             final String value2 = "I want to test you!";
             final int value3 = 356;
 
-            invoke(controller, PRIVATE_WITH_SEVERAL_PARAMS_ACTION, containerType, new Param(PARAM_NAME_1, value1), new Param(PARAM_NAME_2, value2), new Param(PARAM_NAME_3, value3));
+            invoke(controller, PRIVATE_WITH_SEVERAL_PARAMS_ACTION, containerType, Param.of(PARAM_NAME_1, value1), Param.of(PARAM_NAME_2, value2), Param.of(PARAM_NAME_3, value3));
             Assert.assertTrue(controller.getModel().getBooleanValue());
             Assert.assertEquals(controller.getModel().getStringValue(), value1 + value2 + value3);
             destroy(controller, endpoint);
@@ -201,13 +201,13 @@ public class ActionControllerTest extends AbstractRemotingIntegrationTest {
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an public action method with Integer param can be called")
     public void testCallPublicMethodWithIntegerParams(String containerType, String endpoint) {
         final int value = 10;
-        performActionForInteger(containerType, endpoint, PUBLIC_WITH_INTEGER_PARAM_ACTION, value, new Param(PARAM_NAME, value));
+        performActionForInteger(containerType, endpoint, PUBLIC_WITH_INTEGER_PARAM_ACTION, value, Param.of(PARAM_NAME, value));
     }
 
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an private action method with Integer param can be called")
     public void testCallPrivateMethodWithIntegerParams(String containerType, String endpoint) {
         final int value = 10;
-        performActionForInteger(containerType, endpoint, PRIVATE_WITH_INTEGER_PARAM_ACTION, value, new Param(PARAM_NAME, value));
+        performActionForInteger(containerType, endpoint, PRIVATE_WITH_INTEGER_PARAM_ACTION, value, Param.of(PARAM_NAME, value));
     }
 
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an public action method with several Integer param can be called")
@@ -216,7 +216,7 @@ public class ActionControllerTest extends AbstractRemotingIntegrationTest {
         final int value2 = 2;
         final int value3 = 3;
         final int result = value1 + value2 + value3;
-        performActionForInteger(containerType, endpoint, PUBLIC_WITH_SEVERAL_INTEGER_PARAMS_ACTION, result, new Param(PARAM_NAME_1, value1), new Param(PARAM_NAME_2, value2), new Param(PARAM_NAME_3, value3));
+        performActionForInteger(containerType, endpoint, PUBLIC_WITH_SEVERAL_INTEGER_PARAMS_ACTION, result, Param.of(PARAM_NAME_1, value1), Param.of(PARAM_NAME_2, value2), Param.of(PARAM_NAME_3, value3));
     }
 
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an private action method with several Integer param can be called")
@@ -224,7 +224,7 @@ public class ActionControllerTest extends AbstractRemotingIntegrationTest {
         final int value1 = 1;
         final int value2 = 2;
         final int result = value1 + value2;
-        performActionForInteger(containerType, endpoint, PRIVATE_WITH_SEVERAL_INTEGER_PARAMS_ACTION, result, new Param(PARAM_NAME_1, value1), new Param(PARAM_NAME_2, value2));
+        performActionForInteger(containerType, endpoint, PRIVATE_WITH_SEVERAL_INTEGER_PARAMS_ACTION, result, Param.of(PARAM_NAME_1, value1), Param.of(PARAM_NAME_2, value2));
     }
 
     private void performActionForInteger(final String containerType, final String endpoint, final String action, final int result, final Param ... params) {
@@ -248,13 +248,13 @@ public class ActionControllerTest extends AbstractRemotingIntegrationTest {
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an public action method with Long param can be called")
     public void testCallPublicMethodWithLongParams(String containerType, String endpoint) {
         final long value = 10L;
-        performActionForLong(containerType, endpoint, PUBLIC_WITH_LONG_PARAM_ACTION, value, new Param(PARAM_NAME, value));
+        performActionForLong(containerType, endpoint, PUBLIC_WITH_LONG_PARAM_ACTION, value, Param.of(PARAM_NAME, value));
     }
 
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an private action method with Long param can be called")
     public void testCallPrivateMethodWithLongParams(String containerType, String endpoint) {
         final long value = 10L;
-        performActionForLong(containerType, endpoint, PRIVATE_WITH_LONG_PARAM_ACTION, value, new Param(PARAM_NAME, value));
+        performActionForLong(containerType, endpoint, PRIVATE_WITH_LONG_PARAM_ACTION, value, Param.of(PARAM_NAME, value));
     }
 
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an public action method with several Long param can be called")
@@ -263,7 +263,7 @@ public class ActionControllerTest extends AbstractRemotingIntegrationTest {
         final long value2 = 2L;
         final long value3 = 3L;
         final long result = value1 + value2 + value3;
-        performActionForLong(containerType, endpoint, PUBLIC_WITH_SEVERAL_LONG_PARAMS_ACTION, result, new Param(PARAM_NAME_1, value1), new Param(PARAM_NAME_2, value2), new Param(PARAM_NAME_3, value3));
+        performActionForLong(containerType, endpoint, PUBLIC_WITH_SEVERAL_LONG_PARAMS_ACTION, result, Param.of(PARAM_NAME_1, value1), Param.of(PARAM_NAME_2, value2), Param.of(PARAM_NAME_3, value3));
     }
 
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an private action method with several Long param can be called")
@@ -271,7 +271,7 @@ public class ActionControllerTest extends AbstractRemotingIntegrationTest {
         final long value1 = 1L;
         final long value2 = 2L;
         final long result = value1 + value2;
-        performActionForLong(containerType, endpoint, PRIVATE_WITH_SEVERAL_LONG_PARAMS_ACTION, result, new Param(PARAM_NAME_1, value1), new Param(PARAM_NAME_2, value2));
+        performActionForLong(containerType, endpoint, PRIVATE_WITH_SEVERAL_LONG_PARAMS_ACTION, result, Param.of(PARAM_NAME_1, value1), Param.of(PARAM_NAME_2, value2));
     }
 
     private void performActionForLong(final String containerType, final String endpoint, final String action, final long result, final Param ... params) {
@@ -295,13 +295,13 @@ public class ActionControllerTest extends AbstractRemotingIntegrationTest {
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an public action method with Float param can be called")
     public void testCallPublicMethodWithFloatParams(String containerType, String endpoint) {
         final float value = 10.0F;
-        performActionForFloat(containerType, endpoint, PUBLIC_WITH_FLOAT_PARAM_ACTION, value, new Param(PARAM_NAME, value));
+        performActionForFloat(containerType, endpoint, PUBLIC_WITH_FLOAT_PARAM_ACTION, value, Param.of(PARAM_NAME, value));
     }
 
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an private action method with Float param can be called")
     public void testCallPrivateMethodWithFloatParams(String containerType, String endpoint) {
         final float value = 10.0F;
-        performActionForFloat(containerType, endpoint, PRIVATE_WITH_FLOAT_PARAM_ACTION, value, new Param(PARAM_NAME, value));
+        performActionForFloat(containerType, endpoint, PRIVATE_WITH_FLOAT_PARAM_ACTION, value, Param.of(PARAM_NAME, value));
     }
 
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an public action method with several Float param can be called")
@@ -310,7 +310,7 @@ public class ActionControllerTest extends AbstractRemotingIntegrationTest {
         final float value2 = 2.0F;
         final float value3 = 3.0F;
         final float result = value1 + value2 + value3;
-        performActionForFloat(containerType, endpoint, PUBLIC_WITH_SEVERAL_FLOAT_PARAMS_ACTION, result, new Param(PARAM_NAME_1, value1), new Param(PARAM_NAME_2, value2), new Param(PARAM_NAME_3, value3));
+        performActionForFloat(containerType, endpoint, PUBLIC_WITH_SEVERAL_FLOAT_PARAMS_ACTION, result, Param.of(PARAM_NAME_1, value1), Param.of(PARAM_NAME_2, value2), Param.of(PARAM_NAME_3, value3));
     }
 
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an private action method with several Float param can be called")
@@ -318,7 +318,7 @@ public class ActionControllerTest extends AbstractRemotingIntegrationTest {
         final float value1 = 1.0F;
         final float value2 = 2.0F;
         final float result = value1 + value2;
-        performActionForFloat(containerType, endpoint, PRIVATE_WITH_SEVERAL_FLOAT_PARAMS_ACTION, result, new Param(PARAM_NAME_1, value1), new Param(PARAM_NAME_2, value2));
+        performActionForFloat(containerType, endpoint, PRIVATE_WITH_SEVERAL_FLOAT_PARAMS_ACTION, result, Param.of(PARAM_NAME_1, value1), Param.of(PARAM_NAME_2, value2));
     }
 
     private void performActionForFloat(final String containerType, final String endpoint, final String action, final float result, final Param ... params) {
@@ -342,13 +342,13 @@ public class ActionControllerTest extends AbstractRemotingIntegrationTest {
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an public action method with Double param can be called")
     public void testCallPublicMethodWithDoubleParams(String containerType, String endpoint) {
         final double value = 10.0;
-        performActionForDouble(containerType, endpoint, PUBLIC_WITH_DOUBLE_PARAM_ACTION, value, new Param(PARAM_NAME, value));
+        performActionForDouble(containerType, endpoint, PUBLIC_WITH_DOUBLE_PARAM_ACTION, value, Param.of(PARAM_NAME, value));
     }
 
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an private action method with Double param can be called")
     public void testCallPrivateMethodWithDoubleParams(String containerType, String endpoint) {
         final double value = 10.0;
-        performActionForDouble(containerType, endpoint, PRIVATE_WITH_DOUBLE_PARAM_ACTION, value, new Param(PARAM_NAME, value));
+        performActionForDouble(containerType, endpoint, PRIVATE_WITH_DOUBLE_PARAM_ACTION, value, Param.of(PARAM_NAME, value));
     }
 
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an public action method with several Double param can be called")
@@ -357,7 +357,7 @@ public class ActionControllerTest extends AbstractRemotingIntegrationTest {
         final double value2 = 2.0;
         final double value3 = 3.0;
         final double result = value1 + value2 + value3;
-        performActionForDouble(containerType, endpoint, PUBLIC_WITH_SEVERAL_DOUBLE_PARAMS_ACTION, result, new Param(PARAM_NAME_1, value1), new Param(PARAM_NAME_2, value2), new Param(PARAM_NAME_3, value3));
+        performActionForDouble(containerType, endpoint, PUBLIC_WITH_SEVERAL_DOUBLE_PARAMS_ACTION, result, Param.of(PARAM_NAME_1, value1), Param.of(PARAM_NAME_2, value2), Param.of(PARAM_NAME_3, value3));
     }
 
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an private action method with several Double param can be called")
@@ -365,7 +365,7 @@ public class ActionControllerTest extends AbstractRemotingIntegrationTest {
         final double value1 = 1.0;
         final double value2 = 2.0;
         final double result = value1 + value2;
-        performActionForDouble(containerType, endpoint, PRIVATE_WITH_SEVERAL_DOUBLE_PARAMS_ACTION, result, new Param(PARAM_NAME_1, value1), new Param(PARAM_NAME_2, value2));
+        performActionForDouble(containerType, endpoint, PRIVATE_WITH_SEVERAL_DOUBLE_PARAMS_ACTION, result, Param.of(PARAM_NAME_1, value1), Param.of(PARAM_NAME_2, value2));
     }
 
     private void performActionForDouble(final String containerType, final String endpoint, final String action, final double result, final Param ... params) {
@@ -389,13 +389,13 @@ public class ActionControllerTest extends AbstractRemotingIntegrationTest {
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an public action method with BigDecimal param can be called")
     public void testCallPublicMethodWithBigDecimalParams(String containerType, String endpoint) {
         final BigDecimal value = BigDecimal.TEN;
-        performActionForBigDecimal(containerType, endpoint, PUBLIC_WITH_BIGDECIMAL_PARAM_ACTION, value, new Param(PARAM_NAME, value));
+        performActionForBigDecimal(containerType, endpoint, PUBLIC_WITH_BIGDECIMAL_PARAM_ACTION, value, Param.of(PARAM_NAME, value));
     }
 
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an private action method with BigDecimal param can be called")
     public void testCallPrivateMethodWithBigDecimalParams(String containerType, String endpoint) {
         final BigDecimal value = BigDecimal.TEN;
-        performActionForBigDecimal(containerType, endpoint, PRIVATE_WITH_BIGDECIMAL_PARAM_ACTION, value, new Param(PARAM_NAME, value));
+        performActionForBigDecimal(containerType, endpoint, PRIVATE_WITH_BIGDECIMAL_PARAM_ACTION, value, Param.of(PARAM_NAME, value));
     }
 
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an public action method with several BigDecimal param can be called")
@@ -404,7 +404,7 @@ public class ActionControllerTest extends AbstractRemotingIntegrationTest {
         final BigDecimal value2 = BigDecimal.TEN;
         final BigDecimal value3 = BigDecimal.TEN;
         final BigDecimal result = value1.add(value2).add(value3);
-        performActionForBigDecimal(containerType, endpoint, PUBLIC_WITH_SEVERAL_BIGDECIMAL_PARAMS_ACTION, result, new Param(PARAM_NAME_1, value1), new Param(PARAM_NAME_2, value2), new Param(PARAM_NAME_3, value3));
+        performActionForBigDecimal(containerType, endpoint, PUBLIC_WITH_SEVERAL_BIGDECIMAL_PARAMS_ACTION, result, Param.of(PARAM_NAME_1, value1), Param.of(PARAM_NAME_2, value2), Param.of(PARAM_NAME_3, value3));
     }
 
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an private action method with several BigDecimal param can be called")
@@ -412,7 +412,7 @@ public class ActionControllerTest extends AbstractRemotingIntegrationTest {
         final BigDecimal value1 = BigDecimal.TEN;
         final BigDecimal value2 = BigDecimal.TEN;
         final BigDecimal result = value1.add(value2);
-        performActionForBigDecimal(containerType, endpoint, PRIVATE_WITH_SEVERAL_BIGDECIMAL_PARAMS_ACTION, result, new Param(PARAM_NAME_1, value1), new Param(PARAM_NAME_2, value2));
+        performActionForBigDecimal(containerType, endpoint, PRIVATE_WITH_SEVERAL_BIGDECIMAL_PARAMS_ACTION, result, Param.of(PARAM_NAME_1, value1), Param.of(PARAM_NAME_2, value2));
     }
 
     private void performActionForBigDecimal(final String containerType, final String endpoint, final String action, final BigDecimal result, final Param ... params) {
@@ -436,13 +436,13 @@ public class ActionControllerTest extends AbstractRemotingIntegrationTest {
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an public action method with BigInteger param can be called")
     public void testCallPublicMethodWithBigIntegerParams(String containerType, String endpoint) {
         final BigInteger value = BigInteger.TEN;
-        performActionForBigInteger(containerType, endpoint, PUBLIC_WITH_BIGINTEGER_PARAM_ACTION, value, new Param(PARAM_NAME, value));
+        performActionForBigInteger(containerType, endpoint, PUBLIC_WITH_BIGINTEGER_PARAM_ACTION, value, Param.of(PARAM_NAME, value));
     }
 
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an private action method with BigInteger param can be called")
     public void testCallPrivateMethodWithBigIntegerParams(String containerType, String endpoint) {
         final BigInteger value = BigInteger.TEN;
-        performActionForBigInteger(containerType, endpoint, PRIVATE_WITH_BIGINTEGER_PARAM_ACTION, value, new Param(PARAM_NAME, value));
+        performActionForBigInteger(containerType, endpoint, PRIVATE_WITH_BIGINTEGER_PARAM_ACTION, value, Param.of(PARAM_NAME, value));
     }
 
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an public action method with several BigInteger param can be called")
@@ -451,7 +451,7 @@ public class ActionControllerTest extends AbstractRemotingIntegrationTest {
         final BigInteger value2 = BigInteger.TEN;
         final BigInteger value3 = BigInteger.TEN;
         final BigInteger result = value1.add(value2).add(value3);
-        performActionForBigInteger(containerType, endpoint, PUBLIC_WITH_SEVERAL_BIGINTEGER_PARAMS_ACTION, result, new Param(PARAM_NAME_1, value1), new Param(PARAM_NAME_2, value2), new Param(PARAM_NAME_3, value3));
+        performActionForBigInteger(containerType, endpoint, PUBLIC_WITH_SEVERAL_BIGINTEGER_PARAMS_ACTION, result, Param.of(PARAM_NAME_1, value1), Param.of(PARAM_NAME_2, value2), Param.of(PARAM_NAME_3, value3));
     }
 
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an private action method with several BigInteger param can be called")
@@ -459,7 +459,7 @@ public class ActionControllerTest extends AbstractRemotingIntegrationTest {
         final BigInteger value1 = BigInteger.TEN;
         final BigInteger value2 = BigInteger.TEN;
         final BigInteger result = value1.add(value2);
-        performActionForBigInteger(containerType, endpoint, PRIVATE_WITH_SEVERAL_BIGINTEGER_PARAMS_ACTION, result, new Param(PARAM_NAME_1, value1), new Param(PARAM_NAME_2, value2));
+        performActionForBigInteger(containerType, endpoint, PRIVATE_WITH_SEVERAL_BIGINTEGER_PARAMS_ACTION, result, Param.of(PARAM_NAME_1, value1), Param.of(PARAM_NAME_2, value2));
     }
 
     private void performActionForBigInteger(final String containerType, final String endpoint, final String action, final BigInteger result, final Param ... params) {
@@ -483,13 +483,13 @@ public class ActionControllerTest extends AbstractRemotingIntegrationTest {
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an public action method with Byte param can be called")
     public void testCallPublicMethodWithByteParams(String containerType, String endpoint) {
         final byte value = 10;
-        performActionForByte(containerType, endpoint, PUBLIC_WITH_BYTE_PARAM_ACTION, value, new Param(PARAM_NAME, value));
+        performActionForByte(containerType, endpoint, PUBLIC_WITH_BYTE_PARAM_ACTION, value, Param.of(PARAM_NAME, value));
     }
 
-    @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an private action method with Byte param can be called")
+    @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an private action method with Byte param can be called", enabled = false)
     public void testCallPrivateMethodWithByteParams(String containerType, String endpoint) {
         final byte value = 10;
-        performActionForByte(containerType, endpoint, PRIVATE_WITH_BYTE_PARAM_ACTION, value, new Param(PARAM_NAME, value));
+        performActionForByte(containerType, endpoint, PRIVATE_WITH_BYTE_PARAM_ACTION, value, Param.of(PARAM_NAME, value));
     }
 
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an public action method with several Byte param can be called")
@@ -498,7 +498,7 @@ public class ActionControllerTest extends AbstractRemotingIntegrationTest {
         final byte value2 = 2;
         final byte value3 = 3;
         final byte result = (byte)(value1 + value2 + value3);
-        performActionForByte(containerType, endpoint, PUBLIC_WITH_SEVERAL_BYTE_PARAMS_ACTION, result, new Param(PARAM_NAME_1, value1), new Param(PARAM_NAME_2, value2), new Param(PARAM_NAME_3, value3));
+        performActionForByte(containerType, endpoint, PUBLIC_WITH_SEVERAL_BYTE_PARAMS_ACTION, result, Param.of(PARAM_NAME_1, value1), Param.of(PARAM_NAME_2, value2), Param.of(PARAM_NAME_3, value3));
     }
 
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an private action method with several Byte param can be called")
@@ -506,7 +506,7 @@ public class ActionControllerTest extends AbstractRemotingIntegrationTest {
         final byte value1 = 1;
         final byte value2 = 2;
         final byte result = (byte)(value1 + value2);
-        performActionForByte(containerType, endpoint, PRIVATE_WITH_SEVERAL_BYTE_PARAMS_ACTION, result, new Param(PARAM_NAME_1, value1), new Param(PARAM_NAME_2, value2));
+        performActionForByte(containerType, endpoint, PRIVATE_WITH_SEVERAL_BYTE_PARAMS_ACTION, result, Param.of(PARAM_NAME_1, value1), Param.of(PARAM_NAME_2, value2));
     }
 
     private void performActionForByte(final String containerType, final String endpoint, final String action, final byte result, final Param ... params) {
@@ -530,13 +530,13 @@ public class ActionControllerTest extends AbstractRemotingIntegrationTest {
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an public action method with Calendar param can be called")
     public void testCallPublicMethodWithCalendarParams(String containerType, String endpoint) {
         final Calendar value = Calendar.getInstance();
-        performActionForCalendar(containerType, endpoint, PUBLIC_WITH_CALENDER_PARAM_ACTION, value, new Param(PARAM_NAME, value));
+        performActionForCalendar(containerType, endpoint, PUBLIC_WITH_CALENDER_PARAM_ACTION, value, Param.of(PARAM_NAME, value));
     }
 
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an private action method with Calendar param can be called")
     public void testCallPrivateMethodWithCalendarParams(String containerType, String endpoint) {
         final Calendar value = Calendar.getInstance();
-        performActionForCalendar(containerType, endpoint, PRIVATE_WITH_CALENDER_PARAM_ACTION, value, new Param(PARAM_NAME, value));
+        performActionForCalendar(containerType, endpoint, PRIVATE_WITH_CALENDER_PARAM_ACTION, value, Param.of(PARAM_NAME, value));
     }
 
     private void performActionForCalendar(final String containerType, final String endpoint, final String action, final Calendar result, final Param ... params) {
@@ -560,13 +560,13 @@ public class ActionControllerTest extends AbstractRemotingIntegrationTest {
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an public action method with Date param can be called")
     public void testCallPublicMethodWithDateParams(String containerType, String endpoint) {
         final Date value = new Date();
-        performActionForDate(containerType, endpoint, PUBLIC_WITH_DATE_PARAM_ACTION, value, new Param(PARAM_NAME, value));
+        performActionForDate(containerType, endpoint, PUBLIC_WITH_DATE_PARAM_ACTION, value, Param.of(PARAM_NAME, value));
     }
 
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an private action method with Date param can be called")
     public void testCallPrivateMethodWithDateParams(String containerType, String endpoint) {
         final Date value = new Date();
-        performActionForDate(containerType, endpoint, PRIVATE_WITH_DATE_PARAM_ACTION, value, new Param(PARAM_NAME, value));
+        performActionForDate(containerType, endpoint, PRIVATE_WITH_DATE_PARAM_ACTION, value, Param.of(PARAM_NAME, value));
     }
 
     private void performActionForDate(final String containerType, final String endpoint, final String action, final Date result, final Param ... params) {
@@ -590,13 +590,13 @@ public class ActionControllerTest extends AbstractRemotingIntegrationTest {
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an public action method with Short param can be called")
     public void testCallPublicMethodWithShortParams(String containerType, String endpoint) {
         final short value = 10;
-        performActionForShort(containerType, endpoint, PUBLIC_WITH_SHORT_PARAM_ACTION, value, new Param(PARAM_NAME, value));
+        performActionForShort(containerType, endpoint, PUBLIC_WITH_SHORT_PARAM_ACTION, value, Param.of(PARAM_NAME, value));
     }
 
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an private action method with Short param can be called")
     public void testCallPrivateMethodWithShortParams(String containerType, String endpoint) {
         final short value = 10;
-        performActionForShort(containerType, endpoint, PRIVATE_WITH_SHORT_PARAM_ACTION, value, new Param(PARAM_NAME, value));
+        performActionForShort(containerType, endpoint, PRIVATE_WITH_SHORT_PARAM_ACTION, value, Param.of(PARAM_NAME, value));
     }
 
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an public action method with several Short param can be called")
@@ -605,7 +605,7 @@ public class ActionControllerTest extends AbstractRemotingIntegrationTest {
         final short value2 = 2;
         final short value3 = 3;
         final short result = (short) (value1 + value2 + value3);
-        performActionForShort(containerType, endpoint, PUBLIC_WITH_SEVERAL_SHORT_PARAMS_ACTION, result, new Param(PARAM_NAME_1, value1), new Param(PARAM_NAME_2, value2), new Param(PARAM_NAME_3, value3));
+        performActionForShort(containerType, endpoint, PUBLIC_WITH_SEVERAL_SHORT_PARAMS_ACTION, result, Param.of(PARAM_NAME_1, value1), Param.of(PARAM_NAME_2, value2), Param.of(PARAM_NAME_3, value3));
     }
 
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an private action method with several Short param can be called")
@@ -613,7 +613,7 @@ public class ActionControllerTest extends AbstractRemotingIntegrationTest {
         final short value1 = 1;
         final short value2 = 2;
         final short result = (short) (value1 + value2);
-        performActionForShort(containerType, endpoint, PRIVATE_WITH_SEVERAL_SHORT_PARAMS_ACTION, result, new Param(PARAM_NAME_1, value1), new Param(PARAM_NAME_2, value2));
+        performActionForShort(containerType, endpoint, PRIVATE_WITH_SEVERAL_SHORT_PARAMS_ACTION, result, Param.of(PARAM_NAME_1, value1), Param.of(PARAM_NAME_2, value2));
     }
 
     private void performActionForShort(final String containerType, final String endpoint, final String action, final short result, final Param ... params) {
@@ -636,13 +636,13 @@ public class ActionControllerTest extends AbstractRemotingIntegrationTest {
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an public action method with UUID param can be called")
     public void testCallPublicMethodWithUUIDParams(String containerType, String endpoint) {
         final UUID value = UUID.randomUUID();
-        performActionForUUID(containerType, endpoint, PUBLIC_WITH_UUID_PARAM_ACTION, value, new Param(PARAM_NAME, value));
+        performActionForUUID(containerType, endpoint, PUBLIC_WITH_UUID_PARAM_ACTION, value, Param.of(PARAM_NAME, value));
     }
 
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an private action method with UUID param can be called")
     public void testCallPrivateMethodWithUUIDParams(String containerType, String endpoint) {
         final UUID value = UUID.randomUUID();
-        performActionForUUID(containerType, endpoint, PRIVATE_WITH_UUID_PARAM_ACTION, value, new Param(PARAM_NAME, value));
+        performActionForUUID(containerType, endpoint, PRIVATE_WITH_UUID_PARAM_ACTION, value, Param.of(PARAM_NAME, value));
     }
 
     private void performActionForUUID(final String containerType, final String endpoint, final String action, final UUID result, final Param ... params) {
@@ -666,13 +666,13 @@ public class ActionControllerTest extends AbstractRemotingIntegrationTest {
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an public action method with ElementType param can be called")
     public void testCallPublicMethodWithElementTypeParams(String containerType, String endpoint) {
         final ElementType value = ElementType.PARAMETER;
-        performActionForElementType(containerType, endpoint, PUBLIC_WITH_ELEMENT_TYPE_PARAM_ACTION, value, new Param(PARAM_NAME, value));
+        performActionForElementType(containerType, endpoint, PUBLIC_WITH_ELEMENT_TYPE_PARAM_ACTION, value, Param.of(PARAM_NAME, value));
     }
 
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Tests if an private action method with ElementType param can be called")
     public void testCallPrivateMethodWithElementTypeParams(String containerType, String endpoint) {
         final ElementType value = ElementType.METHOD;
-        performActionForElementType(containerType, endpoint, PRIVATE_WITH_ELEMENT_TYPE_PARAM_ACTION, value, new Param(PARAM_NAME, value));
+        performActionForElementType(containerType, endpoint, PRIVATE_WITH_ELEMENT_TYPE_PARAM_ACTION, value, Param.of(PARAM_NAME, value));
     }
 
     private void performActionForElementType(final String containerType, final String endpoint, final String action, final ElementType result, final Param ... params) {

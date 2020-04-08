@@ -53,7 +53,7 @@ public class ClientBeanBuilderImpl extends AbstractBeanBuilder {
         };
     }
 
-
+    @SuppressWarnings("deprecation")
     protected Property create(final Attribute attribute, final PropertyInfo propertyInfo) {
         return new PropertyImpl<>(attribute, propertyInfo);
     }

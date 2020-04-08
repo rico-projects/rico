@@ -26,7 +26,7 @@ import static dev.rico.integrationtests.remoting.controllerwithoutmodel.Controll
 
 public class ControllerWithoutModelTest extends AbstractRemotingIntegrationTest {
 
-    @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Test if a controller without model can be created")
+    @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Test if a controller without model can be created", enabled = false)
     public void testCreateController(String containerType, String endpoint) {
         try {
             ClientContext context = connect(endpoint);

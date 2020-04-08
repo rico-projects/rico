@@ -87,6 +87,7 @@ public class ReflectionHelper {
         return (T) AccessController.doPrivileged(new PrivilegedAction<Object>() {
             @Override
             public Object run() {
+                // Method 'isAccessible()' was deprected in Java 9 but there is no replacement in Java 8.
                 final boolean wasAccessible = field.isAccessible();
                 try {
                     field.setAccessible(true);
@@ -131,6 +132,7 @@ public class ReflectionHelper {
         AccessController.doPrivileged(new PrivilegedAction<Void>() {
             @Override
             public Void run() {
+                // Method 'isAccessible()' was deprected in Java 9 but there is no replacement in Java 8.
                 final boolean wasAccessible = field.isAccessible();
                 try {
                     field.setAccessible(true);
@@ -152,6 +154,7 @@ public class ReflectionHelper {
         return AccessController.doPrivileged((PrivilegedAction<T>) new PrivilegedAction<Object>() {
             @Override
             public Object run() {
+                // Method 'isAccessible()' was deprected in Java 9 but there is no replacement in Java 8.
                 final boolean wasAccessible = method.isAccessible();
                 try {
                     method.setAccessible(true);

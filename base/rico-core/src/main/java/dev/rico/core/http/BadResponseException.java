@@ -25,6 +25,7 @@ public class BadResponseException extends HttpException {
         this.response = response;
     }
 
+    @SuppressWarnings("unchecked")
     public <V> HttpResponse<V> getResponse() {
         return response;
     }

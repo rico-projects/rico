@@ -73,6 +73,7 @@ public class CdiManagedBeanFactory implements ManagedBeanFactory {
         return instance;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T> T createDependentInstance(final Class<T> cls, final PostConstructInterceptor<T> interceptor) {
         Assert.requireNonNull(cls, "cls");
@@ -84,7 +85,7 @@ public class CdiManagedBeanFactory implements ManagedBeanFactory {
                 .beanClass(cls)
                 .name(UUID.randomUUID().toString())
                 .scope(Dependent.class)
-                .beanLifecycle(new RicoContextualLifecycle<T>(injectionTarget, interceptor))
+                .beanLifecycle(new RicoContextualLifecycle<>(injectionTarget, interceptor))
                 .create();
         final Class<?> beanClass = bean.getBeanClass();
         final CreationalContext<T> creationalContext = bm.createCreationalContext(bean);
@@ -94,6 +95,7 @@ public class CdiManagedBeanFactory implements ManagedBeanFactory {
         return instance;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T> void destroyDependentInstance(final T instance, final Class<T> cls) {
         Assert.requireNonNull(instance, "instance");

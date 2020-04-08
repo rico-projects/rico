@@ -18,7 +18,6 @@ package dev.rico.client.remoting;
 
 import dev.rico.core.functional.Binding;
 import dev.rico.remoting.ObservableList;
-import dev.rico.internal.client.remoting.DefaultBidirectionalConverter;
 import dev.rico.internal.remoting.MockedProperty;
 import dev.rico.internal.remoting.collections.ObservableArrayList;
 import dev.rico.remoting.Property;
@@ -182,7 +181,7 @@ public class FXBinderTest {
         DoubleProperty doubleJavaFXProperty = new SimpleDoubleProperty();
         Converter<String, Double> stringDoubleConverter = s -> s == null ? null : Double.parseDouble(s);
         Converter<Double, String> doubleStringConverter = d -> d == null ? null : d.toString();
-        BidirectionalConverter<String, Double> doubleBidirectionalConverter = new DefaultBidirectionalConverter<>(stringDoubleConverter, doubleStringConverter);
+        BidirectionalConverter<String, Double> doubleBidirectionalConverter = new SimpleBidirectionalConverter<>(stringDoubleConverter, doubleStringConverter);
 
         stringRemotingProperty.set("47.0");
         assertNotEquals(doubleJavaFXProperty.doubleValue(), 47.0, EPSILON);
@@ -300,7 +299,7 @@ public class FXBinderTest {
         BooleanProperty booleanJavaFXProperty = new SimpleBooleanProperty();
         Converter<Boolean, String> booleanStringConverter = b -> b == null ? null : b.toString();
         Converter<String, Boolean> stringBooleanConverter = s -> s == null ? null : Boolean.parseBoolean(s);
-        BidirectionalConverter<Boolean, String> booleanStringBidirectionalConverter = new DefaultBidirectionalConverter<>(booleanStringConverter, stringBooleanConverter);
+        BidirectionalConverter<Boolean, String> booleanStringBidirectionalConverter = new SimpleBidirectionalConverter<>(booleanStringConverter, stringBooleanConverter);
 
 
         stringRemotingProperty.set("true");
@@ -389,7 +388,7 @@ public class FXBinderTest {
         StringProperty stringJavaFXProperty = new SimpleStringProperty();
         Converter<String, Double> doubleStringConverter = s -> s == null ? null : Double.parseDouble(s);
         Converter<Double, String> stringDoubleConverter = d -> d == null ? null : d.toString();
-        BidirectionalConverter<Double, String> doubleStringBidirectionalConverter = new DefaultBidirectionalConverter<>(stringDoubleConverter, doubleStringConverter);
+        BidirectionalConverter<Double, String> doubleStringBidirectionalConverter = new SimpleBidirectionalConverter<>(stringDoubleConverter, doubleStringConverter);
 
 
         doubleRemotingProperty.set(0.1);

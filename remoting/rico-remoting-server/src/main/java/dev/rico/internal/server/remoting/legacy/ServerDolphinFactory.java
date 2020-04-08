@@ -24,6 +24,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
  * A factory class to create a ServerDolphin object.
  */
 @API(since = "0.x", status = INTERNAL)
+@SuppressWarnings("deprecation")
 public class ServerDolphinFactory {
 
     private ServerDolphinFactory() {}

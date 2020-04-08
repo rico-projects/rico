@@ -22,6 +22,7 @@ import java.util.Arrays;
 /**
  * Some extracted methods from Apache commons lang3
  */
+@SuppressWarnings("unchecked")
 public class ArrayUtils2 {
 
     public static int[] add(final int[] array, final int element) {
@@ -34,6 +35,7 @@ public class ArrayUtils2 {
         return (T[]) removeAll((Object) array, indices);
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> T[] remove(final T[] array, final int index) {
         return (T[]) remove((Object) array, index);
     }

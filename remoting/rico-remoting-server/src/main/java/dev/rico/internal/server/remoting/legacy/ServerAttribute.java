@@ -29,6 +29,7 @@ import java.util.Objects;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
+@SuppressWarnings("deprecation")
 public class ServerAttribute extends BaseAttribute {
 
     private boolean notifyClient = true;

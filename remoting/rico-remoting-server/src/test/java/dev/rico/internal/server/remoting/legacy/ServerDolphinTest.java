@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@SuppressWarnings({"unchecked", "deprecation"})
 public class ServerDolphinTest {
 
     private DefaultServerDolphin serverInstance;

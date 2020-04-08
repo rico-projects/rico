@@ -64,6 +64,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.testng.Assert.fail;
 
+@SuppressWarnings({"unchecked", "deprecation"})
 public class TestModelCreation extends AbstractRemotingTest {
 
     @Test

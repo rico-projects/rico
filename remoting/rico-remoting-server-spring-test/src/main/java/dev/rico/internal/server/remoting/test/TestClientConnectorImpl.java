@@ -62,6 +62,7 @@ public class TestClientConnectorImpl extends AbstractClientConnector {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void send(Command command, OnFinishedHandler callback) {
         List<Command> answer = transmit(new ArrayList<>(Arrays.asList(command)));
         CommandAndHandler handler = new CommandAndHandler(command, callback);

@@ -21,6 +21,7 @@ import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.DEPRECATED;
 
 @API(since = "0.x", status = DEPRECATED)
+@SuppressWarnings("deprecation")
 public interface ModelStoreListener<A extends Attribute, P extends PresentationModel<A>> {
     void modelStoreChanged(ModelStoreEvent<A, P> event);
 }

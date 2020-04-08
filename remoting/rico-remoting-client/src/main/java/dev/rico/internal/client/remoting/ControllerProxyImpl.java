@@ -76,7 +76,7 @@ public class ControllerProxyImpl<T> implements ControllerProxy<T> {
     @Override
     public CompletableFuture<Void> invoke(final String actionName, final Map<String, ?> params) {
         final List<Param> paramList = params.entrySet().stream().
-                map(e -> new Param(e.getKey(), e.getValue())).
+                map(e -> Param.of(e.getKey(), e.getValue())).
                 collect(Collectors.toList());
         return invoke(actionName, paramList.toArray(new Param[paramList.size()]));
     }

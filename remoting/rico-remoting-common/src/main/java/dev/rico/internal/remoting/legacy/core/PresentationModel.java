@@ -29,6 +29,7 @@ import static org.apiguardian.api.API.Status.DEPRECATED;
  * @see Attribute
  */
 @API(since = "0.x", status = DEPRECATED)
+@SuppressWarnings("deprecation")
 public interface PresentationModel<A extends Attribute> extends Observable {
 
     /**

@@ -53,7 +53,7 @@ import static org.apiguardian.api.API.Status.MAINTAINED;
 /**
  * Utility class to create unidirectional and bidirectional bindings between JavaFX and remoting properties.
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "unchecked"})
 @API(since = "0.x", status = MAINTAINED)
 public final class FXBinder {
 
@@ -117,7 +117,7 @@ public final class FXBinder {
     /**
      * Start point of the fluent API to create a binding.
      * @param property the javafx property
-     * @returna binder that can be used by the fluent API to create binding.
+     * @return binder that can be used by the fluent API to create binding.
      */
     public static NumericJavaFXBidirectionaBinder<Double> bind(final DoubleProperty property) {
         requireNonNull(property, "property");

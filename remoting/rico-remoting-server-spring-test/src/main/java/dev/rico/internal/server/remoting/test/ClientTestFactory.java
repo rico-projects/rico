@@ -96,6 +96,7 @@ public class ClientTestFactory {
             }
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public <S> ControllerUnderTest<S> createController(String childControllerName) {
             try {

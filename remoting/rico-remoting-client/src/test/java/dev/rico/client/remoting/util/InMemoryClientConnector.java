@@ -59,7 +59,7 @@ public class InMemoryClientConnector extends AbstractClientConnector {
         LOG.trace("transmitting {} commands", commands.size());
         if (serverConnector == null) {
             LOG.warn("no server connector wired for in-memory connector");
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         if (sleepMillis > 0) {
             try {
