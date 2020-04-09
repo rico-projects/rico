@@ -18,7 +18,7 @@ package dev.rico.integrationtests.server.remoting.action;
 
 import dev.rico.integrationtests.remoting.action.ActionTestBean;
 import dev.rico.integrationtests.server.TestConfiguration;
-import dev.rico.client.remoting.Param;
+import dev.rico.remoting.client.Param;
 import dev.rico.server.remoting.test.ControllerTestException;
 import dev.rico.server.remoting.test.ControllerUnderTest;
 import dev.rico.server.remoting.test.SpringTestNGControllerTest;

@@ -16,8 +16,8 @@
  */
 package dev.rico.internal.server.remoting.test;
 
-import dev.rico.client.remoting.ControllerProxy;
-import dev.rico.client.remoting.Param;
+import dev.rico.remoting.client.ControllerProxy;
+import dev.rico.remoting.client.Param;
 import dev.rico.internal.core.Assert;
 import dev.rico.server.remoting.test.CommunicationMonitor;
 import dev.rico.server.remoting.test.ControllerTestException;

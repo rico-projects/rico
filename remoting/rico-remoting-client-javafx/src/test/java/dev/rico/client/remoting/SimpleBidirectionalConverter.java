@@ -17,8 +17,8 @@
 package dev.rico.client.remoting;
 
 import dev.rico.internal.core.Assert;
-import dev.rico.client.remoting.BidirectionalConverter;
-import dev.rico.client.remoting.Converter;
+import dev.rico.remoting.client.javafx.BidirectionalConverter;
+import dev.rico.remoting.client.javafx.Converter;
 import org.apiguardian.api.API;
 
 import static org.apiguardian.api.API.Status.DEPRECATED;

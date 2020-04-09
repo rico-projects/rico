@@ -16,7 +16,7 @@
  */
 package dev.rico.server.remoting.test;
 
-import dev.rico.client.remoting.Param;
+import dev.rico.remoting.client.Param;
 import dev.rico.remoting.RemotingBean;
 import dev.rico.remoting.server.RemotingAction;
 import dev.rico.remoting.server.RemotingController;

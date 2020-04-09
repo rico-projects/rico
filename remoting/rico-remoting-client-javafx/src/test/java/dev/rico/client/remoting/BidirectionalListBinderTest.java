@@ -18,6 +18,7 @@ package dev.rico.client.remoting;
 
 import dev.rico.remoting.ObservableList;
 import dev.rico.internal.remoting.collections.ObservableArrayList;
+import dev.rico.remoting.client.javafx.FXBinder;
 import javafx.collections.FXCollections;
 import org.testng.annotations.Test;
 

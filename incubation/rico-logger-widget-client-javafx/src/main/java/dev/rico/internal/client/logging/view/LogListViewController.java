@@ -21,7 +21,7 @@ import dev.rico.client.concurrent.BackgroundExecutor;
 import dev.rico.client.concurrent.UiExecutor;
 import dev.rico.client.remoting.ClientContext;
 import dev.rico.client.remoting.FXBinder;
-import dev.rico.client.remoting.view.AbstractViewController;
+import dev.rico.remoting.client.javafx.view.AbstractViewController;
 import dev.rico.internal.client.logging.widgets.LogListCell;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.logging.LogEntryBean;

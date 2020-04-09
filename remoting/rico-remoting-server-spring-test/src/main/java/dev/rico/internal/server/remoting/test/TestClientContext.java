@@ -16,7 +16,7 @@
  */
 package dev.rico.internal.server.remoting.test;
 
-import dev.rico.client.remoting.ClientContext;
+import dev.rico.remoting.client.ClientContext;
 
 import java.util.concurrent.TimeUnit;
 

@@ -17,8 +17,8 @@
 package dev.rico.client.remoting.legacy;
 
 
-import dev.rico.internal.client.remoting.legacy.ClientAttribute;
-import dev.rico.internal.client.remoting.legacy.ClientPresentationModel;
+import dev.rico.internal.remoting.client.legacy.ClientAttribute;
+import dev.rico.internal.remoting.client.legacy.ClientPresentationModel;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

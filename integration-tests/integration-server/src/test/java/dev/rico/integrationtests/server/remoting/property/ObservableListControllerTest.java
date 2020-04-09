@@ -18,7 +18,7 @@ package dev.rico.integrationtests.server.remoting.property;
 
 import dev.rico.integrationtests.remoting.property.ObservableListBean;
 import dev.rico.integrationtests.server.TestConfiguration;
-import dev.rico.client.remoting.Param;
+import dev.rico.remoting.client.Param;
 import dev.rico.server.remoting.test.ControllerUnderTest;
 import dev.rico.server.remoting.test.SpringTestNGControllerTest;
 import org.springframework.boot.test.context.SpringBootTest;

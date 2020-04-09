@@ -16,8 +16,8 @@
  */
 package dev.rico.integrationtests.remoting.value;
 
-import dev.rico.client.remoting.ClientContext;
-import dev.rico.client.remoting.ControllerProxy;
+import dev.rico.remoting.client.ClientContext;
+import dev.rico.remoting.client.ControllerProxy;
 import dev.rico.integrationtests.remoting.AbstractRemotingIntegrationTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;

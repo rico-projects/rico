@@ -16,9 +16,9 @@
  */
 package dev.rico.client.remoting.legacy.communication;
 
-import dev.rico.internal.client.remoting.legacy.communication.BlindCommandBatcher;
-import dev.rico.internal.client.remoting.legacy.communication.CommandAndHandler;
-import dev.rico.internal.client.remoting.legacy.communication.OnFinishedHandler;
+import dev.rico.internal.remoting.client.legacy.communication.BlindCommandBatcher;
+import dev.rico.internal.remoting.client.legacy.communication.CommandAndHandler;
+import dev.rico.internal.remoting.client.legacy.communication.OnFinishedHandler;
 import dev.rico.internal.remoting.legacy.communication.CreatePresentationModelCommand;
 import dev.rico.internal.remoting.legacy.communication.ValueChangedCommand;
 import org.testng.Assert;
