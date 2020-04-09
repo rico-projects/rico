@@ -18,7 +18,7 @@ package dev.rico.internal.server.projection.notifications;
 
 import dev.rico.internal.projection.message.MessageType;
 import dev.rico.internal.projection.notifications.NotificationData;
-import dev.rico.server.remoting.event.RemotingEventBus;
+import dev.rico.remoting.server.event.RemotingEventBus;
 
 import static dev.rico.internal.server.projection.notifications.NotificationsTopics.GLOBAL_NOTIFICATION;
 

@@ -18,9 +18,10 @@ package dev.rico.internal.server.remoting.legacy.action;
 
 import dev.rico.internal.remoting.legacy.communication.CreatePresentationModelCommand;
 import dev.rico.internal.remoting.legacy.communication.ValueChangedCommand;
-import dev.rico.internal.server.remoting.legacy.DTO;
-import dev.rico.internal.server.remoting.legacy.ServerAttribute;
-import dev.rico.internal.server.remoting.legacy.communication.ActionRegistry;
+import dev.rico.internal.remoting.server.legacy.DTO;
+import dev.rico.internal.remoting.server.legacy.ServerAttribute;
+import dev.rico.internal.remoting.server.legacy.action.AbstractServerAction;
+import dev.rico.internal.remoting.server.legacy.communication.ActionRegistry;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

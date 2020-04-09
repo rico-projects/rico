@@ -17,7 +17,7 @@
 package dev.rico.server.remoting;
 
 import dev.rico.internal.server.remoting.RemotingSpringBeanFactory;
-import dev.rico.server.EnableRico;
+import dev.rico.server.spring.EnableRico;
 import org.apiguardian.api.API;
 import org.springframework.context.annotation.Import;
 

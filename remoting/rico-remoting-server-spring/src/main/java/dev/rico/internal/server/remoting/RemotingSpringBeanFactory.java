@@ -17,18 +17,18 @@
 package dev.rico.internal.server.remoting;
 
 import dev.rico.internal.remoting.BeanManagerImpl;
-import dev.rico.internal.server.remoting.context.ServerRemotingContext;
+import dev.rico.internal.remoting.server.context.ServerRemotingContext;
 import dev.rico.remoting.BeanManager;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.server.bootstrap.PlatformBootstrap;
-import dev.rico.internal.server.remoting.context.ServerRemotingContextProvider;
-import dev.rico.internal.server.remoting.context.RemotingContextImpl;
-import dev.rico.internal.server.remoting.event.LazyEventBusInvocationHandler;
-import dev.rico.server.remoting.RemotingContext;
-import dev.rico.server.remoting.binding.PropertyBinder;
-import dev.rico.server.remoting.event.RemotingEventBus;
-import dev.rico.server.ClientScope;
-import dev.rico.server.SingletonScope;
+import dev.rico.internal.remoting.server.context.ServerRemotingContextProvider;
+import dev.rico.internal.remoting.server.context.RemotingContextImpl;
+import dev.rico.internal.remoting.server.event.LazyEventBusInvocationHandler;
+import dev.rico.remoting.server.RemotingContext;
+import dev.rico.remoting.server.binding.PropertyBinder;
+import dev.rico.remoting.server.event.RemotingEventBus;
+import dev.rico.server.spring.ClientScope;
+import dev.rico.server.spring.SingletonScope;
 import org.apiguardian.api.API;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

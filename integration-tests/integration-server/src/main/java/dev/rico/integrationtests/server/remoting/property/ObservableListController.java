@@ -17,10 +17,10 @@
 package dev.rico.integrationtests.server.remoting.property;
 
 import dev.rico.integrationtests.remoting.property.ObservableListBean;
-import dev.rico.server.remoting.Param;
-import dev.rico.server.remoting.RemotingAction;
-import dev.rico.server.remoting.RemotingController;
-import dev.rico.server.remoting.RemotingModel;
+import dev.rico.remoting.server.Param;
+import dev.rico.remoting.server.RemotingAction;
+import dev.rico.remoting.server.RemotingController;
+import dev.rico.remoting.server.RemotingModel;
 
 import java.util.UUID;
 

@@ -21,9 +21,9 @@ import dev.rico.internal.remoting.legacy.communication.ChangeAttributeMetadataCo
 import dev.rico.internal.remoting.legacy.communication.CreatePresentationModelCommand;
 import dev.rico.internal.remoting.legacy.communication.PresentationModelDeletedCommand;
 import dev.rico.internal.remoting.legacy.communication.ValueChangedCommand;
-import dev.rico.internal.server.remoting.legacy.DefaultServerDolphin;
-import dev.rico.internal.server.remoting.legacy.ServerConnector;
-import dev.rico.internal.server.remoting.legacy.ServerModelStore;
+import dev.rico.internal.remoting.server.legacy.DefaultServerDolphin;
+import dev.rico.internal.remoting.server.legacy.ServerConnector;
+import dev.rico.internal.remoting.server.legacy.ServerModelStore;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;

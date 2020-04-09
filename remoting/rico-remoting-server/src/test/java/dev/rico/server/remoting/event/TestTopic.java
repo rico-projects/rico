@@ -16,7 +16,7 @@
  */
 package dev.rico.server.remoting.event;
 
-import dev.rico.server.remoting.event.Topic;
+import dev.rico.remoting.server.event.Topic;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

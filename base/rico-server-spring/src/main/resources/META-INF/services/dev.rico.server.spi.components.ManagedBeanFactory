@@ -1,1 +1,1 @@
-dev.rico.internal.server.SpringManagedBeanFactory
+dev.rico.internal.server.spring.SpringManagedBeanFactory

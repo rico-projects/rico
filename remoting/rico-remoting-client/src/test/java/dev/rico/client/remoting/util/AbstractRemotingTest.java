@@ -36,8 +36,8 @@ import dev.rico.internal.remoting.PresentationModelBuilderFactory;
 import dev.rico.internal.remoting.collections.ListMapperImpl;
 import dev.rico.internal.remoting.legacy.communication.Command;
 import dev.rico.internal.remoting.legacy.util.DirectExecutor;
-import dev.rico.internal.server.remoting.legacy.ServerConnector;
-import dev.rico.internal.server.remoting.legacy.ServerModelStore;
+import dev.rico.internal.remoting.server.legacy.ServerConnector;
+import dev.rico.internal.remoting.server.legacy.ServerModelStore;
 import dev.rico.remoting.BeanManager;
 
 import java.util.ArrayList;

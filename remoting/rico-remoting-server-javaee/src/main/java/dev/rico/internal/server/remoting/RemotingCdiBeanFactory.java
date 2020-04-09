@@ -18,15 +18,15 @@ package dev.rico.internal.server.remoting;
 
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.server.bootstrap.PlatformBootstrap;
-import dev.rico.internal.server.remoting.context.ServerRemotingContext;
-import dev.rico.internal.server.remoting.context.ServerRemotingContextProvider;
-import dev.rico.internal.server.remoting.context.RemotingContextImpl;
-import dev.rico.internal.server.remoting.event.LazyEventBusInvocationHandler;
+import dev.rico.internal.remoting.server.context.ServerRemotingContext;
+import dev.rico.internal.remoting.server.context.ServerRemotingContextProvider;
+import dev.rico.internal.remoting.server.context.RemotingContextImpl;
+import dev.rico.internal.remoting.server.event.LazyEventBusInvocationHandler;
 import dev.rico.remoting.BeanManager;
-import dev.rico.server.remoting.RemotingContext;
-import dev.rico.server.remoting.binding.PropertyBinder;
-import dev.rico.server.remoting.event.RemotingEventBus;
-import dev.rico.server.ClientScoped;
+import dev.rico.remoting.server.RemotingContext;
+import dev.rico.remoting.server.binding.PropertyBinder;
+import dev.rico.remoting.server.event.RemotingEventBus;
+import dev.rico.server.jee.ClientScoped;
 import org.apiguardian.api.API;
 
 import javax.enterprise.context.ApplicationScoped;

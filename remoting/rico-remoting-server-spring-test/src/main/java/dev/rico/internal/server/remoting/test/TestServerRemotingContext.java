@@ -20,10 +20,10 @@ import dev.rico.internal.core.Assert;
 import dev.rico.internal.remoting.legacy.commands.StartLongPollCommand;
 import dev.rico.internal.remoting.legacy.communication.Command;
 import dev.rico.internal.server.client.ClientSessionProvider;
-import dev.rico.internal.server.remoting.config.RemotingConfiguration;
-import dev.rico.internal.server.remoting.context.ServerRemotingContext;
-import dev.rico.internal.server.remoting.controller.ControllerRepository;
-import dev.rico.internal.server.remoting.legacy.communication.CommandHandler;
+import dev.rico.internal.remoting.server.config.RemotingConfiguration;
+import dev.rico.internal.remoting.server.context.ServerRemotingContext;
+import dev.rico.internal.remoting.server.controller.ControllerRepository;
+import dev.rico.internal.remoting.server.legacy.communication.CommandHandler;
 import dev.rico.server.client.ClientSession;
 import dev.rico.server.spi.components.ManagedBeanFactory;
 

@@ -17,13 +17,13 @@
 package dev.rico.server.remoting.test;
 
 import dev.rico.remoting.BeanManager;
-import dev.rico.server.remoting.RemotingAction;
-import dev.rico.server.remoting.RemotingController;
-import dev.rico.server.remoting.RemotingModel;
-import dev.rico.server.remoting.event.RemotingEventBus;
-import dev.rico.server.remoting.event.MessageEvent;
-import dev.rico.server.remoting.event.MessageListener;
-import dev.rico.server.remoting.event.Topic;
+import dev.rico.remoting.server.RemotingAction;
+import dev.rico.remoting.server.RemotingController;
+import dev.rico.remoting.server.RemotingModel;
+import dev.rico.remoting.server.event.RemotingEventBus;
+import dev.rico.remoting.server.event.MessageEvent;
+import dev.rico.remoting.server.event.MessageListener;
+import dev.rico.remoting.server.event.Topic;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;

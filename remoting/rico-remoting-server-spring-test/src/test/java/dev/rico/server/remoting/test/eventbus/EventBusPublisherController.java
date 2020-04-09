@@ -16,10 +16,10 @@
  */
 package dev.rico.server.remoting.test.eventbus;
 
-import dev.rico.server.remoting.RemotingAction;
-import dev.rico.server.remoting.RemotingController;
-import dev.rico.server.remoting.RemotingModel;
-import dev.rico.server.remoting.event.RemotingEventBus;
+import dev.rico.remoting.server.RemotingAction;
+import dev.rico.remoting.server.RemotingController;
+import dev.rico.remoting.server.RemotingModel;
+import dev.rico.remoting.server.event.RemotingEventBus;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @RemotingController(EventBusTestConstants.EVENT_BUS_PUBLISHER_CONTROLLER_NAME)

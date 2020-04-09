@@ -16,10 +16,12 @@
  */
 package dev.rico.internal.server.remoting.controller;
 
-import dev.rico.server.remoting.RemotingAction;
-import dev.rico.server.remoting.RemotingController;
-import dev.rico.server.remoting.RemotingModel;
-import dev.rico.server.remoting.Param;
+import dev.rico.internal.remoting.server.controller.ControllerValidationException;
+import dev.rico.internal.remoting.server.controller.ControllerValidator;
+import dev.rico.remoting.server.RemotingAction;
+import dev.rico.remoting.server.RemotingController;
+import dev.rico.remoting.server.RemotingModel;
+import dev.rico.remoting.server.Param;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
@@ -58,7 +60,7 @@ public class ControllerValidatorTest {
         controllerValidator.validate(ControllerAsFinal.class);
     }
     @Test(expectedExceptions = ControllerValidationException.class)
-    public void testPostConstructCannotContainParameter() throws ControllerValidationException{
+    public void testPostConstructCannotContainParameter() throws ControllerValidationException {
         controllerValidator.validate(ControllerPostConstructWithParam.class);
     }
     @Test(expectedExceptions = ControllerValidationException.class)

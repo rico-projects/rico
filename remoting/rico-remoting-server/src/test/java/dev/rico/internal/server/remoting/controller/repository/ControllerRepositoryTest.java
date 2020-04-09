@@ -16,7 +16,7 @@
  */
 package dev.rico.internal.server.remoting.controller.repository;
 
-import dev.rico.internal.server.remoting.controller.ControllerRepository;
+import dev.rico.internal.remoting.server.controller.ControllerRepository;
 import dev.rico.internal.server.scanner.DefaultClasspathScanner;
 import org.testng.annotations.Test;
 

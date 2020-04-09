@@ -18,8 +18,8 @@ package dev.rico.server.remoting.test;
 
 import dev.rico.client.remoting.Param;
 import dev.rico.remoting.RemotingBean;
-import dev.rico.server.remoting.RemotingAction;
-import dev.rico.server.remoting.RemotingController;
+import dev.rico.remoting.server.RemotingAction;
+import dev.rico.remoting.server.RemotingController;
 import org.apiguardian.api.API;
 
 import java.util.Map;

@@ -18,9 +18,9 @@ package dev.rico.internal.server.logging;
 
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.logging.LogHistoryBean;
-import dev.rico.server.remoting.PostChildCreated;
-import dev.rico.server.remoting.RemotingController;
-import dev.rico.server.remoting.RemotingModel;
+import dev.rico.remoting.server.PostChildCreated;
+import dev.rico.remoting.server.RemotingController;
+import dev.rico.remoting.server.RemotingModel;
 
 @RemotingController
 public class LogHistoryParentController {

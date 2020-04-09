@@ -3,7 +3,6 @@ package dev.rico.integrationtests.server.timing;
 import dev.rico.integrationtests.timing.TimingConstants;
 import dev.rico.server.timing.Metric;
 import dev.rico.server.timing.ServerTiming;
-import dev.rico.server.timing.Timing;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;

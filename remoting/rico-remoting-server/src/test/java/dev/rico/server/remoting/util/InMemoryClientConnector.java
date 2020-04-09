@@ -21,7 +21,7 @@ import dev.rico.internal.client.remoting.legacy.communication.AbstractClientConn
 import dev.rico.internal.client.remoting.legacy.communication.ICommandBatcher;
 import dev.rico.internal.client.remoting.legacy.communication.SimpleExceptionHandler;
 import dev.rico.internal.remoting.legacy.communication.Command;
-import dev.rico.internal.server.remoting.legacy.ServerConnector;
+import dev.rico.internal.remoting.server.legacy.ServerConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -19,7 +19,7 @@ package dev.rico.integrationtests.server.remoting.listener;
 import dev.rico.server.ServerListener;
 import dev.rico.server.client.ClientSession;
 import dev.rico.server.client.ClientSessionListener;
-import dev.rico.server.remoting.event.RemotingEventBus;
+import dev.rico.remoting.server.event.RemotingEventBus;
 
 import javax.inject.Inject;
 

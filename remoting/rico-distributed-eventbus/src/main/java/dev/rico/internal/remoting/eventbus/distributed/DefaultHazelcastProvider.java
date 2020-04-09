@@ -16,7 +16,7 @@
  */
 package dev.rico.internal.remoting.eventbus.distributed;
 
-import dev.rico.internal.server.remoting.event.MessageEventImpl;
+import dev.rico.internal.remoting.server.event.MessageEventImpl;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.config.SerializerConfig;

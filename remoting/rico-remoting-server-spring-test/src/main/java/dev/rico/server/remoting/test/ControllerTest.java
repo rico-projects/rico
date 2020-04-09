@@ -16,7 +16,7 @@
  */
 package dev.rico.server.remoting.test;
 
-import dev.rico.server.remoting.RemotingController;
+import dev.rico.remoting.server.RemotingController;
 import org.apiguardian.api.API;
 
 import static org.apiguardian.api.API.Status.MAINTAINED;

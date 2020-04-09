@@ -16,6 +16,7 @@
  */
 package dev.rico.internal.server.remoting.gc;
 
+import dev.rico.internal.remoting.server.gc.GarbageCollector;
 import dev.rico.remoting.RemotingBean;
 import dev.rico.remoting.Property;
 

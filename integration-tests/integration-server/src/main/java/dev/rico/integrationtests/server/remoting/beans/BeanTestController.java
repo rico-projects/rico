@@ -19,11 +19,11 @@ package dev.rico.integrationtests.server.remoting.beans;
 import dev.rico.integrationtests.remoting.bean.BeanTestBean;
 import dev.rico.integrationtests.remoting.bean.BeanTestConstants;
 import dev.rico.remoting.BeanManager;
-import dev.rico.server.remoting.RemotingController;
-import dev.rico.server.remoting.RemotingModel;
-import dev.rico.server.remoting.RemotingContext;
-import dev.rico.server.remoting.binding.PropertyBinder;
-import dev.rico.server.remoting.event.RemotingEventBus;
+import dev.rico.remoting.server.RemotingController;
+import dev.rico.remoting.server.RemotingModel;
+import dev.rico.remoting.server.RemotingContext;
+import dev.rico.remoting.server.binding.PropertyBinder;
+import dev.rico.remoting.server.event.RemotingEventBus;
 import dev.rico.server.client.ClientSession;
 
 import javax.annotation.PostConstruct;

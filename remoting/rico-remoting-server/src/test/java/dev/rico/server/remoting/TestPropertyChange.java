@@ -16,7 +16,7 @@
  */
 package dev.rico.server.remoting;
 
-import dev.rico.internal.server.remoting.legacy.ServerModelStore;
+import dev.rico.internal.remoting.server.legacy.ServerModelStore;
 import dev.rico.server.remoting.util.AbstractRemotingTest;
 import dev.rico.server.remoting.util.ChildModel;
 import dev.rico.server.remoting.util.SimpleAnnotatedTestModel;

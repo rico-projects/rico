@@ -21,10 +21,10 @@ import dev.rico.internal.client.remoting.RicoCommandHandler;
 import dev.rico.internal.client.remoting.legacy.ClientAttribute;
 import dev.rico.internal.client.remoting.legacy.ClientModelStore;
 import dev.rico.internal.remoting.legacy.communication.Command;
-import dev.rico.internal.server.remoting.legacy.ServerModelStore;
-import dev.rico.internal.server.remoting.legacy.action.AbstractServerAction;
-import dev.rico.internal.server.remoting.legacy.communication.ActionRegistry;
-import dev.rico.internal.server.remoting.legacy.communication.CommandHandler;
+import dev.rico.internal.remoting.server.legacy.ServerModelStore;
+import dev.rico.internal.remoting.server.legacy.action.AbstractServerAction;
+import dev.rico.internal.remoting.server.legacy.communication.ActionRegistry;
+import dev.rico.internal.remoting.server.legacy.communication.CommandHandler;
 import org.testng.annotations.Test;
 
 import java.util.List;

@@ -18,9 +18,9 @@ package dev.rico.integrationtests.server.remoting.value;
 
 import dev.rico.integrationtests.remoting.value.AllValueTypesTestControllerModel;
 import dev.rico.integrationtests.remoting.value.ValueTestConstants;
-import dev.rico.server.remoting.RemotingController;
-import dev.rico.server.remoting.RemotingModel;
-import dev.rico.server.remoting.RemotingValue;
+import dev.rico.remoting.server.RemotingController;
+import dev.rico.remoting.server.RemotingModel;
+import dev.rico.remoting.server.RemotingValue;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;

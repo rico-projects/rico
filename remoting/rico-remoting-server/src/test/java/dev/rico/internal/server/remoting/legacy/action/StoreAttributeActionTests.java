@@ -18,10 +18,11 @@ package dev.rico.internal.server.remoting.legacy.action;
 
 import dev.rico.internal.remoting.legacy.communication.ChangeAttributeMetadataCommand;
 import dev.rico.internal.remoting.legacy.communication.Command;
-import dev.rico.internal.server.remoting.legacy.ServerAttribute;
-import dev.rico.internal.server.remoting.legacy.ServerModelStore;
-import dev.rico.internal.server.remoting.legacy.ServerPresentationModel;
-import dev.rico.internal.server.remoting.legacy.communication.ActionRegistry;
+import dev.rico.internal.remoting.server.legacy.ServerAttribute;
+import dev.rico.internal.remoting.server.legacy.ServerModelStore;
+import dev.rico.internal.remoting.server.legacy.ServerPresentationModel;
+import dev.rico.internal.remoting.server.legacy.action.StoreAttributeAction;
+import dev.rico.internal.remoting.server.legacy.communication.ActionRegistry;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

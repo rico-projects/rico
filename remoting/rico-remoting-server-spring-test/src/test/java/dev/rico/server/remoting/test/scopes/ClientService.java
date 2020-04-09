@@ -16,7 +16,7 @@
  */
 package dev.rico.server.remoting.test.scopes;
 
-import dev.rico.server.ClientScope;
+import dev.rico.server.spring.ClientScope;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;

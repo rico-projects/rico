@@ -16,10 +16,10 @@
  */
 package dev.rico.internal.remoting.eventbus.distributed;
 
-import dev.rico.internal.server.remoting.config.RemotingConfiguration;
+import dev.rico.internal.remoting.server.config.RemotingConfiguration;
 import dev.rico.remoting.eventbus.distributed.HazelcastProvider;
-import dev.rico.server.remoting.event.spi.EventBusProvider;
-import dev.rico.server.remoting.event.RemotingEventBus;
+import dev.rico.remoting.server.event.spi.EventBusProvider;
+import dev.rico.remoting.server.event.RemotingEventBus;
 import org.apiguardian.api.API;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

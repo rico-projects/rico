@@ -20,11 +20,11 @@ import dev.rico.integrationtests.remoting.qualifier.QualifierTestBean;
 import dev.rico.integrationtests.remoting.qualifier.QualifierTestSubBean;
 import dev.rico.remoting.BeanManager;
 import dev.rico.core.functional.Binding;
-import dev.rico.server.remoting.RemotingAction;
-import dev.rico.server.remoting.RemotingController;
-import dev.rico.server.remoting.RemotingModel;
-import dev.rico.server.remoting.binding.PropertyBinder;
-import dev.rico.server.remoting.binding.Qualifier;
+import dev.rico.remoting.server.RemotingAction;
+import dev.rico.remoting.server.RemotingController;
+import dev.rico.remoting.server.RemotingModel;
+import dev.rico.remoting.server.binding.PropertyBinder;
+import dev.rico.remoting.server.binding.Qualifier;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;

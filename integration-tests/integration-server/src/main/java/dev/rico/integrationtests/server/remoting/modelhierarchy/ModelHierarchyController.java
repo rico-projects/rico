@@ -3,9 +3,9 @@ package dev.rico.integrationtests.server.remoting.modelhierarchy;
 import dev.rico.integrationtests.remoting.modelhierarchy.ChildModel;
 import dev.rico.integrationtests.remoting.modelhierarchy.RootModel;
 import dev.rico.remoting.BeanManager;
-import dev.rico.server.remoting.RemotingAction;
-import dev.rico.server.remoting.RemotingController;
-import dev.rico.server.remoting.RemotingModel;
+import dev.rico.remoting.server.RemotingAction;
+import dev.rico.remoting.server.RemotingController;
+import dev.rico.remoting.server.RemotingModel;
 
 import javax.inject.Inject;
 import java.util.UUID;

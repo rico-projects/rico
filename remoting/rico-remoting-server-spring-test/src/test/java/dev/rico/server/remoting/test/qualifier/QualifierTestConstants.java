@@ -16,7 +16,7 @@
  */
 package dev.rico.server.remoting.test.qualifier;
 
-import dev.rico.server.remoting.binding.Qualifier;
+import dev.rico.remoting.server.binding.Qualifier;
 
 public interface QualifierTestConstants {
 

@@ -20,7 +20,7 @@ import dev.rico.client.concurrent.BackgroundExecutor;
 import dev.rico.client.concurrent.UiExecutor;
 import dev.rico.internal.core.Assert;
 import dev.rico.client.Client;
-import dev.rico.client.FxToolkit;
+import dev.rico.client.javafx.FxToolkit;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;

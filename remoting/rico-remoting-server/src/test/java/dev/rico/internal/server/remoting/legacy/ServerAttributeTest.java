@@ -17,6 +17,7 @@
 package dev.rico.internal.server.remoting.legacy;
 
 
+import dev.rico.internal.remoting.server.legacy.ServerAttribute;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

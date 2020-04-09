@@ -16,7 +16,7 @@
  */
 package dev.rico.integrationtests.server.remoting.controllerwithoutmodel;
 
-import dev.rico.server.remoting.RemotingController;
+import dev.rico.remoting.server.RemotingController;
 
 import static dev.rico.integrationtests.remoting.controllerwithoutmodel.ControllerWithoutModelTestConstants.CONTROLLER_WITHOUT_MODEL_NAME;
 

@@ -21,8 +21,8 @@ import dev.rico.internal.client.remoting.legacy.DefaultModelSynchronizer;
 import dev.rico.internal.client.remoting.legacy.ModelSynchronizer;
 import dev.rico.internal.client.remoting.legacy.communication.AbstractClientConnector;
 import dev.rico.internal.client.remoting.legacy.communication.CommandBatcher;
-import dev.rico.internal.server.remoting.legacy.ServerConnector;
-import dev.rico.internal.server.remoting.legacy.ServerModelStore;
+import dev.rico.internal.remoting.server.legacy.ServerConnector;
+import dev.rico.internal.remoting.server.legacy.ServerModelStore;
 
 import java.util.concurrent.Executor;
 import java.util.function.Supplier;
