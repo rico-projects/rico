@@ -90,7 +90,7 @@ public class PlatformBootstrap {
                     modules.put(instance.getName(), instance);
                 }
 
-                LOG.info("Found {} Rico modules", modules.size());
+                LOG.info("Found {} Rico modules XXXXXX", modules.size());
                 if (LOG.isTraceEnabled()) {
                     for (final String moduleName : modules.keySet()) {
                         LOG.trace("Found Rico module {}", moduleName);

@@ -73,8 +73,9 @@ public class ClasspathScannerTest {
         assertNotNull(resourceClasses);
         assertEquals(resourceClasses.size(), 1);
 
-        final Set<Class<?>> documentClasses = scanner.getTypesAnnotatedWith(Documented.class);
+        final Set<Class<?>> documentClasses = scanner.getTypesAnnotatedWith(Deprecated.class);
         assertNotNull(documentClasses);
+        documentClasses.forEach(c -> System.out.println("FOUND: " + c));
         assertEquals(documentClasses.size(), 1);
     }
 
@@ -97,7 +98,7 @@ public class ClasspathScannerTest {
         assertNotNull(classes);
         assertEquals(classes.size(), 0);
 
-        classes = scanner.getTypesAnnotatedWith(Documented.class);
+        classes = scanner.getTypesAnnotatedWith(Deprecated.class);
         assertNotNull(classes);
         assertEquals(classes.size(), 1);
         assertTrue(classes.contains(DocumentAnnotatedClass.class));

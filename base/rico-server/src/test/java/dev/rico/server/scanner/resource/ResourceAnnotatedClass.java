@@ -19,5 +19,5 @@ package dev.rico.server.scanner.resource;
 import javax.annotation.Resource;
 
 @Resource
-public @interface ResourceAnnotatedClass {
+public interface ResourceAnnotatedClass {
 }

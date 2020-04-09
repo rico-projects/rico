@@ -18,5 +18,5 @@
 dependencies {
     api project(':rico-core')
     implementation "com.google.code.gson:gson:$gsonVersion"
-    implementation "org.reflections:reflections:$reflectionsVersion"
+    implementation "io.github.classgraph:classgraph:4.8.68"
 }
