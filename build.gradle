@@ -36,6 +36,20 @@ subprojects { proj ->
     apply plugin: 'java-library'
     apply plugin: 'com.adarshr.test-logger'
 
+    afterEvaluate {
+        if (proj.publishJars.toBoolean()) {
+            compileJava {
+                inputs.property("moduleName", "dev.rico." + proj.name.replace("rico-", "").replaceAll("-", "."))
+                doFirst {
+                    options.compilerArgs = [
+                            '--module-path', classpath.asPath,
+                    ]
+                    classpath = files()
+                }
+            }
+        }
+    }
+
     proj.tasks.withType(JavaCompile) {
         sourceCompatibility = proj.sourceCompatibility
         targetCompatibility = proj.targetCompatibility
@@ -81,11 +95,11 @@ subprojects { proj ->
         testRuntime "org.slf4j:slf4j-simple:$slf4jVersion"
     }
 
-    
+
     jar.finalizedBy sourcesJar
     jar.finalizedBy javadocJar
 
-    if(proj.publishJars.toBoolean()) {
+    if (proj.publishJars.toBoolean()) {
         apply plugin: 'maven-publish'
         apply plugin: 'com.jfrog.bintray'
         apply plugin: 'com.jfrog.artifactory'
@@ -93,10 +107,9 @@ subprojects { proj ->
         jar {
             manifest {
                 attributes(
-                        'Automatic-Module-Name' : "dev.rico." + proj.name.replace("rico-", "").replaceAll("-", "."),  // 'rico-client-swing' -> 'dev.rico.client.swing'
                         'Build-Timestamp': new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date()),
-                        'Build-Jdk'      : "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})",
-                        'Build-OS'       : "${System.properties['os.name']} ${System.properties['os.arch']} ${System.properties['os.version']}"
+                        'Build-Jdk': "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})",
+                        'Build-OS': "${System.properties['os.name']} ${System.properties['os.arch']} ${System.properties['os.version']}"
                 )
             }
         }
@@ -136,7 +149,7 @@ subprojects { proj ->
                     username = project.bintrayUser
                     password = project.bintrayKey
                 }
-                defaults{
+                defaults {
                     publications('mavenCustom')
                 }
             }

@@ -18,5 +18,11 @@
 dependencies {
     api project(':rico-metrics-server')
     api project(':rico-server-spring')
-    implementation "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
+    // implementation ("org.springframework.boot:spring-boot-starter-web:$springBootVersion") {
+    //    exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+    // }
+
+    implementation "org.springframework:spring-web:5.2.5.RELEASE"
+    implementation "org.springframework:spring-context:5.2.5.RELEASE"
+
 }

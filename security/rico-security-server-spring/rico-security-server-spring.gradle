@@ -18,7 +18,11 @@
 dependencies {
     api project(':rico-security-server')
     api project(':rico-server-spring')
-    implementation "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
-    implementation "org.springframework:spring-web:4.3.13.RELEASE"
-    implementation "org.apache.httpcomponents:httpclient:4.5.12"
+
+    implementation "org.springframework:spring-web:5.2.5.RELEASE"
+    implementation "org.springframework:spring-context:5.2.5.RELEASE"
+    implementation ("org.apache.httpcomponents:httpclient:4.5.12") {
+        exclude group: "commons-logging", module: "commons-logging"
+    }
+
 }

@@ -19,5 +19,4 @@ dependencies {
     api project(':rico-client')
     api project(':rico-security-common')
     implementation "com.google.code.gson:gson:$gsonVersion"
-    implementation "org.keycloak:keycloak-installed-adapter:$keyclockVersion"
 }

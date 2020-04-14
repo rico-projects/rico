@@ -21,7 +21,7 @@ dependencies {
 
     implementation "org.apache.deltaspike.core:deltaspike-core-api:$deltaSpikeVersion"
    runtime "org.apache.deltaspike.core:deltaspike-core-impl:$deltaSpikeVersion"
-    compileOnly "javax.enterprise:cdi-api:$javaxCDIVersion"
+    compileOnly 'jakarta.enterprise:jakarta.enterprise.cdi-api:2.0.2'
     compileOnly "javax.servlet:javax.servlet-api:$servletApiVersion"
 
     testImplementation "javax.enterprise:cdi-api:$javaxCDIVersion"
