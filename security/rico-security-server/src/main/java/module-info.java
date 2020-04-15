@@ -4,7 +4,8 @@ import dev.rico.server.spi.ConfigurationProvider;
 module dev.rico.security.server {
 
     exports dev.rico.security.server;
-    exports dev.rico.internal.security.server to dev.rico.security.server.javaee,
+    exports dev.rico.internal.security.server to dev.rico.server,
+            dev.rico.security.server.javaee,
             dev.rico.security.server.spring;
 
     provides ConfigurationProvider with SecurityDefaultValueProvider;
@@ -15,9 +16,10 @@ module dev.rico.security.server {
     requires keycloak.core;
     requires keycloak.adapter.core;
     requires keycloak.adapter.spi;
-    requires keycloak.servlet.filter.adapter;
+    requires keycloak.servlet.adapter.spi;
 
     requires org.apiguardian.api;
     requires org.slf4j;
     requires java.servlet;
+    requires java.logging;
 }

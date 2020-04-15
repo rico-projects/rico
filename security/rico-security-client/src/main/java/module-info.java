@@ -7,6 +7,8 @@ module dev.rico.security.client {
 
     exports dev.rico.security.client;
 
+    opens dev.rico.internal.security.client to com.google.gson;
+
     provides ServiceProvider with KeycloakSecurityProvider;
 
     provides RequestHandlerProvider with KeycloakSecurityRequestHandlerProvider;

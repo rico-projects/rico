@@ -18,10 +18,10 @@ package dev.rico.internal.security.server;
 
 import dev.rico.internal.core.Assert;
 import dev.rico.core.Configuration;
+import dev.rico.internal.security.server.keycloak.adapters.servlet.KeycloakOIDCFilter;
 import dev.rico.security.server.SecurityContext;
 import dev.rico.security.server.User;
 import org.apiguardian.api.API;
-import org.keycloak.adapters.servlet.KeycloakOIDCFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
