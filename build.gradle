@@ -32,6 +32,7 @@ buildscript {
     }
 }
 
+
 //noinspection GroovyAssignabilityCheck
 subprojects { proj ->
     apply plugin: 'idea'
@@ -49,12 +50,14 @@ subprojects { proj ->
                     classpath = files()
                 }
             }
-
             javadoc {
-                exclude 'module-info.java'
+                options.addStringOption("-module-path", classpath.asPath)
             }
         }
     }
+
+    
+
 
     proj.tasks.withType(JavaCompile) {
         sourceCompatibility = proj.sourceCompatibility
