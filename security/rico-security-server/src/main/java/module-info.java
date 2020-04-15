@@ -1,8 +1,13 @@
+import dev.rico.internal.security.server.SecurityDefaultValueProvider;
+import dev.rico.server.spi.ConfigurationProvider;
+
 module dev.rico.security.server {
 
     exports dev.rico.security.server;
     exports dev.rico.internal.security.server to dev.rico.security.server.javaee,
             dev.rico.security.server.spring;
+
+    provides ConfigurationProvider with SecurityDefaultValueProvider;
 
     requires transitive dev.rico.security.common;
     requires transitive dev.rico.server;

@@ -1,3 +1,7 @@
+import dev.rico.internal.server.bootstrap.BasicConfigurationProvider;
+import dev.rico.server.spi.ConfigurationProvider;
+import dev.rico.server.spi.components.ManagedBeanFactory;
+
 module dev.rico.server {
 
     exports dev.rico.server;
@@ -33,6 +37,11 @@ module dev.rico.server {
             dev.rico.remoting.server;
     exports dev.rico.internal.server.context to dev.rico.metrics.server;
     exports dev.rico.internal.server.scanner to dev.rico.remoting.server.spring.test;
+
+    uses ConfigurationProvider;
+    uses ManagedBeanFactory;
+
+    provides ConfigurationProvider with BasicConfigurationProvider;
 
     requires transitive dev.rico.core;
     requires org.slf4j;
