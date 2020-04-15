@@ -14,7 +14,7 @@ module dev.rico.remoting.client {
     requires transitive dev.rico.remoting.common;
     requires transitive dev.rico.client;
 
-    requires org.apiguardian.api;
+    requires static org.apiguardian.api;
     requires org.slf4j;
     requires java.desktop;
 }

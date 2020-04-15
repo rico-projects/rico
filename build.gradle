@@ -96,7 +96,7 @@ subprojects { proj ->
 
     dependencies {
         implementation "org.slf4j:slf4j-api:$slf4jVersion"
-        implementation "org.apiguardian:apiguardian-api:$apiguardianVersion"
+        compileOnly "org.apiguardian:apiguardian-api:$apiguardianVersion"
 
         testImplementation "org.testng:testng:$testngVersion"
         testImplementation "org.hamcrest:java-hamcrest:$hamcrestVersion"

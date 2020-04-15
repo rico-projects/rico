@@ -13,7 +13,7 @@ module dev.rico.remoting.server.distributed {
 
     requires transitive dev.rico.remoting.server;
 
-    requires org.apiguardian.api;
+    requires static org.apiguardian.api;
     requires org.slf4j;
     requires com.google.gson;
     requires com.hazelcast.core;

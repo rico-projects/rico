@@ -49,6 +49,6 @@ module dev.rico.client {
 
     requires transitive dev.rico.core;
     requires org.slf4j;
-    requires org.apiguardian.api;
+    requires static org.apiguardian.api;
     requires com.google.gson;
 }

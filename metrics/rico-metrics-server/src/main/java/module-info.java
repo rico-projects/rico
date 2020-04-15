@@ -9,8 +9,8 @@ module dev.rico.metrics.server {
     provides ConfigurationProvider with MetricsConfigurationProvider;
 
     requires org.slf4j;
-    requires java.servlet;
-    requires org.apiguardian.api;
+    requires static java.servlet;
+    requires static org.apiguardian.api;
     requires micrometer.core;
     requires micrometer.registry.prometheus;
 }

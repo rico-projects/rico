@@ -45,9 +45,9 @@ module dev.rico.server {
 
     requires transitive dev.rico.core;
     requires org.slf4j;
-    requires org.apiguardian.api;
+    requires static org.apiguardian.api;
     requires io.github.classgraph;
     requires java.management;
-    requires java.servlet;
+    requires static java.servlet;
     requires java.annotation;
 }

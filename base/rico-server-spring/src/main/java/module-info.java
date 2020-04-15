@@ -13,8 +13,8 @@ module dev.rico.server.spring {
 
     requires transitive dev.rico.server;
     requires org.slf4j;
-    requires org.apiguardian.api;
-    requires java.servlet;
+    requires static org.apiguardian.api;
+    requires static java.servlet;
 
     requires spring.core;
     requires spring.context;

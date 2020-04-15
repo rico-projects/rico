@@ -4,5 +4,5 @@ module dev.rico.security.common {
             dev.rico.security.server,
             dev.rico.security.server.spring;
 
-    requires org.apiguardian.api;
+    requires static org.apiguardian.api;
 }

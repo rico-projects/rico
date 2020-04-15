@@ -18,7 +18,7 @@ module dev.rico.server.javaee {
     provides ServletContainerInitializer with JavaeeBootstrap;
 
     requires transitive dev.rico.server;
-    requires org.apiguardian.api;
+    requires static org.apiguardian.api;
     requires jakarta.inject.api;
     requires deltaspike.core.api;
     requires java.servlet;

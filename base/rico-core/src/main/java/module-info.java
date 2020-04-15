@@ -47,5 +47,5 @@ module dev.rico.core {
     exports dev.rico.internal.core.lang to dev.rico.remoting.server;
 
     requires org.slf4j;
-    requires org.apiguardian.api;
+    requires static org.apiguardian.api;
 }
