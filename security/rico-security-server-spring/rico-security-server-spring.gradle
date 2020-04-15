@@ -16,7 +16,11 @@
  */
 
 dependencies {
-    api project(':rico-security-server')
+    api (project(':rico-security-server')) {
+        exclude group: "com.fasterxml.jackson.core", module: "jackson-core"
+        exclude group: "com.fasterxml.jackson.core", module: "jackson-databind"
+    }
+    api project(':rico-server-spring')
 
     implementation "org.springframework:spring-web:$springVersion"
     implementation "org.springframework:spring-context:$springVersion"

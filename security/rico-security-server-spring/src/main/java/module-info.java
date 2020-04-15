@@ -6,6 +6,7 @@ module dev.rico.security.server.spring {
             spring.context;
 
     requires transitive dev.rico.security.server;
+    requires transitive dev.rico.server.spring;
 
     requires static org.apiguardian.api;
     requires org.slf4j;
