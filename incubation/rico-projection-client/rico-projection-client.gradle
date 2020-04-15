@@ -20,5 +20,5 @@
 dependencies {
     api project(':rico-remoting-client-javafx')
     api project(':rico-projection-common')
-    implementation "org.controlsfx:controlsfx:$controlFxVersion"
+    implementation "org.controlsfx:controlsfx:8.40.9"
 }

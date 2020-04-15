@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+//noinspection GroovyAssignabilityCheck
 buildscript {
     repositories {
         jcenter()
@@ -31,6 +32,7 @@ buildscript {
     }
 }
 
+//noinspection GroovyAssignabilityCheck
 subprojects { proj ->
     apply plugin: 'idea'
     apply plugin: 'java-library'
@@ -46,6 +48,10 @@ subprojects { proj ->
                     ]
                     classpath = files()
                 }
+            }
+
+            javadoc {
+                exclude 'module-info.java'
             }
         }
     }

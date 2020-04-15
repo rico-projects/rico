@@ -16,6 +16,8 @@
  */
 package dev.rico.internal.remoting.eventbus.distributed;
 
+import com.hazelcast.internal.serialization.InternalSerializationService;
+import com.hazelcast.spi.serialization.SerializationService;
 import dev.rico.internal.remoting.server.distributed.Base64Utils;
 import dev.rico.internal.remoting.server.distributed.EventStreamSerializer;
 import dev.rico.internal.remoting.server.event.MessageEventImpl;
@@ -355,6 +357,11 @@ public class EventStreamSerializerTests {
         }
 
         @Override
+        public InternalSerializationService getSerializationService() {
+            return null;
+        }
+
+        @Override
         public void readFully(byte[] b) throws IOException {
             throw new RuntimeException("Not needed for test");
         }
@@ -508,6 +515,11 @@ public class EventStreamSerializerTests {
         @Override
         public ByteOrder getByteOrder() {
             throw new RuntimeException("Not needed for test");
+        }
+
+        @Override
+        public SerializationService getSerializationService() {
+            return null;
         }
 
         @Override

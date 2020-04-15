@@ -18,5 +18,5 @@
 dependencies {
     api project(':rico-remoting-server')
     api project(':rico-logger-widget-common')
-    implementation "javax.inject:javax.inject:$javaxInjectVersion"
+    implementation "javax.inject:javax.inject:1"
 }

@@ -17,9 +17,9 @@
 
 dependencies {
     api project(':rico-server')
-    compileOnly "javax.servlet:javax.servlet-api:$servletApiVersion"
+    compileOnly "jakarta.servlet:jakarta.servlet-api:$jakartaServletApiVersion"
 
-    implementation "org.springframework:spring-context:5.2.5.RELEASE"
-    implementation "org.springframework:spring-web:5.2.5.RELEASE"
-    implementation "org.springframework.boot:spring-boot-autoconfigure:2.2.6.RELEASE"
+    implementation "org.springframework:spring-context:$springVersion"
+    implementation "org.springframework:spring-web:$springVersion"
+    implementation "org.springframework.boot:spring-boot-autoconfigure:$springBootVersion"
 }

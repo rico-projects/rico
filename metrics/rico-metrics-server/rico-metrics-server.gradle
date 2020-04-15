@@ -19,6 +19,6 @@ dependencies {
     api project(':rico-server')
     api project(':rico-metrics')
     implementation "io.micrometer:micrometer-registry-prometheus:$micrometerVersion"
-    compileOnly "javax.servlet:javax.servlet-api:$servletApiVersion"
+    compileOnly "jakarta.servlet:jakarta.servlet-api:$jakartaServletApiVersion"
 
 }

@@ -11,7 +11,7 @@ module dev.rico.remoting.server.spring.test {
     requires spring.web;
     requires spring.test;
     requires spring.boot.test;
-    requires javax.servlet.api;
+    requires java.servlet;
     requires testng;
     requires junit;
 }

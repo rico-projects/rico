@@ -39,6 +39,6 @@ module dev.rico.server {
     requires org.apiguardian.api;
     requires io.github.classgraph;
     requires java.management;
-    requires javax.servlet.api;
+    requires java.servlet;
     requires java.annotation;
 }

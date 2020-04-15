@@ -20,10 +20,7 @@ dependencies {
     api project(':rico-server-javaee')
 
     implementation "org.apache.deltaspike.core:deltaspike-core-api:$deltaSpikeVersion"
-   runtime "org.apache.deltaspike.core:deltaspike-core-impl:$deltaSpikeVersion"
-    compileOnly 'jakarta.enterprise:jakarta.enterprise.cdi-api:2.0.2'
-    compileOnly "javax.servlet:javax.servlet-api:$servletApiVersion"
-
-    testImplementation "javax.enterprise:cdi-api:$javaxCDIVersion"
-    testImplementation "javax.servlet:javax.servlet-api:$servletApiVersion"
+    runtime "org.apache.deltaspike.core:deltaspike-core-impl:$deltaSpikeVersion"
+    compileOnly "jakarta.enterprise:jakarta.enterprise.cdi-api:$jakartaEnterpriseCdiApiVersion"
+    compileOnly "jakarta.servlet:jakarta.servlet-api:$jakartaServletApiVersion"
 }

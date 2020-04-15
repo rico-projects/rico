@@ -26,5 +26,5 @@ module dev.rico.remoting.server {
 
     requires org.apiguardian.api;
     requires org.slf4j;
-    requires javax.servlet.api;
+    requires java.servlet;
 }

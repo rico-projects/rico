@@ -18,10 +18,10 @@
 dependencies {
     api project(':rico-server')
     api project(':rico-remoting-common')
-    implementation "javax.annotation:javax.annotation-api:1.3.2"
-    compileOnly "javax.servlet:javax.servlet-api:$servletApiVersion"
+    implementation "jakarta.annotation:jakarta.annotation-api:$jakartaAnnotationApiVersion"
+    compileOnly "jakarta.servlet:jakarta.servlet-api:$jakartaServletApiVersion"
 
     testImplementation project(':rico-remoting-client')
-    testImplementation "javax.servlet:javax.servlet-api:$servletApiVersion"
+    testImplementation "jakarta.servlet:jakarta.servlet-api:$jakartaServletApiVersion"
 
 }

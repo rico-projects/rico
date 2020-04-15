@@ -31,4 +31,5 @@ module dev.rico.remoting.common {
     requires org.apiguardian.api;
     requires org.slf4j;
     requires java.desktop;
+    requires com.google.gson;
 }

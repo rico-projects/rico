@@ -18,6 +18,6 @@
 dependencies {
     api project(':rico-remoting-server')
     api project(':rico-projection-common')
-    implementation "javax.inject:javax.inject:$javaxInjectVersion"
+    implementation "javax.inject:javax.inject:1"
     implementation "javax.annotation:javax.annotation-api:1.3.2"
 }

@@ -17,10 +17,10 @@
 
 dependencies {
     api project(':rico-remoting-common')
-    implementation 'jakarta.validation:jakarta.validation-api:2.0.2'
-    implementation "javax.xml.bind:jaxb-api:2.3.1"
-    
+    compileOnly "jakarta.validation:jakarta.validation-api:$jakartaValidationApiVersion"
+    compileOnly "jakarta.xml.bind:jakarta.xml.bind-api:$jakartaXmlBindApiVersion"
+
     testImplementation "org.hibernate:hibernate-validator:$hibernateValidatorVersion"
+    testImplementation "org.glassfish.jaxb:jaxb-runtime:$jaxbRuntimeVersion"
     testImplementation "org.glassfish:javax.el:$javaxElVersion"
-    testImplementation "org.glassfish.jaxb:jaxb-runtime:2.3.1"
 }

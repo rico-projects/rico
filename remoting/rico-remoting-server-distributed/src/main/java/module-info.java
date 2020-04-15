@@ -6,4 +6,7 @@ module dev.rico.remoting.server.distributed {
 
     requires org.apiguardian.api;
     requires org.slf4j;
+    requires com.google.gson;
+    requires com.hazelcast.core;
+    requires com.hazelcast.client;
 }

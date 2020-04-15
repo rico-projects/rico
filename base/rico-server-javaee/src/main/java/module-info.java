@@ -7,7 +7,7 @@ module dev.rico.server.javaee {
     requires org.apiguardian.api;
     requires jakarta.inject.api;
     requires deltaspike.core.api;
-    requires javax.servlet.api;
+    requires java.servlet;
     requires jakarta.enterprise.cdi.api;
     requires jakarta.interceptor.api;
 }

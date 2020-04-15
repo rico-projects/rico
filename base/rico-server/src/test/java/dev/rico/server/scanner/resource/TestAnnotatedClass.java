@@ -16,8 +16,8 @@
  */
 package dev.rico.server.scanner.resource;
 
-import javax.annotation.Resource;
+import dev.rico.server.scanner.TestAnnotation;
 
-@Resource
-public interface ResourceAnnotatedClass {
+@TestAnnotation
+public interface TestAnnotatedClass {
 }

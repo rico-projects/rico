@@ -21,16 +21,16 @@ dependencies {
     api project(':rico-remoting-client-javafx')
     api project(':rico-logger-widget-common')
 
-    implementation "org.controlsfx:controlsfx:$controlFxVersion"
+    implementation "org.controlsfx:controlsfx:8.40.9"
     implementation "org.openjfx:javafx-controls:11.0.2:mac"
 
 
-    implementation "de.jensd:fontawesomefx-emojione:$fontAwesomeEmonjioneVersion"
-    implementation "de.jensd:fontawesomefx-fontawesome:$fontAwesomeVersion"
-    implementation "de.jensd:fontawesomefx-icons525:$fontAwesomeIcons525Version"
-    implementation "de.jensd:fontawesomefx-materialdesignfont:$fontAwesomeMDfontVersion"
-    implementation "de.jensd:fontawesomefx-materialicons:$fontAwesomeMIconVersion"
-    implementation "de.jensd:fontawesomefx-octicons:$fontAwesomeOctIconVersion"
-    implementation "de.jensd:fontawesomefx-weathericons:$fontAwesomeWIVersion"
-    implementation "de.jensd:fontawesomefx-controls:$fontAwesomeControlsVersion"
+    implementation "de.jensd:fontawesomefx-emojione:2.2.7-2"
+    implementation "de.jensd:fontawesomefx-fontawesome:4.7.0-5"
+    implementation "de.jensd:fontawesomefx-icons525:3.0.0-4"
+    implementation "de.jensd:fontawesomefx-materialdesignfont:1.7.22-4"
+    implementation "de.jensd:fontawesomefx-materialicons:2.2.0-5"
+    implementation "de.jensd:fontawesomefx-octicons:4.3.0-5"
+    implementation "de.jensd:fontawesomefx-weathericons:2.0.10-5"
+    implementation "de.jensd:fontawesomefx-controls:8.15"
 }

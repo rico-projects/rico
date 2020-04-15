@@ -19,13 +19,18 @@ dependencies {
     api project(':rico-remoting-server-spring')
     api project(':rico-remoting-client')
     implementation "org.testng:testng:$testngVersion"
-    implementation 'junit:junit:4.13'
+    implementation "junit:junit:$junitVersion"
 
-    implementation "org.springframework:spring-web:5.2.5.RELEASE"
-    implementation "org.springframework:spring-context:5.2.5.RELEASE"
-    implementation "org.springframework:spring-test:5.2.5.RELEASE"
-    implementation "org.springframework.boot:spring-boot-test:2.2.6.RELEASE"
-    compileOnly "javax.servlet:javax.servlet-api:$servletApiVersion"
+    implementation "org.springframework:spring-web:$springVersion"
+    implementation "org.springframework:spring-context:$springVersion"
+    implementation "org.springframework:spring-test:$springVersion"
+    implementation "org.springframework.boot:spring-boot-test:$springBootVersion"
+    compileOnly "jakarta.servlet:jakarta.servlet-api:$jakartaServletApiVersion"
+
+    testImplementation "jakarta.annotation:jakarta.annotation-api:$jakartaAnnotationApiVersion"
+    testImplementation "org.springframework.boot:spring-boot-autoconfigure:$springBootVersion"
+    testImplementation "jakarta.servlet:jakarta.servlet-api:$jakartaServletApiVersion"
+
 }
 
 configurations {

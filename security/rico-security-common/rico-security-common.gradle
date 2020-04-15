@@ -16,5 +16,4 @@
  */
 
 dependencies {
-    implementation "org.apiguardian:apiguardian-api:$apiguardianVersion"
 }

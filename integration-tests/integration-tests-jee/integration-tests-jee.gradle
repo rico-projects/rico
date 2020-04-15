@@ -20,7 +20,8 @@ apply plugin: 'war'
 dependencies {
     implementation project(':integration-server')
     implementation project(':rico-remoting-server-javaee')
-    compileOnly "javax:javaee-api:$javaeeApiVersion"
+    compileOnly "jakarta.enterprise:jakarta.enterprise.cdi-api:$jakartaEnterpriseCdiApiVersion"
+    compileOnly "jakarta.ws.rs:jakarta.ws.rs-api:$jakartaWsRsApiVersion"
 }
 
 war {

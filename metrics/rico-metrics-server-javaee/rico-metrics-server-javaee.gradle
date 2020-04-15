@@ -17,5 +17,5 @@
 
 dependencies {
     api project(':rico-metrics-server')
-    compileOnly 'jakarta.enterprise:jakarta.enterprise.cdi-api:2.0.2'
+    compileOnly "jakarta.enterprise:jakarta.enterprise.cdi-api:$jakartaEnterpriseCdiApiVersion"
 }

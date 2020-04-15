@@ -19,6 +19,6 @@ dependencies {
     api project(':rico-server-spring')
     api project(':rico-remoting-server')
 
-    implementation "org.springframework:spring-context:5.2.5.RELEASE"
+    implementation "org.springframework:spring-context:$springVersion"
 
 }

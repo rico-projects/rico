@@ -14,5 +14,5 @@ module dev.rico.security.server {
 
     requires org.apiguardian.api;
     requires org.slf4j;
-    requires javax.servlet.api;
+    requires java.servlet;
 }
