@@ -25,9 +25,9 @@ install:
 jobs:
   include:
     - stage: build
-      script: "./gradlew clean build artifactoryPublish -x test"
+      script: "./gradlew clean build --info"
     - stage: snapshot
-      script: "./gradlew clean build"
+      script: "./gradlew clean build --info"
 
 cache:
   directories:
