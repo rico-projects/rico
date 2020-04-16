@@ -52,11 +52,10 @@ subprojects { proj ->
             }
             javadoc {
                 options.addStringOption("-module-path", classpath.asPath)
+                classpath = files()
             }
         }
     }
-
-    
 
 
     proj.tasks.withType(JavaCompile) {

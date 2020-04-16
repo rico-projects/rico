@@ -11,9 +11,24 @@ stages:
   - name: snapshot
     if: (branch = master) AND (NOT (type IN (push, pull_request)))
 
+before_install:
+  # adding $HOME/.sdkman to cache would create an empty directory, which interferes with the initial installation
+  - "[[ -d /home/travis/.sdkman/ ]] && [[ -d /home/travis/.sdkman/bin/ ]] || rm -rf /home/travis/.sdkman/"
+  - curl -sL https://get.sdkman.io | bash
+  - echo sdkman_auto_answer=true > $HOME/.sdkman/etc/config
+  - echo sdkman_auto_selfupdate=true >> $HOME/.sdkman/etc/config
+  - source "/home/travis/.sdkman/bin/sdkman-init.sh"
+
+install:
+  - sdk install java 11.0.6.hs-adpt || true
+
 jobs:
   include:
     - stage: build
       script: "./gradlew clean build artifactoryPublish -x test"
     - stage: snapshot
       script: "./gradlew clean build"
+
+cache:
+  directories:
+    - $HOME/.sdkman
