@@ -19,11 +19,7 @@ package dev.rico.client.remoting;
 import dev.rico.internal.core.Assert;
 import dev.rico.remoting.client.javafx.BidirectionalConverter;
 import dev.rico.remoting.client.javafx.Converter;
-import org.apiguardian.api.API;
 
-import static org.apiguardian.api.API.Status.DEPRECATED;
-
-@API(since = "0.x", status = DEPRECATED)
 public class SimpleBidirectionalConverter<T, U> implements BidirectionalConverter<T, U> {
 
     private final Converter<T, U> converter;
