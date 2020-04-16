@@ -16,10 +16,10 @@
  */
 package dev.rico.internal.client.projection.action;
 
-import dev.rico.internal.projection.base.Action;
 import dev.rico.internal.client.projection.projection.Projector;
+import dev.rico.internal.projection.base.Action;
 import dev.rico.remoting.ObservableList;
-import dev.rico.client.remoting.ControllerProxy;
+import dev.rico.remoting.client.ControllerProxy;
 import javafx.scene.layout.FlowPane;
 
 public class SimpleActionBar extends FlowPane {
@@ -35,7 +35,7 @@ public class SimpleActionBar extends FlowPane {
         this.controllerProxy = controllerProxy;
         this.projector = projector;
         getStyleClass().add("action-bar");
-        this.actions.onChanged( e -> updateActions());
+        this.actions.onChanged(e -> updateActions());
         updateActions();
     }
 

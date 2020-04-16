@@ -56,6 +56,7 @@ public class HttpSessionMock implements HttpSession {
         return 0;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public HttpSessionContext getSessionContext() {
         return null;
@@ -67,6 +68,7 @@ public class HttpSessionMock implements HttpSession {
     }
 
     @Override
+    @Deprecated
     public Object getValue(String name) {
         return null;
     }
@@ -77,6 +79,7 @@ public class HttpSessionMock implements HttpSession {
     }
 
     @Override
+    @Deprecated
     public String[] getValueNames() {
         return new String[0];
     }
@@ -87,6 +90,7 @@ public class HttpSessionMock implements HttpSession {
     }
 
     @Override
+    @Deprecated
     public void putValue(String name, Object value) {
 
     }
@@ -97,6 +101,7 @@ public class HttpSessionMock implements HttpSession {
     }
 
     @Override
+    @Deprecated
     public void removeValue(String name) {
 
     }

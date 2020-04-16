@@ -16,18 +16,18 @@
  */
 package dev.rico.internal.server.remoting.test;
 
-import dev.rico.internal.client.remoting.legacy.ClientModelStore;
-import dev.rico.internal.client.remoting.legacy.communication.AbstractClientConnector;
+import dev.rico.internal.remoting.client.legacy.ClientModelStore;
+import dev.rico.internal.remoting.client.legacy.communication.AbstractClientConnector;
 import dev.rico.internal.client.session.ClientSessionStoreImpl;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.remoting.legacy.communication.Command;
 import dev.rico.internal.server.client.ClientSessionProvider;
 import dev.rico.internal.server.client.HttpClientSessionImpl;
-import dev.rico.internal.server.remoting.config.ConfigurationFileLoader;
-import dev.rico.internal.server.remoting.config.ServerConfiguration;
-import dev.rico.internal.server.remoting.config.RemotingConfiguration;
-import dev.rico.internal.server.remoting.context.ServerRemotingContext;
-import dev.rico.internal.server.remoting.controller.ControllerRepository;
+import dev.rico.internal.server.config.ConfigurationFileLoader;
+import dev.rico.internal.server.config.ServerConfiguration;
+import dev.rico.internal.remoting.server.config.RemotingConfiguration;
+import dev.rico.internal.remoting.server.context.ServerRemotingContext;
+import dev.rico.internal.remoting.server.controller.ControllerRepository;
 import dev.rico.internal.server.scanner.DefaultClasspathScanner;
 import dev.rico.client.Client;
 import dev.rico.server.client.ClientSession;

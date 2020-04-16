@@ -18,7 +18,7 @@ package dev.rico.integrationtests.server.remoting.property;
 
 import dev.rico.integrationtests.remoting.property.ObservableListBean;
 import dev.rico.integrationtests.server.TestConfiguration;
-import dev.rico.client.remoting.Param;
+import dev.rico.remoting.client.Param;
 import dev.rico.server.remoting.test.ControllerUnderTest;
 import dev.rico.server.remoting.test.SpringTestNGControllerTest;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -99,12 +99,12 @@ public class ObservableListControllerTest extends SpringTestNGControllerTest {
         controller.getModel().getList().add(s2);
         controller.getModel().getList().add(s3);
 
-        controller.invoke(REMOVE_ACTION, new Param(INDEX_PARAM, 0));
+        controller.invoke(REMOVE_ACTION, Param.of(INDEX_PARAM, 0));
         Assert.assertEquals(controller.getModel().getList().size(), 2);
         Assert.assertTrue(controller.getModel().getList().contains(s2));
         Assert.assertTrue(controller.getModel().getList().contains(s3));
 
-        controller.invoke(REMOVE_ACTION, new Param(INDEX_PARAM, 1));
+        controller.invoke(REMOVE_ACTION, Param.of(INDEX_PARAM, 1));
         Assert.assertEquals(controller.getModel().getList().size(), 1);
         Assert.assertTrue(controller.getModel().getList().contains(s2));
     }
@@ -137,7 +137,7 @@ public class ObservableListControllerTest extends SpringTestNGControllerTest {
 
     private void checkSizeOnServer(final int size) {
         controller.getModel().setCheckResult(false);
-        controller.invoke(CHECK_SIZE_ACTION, new Param(SIZE_PARAM, size));
+        controller.invoke(CHECK_SIZE_ACTION, Param.of(SIZE_PARAM, size));
         Assert.assertTrue(controller.getModel().getCheckResult());
     }
 }

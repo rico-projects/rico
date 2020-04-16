@@ -18,7 +18,7 @@ package dev.rico.internal.server.bootstrap.modules;
 
 import dev.rico.core.Configuration;
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.server.remoting.servlet.CrossSiteOriginFilter;
+import dev.rico.internal.server.servlet.CrossSiteOriginFilter;
 import dev.rico.internal.server.bootstrap.AbstractBaseModule;
 import dev.rico.server.spi.ModuleDefinition;
 import dev.rico.server.spi.ModuleInitializationException;

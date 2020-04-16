@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+//noinspection GroovyAssignabilityCheck
 buildscript {
     repositories {
         jcenter()
@@ -25,20 +26,44 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
-        classpath 'com.adarshr:gradle-test-logger-plugin:1.1.2'
-        classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:4.5.4'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.5'
+        classpath 'com.adarshr:gradle-test-logger-plugin:2.0.0'
+        classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:4.15.1'
     }
 }
 
+
+//noinspection GroovyAssignabilityCheck
 subprojects { proj ->
     apply plugin: 'idea'
-    apply plugin: 'java'
+    apply plugin: 'java-library'
     apply plugin: 'com.adarshr.test-logger'
+
+    afterEvaluate {
+        if (proj.publishJars.toBoolean()) {
+            compileJava {
+                inputs.property("moduleName", "dev.rico." + proj.name.replace("rico-", "").replaceAll("-", "."))
+                doFirst {
+                    options.compilerArgs = [
+                            '--module-path', classpath.asPath,
+                    ]
+                    classpath = files()
+                }
+            }
+            javadoc {
+                options.addStringOption("-module-path", classpath.asPath)
+                classpath = files()
+            }
+        }
+    }
+
 
     proj.tasks.withType(JavaCompile) {
         sourceCompatibility = proj.sourceCompatibility
         targetCompatibility = proj.targetCompatibility
+
+        //options.compilerArgs << '-Xlint:deprecation'
+        //options.compilerArgs << '-Xlint:unchecked'
     }
 
     test.useTestNG()
@@ -69,18 +94,34 @@ subprojects { proj ->
     }
 
     dependencies {
-        testCompile "org.testng:testng:$testngVersion"
-        testCompile "org.hamcrest:java-hamcrest:$hamcrestVersion"
-        testCompile "org.jmockit:jmockit:$jmockitVersion"
+        implementation "org.slf4j:slf4j-api:$slf4jVersion"
+        compileOnly "org.apiguardian:apiguardian-api:$apiguardianVersion"
+
+        testImplementation "org.testng:testng:$testngVersion"
+        testImplementation "org.hamcrest:java-hamcrest:$hamcrestVersion"
+        testImplementation "org.jmockit:jmockit:$jmockitVersion"
+        testRuntime "org.slf4j:slf4j-simple:$slf4jVersion"
     }
+
 
     jar.finalizedBy sourcesJar
     jar.finalizedBy javadocJar
 
-    if(proj.publishJars.toBoolean()) {
+    if (proj.publishJars.toBoolean()) {
         apply plugin: 'maven-publish'
         apply plugin: 'com.jfrog.bintray'
         apply plugin: 'com.jfrog.artifactory'
+
+        jar {
+            manifest {
+                attributes(
+                        'Build-Timestamp': new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date()),
+                        'Build-Jdk': "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})",
+                        'Build-OS': "${System.properties['os.name']} ${System.properties['os.arch']} ${System.properties['os.version']}"
+                )
+            }
+        }
+
 
         publishing {
             publications {
@@ -116,7 +157,7 @@ subprojects { proj ->
                     username = project.bintrayUser
                     password = project.bintrayKey
                 }
-                defaults{
+                defaults {
                     publications('mavenCustom')
                 }
             }

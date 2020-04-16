@@ -16,7 +16,7 @@
  */
 package dev.rico.server.remoting.test.eventbus;
 
-import dev.rico.server.remoting.event.Topic;
+import dev.rico.remoting.server.event.Topic;
 
 public interface EventBusTestConstants {
     String EVENT_BUS_SUBSCIBER_CONTROLLER_NAME = "EventBusSubscriberController";

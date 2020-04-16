@@ -16,6 +16,15 @@
  */
 
 dependencies {
-    compile project(':rico-security-server')
-    compile project(':rico-server-spring')
+    api (project(':rico-security-server')) {
+        exclude group: "com.fasterxml.jackson.core", module: "jackson-core"
+        exclude group: "com.fasterxml.jackson.core", module: "jackson-databind"
+    }
+    api project(':rico-server-spring')
+
+    implementation "org.springframework:spring-web:$springVersion"
+    implementation "org.springframework:spring-context:$springVersion"
+    implementation ("org.apache.httpcomponents:httpclient:$httpclientVersion") {
+        exclude group: "commons-logging", module: "commons-logging"
+    }
 }

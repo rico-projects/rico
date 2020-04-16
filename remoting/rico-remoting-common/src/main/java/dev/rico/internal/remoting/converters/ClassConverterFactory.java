@@ -29,6 +29,7 @@ public class ClassConverterFactory implements ConverterFactory {
     private final static ClassConverter CONVERTER = new ClassConverter();
 
     @Override
+    @SuppressWarnings("deprecation")
     public void init(final BeanRepo beanRepository) {}
 
     @Override

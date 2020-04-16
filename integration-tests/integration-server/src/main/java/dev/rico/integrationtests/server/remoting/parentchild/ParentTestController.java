@@ -20,10 +20,10 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import dev.rico.integrationtests.remoting.parentchild.ParentTestBean;
-import dev.rico.server.remoting.PostChildCreated;
-import dev.rico.server.remoting.PreChildDestroyed;
-import dev.rico.server.remoting.RemotingController;
-import dev.rico.server.remoting.RemotingModel;
+import dev.rico.remoting.server.PostChildCreated;
+import dev.rico.remoting.server.PreChildDestroyed;
+import dev.rico.remoting.server.RemotingController;
+import dev.rico.remoting.server.RemotingModel;
 
 import static dev.rico.integrationtests.remoting.parentchild.ParentChildTestConstants.PARENT_CONTROLLER_NAME;
 

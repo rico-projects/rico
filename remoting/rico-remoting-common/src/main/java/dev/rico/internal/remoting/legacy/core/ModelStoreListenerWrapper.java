@@ -19,6 +19,7 @@ package dev.rico.internal.remoting.legacy.core;
 
 import dev.rico.internal.core.Assert;
 
+@SuppressWarnings("deprecation")
 public class ModelStoreListenerWrapper<A extends Attribute, P extends PresentationModel<A>> implements ModelStoreListener<A, P> {
     private static final String ANY_PRESENTATION_MODEL_TYPE = "*";
     private final String presentationModelType;

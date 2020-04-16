@@ -24,9 +24,9 @@ import dev.rico.client.remoting.util.PrimitiveDataTypesModel;
 import dev.rico.client.remoting.util.SimpleAnnotatedTestModel;
 import dev.rico.client.remoting.util.SimpleTestModel;
 import dev.rico.client.remoting.util.SingleReferenceModel;
-import dev.rico.internal.client.remoting.legacy.ClientModelStore;
-import dev.rico.internal.client.remoting.legacy.ClientPresentationModel;
-import dev.rico.internal.client.remoting.legacy.communication.AbstractClientConnector;
+import dev.rico.internal.remoting.client.legacy.ClientModelStore;
+import dev.rico.internal.remoting.client.legacy.ClientPresentationModel;
+import dev.rico.internal.remoting.client.legacy.communication.AbstractClientConnector;
 import dev.rico.internal.remoting.BeanDefinitionException;
 import dev.rico.internal.remoting.BeanRepository;
 import dev.rico.internal.remoting.EventDispatcher;
@@ -65,6 +65,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.testng.Assert.fail;
 
+@SuppressWarnings({"deprecation", "unchecked"})
 public class TestModelCreation extends AbstractRemotingTest {
 
     @Test

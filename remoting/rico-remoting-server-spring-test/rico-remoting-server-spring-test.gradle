@@ -16,9 +16,25 @@
  */
 
 dependencies {
-    compile project(':rico-remoting-server-spring')
-    compile project(':rico-remoting-client')
-    compile "org.springframework.boot:spring-boot-starter-test:$springBootVersion"
-    compile "org.testng:testng:$testngVersion"
+    api project(':rico-remoting-server-spring')
+    api project(':rico-remoting-client')
+    implementation "org.testng:testng:$testngVersion"
+    implementation "junit:junit:$junitVersion"
+
+    implementation "org.springframework:spring-web:$springVersion"
+    implementation "org.springframework:spring-context:$springVersion"
+    implementation "org.springframework:spring-test:$springVersion"
+    implementation "org.springframework.boot:spring-boot-test:$springBootVersion"
+    compileOnly "jakarta.servlet:jakarta.servlet-api:$jakartaServletApiVersion"
+
+    testImplementation "jakarta.annotation:jakarta.annotation-api:$jakartaAnnotationApiVersion"
+    testImplementation "org.springframework.boot:spring-boot-autoconfigure:$springBootVersion"
+    testImplementation "jakarta.servlet:jakarta.servlet-api:$jakartaServletApiVersion"
+
 }
 
+configurations {
+    testImplementation {
+        exclude group: 'ch.qos.logback', module: ''
+    }
+}

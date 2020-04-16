@@ -17,7 +17,7 @@
 package dev.rico.internal.client.projection.table;
 
 import dev.rico.internal.projection.table.Column;
-import dev.rico.client.remoting.FXBinder;
+import dev.rico.remoting.client.javafx.FXBinder;
 import javafx.scene.control.TableColumn;
 
 public abstract class AbstractTableColumn<S, T> extends TableColumn<S, T> {

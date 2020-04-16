@@ -1,1 +1,1 @@
-dev.rico.internal.server.CdiManagedBeanFactory
+dev.rico.internal.server.javaee.CdiManagedBeanFactory

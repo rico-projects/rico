@@ -18,19 +18,19 @@ package dev.rico.internal.server.scanner;
 
 import dev.rico.internal.core.Assert;
 import dev.rico.server.spi.components.ClasspathScanner;
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ClassInfo;
+import io.github.classgraph.ScanResult;
 import org.apiguardian.api.API;
-import org.reflections.Reflections;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
-import org.reflections.util.FilterBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.lang.annotation.Annotation;
-import java.net.URL;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
@@ -43,63 +43,52 @@ public class DefaultClasspathScanner implements ClasspathScanner {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultClasspathScanner.class);
 
-    private final Reflections reflections;
+    private final String[] rootPackages;
 
-    public DefaultClasspathScanner(final String rootPackage){
+    public DefaultClasspathScanner(final String rootPackage) {
         this(Collections.singletonList(rootPackage));
     }
 
-    public DefaultClasspathScanner(final String... rootPackages){
-        this(Arrays.asList(rootPackages));
+    public DefaultClasspathScanner(final String... rootPackages) {
+        Assert.requireNonNull(rootPackages, "rootPackages");
+
+        LOG.debug("Scanning class path for root packages {}", Arrays.toString(rootPackages));
+
+        this.rootPackages = rootPackages;
     }
 
     public DefaultClasspathScanner(final List<String> rootPackages) {
-
-        Assert.requireNonNull(rootPackages, "rootPackages");
-
-        LOG.trace("Scanning class path for root packages {}", Arrays.toString(rootPackages.toArray()));
-
-        ConfigurationBuilder configuration = ConfigurationBuilder.build(DefaultClasspathScanner.class.getClassLoader());
-        configuration = configuration.setExpandSuperTypes(false);
-
-        if(rootPackages.size() > 0) {
-            configuration = configuration.forPackages(rootPackages.toArray(new String[rootPackages.size()]));
-            configuration = configuration.setUrls(rootPackages.stream().map(rootPackage -> ClasspathHelper.forPackage(rootPackage)).flatMap(list -> list.stream()).collect(Collectors.toList()));
-            configuration = configuration.filterInputsBy(new FilterBuilder().includePackage(rootPackages.toArray(new String[rootPackages.size()])));
-        }
-
-        //Special case for JBOSS Application server to get all classes
-        try {
-            final Enumeration<URL> res = DefaultClasspathScanner.class.getClassLoader().getResources("");
-            configuration.getUrls().addAll(Collections.list(res));
-        } catch (final IOException e) {
-            throw new RuntimeException("Error in controller class scan", e);
-        }
-
-
-        //Remove native libs (will be added on Mac in a Spring Boot app)
-        final Set<URL> urls = configuration.getUrls();
-        final List<URL> toRemove = new ArrayList<>();
-        for (final URL url : urls) {
-            if (url.toString().endsWith(".jnilib")) {
-                toRemove.add(url);
-            }
-        }
-        LOG.trace("Configuration Urls {}", Arrays.toString(configuration.getUrls().toArray()));
-        for (final URL url : toRemove) {
-            LOG.trace("Url removed {}", url.toString());
-            configuration.getUrls().remove(url);
-        }
-        reflections = new Reflections(configuration);
+        this(Assert.requireNonNull(rootPackages, "rootPackages").toArray(new String[0]));
     }
 
     /**
      * Returns a set that contains all classes in the classpath that are annotated with the given annotation
+     *
      * @param annotation the annotation
      * @return the set of annotated classes
      */
     public synchronized Set<Class<?>> getTypesAnnotatedWith(final Class<? extends Annotation> annotation) {
         Assert.requireNonNull(annotation, "annotation");
-        return reflections.getTypesAnnotatedWith(annotation);
+
+        Set<Class<?>> result = new HashSet<>();
+
+        final ClassGraph classGraph = new ClassGraph()
+                //.verbose()
+                .enableAnnotationInfo()
+                .enableClassInfo()
+                .ignoreClassVisibility()
+                .whitelistPackages(rootPackages);
+
+        final long startTime = System.currentTimeMillis();
+        try (final ScanResult scanResult = classGraph.scan()) {                   // Start the scan
+            for (final ClassInfo classInfo : scanResult.getClassesWithAnnotation(annotation.getName())) {
+                if (!classInfo.isAnnotation()) {
+                    final Class<?> annotatedClass = classInfo.loadClass();
+                    result.add(annotatedClass);
+                }
+            }
+        }
+        LOG.debug("Classpath scan for annotation '{}' took {} ms", annotation.getName(), System.currentTimeMillis() - startTime);
+        return Collections.unmodifiableSet(result);
     }
 }

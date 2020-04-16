@@ -17,10 +17,10 @@
 package dev.rico.internal.server.remoting.controller.repository;
 
 import dev.rico.internal.server.remoting.controller.TestBean;
-import dev.rico.server.remoting.RemotingAction;
-import dev.rico.server.remoting.RemotingController;
-import dev.rico.server.remoting.RemotingModel;
-import dev.rico.server.remoting.Param;
+import dev.rico.remoting.server.RemotingAction;
+import dev.rico.remoting.server.RemotingController;
+import dev.rico.remoting.server.RemotingModel;
+import dev.rico.remoting.server.Param;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;

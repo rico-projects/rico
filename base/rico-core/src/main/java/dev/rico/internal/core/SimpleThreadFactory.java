@@ -32,6 +32,7 @@ import static dev.rico.internal.core.RicoConstants.THREAD_NAME_PREFIX;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
+@SuppressWarnings("deprecation")
 public class SimpleThreadFactory implements ExtendedThreadFactory {
 
     private final AtomicInteger threadNumber = new AtomicInteger(0);

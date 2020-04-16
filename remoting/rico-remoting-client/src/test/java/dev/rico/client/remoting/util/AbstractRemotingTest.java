@@ -16,13 +16,13 @@
  */
 package dev.rico.client.remoting.util;
 
-import dev.rico.internal.client.remoting.ClientBeanBuilderImpl;
-import dev.rico.internal.client.remoting.ClientEventDispatcher;
-import dev.rico.internal.client.remoting.ClientPresentationModelBuilderFactory;
-import dev.rico.internal.client.remoting.legacy.ClientModelStore;
-import dev.rico.internal.client.remoting.legacy.DefaultModelSynchronizer;
-import dev.rico.internal.client.remoting.legacy.ModelSynchronizer;
-import dev.rico.internal.client.remoting.legacy.communication.AbstractClientConnector;
+import dev.rico.internal.remoting.client.ClientBeanBuilderImpl;
+import dev.rico.internal.remoting.client.ClientEventDispatcher;
+import dev.rico.internal.remoting.client.ClientPresentationModelBuilderFactory;
+import dev.rico.internal.remoting.client.legacy.ClientModelStore;
+import dev.rico.internal.remoting.client.legacy.DefaultModelSynchronizer;
+import dev.rico.internal.remoting.client.legacy.ModelSynchronizer;
+import dev.rico.internal.remoting.client.legacy.communication.AbstractClientConnector;
 import dev.rico.internal.remoting.BeanBuilder;
 import dev.rico.internal.remoting.BeanManagerImpl;
 import dev.rico.internal.remoting.BeanRepository;
@@ -36,8 +36,8 @@ import dev.rico.internal.remoting.PresentationModelBuilderFactory;
 import dev.rico.internal.remoting.collections.ListMapperImpl;
 import dev.rico.internal.remoting.legacy.communication.Command;
 import dev.rico.internal.remoting.legacy.util.DirectExecutor;
-import dev.rico.internal.server.remoting.legacy.ServerConnector;
-import dev.rico.internal.server.remoting.legacy.ServerModelStore;
+import dev.rico.internal.remoting.server.legacy.ServerConnector;
+import dev.rico.internal.remoting.server.legacy.ServerModelStore;
 import dev.rico.remoting.BeanManager;
 
 import java.util.ArrayList;

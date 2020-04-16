@@ -22,8 +22,8 @@ import java.util.Optional;
 
 /**
  * Default Interface for CRUD-Services
- * @param <T> Type of the entity
- * @param <ID> Type of the technical id of the entity
+ * {@code <T>} Type of the entity
+ * {@code <ID>} Type of the technical id of the entity
  */
 public interface DataService<ID extends Serializable, E extends DataWithId<ID>> {
 

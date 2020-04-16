@@ -57,11 +57,11 @@ public class TestQualifier extends SpringTestNGControllerTest {
         //then:
         assertEquals(subModelOne.booleanProperty().get(), Boolean.TRUE);
         assertEquals(subModelOne.stringProperty().get(), "Test1");
-        assertEquals(subModelOne.integerProperty().get(), new Integer(42));
+        assertEquals(subModelOne.integerProperty().get(), Integer.valueOf(42));
 
         assertEquals(subModelTwo.booleanProperty().get(), Boolean.TRUE);
         assertEquals(subModelTwo.stringProperty().get(), "Test1");
-        assertEquals(subModelTwo.integerProperty().get(), new Integer(42));
+        assertEquals(subModelTwo.integerProperty().get(), Integer.valueOf(42));
     }
 
     @Test
@@ -80,11 +80,11 @@ public class TestQualifier extends SpringTestNGControllerTest {
         //then:
         assertEquals(subModelOne.booleanProperty().get(), Boolean.TRUE);
         assertEquals(subModelOne.stringProperty().get(), "Test1");
-        assertEquals(subModelOne.integerProperty().get(), new Integer(42));
+        assertEquals(subModelOne.integerProperty().get(), Integer.valueOf(42));
 
         assertEquals(subModelTwo.booleanProperty().get(), Boolean.TRUE);
         assertEquals(subModelTwo.stringProperty().get(), "Test1");
-        assertEquals(subModelTwo.integerProperty().get(), new Integer(42));
+        assertEquals(subModelTwo.integerProperty().get(), Integer.valueOf(42));
     }
 
     @Test
@@ -107,11 +107,11 @@ public class TestQualifier extends SpringTestNGControllerTest {
         //then:
         assertEquals(subModelOne.booleanProperty().get(), Boolean.FALSE);
         assertEquals(subModelOne.stringProperty().get(), "Test2");
-        assertEquals(subModelOne.integerProperty().get(), new Integer(44));
+        assertEquals(subModelOne.integerProperty().get(), Integer.valueOf(44));
 
         assertEquals(subModelTwo.booleanProperty().get(), Boolean.TRUE);
         assertEquals(subModelTwo.stringProperty().get(), "Test1");
-        assertEquals(subModelTwo.integerProperty().get(), new Integer(42));
+        assertEquals(subModelTwo.integerProperty().get(), Integer.valueOf(42));
     }
 
     @Test
@@ -132,7 +132,7 @@ public class TestQualifier extends SpringTestNGControllerTest {
         //then:
         assertEquals(subModelOne.booleanProperty().get(), Boolean.TRUE);
         assertEquals(subModelOne.stringProperty().get(), "Test1");
-        assertEquals(subModelOne.integerProperty().get(), new Integer(42));
+        assertEquals(subModelOne.integerProperty().get(), Integer.valueOf(42));
 
         assertEquals(subModelTwo.booleanProperty().get(), null);
         assertEquals(subModelTwo.stringProperty().get(), null);
@@ -157,7 +157,7 @@ public class TestQualifier extends SpringTestNGControllerTest {
         //then:
         assertEquals(subModelOne.booleanProperty().get(), Boolean.TRUE);
         assertEquals(subModelOne.stringProperty().get(), "Test1");
-        assertEquals(subModelOne.integerProperty().get(), new Integer(42));
+        assertEquals(subModelOne.integerProperty().get(), Integer.valueOf(42));
 
         assertEquals(subModelTwo.booleanProperty().get(), null);
         assertEquals(subModelTwo.stringProperty().get(), null);
@@ -186,11 +186,11 @@ public class TestQualifier extends SpringTestNGControllerTest {
         //then:
         assertEquals(subModelTwo.booleanProperty().get(), Boolean.TRUE);
         assertEquals(subModelTwo.stringProperty().get(), "Test1");
-        assertEquals(subModelTwo.integerProperty().get(), new Integer(42));
+        assertEquals(subModelTwo.integerProperty().get(), Integer.valueOf(42));
 
         assertEquals(subModelTwo.booleanProperty().get(), Boolean.TRUE);
         assertEquals(subModelTwo.stringProperty().get(), "Test1");
-        assertEquals(subModelTwo.integerProperty().get(), new Integer(42));
+        assertEquals(subModelTwo.integerProperty().get(), Integer.valueOf(42));
     }
 
 }

@@ -17,8 +17,12 @@
 package dev.rico.internal.server.remoting.gc;
 
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.server.remoting.config.ServerConfiguration;
-import dev.rico.internal.server.remoting.config.RemotingConfiguration;
+import dev.rico.internal.remoting.server.gc.CircularDependencyException;
+import dev.rico.internal.remoting.server.gc.GarbageCollectionCallback;
+import dev.rico.internal.remoting.server.gc.GarbageCollector;
+import dev.rico.internal.remoting.server.gc.Instance;
+import dev.rico.internal.server.config.ServerConfiguration;
+import dev.rico.internal.remoting.server.config.RemotingConfiguration;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;

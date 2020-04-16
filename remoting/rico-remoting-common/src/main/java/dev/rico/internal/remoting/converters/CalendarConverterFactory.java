@@ -23,8 +23,10 @@ import org.apiguardian.api.API;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -39,7 +41,7 @@ public class CalendarConverterFactory extends AbstractConverterFactory {
 
     @Override
     public List<Class> getSupportedTypes() {
-        return Collections.singletonList(Calendar.class);
+        return Arrays.asList(Calendar.class, GregorianCalendar.class);
     }
 
     @Override

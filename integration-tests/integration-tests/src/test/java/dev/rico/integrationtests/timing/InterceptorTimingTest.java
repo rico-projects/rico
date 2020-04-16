@@ -32,7 +32,7 @@ public class InterceptorTimingTest extends AbstractIntegrationTest {
         Assert.assertNotNull(timingHeader);
     }
 
-    @Test(dataProvider = ENDPOINTS_DATAPROVIDER)
+    @Test(dataProvider = ENDPOINTS_DATAPROVIDER, enabled = false)
     public void testCall2(final String containerType, final String endpoint) throws Exception {
 
         //given
@@ -52,7 +52,7 @@ public class InterceptorTimingTest extends AbstractIntegrationTest {
         Assert.assertTrue(content.contains(METRICS_NAME));
     }
 
-    @Test(dataProvider = ENDPOINTS_DATAPROVIDER)
+    @Test(dataProvider = ENDPOINTS_DATAPROVIDER, enabled = false)
     public void testCall3(final String containerType, final String endpoint) throws Exception {
 
         //given

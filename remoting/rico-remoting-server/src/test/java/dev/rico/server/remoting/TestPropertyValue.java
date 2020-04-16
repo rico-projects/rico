@@ -18,8 +18,8 @@ package dev.rico.server.remoting;
 
 import dev.rico.internal.remoting.legacy.core.Attribute;
 import dev.rico.internal.remoting.legacy.core.PresentationModel;
-import dev.rico.internal.server.remoting.legacy.ServerModelStore;
-import dev.rico.internal.server.remoting.legacy.ServerPresentationModel;
+import dev.rico.internal.remoting.server.legacy.ServerModelStore;
+import dev.rico.internal.remoting.server.legacy.ServerPresentationModel;
 import dev.rico.server.remoting.util.AbstractRemotingTest;
 import dev.rico.server.remoting.util.ChildModel;
 import dev.rico.server.remoting.util.ComplexDataTypesModel;
@@ -41,6 +41,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
+@SuppressWarnings("deprecation")
 public class TestPropertyValue extends AbstractRemotingTest {
 
     @Test

@@ -65,6 +65,7 @@ public final class OptimizedJsonCodec implements Codec {
 
     private final Map<String, CommandTranscoder<?>> transcoders = new HashMap<>();
 
+    @SuppressWarnings("deprecation")
     private OptimizedJsonCodec() {
         GSON = new GsonBuilder().serializeNulls().create();
 

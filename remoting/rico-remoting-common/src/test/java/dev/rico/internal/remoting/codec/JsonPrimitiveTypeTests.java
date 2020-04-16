@@ -151,7 +151,7 @@ public class JsonPrimitiveTypeTests {
     @Test
     public void testGetValueByDoubleType() {
         //given:
-        final JsonElement element = new JsonPrimitive(new Double(0.1d));
+        final JsonElement element = new JsonPrimitive(0.1d);
         final JsonPrimitiveType type = JsonPrimitiveType.DOUBLE;
 
         //when:
@@ -178,7 +178,7 @@ public class JsonPrimitiveTypeTests {
     @Test
     public void testGetValueByFloatType() {
         //given:
-        final JsonElement element = new JsonPrimitive(new Float(0.1f));
+        final JsonElement element = new JsonPrimitive(0.1f);
         final JsonPrimitiveType type = JsonPrimitiveType.FLOAT;
 
         //when:
@@ -205,7 +205,7 @@ public class JsonPrimitiveTypeTests {
     @Test
     public void testGetValueByIntegerType() {
         //given:
-        final JsonElement element = new JsonPrimitive(new Integer(10));
+        final JsonElement element = new JsonPrimitive(10);
         final JsonPrimitiveType type = JsonPrimitiveType.INT;
 
         //when:
@@ -232,7 +232,7 @@ public class JsonPrimitiveTypeTests {
     @Test
     public void testGetValueByLongType() {
         //given:
-        final JsonElement element = new JsonPrimitive(new Long(10l));
+        final JsonElement element = new JsonPrimitive(10l);
         final JsonPrimitiveType type = JsonPrimitiveType.LONG;
 
         //when:

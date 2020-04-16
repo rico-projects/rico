@@ -16,8 +16,8 @@
  */
 package dev.rico.internal.server.remoting.test;
 
-import dev.rico.client.remoting.ControllerProxy;
-import dev.rico.client.remoting.Param;
+import dev.rico.remoting.client.ControllerProxy;
+import dev.rico.remoting.client.Param;
 import dev.rico.internal.core.Assert;
 import dev.rico.server.remoting.test.CommunicationMonitor;
 import dev.rico.server.remoting.test.ControllerTestException;
@@ -33,6 +33,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class ClientTestFactory {
 
+    @SuppressWarnings("unchecked")
     public static <T> ControllerUnderTest<T> createController(final TestClientContext clientContext, final String controllerName, final Map<String, Serializable> parameters) {
         Assert.requireNonNull(clientContext, "clientContext");
         Assert.requireNonBlank(controllerName, "controllerName");
@@ -95,6 +96,7 @@ public class ClientTestFactory {
             }
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public <S> ControllerUnderTest<S> createController(String childControllerName) {
             try {

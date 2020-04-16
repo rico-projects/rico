@@ -16,7 +16,10 @@
  */
 
 dependencies {
-    compile project(':rico-server')
-    compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
-    compileOnly "javax.servlet:javax.servlet-api:$servletApiVersion"
+    api project(':rico-server')
+    compileOnly "jakarta.servlet:jakarta.servlet-api:$jakartaServletApiVersion"
+
+    implementation "org.springframework:spring-context:$springVersion"
+    implementation "org.springframework:spring-web:$springVersion"
+    implementation "org.springframework.boot:spring-boot-autoconfigure:$springBootVersion"
 }

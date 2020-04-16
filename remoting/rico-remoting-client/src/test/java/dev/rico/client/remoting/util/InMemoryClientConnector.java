@@ -16,12 +16,12 @@
  */
 package dev.rico.client.remoting.util;
 
-import dev.rico.internal.client.remoting.legacy.ClientModelStore;
-import dev.rico.internal.client.remoting.legacy.communication.AbstractClientConnector;
-import dev.rico.internal.client.remoting.legacy.communication.ICommandBatcher;
-import dev.rico.internal.client.remoting.legacy.communication.SimpleExceptionHandler;
+import dev.rico.internal.remoting.client.legacy.ClientModelStore;
+import dev.rico.internal.remoting.client.legacy.communication.AbstractClientConnector;
+import dev.rico.internal.remoting.client.legacy.communication.ICommandBatcher;
+import dev.rico.internal.remoting.client.legacy.communication.SimpleExceptionHandler;
 import dev.rico.internal.remoting.legacy.communication.Command;
-import dev.rico.internal.server.remoting.legacy.ServerConnector;
+import dev.rico.internal.remoting.server.legacy.ServerConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,7 +59,7 @@ public class InMemoryClientConnector extends AbstractClientConnector {
         LOG.trace("transmitting {} commands", commands.size());
         if (serverConnector == null) {
             LOG.warn("no server connector wired for in-memory connector");
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         if (sleepMillis > 0) {
             try {

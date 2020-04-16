@@ -16,9 +16,8 @@
  */
 
 dependencies {
-    testCompile project(':rico-remoting-client')
-    testCompile "org.slf4j:slf4j-simple:$slf4jVersion"
-    testCompile project(':integration-common')
+    testImplementation project(':rico-remoting-client')
+    testImplementation project(':integration-common')
 }
 
 task copyWar(dependsOn: [':integration-tests-jee:war']) {

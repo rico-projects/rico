@@ -45,6 +45,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 public class CreatePresentationModelCommandEncoder implements CommandTranscoder<CreatePresentationModelCommand> {
 
     @Override
+    @SuppressWarnings("deprecation")
     public JsonObject encode(final CreatePresentationModelCommand command) {
         Assert.requireNonNull(command, "command");
 
@@ -67,6 +68,7 @@ public class CreatePresentationModelCommandEncoder implements CommandTranscoder<
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public CreatePresentationModelCommand decode(final JsonObject jsonObject) {
         Assert.requireNonNull(jsonObject, "jsonObject");
 

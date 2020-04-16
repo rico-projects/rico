@@ -17,11 +17,11 @@
 package dev.rico.integrationtests.server.remoting.runlater;
 
 import dev.rico.integrationtests.remoting.runlater.RunLaterTestBean;
-import dev.rico.server.remoting.RemotingModel;
-import dev.rico.server.remoting.ClientSessionExecutor;
-import dev.rico.server.remoting.RemotingAction;
-import dev.rico.server.remoting.RemotingContext;
-import dev.rico.server.remoting.RemotingController;
+import dev.rico.remoting.server.RemotingModel;
+import dev.rico.remoting.server.ClientSessionExecutor;
+import dev.rico.remoting.server.RemotingAction;
+import dev.rico.remoting.server.RemotingContext;
+import dev.rico.remoting.server.RemotingController;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;

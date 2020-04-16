@@ -61,12 +61,13 @@ public final class CreatePresentationModelCommand extends Command {
     /**
      * @deprecated use ServerFacade convenience methods (it is ok to use it from the client atm)
      */
+    @Deprecated
     public static <T extends Attribute> CreatePresentationModelCommand makeFrom(final PresentationModel<T> model) {
         final CreatePresentationModelCommand result = new CreatePresentationModelCommand();
         result.setPmId(model.getId());
         result.setPmType(model.getPresentationModelType());
         for (T attr : model.getAttributes()) {
-            final Map attributeMap = new HashMap();
+            final Map<String, Object> attributeMap = new HashMap<>();
             attributeMap.put("propertyName", attr.getPropertyName());
             attributeMap.put("id", attr.getId());
             attributeMap.put("qualifier", attr.getQualifier());

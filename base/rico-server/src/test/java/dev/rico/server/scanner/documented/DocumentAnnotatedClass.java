@@ -16,8 +16,6 @@
  */
 package dev.rico.server.scanner.documented;
 
-import java.lang.annotation.Documented;
-
-@Documented
-public @interface DocumentAnnotatedClass {
+@Deprecated
+public interface DocumentAnnotatedClass {
 }

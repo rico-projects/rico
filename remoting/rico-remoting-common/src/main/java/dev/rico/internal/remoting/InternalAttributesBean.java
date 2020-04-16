@@ -31,8 +31,14 @@ public class InternalAttributesBean {
     private static final String MODEL = "model";
 
     private final BeanRepository beanRepository;
+
+    @SuppressWarnings("deprecation")
     private final Attribute controllerNameAttribute;
+
+    @SuppressWarnings("deprecation")
     private final Attribute controllerIdAttribute;
+
+    @SuppressWarnings("deprecation")
     private final Attribute modelAttribute;
 
     public InternalAttributesBean(final BeanRepository beanRepository, final PresentationModel pm) {

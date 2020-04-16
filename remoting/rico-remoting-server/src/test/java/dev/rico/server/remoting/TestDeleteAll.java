@@ -18,8 +18,8 @@ package dev.rico.server.remoting;
 
 import dev.rico.internal.remoting.BeanRepository;
 import dev.rico.internal.remoting.EventDispatcher;
-import dev.rico.internal.server.remoting.legacy.ServerModelStore;
-import dev.rico.internal.server.remoting.legacy.ServerPresentationModel;
+import dev.rico.internal.remoting.server.legacy.ServerModelStore;
+import dev.rico.internal.remoting.server.legacy.ServerPresentationModel;
 import dev.rico.server.remoting.util.AbstractRemotingTest;
 import dev.rico.server.remoting.util.SimpleAnnotatedTestModel;
 import dev.rico.server.remoting.util.SimpleTestModel;
@@ -32,6 +32,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
+@SuppressWarnings("deprecation")
 public class TestDeleteAll extends AbstractRemotingTest {
 
     @Test

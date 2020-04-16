@@ -42,6 +42,7 @@ public interface ConverterFactory {
      * not
      * @param beanRepository the internally used bean repository.
      */
+    @SuppressWarnings("deprecation")
     void init(BeanRepo beanRepository);
 
     /**

@@ -17,6 +17,8 @@
 package dev.rico.internal.server.remoting.legacy.communication;
 
 import dev.rico.internal.remoting.legacy.communication.Command;
+import dev.rico.internal.remoting.server.legacy.communication.ActionRegistry;
+import dev.rico.internal.remoting.server.legacy.communication.CommandHandler;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

@@ -1,10 +1,10 @@
 package dev.rico.integrationtests.remoting;
 
 import dev.rico.client.Client;
-import dev.rico.client.remoting.ClientContext;
-import dev.rico.client.remoting.ClientContextFactory;
-import dev.rico.client.remoting.ControllerProxy;
-import dev.rico.client.remoting.Param;
+import dev.rico.remoting.client.ClientContext;
+import dev.rico.remoting.client.ClientContextFactory;
+import dev.rico.remoting.client.ControllerProxy;
+import dev.rico.remoting.client.Param;
 import dev.rico.integrationtests.AbstractIntegrationTest;
 import dev.rico.integrationtests.IntegrationTestToolkit;
 
@@ -21,6 +21,7 @@ public class AbstractRemotingIntegrationTest extends AbstractIntegrationTest {
         return createController(clientContext, controllerName, Collections.emptyMap());
     }
 
+    @SuppressWarnings("unchecked")
     protected <T> ControllerProxy<T> createController(final ClientContext clientContext, final String controllerName, final Map<String, Serializable> parameters) {
         try {
             return (ControllerProxy<T>) clientContext.createController(controllerName, parameters).get(getTimeoutInMinutes(), TimeUnit.MINUTES);

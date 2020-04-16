@@ -16,9 +16,9 @@
  */
 package dev.rico.internal.client.projection.chat;
 
-import dev.rico.internal.projection.chat.ChatMessage;
 import dev.rico.core.functional.Binding;
-import dev.rico.client.remoting.FXBinder;
+import dev.rico.internal.projection.chat.ChatMessage;
+import dev.rico.remoting.client.javafx.FXBinder;
 import javafx.geometry.Orientation;
 import javafx.scene.control.ListCell;
 
@@ -40,7 +40,7 @@ public class ChatCell<T extends ChatMessage> extends ListCell<T> {
 
         listViewProperty().addListener(e -> {
             bubble.minWidthProperty().unbind();
-            if(listViewProperty().get() != null) {
+            if (listViewProperty().get() != null) {
                 bubble.minWidthProperty().bind(listViewProperty().get().widthProperty().subtract(32));
                 bubble.prefWidthProperty().bind(listViewProperty().get().widthProperty().subtract(32));
                 bubble.maxWidthProperty().bind(listViewProperty().get().widthProperty().subtract(32));
@@ -60,7 +60,7 @@ public class ChatCell<T extends ChatMessage> extends ListCell<T> {
         Optional.ofNullable(messageBinding).ifPresent(b -> b.unbind());
         Optional.ofNullable(sendByMeBinding).ifPresent(b -> b.unbind());
 
-        if(item == null || empty) {
+        if (item == null || empty) {
             bubble.setVisible(false);
         } else {
             bubble.setVisible(true);

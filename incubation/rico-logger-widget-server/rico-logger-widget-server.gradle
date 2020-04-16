@@ -16,7 +16,7 @@
  */
 
 dependencies {
-    compile project(':rico-remoting-server')
-    compile project(':rico-logger-widget-common')
-    compile "javax.inject:javax.inject:$javaxInjectVersion"
+    api project(':rico-remoting-server')
+    api project(':rico-logger-widget-common')
+    implementation "javax.inject:javax.inject:1"
 }

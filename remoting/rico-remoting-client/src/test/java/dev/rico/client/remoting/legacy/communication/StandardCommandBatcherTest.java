@@ -16,8 +16,8 @@
  */
 package dev.rico.client.remoting.legacy.communication;
 
-import dev.rico.internal.client.remoting.legacy.communication.CommandAndHandler;
-import dev.rico.internal.client.remoting.legacy.communication.CommandBatcher;
+import dev.rico.internal.remoting.client.legacy.communication.CommandAndHandler;
+import dev.rico.internal.remoting.client.legacy.communication.CommandBatcher;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+@SuppressWarnings("deprecation")
 public class StandardCommandBatcherTest {
     @BeforeMethod
     public void setUp() throws Exception {

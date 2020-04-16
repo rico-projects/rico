@@ -37,6 +37,7 @@ public class BeanConverterFactory implements ConverterFactory {
     private Converter<Object, String> converter;
 
     @Override
+    @SuppressWarnings("deprecation")
     public void init(final BeanRepo beanRepository) {
         this.converter = new RemotingBeanConverter(beanRepository);
     }
@@ -61,6 +62,7 @@ public class BeanConverterFactory implements ConverterFactory {
         return converter;
     }
 
+    @SuppressWarnings("deprecation")
     private class RemotingBeanConverter extends AbstractStringConverter<Object> {
 
         private final BeanRepo beanRepository;

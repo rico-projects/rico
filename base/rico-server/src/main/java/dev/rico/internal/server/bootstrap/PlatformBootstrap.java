@@ -21,8 +21,8 @@ import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.SimpleThreadFactory;
 import dev.rico.internal.core.ansi.PlatformLogo;
 import dev.rico.internal.core.context.ContextManagerImpl;
-import dev.rico.internal.server.remoting.config.ServerConfiguration;
-import dev.rico.internal.server.remoting.mbean.MBeanRegistry;
+import dev.rico.internal.server.config.ServerConfiguration;
+import dev.rico.internal.server.mbean.MBeanRegistry;
 import dev.rico.internal.server.scanner.DefaultClasspathScanner;
 import dev.rico.server.spi.ModuleDefinition;
 import dev.rico.server.spi.ModuleInitializationException;
@@ -86,7 +86,7 @@ public class PlatformBootstrap {
                         throw new RuntimeException("Class " + moduleClass + " is annoated with " + ModuleDefinition.class.getSimpleName() + " but do not implement " + ServerModule.class.getSimpleName());
                     }
                     final ModuleDefinition moduleDefinition = moduleClass.getAnnotation(ModuleDefinition.class);
-                    final ServerModule instance = (ServerModule) moduleClass.newInstance();
+                    final ServerModule instance = (ServerModule) moduleClass.getConstructor().newInstance();
                     modules.put(instance.getName(), instance);
                 }
 

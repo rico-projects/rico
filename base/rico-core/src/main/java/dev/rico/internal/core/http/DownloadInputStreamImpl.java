@@ -83,14 +83,6 @@ public class DownloadInputStreamImpl extends DownloadInputStream {
         this.updateChunkSize.set(updateChunkSize);
     }
 
-    public CompletableFuture<String> getHash() {
-        final CompletableFuture<String> future = new CompletableFuture<>();
-        addDownloadDoneListener(size -> {
-            future.complete(ConnectionUtils.toHex(wrappedStream.getMessageDigest().digest()));
-        });
-        return future;
-    }
-
     public DownloadType getDownloadType() {
         return downloadType;
     }

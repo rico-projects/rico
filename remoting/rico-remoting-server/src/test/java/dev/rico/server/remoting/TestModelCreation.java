@@ -35,9 +35,9 @@ import dev.rico.internal.remoting.converters.StringConverterFactory;
 import dev.rico.internal.remoting.legacy.LegacyConstants;
 import dev.rico.internal.remoting.legacy.core.Attribute;
 import dev.rico.internal.remoting.legacy.core.PresentationModel;
-import dev.rico.internal.server.remoting.legacy.ServerAttribute;
-import dev.rico.internal.server.remoting.legacy.ServerModelStore;
-import dev.rico.internal.server.remoting.legacy.ServerPresentationModel;
+import dev.rico.internal.remoting.server.legacy.ServerAttribute;
+import dev.rico.internal.remoting.server.legacy.ServerModelStore;
+import dev.rico.internal.remoting.server.legacy.ServerPresentationModel;
 import dev.rico.server.remoting.util.AbstractRemotingTest;
 import dev.rico.server.remoting.util.ChildModel;
 import dev.rico.server.remoting.util.ComplexDataTypesModel;
@@ -64,6 +64,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.testng.Assert.fail;
 
+@SuppressWarnings({"unchecked", "deprecation"})
 public class TestModelCreation extends AbstractRemotingTest {
 
     @Test

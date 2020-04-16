@@ -16,6 +16,6 @@
  */
 
 dependencies {
-    compile project(':rico-core')
-    compile "com.google.code.gson:gson:$gsonVersion"
+    api project(':rico-core')
+    implementation "com.google.code.gson:gson:$gsonVersion"
 }

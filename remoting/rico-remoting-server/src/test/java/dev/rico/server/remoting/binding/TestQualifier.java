@@ -16,7 +16,7 @@
  */
 package dev.rico.server.remoting.binding;
 
-import dev.rico.server.remoting.binding.Qualifier;
+import dev.rico.remoting.server.binding.Qualifier;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

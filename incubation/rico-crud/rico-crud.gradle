@@ -16,6 +16,7 @@
  */
 
 dependencies {
-    compile project(':rico-remoting-server')
-    compile project(':rico-data')
+    api project(':rico-remoting-server')
+    api project(':rico-data')
+    implementation "javax.annotation:javax.annotation-api:1.3.2"
 }

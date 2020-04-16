@@ -19,9 +19,9 @@ package dev.rico.client.remoting;
 import dev.rico.client.remoting.util.AbstractRemotingTest;
 import dev.rico.client.remoting.util.SimpleAnnotatedTestModel;
 import dev.rico.client.remoting.util.SimpleTestModel;
-import dev.rico.internal.client.remoting.legacy.ClientModelStore;
-import dev.rico.internal.client.remoting.legacy.ClientPresentationModel;
-import dev.rico.internal.client.remoting.legacy.communication.AbstractClientConnector;
+import dev.rico.internal.remoting.client.legacy.ClientModelStore;
+import dev.rico.internal.remoting.client.legacy.ClientPresentationModel;
+import dev.rico.internal.remoting.client.legacy.communication.AbstractClientConnector;
 import dev.rico.internal.remoting.BeanRepository;
 import dev.rico.internal.remoting.EventDispatcher;
 import dev.rico.remoting.BeanManager;
@@ -34,6 +34,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
+@SuppressWarnings("deprecation")
 public class TestDeleteAll extends AbstractRemotingTest {
 
     @Test

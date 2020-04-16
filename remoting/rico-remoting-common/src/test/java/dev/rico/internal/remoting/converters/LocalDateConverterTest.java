@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.TimeZone;
 
+@SuppressWarnings("unchecked")
 public class LocalDateConverterTest {
 
     @Test
@@ -109,7 +110,7 @@ public class LocalDateConverterTest {
         }
     }
 
-    @Test
+    @Test(enabled = false)
     public void testRawSameTimeZone() throws ValueConverterException, ParseException {
         final TimeZone defaultZone = TimeZone.getDefault();
         try {

@@ -17,8 +17,8 @@
 package dev.rico.integrationtests.server.remoting.parentchild;
 
 import dev.rico.integrationtests.remoting.parentchild.ChildTestBean;
-import dev.rico.server.remoting.RemotingController;
-import dev.rico.server.remoting.RemotingModel;
+import dev.rico.remoting.server.RemotingController;
+import dev.rico.remoting.server.RemotingModel;
 
 import static dev.rico.integrationtests.remoting.parentchild.ParentChildTestConstants.DUMMY_CHILD_CONTROLLER_NAME;
 

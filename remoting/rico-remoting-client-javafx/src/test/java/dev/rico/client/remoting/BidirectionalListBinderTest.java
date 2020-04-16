@@ -18,6 +18,7 @@ package dev.rico.client.remoting;
 
 import dev.rico.remoting.ObservableList;
 import dev.rico.internal.remoting.collections.ObservableArrayList;
+import dev.rico.remoting.client.javafx.FXBinder;
 import javafx.collections.FXCollections;
 import org.testng.annotations.Test;
 
@@ -28,6 +29,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 
+@SuppressWarnings("unchecked")
 public class BidirectionalListBinderTest {
 
     //////////////////
@@ -81,6 +83,7 @@ public class BidirectionalListBinderTest {
     ////////////////////////////////
     // Parameter check
     ////////////////////////////////
+    @SuppressWarnings("unchecked")
     @Test(expectedExceptions = NullPointerException.class)
     public void shouldThrowNPEIfJavaFXListIsNull() {
         // when:

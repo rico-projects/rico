@@ -24,7 +24,7 @@ import dev.rico.internal.server.data.mapping.BeanMapperImpl;
 import dev.rico.core.functional.Subscription;
 import dev.rico.remoting.BeanManager;
 import dev.rico.remoting.ObservableList;
-import dev.rico.server.remoting.event.RemotingEventBus;
+import dev.rico.remoting.server.event.RemotingEventBus;
 
 import javax.annotation.PostConstruct;
 import java.io.Serializable;
@@ -67,11 +67,11 @@ public abstract class AbstractCrudListController<ID extends Serializable, B, E e
         eventBusSubscription.unsubscribe();
     }
 
-    private void onCrudEvent(final CrudEvent event) {
+    private <ID extends Serializable> void onCrudEvent(final CrudEvent<ID, ?> event) {
         //TODO: Would be perfect to get meta information for example the user.
         Assert.requireNonNull(event, "event");
         if(event.getEntityClass().equals(entityClass)) {
-            final ID id = (ID) event.getId();
+            final ID id = event.getId();
             entities.stream()
                     .filter(e -> id.equals(e.getId()))
                     .findFirst()

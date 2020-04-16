@@ -16,6 +16,7 @@
  */
 package dev.rico.internal.server.remoting.gc;
 
+import dev.rico.internal.remoting.server.gc.GarbageCollector;
 import dev.rico.remoting.ObservableList;
 import dev.rico.remoting.RemotingBean;
 
@@ -33,11 +34,11 @@ public class BeanWithLists {
     private ObservableList<BeanWithProperties> beansList2;
 
     public BeanWithLists(GarbageCollector garbageCollector) {
-        stringList = new ObservableListWithGcSupport(garbageCollector);
-        booleanList = new ObservableListWithGcSupport(garbageCollector);
-        doubleList = new ObservableListWithGcSupport(garbageCollector);
-        beansList = new ObservableListWithGcSupport(garbageCollector);
-        beansList2 = new ObservableListWithGcSupport(garbageCollector);
+        stringList = new ObservableListWithGcSupport<>(garbageCollector);
+        booleanList = new ObservableListWithGcSupport<>(garbageCollector);
+        doubleList = new ObservableListWithGcSupport<>(garbageCollector);
+        beansList = new ObservableListWithGcSupport<>(garbageCollector);
+        beansList2 = new ObservableListWithGcSupport<>(garbageCollector);
     }
 
     public ObservableList<String> getStringList() {

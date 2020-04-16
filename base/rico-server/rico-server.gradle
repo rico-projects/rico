@@ -16,8 +16,10 @@
  */
 
 dependencies {
-    compile project(':rico-core')
-    compile "org.reflections:reflections:$reflectionsVersion"
-    compileOnly "javax.servlet:javax.servlet-api:$servletApiVersion"
-    testCompile "javax.servlet:javax.servlet-api:$servletApiVersion"
+    api project(':rico-core')
+    compileOnly "jakarta.annotation:jakarta.annotation-api:$jakartaAnnotationApiVersion"
+    implementation "io.github.classgraph:classgraph:$classgraphVersion"
+    compileOnly "jakarta.servlet:jakarta.servlet-api:$jakartaServletApiVersion"
+
+    testImplementation "jakarta.servlet:jakarta.servlet-api:$jakartaServletApiVersion"
 }

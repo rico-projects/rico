@@ -16,5 +16,4 @@
  */
 
 dependencies {
-    compile "org.apiguardian:apiguardian-api:$apiguardianVersion"
 }

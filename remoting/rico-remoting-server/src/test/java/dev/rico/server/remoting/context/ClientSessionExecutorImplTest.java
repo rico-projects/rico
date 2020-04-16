@@ -16,8 +16,8 @@
  */
 package dev.rico.server.remoting.context;
 
-import dev.rico.internal.server.remoting.context.ClientSessionExecutorImpl;
-import dev.rico.server.remoting.ClientSessionExecutor;
+import dev.rico.internal.remoting.server.context.ClientSessionExecutorImpl;
+import dev.rico.remoting.server.ClientSessionExecutor;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

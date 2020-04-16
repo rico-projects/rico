@@ -21,7 +21,6 @@ import dev.rico.core.http.ByteArrayProvider;
 import dev.rico.core.http.HttpResponse;
 import dev.rico.core.http.RequestMethod;
 
-import javax.xml.bind.DatatypeConverter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,24 +47,10 @@ public class ConnectionUtils {
         return Base64.getEncoder().encodeToString(bytes);
     }
 
-    public static String toHex(final byte[] bytes) {
-        return DatatypeConverter.printHexBinary(bytes).toUpperCase();
-    }
-
     public static DigestInputStream createMD5HashStream(final InputStream inputStream) throws NoSuchAlgorithmException {
         Assert.requireNonNull(inputStream, "inputStream");
         final MessageDigest digest = MessageDigest.getInstance(HASH_ALGORITHM);
         return new DigestInputStream(inputStream, digest);
-    }
-
-
-    public static String readMD5Hash(final InputStream inputStream) throws IOException, NoSuchAlgorithmException {
-        try (final DigestInputStream digestInputStream = createMD5HashStream(inputStream)) {
-            final byte[] buffer = new byte[1024];
-            while (digestInputStream.read(buffer) > 0) {
-            }
-            return toHex(digestInputStream.getMessageDigest().digest());
-        }
     }
 
     public static byte[] readContent(final InputStream inputStream) throws IOException {

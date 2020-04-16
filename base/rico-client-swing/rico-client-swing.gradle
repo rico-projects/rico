@@ -16,5 +16,5 @@
  */
 
 dependencies {
-    compile project(':rico-client')
+    api project(':rico-client')
 }

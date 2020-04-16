@@ -63,7 +63,7 @@ public class RemoteLogger implements LoggerBridge {
 
     private final AtomicLong remotingErrorTime = new AtomicLong(0);
 
-    private final BlockingQueue<LogMessage> messageBlockingQueue = new LinkedBlockingQueue();
+    private final BlockingQueue<LogMessage> messageBlockingQueue = new LinkedBlockingQueue<>();
 
     public RemoteLogger(final LoggerConfiguration configuration) {
         Objects.requireNonNull(configuration);

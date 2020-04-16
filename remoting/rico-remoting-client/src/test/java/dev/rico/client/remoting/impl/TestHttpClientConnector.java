@@ -18,10 +18,10 @@ package dev.rico.client.remoting.impl;
 
 import dev.rico.client.concurrent.BackgroundExecutor;
 import dev.rico.client.concurrent.UiExecutor;
-import dev.rico.internal.client.remoting.HttpClientConnector;
-import dev.rico.internal.client.remoting.legacy.ClientModelStore;
-import dev.rico.internal.client.remoting.legacy.DefaultModelSynchronizer;
-import dev.rico.internal.client.remoting.legacy.communication.SimpleExceptionHandler;
+import dev.rico.internal.remoting.client.HttpClientConnector;
+import dev.rico.internal.remoting.client.legacy.ClientModelStore;
+import dev.rico.internal.remoting.client.legacy.DefaultModelSynchronizer;
+import dev.rico.internal.remoting.client.legacy.communication.SimpleExceptionHandler;
 import dev.rico.client.Client;
 import dev.rico.internal.client.http.HttpClientImpl;
 import dev.rico.internal.core.http.HttpStatus;
@@ -48,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@SuppressWarnings("deprecation")
 public class TestHttpClientConnector {
 
     @Test

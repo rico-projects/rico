@@ -16,9 +16,8 @@
  */
 package dev.rico.integrationtests.remoting;
 
-import dev.rico.client.remoting.ClientContext;
-import dev.rico.client.remoting.ControllerProxy;
-import dev.rico.integrationtests.AbstractIntegrationTest;
+import dev.rico.remoting.client.ClientContext;
+import dev.rico.remoting.client.ControllerProxy;
 import dev.rico.integrationtests.remoting.property.PropertyTestBean;
 import org.testng.Assert;
 import org.testng.annotations.Test;

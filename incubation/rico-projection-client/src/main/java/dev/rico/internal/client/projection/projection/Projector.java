@@ -16,16 +16,16 @@
  */
 package dev.rico.internal.client.projection.projection;
 
+import dev.rico.internal.client.projection.base.ClientActionSupport;
 import dev.rico.internal.projection.action.ClientAction;
 import dev.rico.internal.projection.action.ServerAction;
 import dev.rico.internal.projection.base.Projectable;
-import dev.rico.internal.client.projection.base.ClientActionSupport;
+import dev.rico.internal.projection.base.View;
 import dev.rico.internal.projection.form.Form;
 import dev.rico.internal.projection.graph.GraphDataBean;
 import dev.rico.internal.projection.lazy.concrete.MediaLazyListBean;
-import dev.rico.internal.projection.base.View;
-import dev.rico.client.remoting.ClientContext;
-import dev.rico.client.remoting.ControllerProxy;
+import dev.rico.remoting.client.ClientContext;
+import dev.rico.remoting.client.ControllerProxy;
 import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -62,12 +62,12 @@ public class Projector {
 
     public Parent create(final Object projectable, final ControllerProxy controllerProxy) {
         ProjectionFactory factory = projectionMapping.get(projectable.getClass());
-        if(factory != null) {
+        if (factory != null) {
             return factory.createProjection(this, clientContext, controllerProxy, projectable);
         }
-        if(factory == null) {
-            for(Class cls : projectionMapping.keySet()) {
-                if(cls.isAssignableFrom(projectable.getClass())) {
+        if (factory == null) {
+            for (Class cls : projectionMapping.keySet()) {
+                if (cls.isAssignableFrom(projectable.getClass())) {
                     return projectionMapping.get(cls).createProjection(this, clientContext, controllerProxy, projectable);
                 }
             }
@@ -81,14 +81,14 @@ public class Projector {
 
     public CompletableFuture<Void> openInWindow(final String controllerName, final Consumer<Scene> sceneInitializer) {
         return clientContext.createController(controllerName).handle((c, e) -> {
-            if(e != null) {
+            if (e != null) {
                 //TODO
             }
             Platform.runLater(() -> {
                 Parent rootPane = create((Projectable) c.getModel(), c);
                 Stage stage = new Stage();
                 Scene scene = new Scene(rootPane);
-                if(sceneInitializer != null) {
+                if (sceneInitializer != null) {
                     sceneInitializer.accept(scene);
                 }
                 stage.setScene(scene);
@@ -103,7 +103,7 @@ public class Projector {
 
     public CompletableFuture<Parent> create(final String controllerName) {
         return clientContext.createController(controllerName).handle((c, e) -> {
-            if(e != null) {
+            if (e != null) {
                 //TODO
             }
             return create((Projectable) c.getModel(), c);

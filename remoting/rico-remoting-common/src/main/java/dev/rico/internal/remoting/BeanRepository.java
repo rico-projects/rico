@@ -26,6 +26,7 @@ import java.util.List;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
+@SuppressWarnings("deprecation")
 public interface BeanRepository extends BeanRepo {
 
     <T> Subscription addOnAddedListener(final Class<T> beanClass, final BeanAddedListener<? super T> listener);

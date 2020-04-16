@@ -16,12 +16,12 @@
  */
 package dev.rico.internal.server.remoting.test;
 
-import dev.rico.internal.client.remoting.legacy.ClientModelStore;
-import dev.rico.internal.client.remoting.legacy.communication.AbstractClientConnector;
-import dev.rico.internal.client.remoting.legacy.communication.CommandAndHandler;
-import dev.rico.internal.client.remoting.legacy.communication.CommandBatcher;
-import dev.rico.internal.client.remoting.legacy.communication.OnFinishedHandler;
-import dev.rico.internal.client.remoting.legacy.communication.SimpleExceptionHandler;
+import dev.rico.internal.remoting.client.legacy.ClientModelStore;
+import dev.rico.internal.remoting.client.legacy.communication.AbstractClientConnector;
+import dev.rico.internal.remoting.client.legacy.communication.CommandAndHandler;
+import dev.rico.internal.remoting.client.legacy.communication.CommandBatcher;
+import dev.rico.internal.remoting.client.legacy.communication.OnFinishedHandler;
+import dev.rico.internal.remoting.client.legacy.communication.SimpleExceptionHandler;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.remoting.legacy.commands.StartLongPollCommand;
 import dev.rico.internal.remoting.legacy.communication.Command;
@@ -62,6 +62,7 @@ public class TestClientConnectorImpl extends AbstractClientConnector {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void send(Command command, OnFinishedHandler callback) {
         List<Command> answer = transmit(new ArrayList<>(Arrays.asList(command)));
         CommandAndHandler handler = new CommandAndHandler(command, callback);

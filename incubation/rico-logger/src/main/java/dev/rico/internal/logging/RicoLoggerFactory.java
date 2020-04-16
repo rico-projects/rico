@@ -50,7 +50,7 @@ public class RicoLoggerFactory implements ILoggerFactory {
 
     private final AtomicBoolean configured = new AtomicBoolean(false);
 
-    private final ConcurrentMap<String, RicoLogger> loggerMap = new ConcurrentHashMap();
+    private final ConcurrentMap<String, RicoLogger> loggerMap = new ConcurrentHashMap<>();
 
     private final List<LoggerBridge> bridges = new CopyOnWriteArrayList<>();
 

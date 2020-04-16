@@ -16,8 +16,7 @@
  */
 package dev.rico.integrationtests.remoting;
 
-import dev.rico.client.remoting.ClientContext;
-import dev.rico.integrationtests.AbstractIntegrationTest;
+import dev.rico.remoting.client.ClientContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

@@ -16,7 +16,7 @@
  */
 package dev.rico.internal.server.remoting.test;
 
-import dev.rico.internal.server.AbstractSpringManagedBeanFactory;
+import dev.rico.internal.server.spring.AbstractSpringManagedBeanFactory;
 import dev.rico.internal.core.Assert;
 import org.apiguardian.api.API;
 import org.springframework.context.ApplicationContext;

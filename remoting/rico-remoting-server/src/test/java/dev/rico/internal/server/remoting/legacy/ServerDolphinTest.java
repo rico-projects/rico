@@ -20,6 +20,10 @@ import dev.rico.internal.remoting.legacy.communication.Command;
 import dev.rico.internal.remoting.legacy.core.ModelStoreEvent;
 import dev.rico.internal.remoting.legacy.core.ModelStoreListener;
 import dev.rico.internal.remoting.legacy.core.PresentationModel;
+import dev.rico.internal.remoting.server.legacy.DefaultServerDolphin;
+import dev.rico.internal.remoting.server.legacy.ServerAttribute;
+import dev.rico.internal.remoting.server.legacy.ServerDolphinFactory;
+import dev.rico.internal.remoting.server.legacy.ServerPresentationModel;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -28,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@SuppressWarnings({"unchecked", "deprecation"})
 public class ServerDolphinTest {
 
     private DefaultServerDolphin serverInstance;

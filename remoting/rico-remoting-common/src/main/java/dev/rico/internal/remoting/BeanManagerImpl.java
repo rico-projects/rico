@@ -43,12 +43,14 @@ public class BeanManagerImpl implements BeanManager {
     }
 
     @Override
+    @Deprecated
     public <T> List<T> findAll(final Class<T> beanClass) {
         RemotingUtils.assertIsRemotingBean(beanClass);
         return beanRepository.findAll(beanClass);
     }
 
     @Override
+    @Deprecated
     public <T> Subscription onAdded(final Class<T> beanClass, final BeanAddedListener<? super T> listener) {
         RemotingUtils.assertIsRemotingBean(beanClass);
         return beanRepository.addOnAddedListener(beanClass, listener);

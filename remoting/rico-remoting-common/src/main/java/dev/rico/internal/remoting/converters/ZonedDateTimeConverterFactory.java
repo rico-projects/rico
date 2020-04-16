@@ -20,13 +20,12 @@ import dev.rico.remoting.converter.Converter;
 import dev.rico.remoting.converter.ValueConverterException;
 import org.apiguardian.api.API;
 
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Calendar;
+import java.time.temporal.TemporalAccessor;
 import java.util.Collections;
-import java.util.GregorianCalendar;
 import java.util.List;
 
+import static dev.rico.internal.remoting.RemotingConstants.JAVA_DATE_AND_TIME_FORMATTER;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
@@ -49,7 +48,7 @@ public class ZonedDateTimeConverterFactory extends AbstractConverterFactory {
         return CONVERTER;
     }
 
-    private static class ZonedDateTimeConverter extends AbstractDateConverter<ZonedDateTime> {
+    private static class ZonedDateTimeConverter extends AbstractStringConverter<ZonedDateTime> {
 
         @Override
         public ZonedDateTime convertFromRemoting(final String value) throws ValueConverterException {
@@ -57,9 +56,8 @@ public class ZonedDateTimeConverterFactory extends AbstractConverterFactory {
                 return null;
             }
             try {
-                final Calendar result = Calendar.getInstance();
-                result.setTime(getDateFormat().parse(value));
-                return result.toInstant().atZone(ZoneId.systemDefault());
+                final TemporalAccessor parsed = JAVA_DATE_AND_TIME_FORMATTER.parse(value);
+                return ZonedDateTime.from(parsed);
             } catch (final Exception e) {
                 throw new ValueConverterException("Can not convert to ZonedDateTime", e);
             }
@@ -71,8 +69,7 @@ public class ZonedDateTimeConverterFactory extends AbstractConverterFactory {
                 return null;
             }
             try {
-                final Calendar calendar = GregorianCalendar.from(value);
-                return getDateFormat().format(calendar.getTime());
+                return JAVA_DATE_AND_TIME_FORMATTER.format(value);
             } catch (final Exception e) {
                 throw new ValueConverterException("Can not convert from ZonedDateTime", e);
             }

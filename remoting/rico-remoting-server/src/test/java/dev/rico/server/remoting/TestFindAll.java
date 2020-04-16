@@ -16,7 +16,7 @@
  */
 package dev.rico.server.remoting;
 
-import dev.rico.internal.server.remoting.legacy.ServerModelStore;
+import dev.rico.internal.remoting.server.legacy.ServerModelStore;
 import dev.rico.server.remoting.util.AbstractRemotingTest;
 import dev.rico.server.remoting.util.SimpleAnnotatedTestModel;
 import dev.rico.server.remoting.util.SimpleTestModel;
@@ -29,6 +29,7 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
+@SuppressWarnings("deprecation")
 public class TestFindAll extends AbstractRemotingTest {
 
     @Test

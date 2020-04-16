@@ -19,14 +19,14 @@ package dev.rico.internal.client.logging.view;
 import dev.rico.client.Client;
 import dev.rico.client.concurrent.BackgroundExecutor;
 import dev.rico.client.concurrent.UiExecutor;
-import dev.rico.client.remoting.ClientContext;
-import dev.rico.client.remoting.FXBinder;
-import dev.rico.client.remoting.view.AbstractViewController;
 import dev.rico.internal.client.logging.widgets.LogListCell;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.logging.LogEntryBean;
 import dev.rico.internal.logging.LogListBean;
 import dev.rico.internal.logging.spi.LogMessage;
+import dev.rico.remoting.client.ClientContext;
+import dev.rico.remoting.client.javafx.FXBinder;
+import dev.rico.remoting.client.javafx.view.AbstractViewController;
 import javafx.scene.Node;
 import javafx.scene.control.ListView;
 
@@ -52,7 +52,9 @@ public class LogListViewController extends AbstractViewController<LogListBean> {
             while (true) {
                 try {
                     Thread.sleep(2_000);
-                } catch (InterruptedException e) { e.printStackTrace();}
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 Client.getService(UiExecutor.class).execute(() -> invoke(UPDATE_ACTION));
             }
         });

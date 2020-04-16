@@ -36,10 +36,12 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class PropertyImpl<T> extends AbstractProperty<T> {
 
+    @SuppressWarnings("deprecation")
     private final Attribute attribute;
 
     private final PropertyInfo propertyInfo;
 
+    @SuppressWarnings("deprecation")
     public PropertyImpl(final Attribute attribute, final PropertyInfo propertyInfo) {
         this.attribute = Assert.requireNonNull(attribute, "attribute");
         this.propertyInfo = Assert.requireNonNull(propertyInfo, "propertyInfo");

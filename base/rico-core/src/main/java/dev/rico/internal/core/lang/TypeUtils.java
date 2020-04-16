@@ -36,6 +36,7 @@ import java.util.Set;
 /**
  * Some extracted methods from Apache commons lang3
  */
+@SuppressWarnings("unchecked")
 public class TypeUtils {
 
     /**

@@ -1,1 +1,1 @@
-dev.rico.internal.server.metrics.module.MetricsConfigurationProvider
+dev.rico.internal.metrics.server.module.MetricsConfigurationProvider

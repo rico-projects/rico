@@ -18,7 +18,7 @@ public class SingleInstanceChecker {
     }
 
     public void instanceCheck() {
-        final List<ShutdownTask> shutdownRunnables = new ArrayList();
+        final List<ShutdownTask> shutdownRunnables = new ArrayList<>();
         shutdownRunnables.add(() -> Files.deleteIfExists(lockFile));
         try {
             Files.createDirectories(lockFile.getParent());

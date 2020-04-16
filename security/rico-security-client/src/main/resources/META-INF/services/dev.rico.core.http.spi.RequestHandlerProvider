@@ -1,1 +1,1 @@
-dev.rico.internal.client.security.KeycloakSecurityRequestHandlerProvider
+dev.rico.internal.security.client.KeycloakSecurityRequestHandlerProvider

@@ -1,19 +1,29 @@
 dist: trusty
 sudo: required
-language: java
-jdk: oraclejdk8
 
 services:
   - docker
 
-stages:
-  - build
-  - name: snapshot
-    if: (branch = master) AND (NOT (type IN (push, pull_request)))
+before_install:
+  # adding $HOME/.sdkman to cache would create an empty directory, which interferes with the initial installation
+  - "[[ -d /home/travis/.sdkman/ ]] && [[ -d /home/travis/.sdkman/bin/ ]] || rm -rf /home/travis/.sdkman/"
+  - curl -sL https://get.sdkman.io | bash
+  - echo sdkman_auto_answer=true > $HOME/.sdkman/etc/config
+  - echo sdkman_auto_selfupdate=true >> $HOME/.sdkman/etc/config
+  - source "/home/travis/.sdkman/bin/sdkman-init.sh"
 
-jobs:
-  include:
-    - stage: build
-      script: "./gradlew clean build artifactoryPublish -x test"
-    - stage: snapshot
-      script: "./gradlew clean build"
+install:
+  - sdk install java 11.0.6.hs-adpt || true
+
+script: "./gradlew clean build --info"
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  directories:
+    - $HOME/.sdkman
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+

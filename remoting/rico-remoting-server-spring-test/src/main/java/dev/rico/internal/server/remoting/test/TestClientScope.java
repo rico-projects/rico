@@ -16,7 +16,7 @@
  */
 package dev.rico.internal.server.remoting.test;
 
-import dev.rico.internal.server.ClientScopeImpl;
+import dev.rico.internal.server.spring.ClientScopeImpl;
 import dev.rico.internal.core.Assert;
 import dev.rico.server.client.ClientSession;
 import org.apiguardian.api.API;
