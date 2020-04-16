@@ -23,10 +23,17 @@ install:
 jobs:
   include:
     - stage: build
-      script: "./gradlew clean build -x test"
+      script: "./gradlew clean build"
     - stage: snapshot
-      script: "./gradlew clean build -x test"
+      script: "./gradlew clean build"
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 
 cache:
   directories:
     - $HOME/.sdkman
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+
