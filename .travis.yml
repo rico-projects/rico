@@ -23,9 +23,9 @@ install:
 jobs:
   include:
     - stage: build
-      script: "./gradlew clean build --info"
+      script: "./gradlew clean :rico-server:javadoc --info"
     - stage: snapshot
-      script: "./gradlew clean build --info"
+      script: "./gradlew clean :rico-server:javadoc --info"
 
 cache:
   directories:
