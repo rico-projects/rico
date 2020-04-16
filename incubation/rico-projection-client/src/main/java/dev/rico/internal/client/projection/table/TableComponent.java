@@ -19,18 +19,18 @@ package dev.rico.internal.client.projection.table;
 import dev.rico.internal.projection.table.PropertyColumn;
 import dev.rico.internal.projection.table.Table;
 import dev.rico.remoting.Property;
-import dev.rico.client.remoting.FXBinder;
+import dev.rico.remoting.client.javafx.FXBinder;
 import javafx.scene.control.TableView;
 
 public class TableComponent<S> extends TableView<S> {
 
     public TableComponent(Property<Table<S>> tableProperty) {
         tableProperty.onChanged(e -> {
-            if(e.getNewValue() != null) {
+            if (e.getNewValue() != null) {
                 update(e.getNewValue());
             }
         });
-        if(tableProperty.get() != null) {
+        if (tableProperty.get() != null) {
             update(tableProperty.get());
         }
     }
@@ -42,7 +42,7 @@ public class TableComponent<S> extends TableView<S> {
     private void update(Table<S> table) {
         FXBinder.bind(getItems()).to(table.getItems());
         FXBinder.bind(getColumns()).to(table.getColumns(), column -> {
-            if(column instanceof PropertyColumn) {
+            if (column instanceof PropertyColumn) {
                 return new PropertyTableColumn<S, Object>((PropertyColumn) column);
             } else {
                 //TODO: Action Column, Error

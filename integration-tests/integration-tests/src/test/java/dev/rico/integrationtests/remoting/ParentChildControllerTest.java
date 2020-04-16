@@ -31,7 +31,7 @@ import static dev.rico.integrationtests.remoting.parentchild.ParentChildTestCons
 
 public class ParentChildControllerTest extends AbstractRemotingIntegrationTest {
 
-    @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Test if controller and model can be created", enabled = false)
+    @Test(dataProvider = ENDPOINTS_DATAPROVIDER, description = "Test if controller and model can be created")
     public void testCreateController(final String containerType, final String endpoint) {
         try {
             ClientContext context = connect(endpoint);
@@ -122,7 +122,7 @@ public class ParentChildControllerTest extends AbstractRemotingIntegrationTest {
             ClientContext context = connect(endpoint);
             ControllerProxy<ParentTestBean> controller = createController(context, PARENT_CONTROLLER_NAME);
             ControllerProxy<?> childController = controller.createController(CHILD_CONTROLLER_NAME).get();
-            Property<Boolean> childPreDestroyCalledProperty = ((ChildTestBean)childController.getModel()).preDestroyedCalledProperty();
+            Property<Boolean> childPreDestroyCalledProperty = ((ChildTestBean) childController.getModel()).preDestroyedCalledProperty();
             Property<Boolean> parentPreDestroyCalledProperty = controller.getModel().preDestroyedCalledProperty();
             Assert.assertNull(parentPreDestroyCalledProperty.get());
             Assert.assertNull(childPreDestroyCalledProperty.get());

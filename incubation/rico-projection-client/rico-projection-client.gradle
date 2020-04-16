@@ -21,4 +21,8 @@ dependencies {
     api project(':rico-remoting-client-javafx')
     api project(':rico-projection-common')
     implementation "org.controlsfx:controlsfx:8.40.9"
+    implementation "org.openjfx:javafx-base:11.0.2:mac"
+    implementation "org.openjfx:javafx-graphics:11.0.2:mac"
+    implementation "org.openjfx:javafx-controls:11.0.2:mac"
+
 }

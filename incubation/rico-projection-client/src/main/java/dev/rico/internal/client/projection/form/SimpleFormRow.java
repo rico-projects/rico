@@ -18,9 +18,8 @@ package dev.rico.internal.client.projection.form;
 
 import dev.rico.internal.client.projection.projection.Utils;
 import dev.rico.internal.projection.form.FormField;
-import dev.rico.client.remoting.BidirectionalConverter;
-import dev.rico.client.remoting.Converter;
-import dev.rico.client.remoting.FXBinder;
+import dev.rico.remoting.client.javafx.BidirectionalConverter;
+import dev.rico.remoting.client.javafx.FXBinder;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Pos;
@@ -119,11 +118,11 @@ public class SimpleFormRow extends AbstractFormLayoutRegion {
         try {
             Control editor = null;
             if (bean.getContentType().equals(String.class)) {
-              //  if (((StringFormFieldBean) bean).isMultiline()) {
+                //  if (((StringFormFieldBean) bean).isMultiline()) {
                 //      editor = new TextArea();
                 //     ((TextArea) editor).setWrapText(true);
                 //  } else {
-                      editor = new TextField();
+                editor = new TextField();
                 //  }
                 FXBinder.bind(((TextInputControl) editor).textProperty()).bidirectionalTo(bean.valueProperty());
 
@@ -175,9 +174,9 @@ public class SimpleFormRow extends AbstractFormLayoutRegion {
         label.setMaxHeight(Double.MAX_VALUE);
 
 
-      //  if (bean instanceof StringFormFieldBean && ((StringFormFieldBean) bean).isMultiline()) {
-      //      label.setAlignment(Pos.TOP_RIGHT);
-      //  }
+        //  if (bean instanceof StringFormFieldBean && ((StringFormFieldBean) bean).isMultiline()) {
+        //      label.setAlignment(Pos.TOP_RIGHT);
+        //  }
         if (bean.getContentType().equals(Boolean.class)) {
             label.setVisible(false);
         } else {

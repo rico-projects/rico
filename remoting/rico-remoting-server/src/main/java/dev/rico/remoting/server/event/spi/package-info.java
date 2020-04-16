@@ -15,6 +15,9 @@
  * limitations under the License.
  */
 /**
- * The remoting layer supports different implementations for the event bus (see {@link dev.rico.remoting.server.event.RemotingEventBus}). This is for example needed if the event bus should be used in a clustered or distributed environment.
+ * The remoting layer supports different implementations for the
+ * event bus (see {@link dev.rico.remoting.server.event.RemotingEventBus}).
+ * This is for example needed if the event bus should be used in a clustered
+ * or distributed environment.
  */
 package dev.rico.remoting.server.event.spi;

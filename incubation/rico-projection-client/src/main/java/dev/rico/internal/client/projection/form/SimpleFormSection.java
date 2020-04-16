@@ -18,7 +18,7 @@ package dev.rico.internal.client.projection.form;
 
 import dev.rico.internal.projection.form.FormField;
 import dev.rico.internal.projection.form.FormSection;
-import dev.rico.client.remoting.FXWrapper;
+import dev.rico.remoting.client.javafx.FXWrapper;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Node;
@@ -61,17 +61,17 @@ public class SimpleFormSection extends AbstractFormLayoutRegion {
         formSectionBean.getFields().onChanged(e -> {
             getChildren().clear();
             getChildren().addAll(header, descriptionLabel);
-            for(FormField formFieldBean : formSectionBean.getFields()) {
+            for (FormField formFieldBean : formSectionBean.getFields()) {
                 getChildren().add(rowFactory.call(formFieldBean));
             }
-           requestParentLayout();
+            requestParentLayout();
         });
-        for(FormField formFieldBean : formSectionBean.getFields()) {
+        for (FormField formFieldBean : formSectionBean.getFields()) {
             getChildren().add(rowFactory.call(formFieldBean));
         }
 
         titleWidthProperty().addListener(e -> {
-            for(SimpleFormRow row : getRows()) {
+            for (SimpleFormRow row : getRows()) {
                 row.setTitleWidth(getTitleWidth());
             }
         });
@@ -86,7 +86,7 @@ public class SimpleFormSection extends AbstractFormLayoutRegion {
     protected double computePrefWidth(double height) {
         updateSizes();
         double prefWidth = getPadding().getLeft() + getPadding().getRight();
-        for(SimpleFormRow row : getRows()) {
+        for (SimpleFormRow row : getRows()) {
             prefWidth = Math.max(prefWidth, getPadding().getLeft() + row.prefWidth(-1) + getPadding().getRight());
         }
         return prefWidth;
@@ -96,7 +96,7 @@ public class SimpleFormSection extends AbstractFormLayoutRegion {
     protected double computeMaxWidth(double height) {
         updateSizes();
         double maxWidth = Double.MAX_VALUE;
-        for(SimpleFormRow row : getRows()) {
+        for (SimpleFormRow row : getRows()) {
             maxWidth = Math.min(maxWidth, getPadding().getLeft() + row.maxWidth(-1) + getPadding().getRight());
         }
         return maxWidth;
@@ -106,7 +106,7 @@ public class SimpleFormSection extends AbstractFormLayoutRegion {
     protected double computeMinWidth(double height) {
         updateSizes();
         double minWidth = getPadding().getLeft() + getPadding().getRight();
-        for(SimpleFormRow row : getRows()) {
+        for (SimpleFormRow row : getRows()) {
             minWidth = Math.max(minWidth, getPadding().getLeft() + row.minWidth(-1) + getPadding().getRight());
         }
         return minWidth;
@@ -116,18 +116,18 @@ public class SimpleFormSection extends AbstractFormLayoutRegion {
     protected double computePrefHeight(double width) {
         updateSizes();
         double prefHeight = getPadding().getTop();
-        if(header.isVisible()) {
-            prefHeight = prefHeight  + header.prefHeight(width);
+        if (header.isVisible()) {
+            prefHeight = prefHeight + header.prefHeight(width);
         }
-        if(descriptionLabel.isVisible()) {
-            prefHeight = prefHeight  + descriptionLabel.prefHeight(width);
+        if (descriptionLabel.isVisible()) {
+            prefHeight = prefHeight + descriptionLabel.prefHeight(width);
         }
 
-        for(SimpleFormRow row : getRows()) {
+        for (SimpleFormRow row : getRows()) {
             prefHeight = prefHeight + row.prefHeight(width);
         }
         prefHeight = prefHeight + Math.max(0, (getRows().size() - 1) * spacing.get());
-        prefHeight = prefHeight +  getPadding().getBottom();
+        prefHeight = prefHeight + getPadding().getBottom();
         return prefHeight;
     }
 
@@ -135,19 +135,19 @@ public class SimpleFormSection extends AbstractFormLayoutRegion {
     protected double computeMaxHeight(double width) {
         updateSizes();
         double maxHeight = getPadding().getTop();
-        if(header.isVisible()) {
-            maxHeight = maxHeight  + header.maxHeight(width);
+        if (header.isVisible()) {
+            maxHeight = maxHeight + header.maxHeight(width);
         }
-        if(descriptionLabel.isVisible()) {
-            maxHeight = maxHeight  + descriptionLabel.maxHeight(width);
+        if (descriptionLabel.isVisible()) {
+            maxHeight = maxHeight + descriptionLabel.maxHeight(width);
         }
 
-        for(SimpleFormRow row : getRows()) {
+        for (SimpleFormRow row : getRows()) {
             maxHeight = maxHeight + row.maxHeight(width);
         }
         maxHeight = maxHeight + Math.max(0, (getRows().size() - 1) * spacing.get());
 
-        maxHeight = maxHeight +  getPadding().getBottom();
+        maxHeight = maxHeight + getPadding().getBottom();
         return maxHeight;
     }
 
@@ -155,19 +155,19 @@ public class SimpleFormSection extends AbstractFormLayoutRegion {
     protected double computeMinHeight(double width) {
         updateSizes();
         double minHeight = getPadding().getTop();
-        if(header.isVisible()) {
-            minHeight = minHeight  + header.minHeight(width);
+        if (header.isVisible()) {
+            minHeight = minHeight + header.minHeight(width);
         }
-        if(descriptionLabel.isVisible()) {
-            minHeight = minHeight  + descriptionLabel.minHeight(width);
+        if (descriptionLabel.isVisible()) {
+            minHeight = minHeight + descriptionLabel.minHeight(width);
         }
 
-        for(SimpleFormRow row : getRows()) {
+        for (SimpleFormRow row : getRows()) {
             minHeight = minHeight + row.minHeight(width);
         }
         minHeight = minHeight + Math.max(0, (getRows().size() - 1) * spacing.get());
 
-        minHeight = minHeight +  getPadding().getBottom();
+        minHeight = minHeight + getPadding().getBottom();
         return minHeight;
     }
 
@@ -178,7 +178,7 @@ public class SimpleFormSection extends AbstractFormLayoutRegion {
         double labelMaxWidth = Double.MAX_VALUE;
         double labelMinWidth = 0;
         double labelPrefWidth = 0;
-        for(SimpleFormRow row : getRows()) {
+        for (SimpleFormRow row : getRows()) {
             row.updateSizes();
             editorMaxWidth = Math.min(editorMaxWidth, row.getMaxEditorWidth());
             editorMinWidth = Math.max(editorMinWidth, row.getMinEditorWidth());
@@ -197,8 +197,8 @@ public class SimpleFormSection extends AbstractFormLayoutRegion {
 
     protected List<SimpleFormRow> getRows() {
         List<SimpleFormRow> rows = new ArrayList<>();
-        for(Node child : getChildren()) {
-            if(child instanceof SimpleFormRow) {
+        for (Node child : getChildren()) {
+            if (child instanceof SimpleFormRow) {
                 rows.add((SimpleFormRow) child);
             }
         }
@@ -209,20 +209,20 @@ public class SimpleFormSection extends AbstractFormLayoutRegion {
     protected void layoutChildren() {
         double startY = getPadding().getTop();
 
-        if(header.isVisible()) {
+        if (header.isVisible()) {
             double headerHeight = header.prefHeight(getWidth());
             header.relocate(getPadding().getLeft(), startY);
             header.resize(getWidth(), headerHeight);
             startY = startY + headerHeight;
         }
-        if(descriptionLabel.isVisible()) {
+        if (descriptionLabel.isVisible()) {
             double descHeight = descriptionLabel.prefHeight(getWidth());
             descriptionLabel.relocate(getPadding().getLeft(), startY);
             descriptionLabel.resize(getWidth(), descHeight);
             startY = startY + descHeight;
         }
 
-        for(SimpleFormRow row : getRows()) {
+        for (SimpleFormRow row : getRows()) {
             row.setTitleWidth(getTitleWidth());
             row.relocate(getPadding().getLeft(), startY);
             double height = row.prefHeight(getWidth() - getPadding().getLeft() - getPadding().getRight());

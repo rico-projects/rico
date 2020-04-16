@@ -26,7 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -53,13 +52,13 @@ public class DefaultClasspathScanner implements ClasspathScanner {
     public DefaultClasspathScanner(final String... rootPackages) {
         Assert.requireNonNull(rootPackages, "rootPackages");
 
-        LOG.trace("Scanning class path for root packages {}", Arrays.toString(rootPackages));
+        LOG.debug("Scanning class path for root packages {}", Arrays.toString(rootPackages));
 
         this.rootPackages = rootPackages;
     }
 
     public DefaultClasspathScanner(final List<String> rootPackages) {
-           this(Assert.requireNonNull(rootPackages, "rootPackages").toArray(new String[0]));
+        this(Assert.requireNonNull(rootPackages, "rootPackages").toArray(new String[0]));
     }
 
     /**
@@ -83,13 +82,13 @@ public class DefaultClasspathScanner implements ClasspathScanner {
         final long startTime = System.currentTimeMillis();
         try (final ScanResult scanResult = classGraph.scan()) {                   // Start the scan
             for (final ClassInfo classInfo : scanResult.getClassesWithAnnotation(annotation.getName())) {
-                if(!classInfo.isAnnotation()) {
+                if (!classInfo.isAnnotation()) {
                     final Class<?> annotatedClass = classInfo.loadClass();
                     result.add(annotatedClass);
                 }
             }
         }
-        LOG.info("Classpath scan for annotation '{}' took {} ms", annotation.getName(), System.currentTimeMillis() - startTime);
+        LOG.debug("Classpath scan for annotation '{}' took {} ms", annotation.getName(), System.currentTimeMillis() - startTime);
         return Collections.unmodifiableSet(result);
     }
 }

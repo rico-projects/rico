@@ -20,12 +20,6 @@ dependencies {
     api project(':rico-security-common')
     implementation "org.keycloak:keycloak-servlet-adapter-spi:$keyclockVersion"
     implementation "org.apache.httpcomponents:httpclient:4.5.4"
-
-
-    //implementation ("org.keycloak:keycloak-servlet-filter-adapter:$keyclockVersion")
-            //{
-        //exclude group:"org.keycloak", module:"keycloak-servlet-adapter-spi"
-    //}
     implementation "org.keycloak:keycloak-core:$keyclockVersion"
     implementation "org.keycloak:keycloak-adapter-spi:$keyclockVersion"
     implementation "org.keycloak:keycloak-adapter-core:$keyclockVersion"

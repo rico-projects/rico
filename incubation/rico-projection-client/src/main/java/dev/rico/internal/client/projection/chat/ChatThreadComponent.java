@@ -18,7 +18,7 @@ package dev.rico.internal.client.projection.chat;
 
 import dev.rico.internal.projection.chat.ChatMessage;
 import dev.rico.internal.projection.chat.ChatThread;
-import dev.rico.client.remoting.FXBinder;
+import dev.rico.remoting.client.javafx.FXBinder;
 import javafx.scene.control.ListView;
 
 public class ChatThreadComponent extends ListView<ChatMessage> {

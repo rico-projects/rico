@@ -16,8 +16,8 @@
  */
 package dev.rico.internal.client.projection.projection;
 
-import dev.rico.client.remoting.ClientContext;
-import dev.rico.client.remoting.ControllerProxy;
+import dev.rico.remoting.client.ClientContext;
+import dev.rico.remoting.client.ControllerProxy;
 import javafx.scene.Parent;
 
 public interface ProjectionFactory<T> {

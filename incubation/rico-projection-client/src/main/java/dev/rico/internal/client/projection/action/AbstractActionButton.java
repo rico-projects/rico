@@ -17,7 +17,7 @@
 package dev.rico.internal.client.projection.action;
 
 import dev.rico.internal.projection.base.Action;
-import dev.rico.client.remoting.FXBinder;
+import dev.rico.remoting.client.javafx.FXBinder;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -49,13 +49,13 @@ public abstract class AbstractActionButton<T extends Action> extends Button {
         disableProperty().bind(disabled.or(blockOnAction.and(actionRunning)));
 
         action.descriptionProperty().onChanged(event -> {
-            if(action.getDescription() != null) {
+            if (action.getDescription() != null) {
                 setTooltip(new Tooltip(action.getDescription()));
             } else {
                 setTooltip(null);
             }
         });
-        if(action.getDescription() != null) {
+        if (action.getDescription() != null) {
             setTooltip(new Tooltip(action.getDescription()));
         }
 

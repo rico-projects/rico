@@ -16,12 +16,12 @@
  */
 package dev.rico.internal.client.projection.form;
 
+import dev.rico.core.functional.Subscription;
 import dev.rico.internal.client.projection.action.SimpleActionBar;
 import dev.rico.internal.client.projection.projection.Projector;
 import dev.rico.internal.projection.form.Form;
 import dev.rico.internal.projection.form.FormSection;
-import dev.rico.core.functional.Subscription;
-import dev.rico.client.remoting.ControllerProxy;
+import dev.rico.remoting.client.ControllerProxy;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -64,18 +64,18 @@ public class SimpleForm extends Region {
         this.projector = projector;
         formBean = new SimpleObjectProperty<>();
         this.formBean.addListener(e -> {
-            if(updateSectionSubscription != null) {
+            if (updateSectionSubscription != null) {
                 updateSectionSubscription.unsubscribe();
             }
             getChildren().clear();
             Form bean = this.formBean.get();
-            if(bean != null) {
+            if (bean != null) {
                 updateSectionSubscription = bean.getSections().onChanged(e2 -> {
                     getChildren().clear();
                     for (FormSection formSectionBean : bean.getSections()) {
                         getChildren().add(sectionFactory.call(formSectionBean));
                     }
-                    if(actionBar != null) {
+                    if (actionBar != null) {
                         getChildren().add(actionBar);
                     }
                     requestParentLayout();
@@ -119,7 +119,7 @@ public class SimpleForm extends Region {
         for (SimpleFormSection row : getRows()) {
             prefWidth = Math.max(prefWidth, getPadding().getLeft() + row.prefWidth(-1) + getPadding().getRight());
         }
-        if(actionBar != null) {
+        if (actionBar != null) {
             prefWidth = Math.max(prefWidth, getPadding().getLeft() + actionBar.prefWidth(-1) + getPadding().getRight());
         }
         return prefWidth;
@@ -132,7 +132,7 @@ public class SimpleForm extends Region {
         for (SimpleFormSection row : getRows()) {
             minWidth = Math.max(minWidth, getPadding().getLeft() + row.minWidth(-1) + getPadding().getRight());
         }
-        if(actionBar != null) {
+        if (actionBar != null) {
             minWidth = Math.max(minWidth, getPadding().getLeft() + actionBar.minWidth(-1) + getPadding().getRight());
         }
         return minWidth;
@@ -145,7 +145,7 @@ public class SimpleForm extends Region {
         for (SimpleFormSection row : getRows()) {
             maxWidth = Math.min(maxWidth, getPadding().getLeft() + row.maxWidth(-1) + getPadding().getRight());
         }
-        if(actionBar != null) {
+        if (actionBar != null) {
             maxWidth = Math.min(maxWidth, getPadding().getLeft() + actionBar.maxWidth(-1) + getPadding().getRight());
         }
         return maxWidth;
@@ -159,7 +159,7 @@ public class SimpleForm extends Region {
             prefHeight = prefHeight + row.prefHeight(width);
         }
         prefHeight = prefHeight + Math.max(0, (getRows().size() - 1) * spacing.get());
-        if(actionBar != null) {
+        if (actionBar != null) {
             prefHeight = prefHeight + spacing.get() + actionBar.prefHeight(width);
         }
         return prefHeight;
@@ -173,7 +173,7 @@ public class SimpleForm extends Region {
             minHeight = minHeight + row.minHeight(width);
         }
         minHeight = minHeight + Math.max(0, (getRows().size() - 1) * spacing.get());
-        if(actionBar != null) {
+        if (actionBar != null) {
             minHeight = minHeight + spacing.get() + actionBar.minHeight(width);
         }
         return minHeight;
@@ -187,7 +187,7 @@ public class SimpleForm extends Region {
             maxHeight = maxHeight + row.maxHeight(width);
         }
         maxHeight = maxHeight + Math.max(0, (getRows().size() - 1) * spacing.get());
-        if(actionBar != null) {
+        if (actionBar != null) {
             maxHeight = maxHeight + spacing.get() + actionBar.maxHeight(width);
         }
         maxHeight = maxHeight + getPadding().getBottom();
@@ -219,7 +219,7 @@ public class SimpleForm extends Region {
             row.resize(width, height);
             startY = startY + spacing.get() + height;
         }
-        if(actionBar != null) {
+        if (actionBar != null) {
             double height = actionBar.prefHeight(width);
             actionBar.relocate(getPadding().getLeft(), getHeight() - getPadding().getBottom() - height);
             actionBar.resize(width, height);

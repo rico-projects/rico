@@ -15,7 +15,13 @@
  * limitations under the License.
  */
 /**
- * This package provides a server site event bus for the remoting layer. The event bus can be used to send events to other controllers (see {@link dev.rico.remoting.server.RemotingController}) in the same or in external client sessions (see {@link dev.rico.server.client.ClientSession}). Since the eventbus can easily integrated in any managed bean messages can be send from non Rico beans to controllers. By doing so a remoting controller can for example easily react on messages that are send by a REST endpoint.
+ * This package provides a server site event bus for the remoting layer.
+ * The event bus can be used to send events to other controllers
+ * (see {@link dev.rico.remoting.server.RemotingController}) in the same or in
+ * external client sessions (see {@link dev.rico.server.client.ClientSession}).
+ * Since the eventbus can easily integrated in any managed bean messages can be
+ * send from non Rico beans to controllers. By doing so a remoting controller can
+ * for example easily react on messages that are send by a REST endpoint.
  *
  * @author Hendrik Ebbers
  */

@@ -22,9 +22,12 @@ dependencies {
     api project(':rico-logger-widget-common')
 
     implementation "org.controlsfx:controlsfx:8.40.9"
+    implementation "org.openjfx:javafx-base:11.0.2:mac"
     implementation "org.openjfx:javafx-controls:11.0.2:mac"
+    implementation "org.openjfx:javafx-graphics:11.0.2:mac"
 
 
+    implementation "de.jensd:fontawesomefx-commons:8.15"
     implementation "de.jensd:fontawesomefx-emojione:2.2.7-2"
     implementation "de.jensd:fontawesomefx-fontawesome:4.7.0-5"
     implementation "de.jensd:fontawesomefx-icons525:3.0.0-4"

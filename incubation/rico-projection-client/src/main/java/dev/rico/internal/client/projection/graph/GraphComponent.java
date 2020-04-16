@@ -16,13 +16,12 @@
  */
 package dev.rico.internal.client.projection.graph;
 
+import dev.rico.core.functional.Binding;
+import dev.rico.core.functional.Subscription;
 import dev.rico.internal.projection.graph.GraphDataBean;
 import dev.rico.internal.projection.graph.GraphMetadata;
 import dev.rico.internal.projection.graph.GraphType;
 import dev.rico.internal.projection.metadata.MetadataUtilities;
-import dev.rico.core.functional.Binding;
-import dev.rico.core.functional.Subscription;
-import dev.rico.client.remoting.FXBinder;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.chart.BarChart;
@@ -62,7 +61,7 @@ public class GraphComponent extends StackPane {
         bindings.clear();
 
 
-        if(metadataSubscription != null) {
+        if (metadataSubscription != null) {
             metadataSubscription.unsubscribe();
         }
         metadataSubscription = MetadataUtilities.addListenerToMetadata(data.get(), () -> {

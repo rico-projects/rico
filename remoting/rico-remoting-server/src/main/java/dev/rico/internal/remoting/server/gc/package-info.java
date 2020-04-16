@@ -22,7 +22,7 @@
  * When the server controller removes a bean out of the hierarchy the garbage collection should notice this and automatically
  * removePresentationModel the bean representation from the remoting layer. By doing so the bean will automatically be deleted on the client.
  * How a bean can be created is defined by the {@link dev.rico.remoting.BeanManager}.
- *
+ * <p>
  * The current version of the garbage collections don't allow cycles in references.
  */
 package dev.rico.internal.remoting.server.gc;

@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 /**
- * The server API of the remoting layer. The API provide the functionallity to define controller classes by using the {@link dev.rico.remoting.server.RemotingController} annotation.
+ * The server API of the remoting layer. The API provide the functionality to define
+ * controller classes by using the {@link dev.rico.remoting.server.RemotingController} annotation.
  */
 package dev.rico.remoting.server;

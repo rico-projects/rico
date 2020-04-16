@@ -17,7 +17,7 @@
 package dev.rico.internal.client.projection.action;
 
 import dev.rico.internal.projection.action.ServerAction;
-import dev.rico.client.remoting.ControllerProxy;
+import dev.rico.remoting.client.ControllerProxy;
 
 import java.util.concurrent.CompletableFuture;
 

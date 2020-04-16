@@ -19,7 +19,7 @@ package dev.rico.internal.client.projection.table;
 import dev.rico.internal.core.ReflectionHelper;
 import dev.rico.internal.projection.table.PropertyColumn;
 import dev.rico.remoting.Property;
-import dev.rico.client.remoting.FXBinder;
+import dev.rico.remoting.client.javafx.FXBinder;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
