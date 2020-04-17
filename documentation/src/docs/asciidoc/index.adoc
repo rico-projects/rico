@@ -1,0 +1,9 @@
+ifndef::imagesdir[:imagesdir: images]
+
+= Main Header
+
+include::document.adoc[]
+
+include::document-2.adoc[]
+
+include::sub-doc/subdoc.adoc[]

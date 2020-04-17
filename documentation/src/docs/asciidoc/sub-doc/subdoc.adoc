@@ -1,0 +1,9 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+== Sub
+
+Test 123
+
+image:P4113093.JPG[]
+
+Test 123
