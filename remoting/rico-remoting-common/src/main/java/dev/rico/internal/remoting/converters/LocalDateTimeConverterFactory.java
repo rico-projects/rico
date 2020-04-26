@@ -38,7 +38,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class LocalDateTimeConverterFactory extends AbstractConverterFactory {
 
-    private final static Converter CONVERTER = new LocalDateTimeConverter();
+    private static final Converter CONVERTER = new LocalDateTimeConverter();
 
     @Override
     public List<Class> getSupportedTypes() {

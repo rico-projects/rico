@@ -29,7 +29,7 @@ import static org.apiguardian.api.API.Status.MAINTAINED;
 @API(since = "1.0.0-RC5", status = MAINTAINED)
 public class SwingToolkit implements Toolkit {
 
-    private final static String NAME = "Swing Toolkit";
+    private static final String NAME = "Swing Toolkit";
 
     @Override
     public UiExecutor getUiExecutor() {

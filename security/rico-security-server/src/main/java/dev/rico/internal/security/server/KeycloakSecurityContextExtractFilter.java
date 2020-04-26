@@ -43,7 +43,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.19.0", status = INTERNAL)
 public class KeycloakSecurityContextExtractFilter implements Filter, AccessDeniedCallback {
 
-    private final static Logger LOG = LoggerFactory.getLogger(KeycloakSecurityContextExtractFilter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(KeycloakSecurityContextExtractFilter.class);
 
     private final ThreadLocal<KeycloakSecurityContext> contextHolder = new ThreadLocal<>();
 

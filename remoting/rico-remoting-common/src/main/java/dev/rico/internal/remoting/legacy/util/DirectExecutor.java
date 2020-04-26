@@ -26,7 +26,7 @@ import static org.apiguardian.api.API.Status.DEPRECATED;
 @API(since = "0.x", status = DEPRECATED)
 public class DirectExecutor implements Executor {
 
-    private final static DirectExecutor INSTANCE = new DirectExecutor();
+    private static final DirectExecutor INSTANCE = new DirectExecutor();
 
     private DirectExecutor() {
     }

@@ -27,9 +27,9 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class DoubleConverterFactory extends AbstractConverterFactory {
 
-    public final static int FIELD_TYPE_DOUBLE = 6;
+    public static final int FIELD_TYPE_DOUBLE = 6;
 
-    private final static Converter CONVERTER = new AbstractNumberConverter<Double>() {
+    private static final Converter CONVERTER = new AbstractNumberConverter<Double>() {
 
         @Override
         public Double convertFromRemoting(final Number value) {

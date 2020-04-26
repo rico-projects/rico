@@ -31,9 +31,9 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class DateConverterFactory extends AbstractConverterFactory {
 
-    public final static int FIELD_TYPE_DATE = 9;
+    public static final int FIELD_TYPE_DATE = 9;
 
-    private final static Converter CONVERTER = new DateConverter();
+    private static final Converter CONVERTER = new DateConverter();
 
     @Override
     public List<Class> getSupportedTypes() {

@@ -37,7 +37,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.19.0", status = INTERNAL)
 public class KeycloakConfiguration implements Serializable {
 
-    private final static Logger LOG = LoggerFactory.getLogger(KeycloakConfiguration.class);
+    private static final Logger LOG = LoggerFactory.getLogger(KeycloakConfiguration.class);
 
     private final String realmName;
 

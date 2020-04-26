@@ -23,9 +23,9 @@ import java.util.List;
 
 public class CharacterConverterFactory extends AbstractConverterFactory {
 
-    public final static int FIELD_CHARACTER_BYTE = 107;
+    public static final int FIELD_CHARACTER_BYTE = 107;
 
-    private final static Converter<Character, Number> CONVERTER = new AbstractNumberConverter<Character>() {
+    private static final Converter<Character, Number> CONVERTER = new AbstractNumberConverter<Character>() {
 
         @Override
         public Character convertFromRemoting(final Number value) {

@@ -31,7 +31,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class ClientSessionExecutorImpl implements ClientSessionExecutor {
 
-    private final static Logger LOG = LoggerFactory.getLogger(ClientSessionExecutorImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ClientSessionExecutorImpl.class);
 
     private final Executor runLaterExecutor;
 

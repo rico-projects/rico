@@ -23,7 +23,7 @@ import java.util.function.Consumer;
 
 public class DownloadInputStreamImpl extends DownloadInputStream {
 
-    private final static Logger LOG = LoggerFactory.getLogger(DownloadInputStreamImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DownloadInputStreamImpl.class);
 
     private final List<Consumer<Double>> downloadPercentageListeners;
 

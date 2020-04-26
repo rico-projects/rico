@@ -38,9 +38,9 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class ClientScopeImpl implements Scope {
 
-    public final static String CLIENT_SCOPE = "client";
+    public static final String CLIENT_SCOPE = "client";
 
-    private final static String CLIENT_STORE_ATTRIBUTE = "SpringClientScopeStore";
+    private static final String CLIENT_STORE_ATTRIBUTE = "SpringClientScopeStore";
 
     @Override
     public Object get(final String name, final ObjectFactory<?> objectFactory) {

@@ -39,7 +39,7 @@ import static dev.rico.internal.core.http.HttpHeaderConstants.CONTENT_LENGHT_HEA
 
 public class HttpClientConnection {
 
-    private final static Logger LOG = LoggerFactory.getLogger(HttpClientConnection.class);
+    private static final Logger LOG = LoggerFactory.getLogger(HttpClientConnection.class);
 
     private final HttpURLConnection connection;
 

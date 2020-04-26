@@ -56,7 +56,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @ModuleDefinition
 public class MetricsModule extends AbstractBaseModule {
 
-    private final static Logger LOG = LoggerFactory.getLogger(MetricsModule.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MetricsModule.class);
 
     @Override
     protected String getActivePropertyName() {

@@ -27,9 +27,9 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class ShortConverterFactory extends AbstractConverterFactory {
 
-    public final static int FIELD_TYPE_SHORT = 2;
+    public static final int FIELD_TYPE_SHORT = 2;
 
-    private final static Converter CONVERTER = new AbstractNumberConverter<Short>() {
+    private static final Converter CONVERTER = new AbstractNumberConverter<Short>() {
 
         @Override
         public Short convertFromRemoting(final Number value) {

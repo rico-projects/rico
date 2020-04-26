@@ -33,7 +33,7 @@ import static dev.rico.internal.security.SecurityConstants.REALM_NAME_HEADER;
 
 public class SecurityClientRequestFactory extends HttpComponentsClientHttpRequestFactory implements ClientHttpRequestFactory {
 
-    private final static Logger LOG = LoggerFactory.getLogger(SecurityClientRequestFactory.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SecurityClientRequestFactory.class);
 
     private final Supplier<String> securityTokenSupplier;
 

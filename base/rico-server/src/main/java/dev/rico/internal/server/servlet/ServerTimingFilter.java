@@ -36,7 +36,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "1.0.0-RC5", status = INTERNAL)
 public class ServerTimingFilter implements Filter {
 
-    private final static ThreadLocal<ServerTimingImpl> timingLocal = new ThreadLocal<>();
+    private static final ThreadLocal<ServerTimingImpl> timingLocal = new ThreadLocal<>();
 
     private final boolean addServerTiming;
 

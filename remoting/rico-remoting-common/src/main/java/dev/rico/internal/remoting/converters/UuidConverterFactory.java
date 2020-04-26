@@ -32,9 +32,9 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class UuidConverterFactory extends AbstractConverterFactory {
 
-    public final static int FIELD_TYPE_UUID = 14;
+    public static final int FIELD_TYPE_UUID = 14;
 
-    private final static Converter CONVERTER = new AbstractStringConverter<UUID>() {
+    private static final Converter CONVERTER = new AbstractStringConverter<UUID>() {
         @Override
         public UUID convertFromRemoting(final String value) throws ValueConverterException {
             try {

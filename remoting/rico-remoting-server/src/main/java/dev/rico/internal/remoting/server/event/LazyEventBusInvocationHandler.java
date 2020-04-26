@@ -29,7 +29,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class LazyEventBusInvocationHandler implements InvocationHandler {
 
-    private final static String DUMMY_OBJECT = "";
+    private static final String DUMMY_OBJECT = "";
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {

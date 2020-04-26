@@ -23,9 +23,9 @@ import java.util.Map;
 
 public class AdditionalTestConfigurationProvider extends ConfigurationProviderAdapter {
 
-    public final static String PROPERTY_NAME = "someTestProperty";
+    public static final String PROPERTY_NAME = "someTestProperty";
 
-    public final static String PROPERTY_VALUE = "Some Value";
+    public static final String PROPERTY_VALUE = "Some Value";
 
     @Override
     public Map<String, String> getStringProperties() {

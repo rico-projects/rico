@@ -55,7 +55,7 @@ import java.util.regex.Pattern;
  */
 public class KeycloakOIDCFilter implements Filter {
 
-    private final static Logger log = LoggerFactory.getLogger(KeycloakOIDCFilter.class);
+    private static final Logger log = LoggerFactory.getLogger(KeycloakOIDCFilter.class);
 
     public static final String SKIP_PATTERN_PARAM = "keycloak.config.skipPattern";
 

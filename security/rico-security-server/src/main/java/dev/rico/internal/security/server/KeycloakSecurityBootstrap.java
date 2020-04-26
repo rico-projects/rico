@@ -36,9 +36,9 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.19.0", status = INTERNAL)
 public class KeycloakSecurityBootstrap {
 
-    private final static Logger LOG = LoggerFactory.getLogger(KeycloakSecurityBootstrap.class);
+    private static final Logger LOG = LoggerFactory.getLogger(KeycloakSecurityBootstrap.class);
 
-    private final static KeycloakSecurityBootstrap INSTANCE = new KeycloakSecurityBootstrap();
+    private static final KeycloakSecurityBootstrap INSTANCE = new KeycloakSecurityBootstrap();
 
     private KeycloakSecurityContextExtractFilter extractFilter;
 

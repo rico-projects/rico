@@ -29,7 +29,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class PeriodConverterFactory extends AbstractConverterFactory {
 
-    private final static Converter CONVERTER = new PeriodConverter();
+    private static final Converter CONVERTER = new PeriodConverter();
 
     @Override
     public List<Class> getSupportedTypes() {

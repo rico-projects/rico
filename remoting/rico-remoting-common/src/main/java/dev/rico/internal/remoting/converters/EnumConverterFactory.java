@@ -29,7 +29,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class EnumConverterFactory extends AbstractConverterFactory {
 
-    public final static int FIELD_TYPE_ENUM = 10;
+    public static final int FIELD_TYPE_ENUM = 10;
 
     private final Map<Class<?>, EnumConverter> enumConverters = new HashMap<>();
 

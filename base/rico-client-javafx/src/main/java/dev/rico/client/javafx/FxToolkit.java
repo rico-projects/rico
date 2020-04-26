@@ -28,7 +28,7 @@ import static org.apiguardian.api.API.Status.MAINTAINED;
 @API(since = "0.x", status = MAINTAINED)
 public class FxToolkit implements Toolkit {
 
-    private final static String NAME = "JavaFX toolkit";
+    private static final String NAME = "JavaFX toolkit";
 
     @Override
     public UiExecutor getUiExecutor() {
