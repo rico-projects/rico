@@ -97,16 +97,16 @@ public class KeycloakOIDCFilter implements Filter {
 
         if (definedconfigResolver != null) {
             deploymentContext = new AdapterDeploymentContext(definedconfigResolver);
-            log.info("Using {0} to resolve Keycloak configuration on a per-request basis.", definedconfigResolver.getClass());
+            log.info("Using {} to resolve Keycloak configuration on a per-request basis.", definedconfigResolver.getClass());
         } else {
             String configResolverClass = filterConfig.getInitParameter(CONFIG_RESOLVER_PARAM);
             if (configResolverClass != null) {
                 try {
                     KeycloakConfigResolver configResolver = (KeycloakConfigResolver) getClass().getClassLoader().loadClass(configResolverClass).newInstance();
                     deploymentContext = new AdapterDeploymentContext(configResolver);
-                    log.info("Using {0} to resolve Keycloak configuration on a per-request basis.", configResolverClass);
+                    log.info("Using {} to resolve Keycloak configuration on a per-request basis.", configResolverClass);
                 } catch (Exception ex) {
-                    log.debug("The specified resolver {0} could NOT be loaded. Keycloak is unconfigured and will deny all requests. Reason: {1}", new Object[]{configResolverClass, ex.getMessage()});
+                    log.debug("The specified resolver {} could NOT be loaded. Keycloak is unconfigured and will deny all requests. Reason: {}", new Object[]{configResolverClass, ex.getMessage()});
                     deploymentContext = new AdapterDeploymentContext(new KeycloakDeployment());
                 }
             } else {
