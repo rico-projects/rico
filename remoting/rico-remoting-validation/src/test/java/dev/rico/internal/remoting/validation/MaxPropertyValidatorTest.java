@@ -34,7 +34,7 @@ import static org.testng.Assert.fail;
 public class MaxPropertyValidatorTest {
 
     @RemotingBean
-    private class MaxBean {
+    private static class MaxBean {
         @Max(1)
         private Property<BigDecimal> bigDecimal = new MockedProperty<>();
 

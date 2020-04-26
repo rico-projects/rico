@@ -35,7 +35,7 @@ import static org.testng.Assert.assertEquals;
 public class DecimalMaxPropertyValidatorTest {
 
     @RemotingBean
-    private class MaxBean {
+    private static class MaxBean {
         // inclusive = true by default
         @DecimalMax(value = "1234.5E-4")
         private Property<BigDecimal> bigDecimal = new MockedProperty<>();
