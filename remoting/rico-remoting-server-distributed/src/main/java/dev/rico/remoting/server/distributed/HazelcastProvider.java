@@ -17,7 +17,6 @@
 package dev.rico.remoting.server.distributed;
 
 import com.hazelcast.core.HazelcastInstance;
-import dev.rico.internal.remoting.server.distributed.HazelcastConfig;
 import org.apiguardian.api.API;
 
 import static org.apiguardian.api.API.Status.INTERNAL;

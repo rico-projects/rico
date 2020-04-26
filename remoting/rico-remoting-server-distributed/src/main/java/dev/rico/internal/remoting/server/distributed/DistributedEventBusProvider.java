@@ -17,6 +17,7 @@
 package dev.rico.internal.remoting.server.distributed;
 
 import dev.rico.internal.remoting.server.config.RemotingConfiguration;
+import dev.rico.remoting.server.distributed.HazelcastConfig;
 import dev.rico.remoting.server.distributed.HazelcastProvider;
 import dev.rico.remoting.server.event.spi.EventBusProvider;
 import dev.rico.remoting.server.event.RemotingEventBus;
