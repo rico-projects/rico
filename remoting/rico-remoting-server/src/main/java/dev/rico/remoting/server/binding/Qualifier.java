@@ -20,6 +20,7 @@ import dev.rico.internal.core.Assert;
 import dev.rico.remoting.Property;
 import org.apiguardian.api.API;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
@@ -83,7 +84,7 @@ public final class Qualifier<T> {
 
         Qualifier<?> qualifier = (Qualifier<?>) o;
 
-        return identifier != null ? identifier.equals(qualifier.identifier) : qualifier.identifier == null;
+        return Objects.equals(identifier, qualifier.identifier);
 
     }
 

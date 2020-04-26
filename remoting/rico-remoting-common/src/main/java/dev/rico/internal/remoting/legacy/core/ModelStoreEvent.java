@@ -18,6 +18,8 @@ package dev.rico.internal.remoting.legacy.core;
 
 import org.apiguardian.api.API;
 
+import java.util.Objects;
+
 import static org.apiguardian.api.API.Status.DEPRECATED;
 
 @API(since = "0.x", status = DEPRECATED)
@@ -54,8 +56,7 @@ public class ModelStoreEvent<A extends Attribute, P extends PresentationModel<A>
 
         ModelStoreEvent<?, ?> that = (ModelStoreEvent<?, ?>) o;
 
-        if (type != that.type) return false;
-        return presentationModel != null ? presentationModel.equals(that.presentationModel) : that.presentationModel == null;
+        return type == that.type && Objects.equals(presentationModel, that.presentationModel);
 
     }
 

@@ -26,6 +26,7 @@ import javax.persistence.PostPersist;
 import javax.persistence.PostRemove;
 import javax.persistence.PostUpdate;
 import javax.persistence.Version;
+import java.util.Objects;
 
 @MappedSuperclass
 public class AbstractEntity implements DataWithId<Long> {
@@ -87,10 +88,7 @@ public class AbstractEntity implements DataWithId<Long> {
 
         AbstractEntity that = (AbstractEntity) o;
 
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (version != null ? !version.equals(that.version) : that.version != null) return false;
-
-        return true;
+        return Objects.equals(id, that.id) && Objects.equals(version, that.version);
     }
 
     @Override
