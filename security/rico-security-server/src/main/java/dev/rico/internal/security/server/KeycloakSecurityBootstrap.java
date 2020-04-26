@@ -49,9 +49,9 @@ public class KeycloakSecurityBootstrap {
         final KeycloakConfiguration keycloakConfiguration = new KeycloakConfiguration(configuration);
         if(keycloakConfiguration.isSecurityActive()) {
             if (LOG.isInfoEnabled()) {
-                keycloakConfiguration.getSecureEndpoints().stream().forEach(e -> {
+                for (String e : keycloakConfiguration.getSecureEndpoints()) {
                     LOG.info("Adding security to the following endpoint: {}", e);
-                });
+                }
             }
             this.extractFilter = new KeycloakSecurityContextExtractFilter();
             KeycloakConfigResolverImpl.setConfiguration(keycloakConfiguration);

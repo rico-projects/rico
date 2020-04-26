@@ -104,7 +104,7 @@ public enum JsonPrimitiveType {
 
     public static JsonPrimitiveType ofType(final String type) {
         Assert.requireNonBlank(type, "type");
-        return Arrays.asList(values()).stream()
+        return Arrays.stream(values())
                 .filter(v -> Objects.equals(v.getType(), type))
                 .findAny()
                 .orElseThrow(() -> new IllegalArgumentException("Can not find type '" + type + "'"));
@@ -112,7 +112,7 @@ public enum JsonPrimitiveType {
 
     public static JsonPrimitiveType ofTypeClass(final Class typeClass) {
         Assert.requireNonNull(typeClass, "typeClass");
-        return Arrays.asList(values()).stream()
+        return Arrays.stream(values())
                 .filter(v -> Objects.equals(v.getTypeClass(), typeClass))
                 .findAny()
                 .orElseThrow(() -> new IllegalArgumentException("Can not find type '" + typeClass + "'"));
