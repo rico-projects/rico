@@ -47,10 +47,10 @@ public class DoubleRemotingBinder extends AbstractNumericRemotingBinder<Double> 
 
     @Override
     protected BidirectionalConverter<Number, Double> getConverter() {
-        return new BidirectionalConverter<Number, Double>() {
+        return new BidirectionalConverter<>() {
             @Override
             public Number convertBack(final Double value) {
-                if(value == null) {
+                if (value == null) {
                     return 0.0;
                 }
                 return value;
@@ -58,7 +58,7 @@ public class DoubleRemotingBinder extends AbstractNumericRemotingBinder<Double> 
 
             @Override
             public Double convert(final Number value) {
-                if(value == null) {
+                if (value == null) {
                     return 0.0;
                 }
                 return value.doubleValue();

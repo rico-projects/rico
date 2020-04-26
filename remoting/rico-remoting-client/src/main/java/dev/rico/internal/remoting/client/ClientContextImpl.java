@@ -81,7 +81,7 @@ public class ClientContextImpl implements ClientContext {
         this.clientSessionStore = Assert.requireNonNull(clientSessionStore, "clientSessionStore");
         this.endpoint = Assert.requireNonNull(endpoint, "endpoint");
 
-        final ModelSynchronizer defaultModelSynchronizer = new DefaultModelSynchronizer(new Supplier<AbstractClientConnector>() {
+        final ModelSynchronizer defaultModelSynchronizer = new DefaultModelSynchronizer(new Supplier<>() {
             @Override
             public AbstractClientConnector get() {
                 return clientConnector;

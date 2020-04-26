@@ -36,7 +36,7 @@ public class EventBusTestSubscriberController {
 
     @PostConstruct
     public void init() {
-        eventBus.subscribe(EventBusTestConstants.TEST_TOPIC, new MessageListener<String>() {
+        eventBus.subscribe(EventBusTestConstants.TEST_TOPIC, new MessageListener<>() {
             @Override
             public void onMessage(MessageEvent<String> message) {
                 model.valueProperty().set(message.getData());

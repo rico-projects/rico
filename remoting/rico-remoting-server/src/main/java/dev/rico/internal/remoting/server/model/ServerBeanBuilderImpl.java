@@ -64,28 +64,28 @@ public class ServerBeanBuilderImpl extends AbstractBeanBuilder implements Server
     protected <T> ObservableList<T> create(final PropertyInfo observableListInfo, final PresentationModel model, final ListMapper listMapper) {
         Assert.requireNonNull(model, "model");
         Assert.requireNonNull(listMapper, "listMapper");
-        final ObservableList<T> list = new ObservableArrayList<T>() {
+        final ObservableList<T> list = new ObservableArrayList<>() {
             @Override
             protected void notifyInternalListeners(ListChangeEvent<T> event) {
                 listMapper.processEvent(observableListInfo, model.getId(), event);
             }
         };
 
-        list.onChanged(new ListChangeListener<T>() {
+        list.onChanged(new ListChangeListener<>() {
             @Override
             public void listChanged(ListChangeEvent<? extends T> event) {
-                for(ListChangeEvent.Change<? extends T> c : event.getChanges()) {
-                    if(c.isAdded()) {
-                        for(Object added : list.subList(c.getFrom(), c.getTo())) {
+                for (ListChangeEvent.Change<? extends T> c : event.getChanges()) {
+                    if (c.isAdded()) {
+                        for (Object added : list.subList(c.getFrom(), c.getTo())) {
                             garbageCollector.onAddedToList(list, added);
                         }
                     }
-                    if(c.isRemoved()) {
-                        for(Object removed : c.getRemovedElements()) {
+                    if (c.isRemoved()) {
+                        for (Object removed : c.getRemovedElements()) {
                             garbageCollector.onRemovedFromList(list, removed);
                         }
                     }
-                    if(c.isReplaced()) {
+                    if (c.isReplaced()) {
                         //??? TODO
                     }
                 }
@@ -96,7 +96,7 @@ public class ServerBeanBuilderImpl extends AbstractBeanBuilder implements Server
     }
 
     protected <T> Property<T> create(final Attribute attribute, final PropertyInfo propertyInfo) {
-        return new PropertyImpl<T>(attribute, propertyInfo) {
+        return new PropertyImpl<>(attribute, propertyInfo) {
 
             @Override
             protected void notifyInternalListeners(ValueChangeEvent event) {

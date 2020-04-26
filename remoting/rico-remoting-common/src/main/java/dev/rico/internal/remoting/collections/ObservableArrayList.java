@@ -79,7 +79,7 @@ public class ObservableArrayList<E> implements ObservableList<E> {
         final List<E> removedElements = new ArrayList<>(slice);
         slice.clear();
         list.addAll(from, newElements);
-        notifyExternalListeners(new ListChangeEventImpl<E>(this, from, from + newElements.size(), removedElements));
+        notifyExternalListeners(new ListChangeEventImpl<>(this, from, from + newElements.size(), removedElements));
     }
 
     @Override
@@ -300,7 +300,7 @@ public class ObservableArrayList<E> implements ObservableList<E> {
             }
         });
 
-        onChanged(new ListChangeListener<E>() {
+        onChanged(new ListChangeListener<>() {
             @Override
             public void listChanged(final ListChangeEvent<? extends E> evt) {
                 final List<? extends ListChangeEvent.Change<? extends E>> changes = Assert.requireNonNull(evt, "evt").getChanges();

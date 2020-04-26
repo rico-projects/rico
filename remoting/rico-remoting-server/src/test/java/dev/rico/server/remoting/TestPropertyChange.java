@@ -43,11 +43,11 @@ public class TestPropertyChange extends AbstractRemotingTest {
         final SimpleAnnotatedTestModel model = manager.create(SimpleAnnotatedTestModel.class);
 
         final ListerResults<String> results = new ListerResults<>();
-        ValueChangeListener<String> myListener = new ValueChangeListener<String>() {
+        ValueChangeListener<String> myListener = new ValueChangeListener<>() {
             @SuppressWarnings("unchecked")
             @Override
             public void valueChanged(ValueChangeEvent<? extends String> evt) {
-                assertThat((Property<String>)evt.getSource(), is(model.getMyProperty()));
+                assertThat((Property<String>) evt.getSource(), is(model.getMyProperty()));
                 results.newValue = evt.getNewValue();
                 results.oldValue = evt.getOldValue();
                 results.listenerCalls++;
@@ -86,7 +86,7 @@ public class TestPropertyChange extends AbstractRemotingTest {
         final SimpleTestModel model = manager.create(SimpleTestModel.class);
 
         final ListerResults<String> results = new ListerResults<>();
-        ValueChangeListener<String> myListener = new ValueChangeListener<String>() {
+        ValueChangeListener<String> myListener = new ValueChangeListener<>() {
             @SuppressWarnings("unchecked")
             @Override
             public void valueChanged(ValueChangeEvent<? extends String> evt) {
@@ -134,7 +134,7 @@ public class TestPropertyChange extends AbstractRemotingTest {
         final SingleReferenceModel model = manager.create(SingleReferenceModel.class);
 
         final ListerResults<SimpleTestModel> results = new ListerResults<>();
-        final ValueChangeListener<SimpleTestModel> myListener = new ValueChangeListener<SimpleTestModel>() {
+        final ValueChangeListener<SimpleTestModel> myListener = new ValueChangeListener<>() {
             @SuppressWarnings("unchecked")
             @Override
             public void valueChanged(ValueChangeEvent<? extends SimpleTestModel> evt) {
@@ -177,7 +177,7 @@ public class TestPropertyChange extends AbstractRemotingTest {
         final ChildModel model = manager.create(ChildModel.class);
 
         final ListerResults<String> childResults = new ListerResults<>();
-        ValueChangeListener<String> childListener = new ValueChangeListener<String>() {
+        ValueChangeListener<String> childListener = new ValueChangeListener<>() {
             @SuppressWarnings("unchecked")
             @Override
             public void valueChanged(ValueChangeEvent<? extends String> evt) {
@@ -188,7 +188,7 @@ public class TestPropertyChange extends AbstractRemotingTest {
             }
         };
         final ListerResults<String> parentResults = new ListerResults<>();
-        ValueChangeListener<String> parentListener = new ValueChangeListener<String>() {
+        ValueChangeListener<String> parentListener = new ValueChangeListener<>() {
             @SuppressWarnings("unchecked")
             @Override
             public void valueChanged(ValueChangeEvent<? extends String> evt) {

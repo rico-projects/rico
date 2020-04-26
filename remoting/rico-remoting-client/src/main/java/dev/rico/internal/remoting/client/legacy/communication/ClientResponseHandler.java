@@ -75,7 +75,7 @@ public class ClientResponseHandler {
             throw new IllegalStateException("There already is a presentation model with id '" + serverCommand.getPmId() + "' known to the client.");
         }
 
-        final List<ClientAttribute> attributes = new ArrayList<ClientAttribute>();
+        final List<ClientAttribute> attributes = new ArrayList<>();
         for (final Map<String, Object> attr : serverCommand.getAttributes()) {
 
             final Object propertyName = attr.get("propertyName");

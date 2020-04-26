@@ -65,12 +65,12 @@ public class ProcessChainImpl<T> implements ProcessChain<T> {
 
     @Override
     public <V> ProcessChain<V> addUiFunction(final Function<T, V> function) {
-        return addProcessDescription(new ProcessDescription<T, V>(function, ThreadType.PLATFORM));
+        return addProcessDescription(new ProcessDescription<>(function, ThreadType.PLATFORM));
     }
 
     @Override
     public <V> ProcessChain<V> addBackgroundFunction(final Function<T, V> function) {
-        return addProcessDescription(new ProcessDescription<T, V>(function, ThreadType.EXECUTOR));
+        return addProcessDescription(new ProcessDescription<>(function, ThreadType.EXECUTOR));
     }
 
     @Override
@@ -105,7 +105,7 @@ public class ProcessChainImpl<T> implements ProcessChain<T> {
 
     private ProcessChain<Void> addRunnable(final Runnable runnable, final ThreadType type) {
         Assert.requireNonNull(runnable, "runnable");
-        return addProcessDescription(new ProcessDescription<T, Void>(e -> {
+        return addProcessDescription(new ProcessDescription<>(e -> {
             runnable.run();
             return null;
         }, type));
@@ -113,7 +113,7 @@ public class ProcessChainImpl<T> implements ProcessChain<T> {
 
     private ProcessChain<Void> addConsumer(final Consumer<T> consumer, final ThreadType type) {
         Assert.requireNonNull(consumer, "consumer");
-        return addProcessDescription(new ProcessDescription<T, Void>(e -> {
+        return addProcessDescription(new ProcessDescription<>(e -> {
             consumer.accept(e);
             return null;
         }, type));
@@ -121,24 +121,24 @@ public class ProcessChainImpl<T> implements ProcessChain<T> {
 
     private <V> ProcessChain<V> addSupplier(final Supplier<V> supplier, final ThreadType type) {
         Assert.requireNonNull(supplier, "supplier");
-        return addProcessDescription(new ProcessDescription<T, V>(e -> supplier.get(), type));
+        return addProcessDescription(new ProcessDescription<>(e -> supplier.get(), type));
     }
 
     private <V> ProcessChain<V> addProcessDescription(final ProcessDescription<T, V> processDescription) {
         Assert.requireNonNull(processDescription, "processDescription");
         processes.add(processDescription);
-        return new ProcessChainImpl<V>(backgroundExecutor, uiExecutor, processes, exceptionConsumer, finalRunnable);
+        return new ProcessChainImpl<>(backgroundExecutor, uiExecutor, processes, exceptionConsumer, finalRunnable);
     }
 
 
     @Override
     public ProcessChain<T> onException(final Consumer<Throwable> exceptionConsumer) {
-        return new ProcessChainImpl<T>(backgroundExecutor, uiExecutor, processes, exceptionConsumer, finalRunnable);
+        return new ProcessChainImpl<>(backgroundExecutor, uiExecutor, processes, exceptionConsumer, finalRunnable);
     }
 
     @Override
     public ProcessChain<T> withUiFinal(final Runnable finalRunnable) {
-        return new ProcessChainImpl<T>(backgroundExecutor, uiExecutor, processes, exceptionConsumer, finalRunnable);
+        return new ProcessChainImpl<>(backgroundExecutor, uiExecutor, processes, exceptionConsumer, finalRunnable);
     }
 
     private <U, V> V execute(final U inputParameter, final ProcessDescription<U, V> processDescription) throws InterruptedException, ExecutionException {
@@ -157,7 +157,7 @@ public class ProcessChainImpl<T> implements ProcessChain<T> {
 
     @Override
     public Callable<T> run() {
-        final Callable<T> task = new Callable<T>() {
+        final Callable<T> task = new Callable<>() {
 
             @Override
             public T call() throws Exception {

@@ -209,8 +209,8 @@ public class ClientConnectorTests {
 
     @Test(expectedExceptions = Exception.class)
     public void testHandle_CreatePresentationModelTwiceFails() {
-        List<Map<String, Object>> attributes = new ArrayList<Map<String, Object>>();
-        Map<String, Object> map = new HashMap<String, Object>();
+        List<Map<String, Object>> attributes = new ArrayList<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("propertyName", "attr");
         map.put("value", "initialValue");
         map.put("qualifier", "qualifier");
@@ -221,7 +221,7 @@ public class ClientConnectorTests {
 
     @Test
     public void testHandle_CreatePresentationModel() {
-        List<Map<String, Object>> attributes = new ArrayList<Map<String, Object>>();
+        List<Map<String, Object>> attributes = new ArrayList<>();
         Map<String, Object> map = new HashMap<>();
         map.put("propertyName", "attr");
         map.put("value", "initialValue");
@@ -241,7 +241,7 @@ public class ClientConnectorTests {
 
     @Test
     public void testHandle_CreatePresentationModel_ClientSideOnly() {
-        List<Map<String, Object>> attributes = new ArrayList<Map<String, Object>>();
+        List<Map<String, Object>> attributes = new ArrayList<>();
         Map map = new HashMap();
         map.put("propertyName", "attr");
         map.put("value", "initialValue");
@@ -339,7 +339,7 @@ public class ClientConnectorTests {
             return Collections.emptyList();
         }
 
-        private List<Command> transmittedCommands = new ArrayList<Command>();
+        private List<Command> transmittedCommands = new ArrayList<>();
     }
 
     public class ExtendedAttribute extends ClientAttribute {

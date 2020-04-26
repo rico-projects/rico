@@ -97,7 +97,7 @@ public class RemotingWindowUtils {
 	 */
     public static final <M> Window createWindow(final AbstractViewController<M> viewBinder) {
        Assert.requireNonNull(viewBinder, "viewBinder");
-	   return new RemotingWindow<M>(viewBinder);
+	   return new RemotingWindow<>(viewBinder);
     }
     
 	/**
@@ -107,7 +107,7 @@ public class RemotingWindowUtils {
 	 */
     public static final <M> Stage createStage(final AbstractViewController<M> viewBinder) {
     	Assert.requireNonNull(viewBinder, "viewBinder");
-    	return new RemotingStage<M>(viewBinder);
+    	return new RemotingStage<>(viewBinder);
      }
 
 }

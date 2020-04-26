@@ -64,7 +64,7 @@ public interface Binder<S> {
         if (property == null) {
             throw new IllegalArgumentException("javaFxProperty must not be null");
         }
-        return bidirectionalTo(property, new BidirectionalConverter<S, S>() {
+        return bidirectionalTo(property, new BidirectionalConverter<>() {
             @Override
             public S convertBack(S value) {
                 return value;

@@ -29,7 +29,7 @@ public class ByteConverterFactory extends AbstractConverterFactory {
 
     public final static int FIELD_TYPE_BYTE = 1;
 
-    private final static Converter<Byte, Number> CONVERTER = new AbstractNumberConverter<Byte>() {
+    private final static Converter<Byte, Number> CONVERTER = new AbstractNumberConverter<>() {
 
         @Override
         public Byte convertFromRemoting(final Number value) {

@@ -47,7 +47,7 @@ public class FloatRemotingBinder extends AbstractNumericRemotingBinder<Float> {
 
     @Override
     protected BidirectionalConverter<Number, Float> getConverter() {
-        return new BidirectionalConverter<Number, Float>() {
+        return new BidirectionalConverter<>() {
             @Override
             public Number convertBack(final Float value) {
                 if (value == null) {

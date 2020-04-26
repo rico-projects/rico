@@ -45,7 +45,7 @@ public class ServerConnector {
 
     private final ActionRegistry registry = new ActionRegistry();
 
-    private final List<AbstractServerAction> abstractServerActions = new ArrayList<AbstractServerAction>();
+    private final List<AbstractServerAction> abstractServerActions = new ArrayList<>();
 
     private final AtomicBoolean initialized = new AtomicBoolean(false);
 
@@ -80,7 +80,7 @@ public class ServerConnector {
 
         // copying the list of actions allows an Action to unregister itself
         // avoiding ConcurrentModificationException to be thrown by the loop
-        List<CommandHandler> actionsCopy = new ArrayList<CommandHandler>();
+        List<CommandHandler> actionsCopy = new ArrayList<>();
         actionsCopy.addAll(actions);
         try {
             for (CommandHandler action : actionsCopy) {

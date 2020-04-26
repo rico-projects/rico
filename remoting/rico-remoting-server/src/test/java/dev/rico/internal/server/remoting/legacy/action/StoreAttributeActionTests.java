@@ -36,7 +36,7 @@ public class StoreAttributeActionTests {
     @BeforeMethod
     public void setUp() throws Exception {
         serverModelStore = new ServerModelStore();
-        serverModelStore.setCurrentResponse(new ArrayList<Command>());
+        serverModelStore.setCurrentResponse(new ArrayList<>());
         registry = new ActionRegistry();
     }
 

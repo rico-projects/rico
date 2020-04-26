@@ -40,7 +40,7 @@ public class ServerDolphinTest {
     @BeforeMethod
     public void setUp() throws Exception {
         serverInstance = ((DefaultServerDolphin) (ServerDolphinFactory.create()));
-        serverInstance.getModelStore().setCurrentResponse(new ArrayList<Command>());
+        serverInstance.getModelStore().setCurrentResponse(new ArrayList<>());
     }
 
     @Test

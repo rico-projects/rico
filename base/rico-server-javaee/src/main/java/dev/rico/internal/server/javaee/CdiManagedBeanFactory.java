@@ -63,7 +63,7 @@ public class CdiManagedBeanFactory implements ManagedBeanFactory {
                 .beanClass(cls)
                 .name(UUID.randomUUID().toString())
                 .scope(Dependent.class)
-                .beanLifecycle(new DelegatingContextualLifecycle<T>(injectionTarget))
+                .beanLifecycle(new DelegatingContextualLifecycle<>(injectionTarget))
                 .create();
         final Class<?> beanClass = bean.getBeanClass();
         final CreationalContext<T> creationalContext = bm.createCreationalContext(bean);

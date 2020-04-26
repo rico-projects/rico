@@ -163,14 +163,14 @@ public class TestObservableArrayList {
     }
 
     private void addOnChangeListener(final AtomicBoolean removed, final AtomicBoolean added, final AtomicInteger callCount, ObservableArrayList<String> list) {
-        list.onChanged(new ListChangeListener<String>() {
+        list.onChanged(new ListChangeListener<>() {
             @Override
             public void listChanged(ListChangeEvent<? extends String> evt) {
                 callCount.incrementAndGet();
-                if(evt.getChanges().iterator().next().isAdded()){
+                if (evt.getChanges().iterator().next().isAdded()) {
                     added.set(true);
                     removed.set(false);
-                }else{
+                } else {
                     removed.set(true);
                     added.set(false);
                 }

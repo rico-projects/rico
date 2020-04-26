@@ -84,7 +84,7 @@ public class ReflectionHelper {
 
     public static <T> T getPrivileged(final Field field, final Object bean) {
         Assert.requireNonNull(field, "field");
-        return (T) AccessController.doPrivileged(new PrivilegedAction<Object>() {
+        return (T) AccessController.doPrivileged(new PrivilegedAction<>() {
             @Override
             public Object run() {
                 // Method 'isAccessible()' was deprected in Java 9 but there is no replacement in Java 8.
@@ -151,7 +151,7 @@ public class ReflectionHelper {
     public static <T> T invokePrivileged(final Method method, final Object instance, final Object... args) {
         Assert.requireNonNull(method, "method");
         Assert.requireNonNull(instance, "instance");
-        return AccessController.doPrivileged((PrivilegedAction<T>) new PrivilegedAction<Object>() {
+        return AccessController.doPrivileged((PrivilegedAction<T>) new PrivilegedAction<>() {
             @Override
             public Object run() {
                 // Method 'isAccessible()' was deprected in Java 9 but there is no replacement in Java 8.

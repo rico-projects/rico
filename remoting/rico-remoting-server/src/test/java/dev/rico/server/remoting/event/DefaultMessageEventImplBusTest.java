@@ -53,7 +53,7 @@ public class DefaultMessageEventImplBusTest {
     @Test(expectedExceptions = IllegalStateException.class)
     public void TestCanNotSubscribeOutsideSession() {
         RemotingEventBus eventBus = create(null);
-        eventBus.subscribe(TEST_TOPIC, new MessageListener<String>() {
+        eventBus.subscribe(TEST_TOPIC, new MessageListener<>() {
             @Override
             public void onMessage(MessageEvent<String> message) {
             }
@@ -73,7 +73,7 @@ public class DefaultMessageEventImplBusTest {
         //given
         final AtomicBoolean calledCheck = new AtomicBoolean(false);
         RemotingEventBus eventBus = create(createContext());
-        eventBus.subscribe(TEST_TOPIC, new MessageListener<String>() {
+        eventBus.subscribe(TEST_TOPIC, new MessageListener<>() {
             @Override
             public void onMessage(MessageEvent<String> message) {
                 calledCheck.set(true);
@@ -92,7 +92,7 @@ public class DefaultMessageEventImplBusTest {
         //given
         final AtomicBoolean calledCheck = new AtomicBoolean(false);
         RemotingEventBus eventBus = create(createContext());
-        Subscription subscription = eventBus.subscribe(TEST_TOPIC, new MessageListener<String>() {
+        Subscription subscription = eventBus.subscribe(TEST_TOPIC, new MessageListener<>() {
             @Override
             public void onMessage(MessageEvent<String> message) {
                 calledCheck.set(true);

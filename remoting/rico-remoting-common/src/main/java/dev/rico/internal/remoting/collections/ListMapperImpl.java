@@ -71,7 +71,7 @@ public class ListMapperImpl implements ListMapper {
                     final int to = ((Number) model.getAttribute("to").getValue()).intValue();
                     final int count = ((Number) model.getAttribute("count").getValue()).intValue();
 
-                    final List<Object> newElements = new ArrayList<Object>(count);
+                    final List<Object> newElements = new ArrayList<>(count);
                     for (int i = 0; i < count; i++) {
                         final Object remotingValue = model.getAttribute(Integer.toString(i)).getValue();
                         final Object value = observableListInfo.convertFromRemoting(remotingValue);
