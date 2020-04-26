@@ -4,7 +4,6 @@ import dev.rico.core.functional.Subscription;
 import org.apiguardian.api.API;
 
 import java.io.InputStream;
-import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
