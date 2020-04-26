@@ -13,4 +13,5 @@ module dev.rico.security.server.spring {
     requires spring.web;
     requires spring.context;
     requires org.apache.httpcomponents.httpclient;
+    requires org.apache.httpcomponents.httpcore;
 }
