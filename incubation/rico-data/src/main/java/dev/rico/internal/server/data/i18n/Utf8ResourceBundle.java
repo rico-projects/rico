@@ -39,7 +39,7 @@ public class Utf8ResourceBundle {
      * @return Unicode friendly resource bundle
      * @see java.util.ResourceBundle#getBundle(String)
      */
-    public static final ResourceBundle getBundle(final String baseName, final Locale locale) {
+    public static ResourceBundle getBundle(final String baseName, final Locale locale) {
         return createUtf8PropertyResourceBundle(ResourceBundle.getBundle(baseName, locale));
     }
 

@@ -1097,7 +1097,7 @@ public class TypeUtils {
      * @return {@link ParameterizedType}
      * @since 3.2
      */
-    private static final ParameterizedType parameterizeWithOwner(final Type owner, final Class<?> raw,
+    private static ParameterizedType parameterizeWithOwner(final Type owner, final Class<?> raw,
                                                                 final Type... typeArguments) {
         Assert.requireNonNull(raw, "raw");
         final Type useOwner;

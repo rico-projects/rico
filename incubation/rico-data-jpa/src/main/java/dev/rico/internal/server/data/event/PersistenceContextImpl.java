@@ -46,7 +46,7 @@ public class PersistenceContextImpl implements PersistanceContext {
      * Returns the singleton
      * @return the singleton
      */
-    public static final PersistenceContextImpl getInstance() {
+    public static PersistenceContextImpl getInstance() {
         return instance;
     }
 
