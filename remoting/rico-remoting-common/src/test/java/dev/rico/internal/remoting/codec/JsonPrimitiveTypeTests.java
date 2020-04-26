@@ -14,7 +14,7 @@ public class JsonPrimitiveTypeTests {
     @Test
     public void testGetValueByBigDecimalType() {
         //given:
-        final JsonElement element = new JsonPrimitive(new BigDecimal(1.1d));
+        final JsonElement element = new JsonPrimitive(new BigDecimal("1.1"));
         final JsonPrimitiveType type = JsonPrimitiveType.BIG_DECIMAL;
 
         //when:
@@ -42,7 +42,7 @@ public class JsonPrimitiveTypeTests {
     @Test
     public void testGetValueByBigIntegerType() {
         //given:
-        final JsonElement element = new JsonPrimitive(BigInteger.valueOf(100l));
+        final JsonElement element = new JsonPrimitive(BigInteger.valueOf(100L));
         final JsonPrimitiveType type = JsonPrimitiveType.BIG_INTEGER;
 
         //when:
@@ -50,7 +50,7 @@ public class JsonPrimitiveTypeTests {
 
         //then:
         Assert.assertNotNull(value);
-        Assert.assertEquals(value.longValue(), 100l);
+        Assert.assertEquals(value.longValue(), 100L);
     }
 
     @Test
@@ -232,7 +232,7 @@ public class JsonPrimitiveTypeTests {
     @Test
     public void testGetValueByLongType() {
         //given:
-        final JsonElement element = new JsonPrimitive(10l);
+        final JsonElement element = new JsonPrimitive(10L);
         final JsonPrimitiveType type = JsonPrimitiveType.LONG;
 
         //when:
@@ -240,7 +240,7 @@ public class JsonPrimitiveTypeTests {
 
         //then:
         Assert.assertNotNull(value);
-        Assert.assertEquals(value.longValue(), 10l);
+        Assert.assertEquals(value.longValue(), 10L);
     }
 
     @Test

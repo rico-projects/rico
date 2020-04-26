@@ -64,7 +64,7 @@ public interface PropertyTestConstants {
 
     Integer INTEGER_VALUE = 4711;
 
-    Long LONG_VALUE = Long.valueOf(Integer.MAX_VALUE * 2);
+    Long LONG_VALUE = ((long) Integer.MAX_VALUE)* 2L;
 
     Float FLOAT_VALUE = Float.valueOf(1.01f);
 
@@ -72,7 +72,7 @@ public interface PropertyTestConstants {
 
     Number NUMBER_VALUE = Double.MAX_VALUE;
 
-    BigDecimal BIG_DECIMAL_VALUE = new BigDecimal(12.23);
+    BigDecimal BIG_DECIMAL_VALUE = new BigDecimal("12.23");
 
     BigInteger BIG_INTEGER_VALUE= BigInteger.valueOf(12475);
 
