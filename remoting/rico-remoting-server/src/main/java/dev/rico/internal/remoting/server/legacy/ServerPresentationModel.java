@@ -46,7 +46,7 @@ public class ServerPresentationModel extends BasePresentationModel<ServerAttribu
 
     private static String makeId(final ServerModelStore serverModelStore) {
         long newId = serverModelStore.pmInstanceCount++;
-        return String.valueOf(newId) + LegacyConstants.SERVER_PM_AUTO_ID_SUFFIX;
+        return newId + LegacyConstants.SERVER_PM_AUTO_ID_SUFFIX;
     }
 
     public ServerModelStore getModelStore() {
