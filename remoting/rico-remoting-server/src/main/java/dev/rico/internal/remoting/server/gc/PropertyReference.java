@@ -30,7 +30,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class PropertyReference extends Reference {
 
-    private Property property;
+    private final Property property;
 
     /**
      * Constructor

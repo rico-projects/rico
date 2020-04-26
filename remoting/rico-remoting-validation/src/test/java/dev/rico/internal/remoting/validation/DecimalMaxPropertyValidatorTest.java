@@ -38,7 +38,7 @@ public class DecimalMaxPropertyValidatorTest {
     private class MaxBean {
         // inclusive = true by default
         @DecimalMax(value = "1234.5E-4")
-        private Property<BigDecimal> bigDecimal = new MockedProperty<>();
+        private final Property<BigDecimal> bigDecimal = new MockedProperty<>();
 
         public Property<BigDecimal> bigDecimalProperty() {
             return bigDecimal;

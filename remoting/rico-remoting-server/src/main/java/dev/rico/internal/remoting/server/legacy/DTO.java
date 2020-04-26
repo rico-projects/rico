@@ -35,7 +35,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public final class DTO {
 
-    private List<Slot> slots;
+    private final List<Slot> slots;
 
     public DTO(final List<Slot> newSlots) {
         slots = newSlots;

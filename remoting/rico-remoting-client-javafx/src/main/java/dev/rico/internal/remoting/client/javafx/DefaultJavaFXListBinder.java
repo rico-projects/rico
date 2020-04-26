@@ -34,9 +34,9 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class DefaultJavaFXListBinder<S> implements JavaFXListBinder<S> {
 
-    private javafx.collections.ObservableList<S> list;
+    private final javafx.collections.ObservableList<S> list;
 
-    private static IdentityHashMap<javafx.collections.ObservableList, javafx.collections.ObservableList> boundLists = new IdentityHashMap<>();
+    private static final IdentityHashMap<javafx.collections.ObservableList, javafx.collections.ObservableList> boundLists = new IdentityHashMap<>();
 
     public DefaultJavaFXListBinder(final javafx.collections.ObservableList<S> list) {
         Assert.requireNonNull(list, "list");

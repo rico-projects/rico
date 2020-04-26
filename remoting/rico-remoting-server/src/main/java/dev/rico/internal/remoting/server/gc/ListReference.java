@@ -30,7 +30,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class ListReference extends Reference {
 
-    private ObservableList list;
+    private final ObservableList list;
 
     /**
      * Constructor

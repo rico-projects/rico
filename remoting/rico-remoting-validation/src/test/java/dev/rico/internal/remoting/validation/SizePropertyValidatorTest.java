@@ -46,7 +46,7 @@ public class SizePropertyValidatorTest {
         @RemotingBean
         class TestedClass {
             @Size(min = 3, max = 8)
-            private Property<Object> value = new MockedProperty<>();
+            private final Property<Object> value = new MockedProperty<>();
         }
 
         TestedClass bean = new TestedClass();

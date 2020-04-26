@@ -27,19 +27,19 @@ import java.math.BigInteger;
 @RemotingBean
 public class TestBeanMin {
     @Min(1)
-    private Property<BigDecimal> bigDecimal = new MockedProperty<>();
+    private final Property<BigDecimal> bigDecimal = new MockedProperty<>();
 
     @Min(1)
-    private Property<BigInteger> bigInteger = new MockedProperty<>();
+    private final Property<BigInteger> bigInteger = new MockedProperty<>();
 
     @Min(1)
-    private Property<Long> longProperty = new MockedProperty<>();
+    private final Property<Long> longProperty = new MockedProperty<>();
 
     @Min(1)
-    private Property<Byte> byteProperty = new MockedProperty<>();
+    private final Property<Byte> byteProperty = new MockedProperty<>();
 
     @Min(1)
-    private Property<String> string = new MockedProperty<>();
+    private final Property<String> string = new MockedProperty<>();
 
     public Property<BigDecimal> bigDecimalProperty() {
         return bigDecimal;

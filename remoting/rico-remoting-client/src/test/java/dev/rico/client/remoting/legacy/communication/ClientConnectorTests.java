@@ -339,7 +339,7 @@ public class ClientConnectorTests {
             return Collections.emptyList();
         }
 
-        private List<Command> transmittedCommands = new ArrayList<Command>();
+        private final List<Command> transmittedCommands = new ArrayList<Command>();
     }
 
     public class ExtendedAttribute extends ClientAttribute {

@@ -22,7 +22,7 @@ import java.util.Map;
 
 public class URLParams {
 
-    private Map<String, String> map;
+    private final Map<String, String> map;
 
     private URLParams() {
         this.map = new HashMap<>();

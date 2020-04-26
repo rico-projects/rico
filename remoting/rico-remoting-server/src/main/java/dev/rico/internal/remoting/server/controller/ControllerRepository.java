@@ -34,8 +34,8 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class ControllerRepository {
 
-    private Map<String, Class> controllersClasses;
-    private ControllerValidator controllerValidator;
+    private final Map<String, Class> controllersClasses;
+    private final ControllerValidator controllerValidator;
 
     /**
      * Constructor

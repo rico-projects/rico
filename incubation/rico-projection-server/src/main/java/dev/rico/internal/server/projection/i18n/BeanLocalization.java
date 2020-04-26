@@ -27,7 +27,7 @@ public class BeanLocalization {
 
     private Locale locale;
 
-    private Translator translator;
+    private final Translator translator;
 
     public BeanLocalization(final Translator translator) {
         locale = Locale.getDefault();
