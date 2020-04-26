@@ -8,4 +8,5 @@ module dev.rico.metrics {
 
     requires transitive dev.rico.core;
     requires micrometer.core;
+    requires org.slf4j;
 }
