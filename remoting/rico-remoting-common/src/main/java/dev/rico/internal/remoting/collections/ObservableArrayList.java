@@ -94,17 +94,20 @@ public class ObservableArrayList<E> implements ObservableList<E> {
     }
 
     @Override
-    public boolean addAll(final E... elements) {
+    @SafeVarargs
+    public final boolean addAll(final E... elements) {
         return addAll(Arrays.asList(elements));
     }
 
     @Override
-    public boolean setAll(final E... elements) {
+    @SafeVarargs
+    public final boolean setAll(final E... elements) {
         return setAll(Arrays.asList(elements));
     }
 
     @Override
-    public boolean removeAll(final E... elements) {
+    @SafeVarargs
+    public final boolean removeAll(final E... elements) {
         return removeAll(Arrays.asList(elements));
     }
 
@@ -185,7 +188,8 @@ public class ObservableArrayList<E> implements ObservableList<E> {
     }
 
     @Override
-    public boolean retainAll(final E... elements) {
+    @SafeVarargs
+    public final boolean retainAll(final E... elements) {
         return batchRemove(Arrays.asList(elements), false);
     }
 
