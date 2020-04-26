@@ -144,13 +144,13 @@ public class ServerRemotingContextTest {
 
         //then:
         Map<Class<? extends Command>, List<CommandHandler>> actions = serverRemotingContext.getServerConnector().getRegistry().getActions();
-        assertNotNull(actions.containsKey(CreateContextCommand.class));
-        assertNotNull(actions.containsKey(DestroyContextCommand.class));
-        assertNotNull(actions.containsKey(CreateControllerCommand.class));
-        assertNotNull(actions.containsKey(DestroyControllerCommand.class));
-        assertNotNull(actions.containsKey(CallActionCommand.class));
-        assertNotNull(actions.containsKey(StartLongPollCommand.class));
-        assertNotNull(actions.containsKey(InterruptLongPollCommand.class));
+        assertTrue(actions.containsKey(CreateContextCommand.class));
+        assertTrue(actions.containsKey(DestroyContextCommand.class));
+        assertTrue(actions.containsKey(CreateControllerCommand.class));
+        assertTrue(actions.containsKey(DestroyControllerCommand.class));
+        assertTrue(actions.containsKey(CallActionCommand.class));
+        assertTrue(actions.containsKey(StartLongPollCommand.class));
+        assertTrue(actions.containsKey(InterruptLongPollCommand.class));
     }
 
     private final DefaultClasspathScanner classpathScanner = new DefaultClasspathScanner("not.in.classpath");
