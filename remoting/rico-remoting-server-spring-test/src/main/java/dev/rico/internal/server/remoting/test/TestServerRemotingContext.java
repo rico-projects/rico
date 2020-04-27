@@ -72,7 +72,7 @@ public class TestServerRemotingContext extends ServerRemotingContext {
     @Override
     public <T> Future<T> callLater(final Callable<T> callable) {
         Assert.requireNonNull(callable, "callable");
-        final CompletableFuture<T> result = new CompletableFuture<T>();
+        final CompletableFuture<T> result = new CompletableFuture<>();
         callLaterTasks.offer(() -> {
             try {
                 T taskResult = callable.call();

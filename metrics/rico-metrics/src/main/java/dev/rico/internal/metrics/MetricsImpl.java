@@ -126,7 +126,7 @@ public class MetricsImpl implements Metrics {
         final List<io.micrometer.core.instrument.Tag> tagList = new ArrayList<>();
         tagList.addAll(TagUtil.convertTags(tags));
         tagList.addAll(TagUtil.convertTags(ContextManagerImpl.getInstance().getGlobalContexts()));
-        final AtomicReference<Double> internalValue = new AtomicReference<Double>(0d);
+        final AtomicReference<Double> internalValue = new AtomicReference<>(0d);
 
         io.micrometer.core.instrument.Gauge gauge = io.micrometer.core.instrument.Gauge
                 .builder("name", internalValue, r -> Optional.ofNullable(r.get()).orElse(0d))

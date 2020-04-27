@@ -29,7 +29,7 @@ public class StringConverterFactory extends AbstractConverterFactory {
 
     public static final int FIELD_TYPE_STRING = 8;
 
-    private static final Converter<String, String> CONVERTER = new AbstractStringConverter<String>() {
+    private static final Converter<String, String> CONVERTER = new AbstractStringConverter<>() {
         @Override
         public String convertFromRemoting(final String value) {
             return value;

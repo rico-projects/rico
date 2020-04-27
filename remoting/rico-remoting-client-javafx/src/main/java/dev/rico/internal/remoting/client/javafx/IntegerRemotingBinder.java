@@ -45,7 +45,7 @@ public class IntegerRemotingBinder extends AbstractNumericRemotingBinder<Integer
 
     @Override
     protected BidirectionalConverter<Number, Integer> getConverter() {
-        return new BidirectionalConverter<Number, Integer>() {
+        return new BidirectionalConverter<>() {
             @Override
             public Number convertBack(final Integer value) {
                 if (value == null) {

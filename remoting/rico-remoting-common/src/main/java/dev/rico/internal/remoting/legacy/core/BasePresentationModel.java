@@ -33,7 +33,7 @@ import static org.apiguardian.api.API.Status.DEPRECATED;
 @SuppressWarnings("deprecation")
 public class BasePresentationModel<A extends Attribute> extends AbstractObservable implements PresentationModel<A> {
 
-    protected final List<A> attributes = new LinkedList<A>();
+    protected final List<A> attributes = new LinkedList<>();
 
     private final String id;
 

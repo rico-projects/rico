@@ -42,7 +42,7 @@ public interface BidirectionalConverter<T, U>  extends Converter<T, U> {
      */
     default BidirectionalConverter<U, T> invert() {
         final BidirectionalConverter<T, U> converter = this;
-        return new BidirectionalConverter<U, T>() {
+        return new BidirectionalConverter<>() {
             @Override
             public U convertBack(final T value) {
                 return converter.convert(value);

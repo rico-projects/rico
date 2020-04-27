@@ -37,7 +37,7 @@ public final class CreatePresentationModelCommand extends Command {
 
     private boolean clientSideOnly = false;
 
-    private List<Map<String, Object>> attributes = new ArrayList<Map<String, Object>>();
+    private List<Map<String, Object>> attributes = new ArrayList<>();
 
     public CreatePresentationModelCommand(final String pmId, String pmType, final List<Map<String, Object>> attributes, final boolean clientSideOnly) {
         this();

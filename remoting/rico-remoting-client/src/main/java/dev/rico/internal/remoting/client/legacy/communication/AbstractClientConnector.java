@@ -236,7 +236,7 @@ public abstract class AbstractClientConnector {
             @Override
             public void run() {
                 try {
-                    final List<Command> releaseCommandList = new ArrayList<Command>(Collections.singletonList(releaseCommand));
+                    final List<Command> releaseCommandList = new ArrayList<>(Collections.singletonList(releaseCommand));
                     transmit(releaseCommandList);
                 } catch (RemotingException e) {
                     handleError(e);

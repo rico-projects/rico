@@ -55,7 +55,7 @@ public class ActionRegistry {
     public List<CommandHandler> getActionsFor(final Class<? extends Command> commandClass) {
         List<CommandHandler> actions = this.actions.get(commandClass);
         if (actions == null) {
-            actions = new ArrayList<CommandHandler>();
+            actions = new ArrayList<>();
             this.actions.put(commandClass, actions);
         }
 

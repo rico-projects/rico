@@ -271,7 +271,7 @@ public class ControllerHandler {
             }
             ReflectionHelper.setPrivileged(parentField, controller, parentController);
             if (parentChildRelations.get(parentControllerId) == null) {
-                parentChildRelations.put(parentControllerId, new ArrayList<String>());
+                parentChildRelations.put(parentControllerId, new ArrayList<>());
             }
             parentChildRelations.get(parentControllerId).add(controllerId);
             childToParentRelations.put(controllerId, parentControllerId);

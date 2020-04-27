@@ -49,7 +49,7 @@ public class TestPropertyChange extends AbstractRemotingTest {
         final SimpleAnnotatedTestModel model = manager.create(SimpleAnnotatedTestModel.class);
 
         final ListerResults<String> results = new ListerResults<>();
-        ValueChangeListener<String> myListener = new ValueChangeListener<String>() {
+        ValueChangeListener<String> myListener = new ValueChangeListener<>() {
             @Override
             public void valueChanged(ValueChangeEvent<? extends String> evt) {
                 Assert.assertEquals(evt.getSource(), model.myProperty());
@@ -99,7 +99,7 @@ public class TestPropertyChange extends AbstractRemotingTest {
         final SimpleTestModel model = manager.create(SimpleTestModel.class);
 
         final ListerResults<String> results = new ListerResults<>();
-        ValueChangeListener<String> myListener = new ValueChangeListener<String>() {
+        ValueChangeListener<String> myListener = new ValueChangeListener<>() {
             @Override
             public void valueChanged(ValueChangeEvent<? extends String> evt) {
                 Assert.assertEquals(evt.getSource(), model.getTextProperty());
@@ -154,7 +154,7 @@ public class TestPropertyChange extends AbstractRemotingTest {
         final SingleReferenceModel model = manager.create(SingleReferenceModel.class);
 
         final ListerResults<SimpleTestModel> results = new ListerResults<>();
-        final ValueChangeListener<SimpleTestModel> myListener = new ValueChangeListener<SimpleTestModel>() {
+        final ValueChangeListener<SimpleTestModel> myListener = new ValueChangeListener<>() {
             @Override
             public void valueChanged(ValueChangeEvent<? extends SimpleTestModel> evt) {
                 Assert.assertEquals(evt.getSource(), model.getReferenceProperty());
@@ -204,7 +204,7 @@ public class TestPropertyChange extends AbstractRemotingTest {
         final ChildModel model = manager.create(ChildModel.class);
 
         final ListerResults<String> childResults = new ListerResults<>();
-        ValueChangeListener<String> childListener = new ValueChangeListener<String>() {
+        ValueChangeListener<String> childListener = new ValueChangeListener<>() {
             @Override
             public void valueChanged(ValueChangeEvent<? extends String> evt) {
                 Assert.assertEquals(evt.getSource(), model.getChildProperty());
@@ -214,7 +214,7 @@ public class TestPropertyChange extends AbstractRemotingTest {
             }
         };
         final ListerResults<String> parentResults = new ListerResults<>();
-        ValueChangeListener<String> parentListener = new ValueChangeListener<String>() {
+        ValueChangeListener<String> parentListener = new ValueChangeListener<>() {
             @Override
             public void valueChanged(ValueChangeEvent<? extends String> evt) {
                 Assert.assertEquals(evt.getSource(), model.getParentProperty());

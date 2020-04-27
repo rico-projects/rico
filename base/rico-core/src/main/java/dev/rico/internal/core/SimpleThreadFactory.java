@@ -55,7 +55,7 @@ public class SimpleThreadFactory implements ExtendedThreadFactory {
     @Override
     public Thread newThread(final Runnable task) {
         Assert.requireNonNull(task, "task");
-        return AccessController.doPrivileged(new PrivilegedAction<Thread>() {
+        return AccessController.doPrivileged(new PrivilegedAction<>() {
             @Override
             public Thread run() {
                 final String name = THREAD_NAME_PREFIX + threadNumber.getAndIncrement();

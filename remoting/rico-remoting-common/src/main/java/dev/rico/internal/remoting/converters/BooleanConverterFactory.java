@@ -29,7 +29,7 @@ public class BooleanConverterFactory extends AbstractConverterFactory {
 
     public static final int FIELD_TYPE_BOOLEAN = 7;
 
-    private static final Converter<Boolean, Boolean> CONVERTER = new AbstractBooleanConverter<Boolean>() {
+    private static final Converter<Boolean, Boolean> CONVERTER = new AbstractBooleanConverter<>() {
 
         @Override
         public Boolean convertFromRemoting(final Boolean value) {

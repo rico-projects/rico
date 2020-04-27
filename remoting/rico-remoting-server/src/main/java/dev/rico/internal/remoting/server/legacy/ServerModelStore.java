@@ -204,7 +204,7 @@ public class ServerModelStore extends ModelStore<ServerAttribute, ServerPresenta
      * @throws IllegalArgumentException if a presentation model for this id already exists. No commands are sent in this case.
      */
     public ServerPresentationModel presentationModel(final String id, final String presentationModelType, final DTO dto) {
-        List<ServerAttribute> attributes = new ArrayList<ServerAttribute>();
+        List<ServerAttribute> attributes = new ArrayList<>();
         for (final Slot slot : dto.getSlots()) {
             final ServerAttribute result = new ServerAttribute(slot.getPropertyName(), slot.getValue(), slot.getQualifier());
             result.silently(new Runnable() {

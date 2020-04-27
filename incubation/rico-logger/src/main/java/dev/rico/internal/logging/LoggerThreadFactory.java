@@ -39,7 +39,7 @@ public class LoggerThreadFactory implements ThreadFactory {
     @Override
     public synchronized Thread newThread(Runnable task) {
         Objects.requireNonNull(task, "task");
-        return AccessController.doPrivileged(new PrivilegedAction<Thread>() {
+        return AccessController.doPrivileged(new PrivilegedAction<>() {
             @Override
             public Thread run() {
                 final Thread backgroundThread = new Thread(task);

@@ -44,7 +44,7 @@ public class ActionRegistryTests {
     public void testRegisterCommand() {
         //given:
         Assert.assertEquals(0, registry.getActions().size());
-        CommandHandler<TestDataCommand> firstAction = new CommandHandler<TestDataCommand>() {
+        CommandHandler<TestDataCommand> firstAction = new CommandHandler<>() {
             @Override
             public void handleCommand(TestDataCommand command, List response) {
 
@@ -65,7 +65,7 @@ public class ActionRegistryTests {
     public void testRegisterCommandHandler() {
 
         //given:
-        CommandHandler<TestDataCommand> commandHandler = new CommandHandler<TestDataCommand>() {
+        CommandHandler<TestDataCommand> commandHandler = new CommandHandler<>() {
             @Override
             public void handleCommand(TestDataCommand command, List response) {
 
@@ -87,7 +87,7 @@ public class ActionRegistryTests {
 
         //given:
         Assert.assertEquals(0, registry.getActions().size());
-        CommandHandler<TestDataCommand> action = new CommandHandler<TestDataCommand>() {
+        CommandHandler<TestDataCommand> action = new CommandHandler<>() {
             @Override
             public void handleCommand(TestDataCommand command, List response) {
 

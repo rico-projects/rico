@@ -67,10 +67,10 @@ public class ControllerProxyFactory {
         }
         createControllerCommand.setParameters(parameters);
 
-        return commandHandler.invokeCommand(createControllerCommand).thenApply(new Function<Void, ControllerProxy<T>>() {
+        return commandHandler.invokeCommand(createControllerCommand).thenApply(new Function<>() {
             @Override
             public ControllerProxy<T> apply(Void aVoid) {
-                return new ControllerProxyImpl<T>(bean.getControllerId(), (T) bean.getModel(), clientConnector, platformBeanRepository, ControllerProxyFactory.this, converters);
+                return new ControllerProxyImpl<>(bean.getControllerId(), (T) bean.getModel(), clientConnector, platformBeanRepository, ControllerProxyFactory.this, converters);
             }
         });
     }

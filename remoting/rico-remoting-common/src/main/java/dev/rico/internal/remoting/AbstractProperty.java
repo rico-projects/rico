@@ -45,7 +45,7 @@ public abstract class AbstractProperty<T> implements Property<T> {
     }
 
     protected void firePropertyChanged(final T oldValue, final T newValue) {
-        final ValueChangeEvent<T> event = new ValueChangeEvent<T>() {
+        final ValueChangeEvent<T> event = new ValueChangeEvent<>() {
             @Override
             public Property<T> getSource() {
                 return AbstractProperty.this;

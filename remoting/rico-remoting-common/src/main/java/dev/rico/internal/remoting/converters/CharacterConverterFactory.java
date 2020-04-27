@@ -25,7 +25,7 @@ public class CharacterConverterFactory extends AbstractConverterFactory {
 
     public static final int FIELD_CHARACTER_BYTE = 107;
 
-    private static final Converter<Character, Number> CONVERTER = new AbstractNumberConverter<Character>() {
+    private static final Converter<Character, Number> CONVERTER = new AbstractNumberConverter<>() {
 
         @Override
         public Character convertFromRemoting(final Number value) {

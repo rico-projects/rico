@@ -344,7 +344,7 @@ public class ServerRemotingContext {
 
     public Future<Void> runLater(final Runnable runnable) {
         Assert.requireNonNull(runnable, "runnable");
-        return callLater(new Callable<Void>() {
+        return callLater(new Callable<>() {
             @Override
             public Void call() throws Exception {
                 runnable.run();

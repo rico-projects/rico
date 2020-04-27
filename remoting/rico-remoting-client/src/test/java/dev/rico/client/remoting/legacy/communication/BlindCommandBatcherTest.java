@@ -80,7 +80,7 @@ public class BlindCommandBatcherTest {
     public void doNonBlindForcesBatch() {
         Assert.assertTrue(batcher.isEmpty());
 
-        List<CommandAndHandler> list = new ArrayList<CommandAndHandler>();
+        List<CommandAndHandler> list = new ArrayList<>();
         list.add(new CommandAndHandler(null));
         list.add(new CommandAndHandler(null));
         list.add(new CommandAndHandler(null));
@@ -126,7 +126,7 @@ public class BlindCommandBatcherTest {
     public void doMaxBatchSize() {
         //given:
         batcher.setMaxBatchSize(4);
-        ArrayList<CommandAndHandler> list = new ArrayList<CommandAndHandler>();
+        ArrayList<CommandAndHandler> list = new ArrayList<>();
         for (int i = 0; i < 17; i++) {
             list.add(new CommandAndHandler(null));
         }
@@ -159,7 +159,7 @@ public class BlindCommandBatcherTest {
 
         //given:
         batcher.setMergeValueChanges(true);
-        List<CommandAndHandler> list = new ArrayList<CommandAndHandler>();
+        List<CommandAndHandler> list = new ArrayList<>();
         ValueChangedCommand command = new ValueChangedCommand();
         command.setAttributeId("0");
         command.setNewValue(1);
@@ -202,7 +202,7 @@ public class BlindCommandBatcherTest {
 
         //given:
         batcher.setMergeValueChanges(true);
-        List<CommandAndHandler> list = new ArrayList<CommandAndHandler>();
+        List<CommandAndHandler> list = new ArrayList<>();
         ValueChangedCommand command = new ValueChangedCommand();
         command.setAttributeId("0");
         command.setNewValue(1);

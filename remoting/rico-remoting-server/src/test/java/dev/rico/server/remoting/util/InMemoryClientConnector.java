@@ -64,7 +64,7 @@ public class InMemoryClientConnector extends AbstractClientConnector {
                 throw new RuntimeException(e);
             }
         }
-        List<Command> result = new LinkedList<Command>();
+        List<Command> result = new LinkedList<>();
         for (Command command : commands) {
             LOG.trace("processing {}", command);
             result.addAll(serverConnector.receive(command));// there is no need for encoding since we are in-memory

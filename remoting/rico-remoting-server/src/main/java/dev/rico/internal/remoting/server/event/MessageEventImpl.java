@@ -33,7 +33,7 @@ public class MessageEventImpl<T extends Serializable> implements MessageEvent<T>
     private final RemotingEventContext<T> eventContext;
 
     public MessageEventImpl(final Topic<T> topic, final long timestamp, final T data) {
-        this.eventContext = new RemotingEventContext<T>(topic, timestamp);
+        this.eventContext = new RemotingEventContext<>(topic, timestamp);
         this.data = data;
     }
 

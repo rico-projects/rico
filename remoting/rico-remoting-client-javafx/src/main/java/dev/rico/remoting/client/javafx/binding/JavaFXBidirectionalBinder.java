@@ -39,7 +39,7 @@ public interface JavaFXBidirectionalBinder<S> extends JavaFXBinder<S> {
      * @return the binding
      */
     default Binding bidirectionalTo(final Property<S> remotingProperty) {
-        return bidirectionalTo(remotingProperty, new BidirectionalConverter<S, S>() {
+        return bidirectionalTo(remotingProperty, new BidirectionalConverter<>() {
             @Override
             public S convertBack(final S value) {
                 return value;

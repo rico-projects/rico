@@ -45,7 +45,7 @@ public class BlindCommandBatcher extends CommandBatcher {
 
     private final ExecutorService executorService = Executors.newCachedThreadPool();
 
-    private final LinkedList<CommandAndHandler> commandsAndHandlers = new LinkedList<CommandAndHandler>();
+    private final LinkedList<CommandAndHandler> commandsAndHandlers = new LinkedList<>();
 
     private final Lock commandsAndHandlersLock = new ReentrantLock();
 

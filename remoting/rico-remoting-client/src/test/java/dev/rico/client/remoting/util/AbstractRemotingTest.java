@@ -90,7 +90,7 @@ public abstract class AbstractRemotingTest {
         DefaultInMemoryConfig config = new DefaultInMemoryConfig(DirectExecutor.getInstance());
         config.getServerConnector().registerDefaultActions();
         ServerModelStore store = config.getServerModelStore();
-        store.setCurrentResponse(new ArrayList<Command>());
+        store.setCurrentResponse(new ArrayList<>());
 
         return new TestConfiguration(config.getClientModelStore(), config.getServerModelStore(), config.getClientConnector(), config.getServerConnector());
     }

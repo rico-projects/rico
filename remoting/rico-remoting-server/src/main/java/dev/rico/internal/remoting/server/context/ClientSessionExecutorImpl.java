@@ -42,7 +42,7 @@ public class ClientSessionExecutorImpl implements ClientSessionExecutor {
     @Override
     public CompletableFuture<Void> runLaterInClientSession(final Runnable task) {
         Assert.requireNonNull(task, "task");
-        return callLaterInClientSession(new Callable<Void>() {
+        return callLaterInClientSession(new Callable<>() {
             @Override
             public Void call() throws Exception {
                 task.run();

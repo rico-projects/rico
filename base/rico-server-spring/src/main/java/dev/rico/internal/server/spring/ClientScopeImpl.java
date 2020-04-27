@@ -75,7 +75,7 @@ public class ClientScopeImpl implements Scope {
         }
         Map<String, Object> localStore = session.getAttribute(CLIENT_STORE_ATTRIBUTE);
         if(localStore == null) {
-            localStore = Collections.synchronizedMap(new HashMap<String, Object>());
+            localStore = Collections.synchronizedMap(new HashMap<>());
             session.setAttribute(CLIENT_STORE_ATTRIBUTE, localStore);
         }
         return localStore;

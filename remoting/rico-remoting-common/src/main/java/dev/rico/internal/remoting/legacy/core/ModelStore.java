@@ -62,7 +62,7 @@ public class ModelStore<A extends Attribute, P extends PresentationModel<A>> {
     private final Map<String, A>        attributesPerId;
     private final Map<String, List<A>>  attributesPerQualifier;
 
-    private final Set<ModelStoreListenerWrapper<A, P>> modelStoreListeners = new LinkedHashSet<ModelStoreListenerWrapper<A, P>>();
+    private final Set<ModelStoreListenerWrapper<A, P>> modelStoreListeners = new LinkedHashSet<>();
 
     private final PropertyChangeListener ATTRIBUTE_WORKER = new PropertyChangeListener() {
         @Override
@@ -90,10 +90,10 @@ public class ModelStore<A extends Attribute, P extends PresentationModel<A>> {
      * @see ModelStoreConfig
      */
     public ModelStore(final ModelStoreConfig config) {
-        presentationModels      = new HashMap<String, P>        (config.getPmCapacity());
-        modelsPerType           = new HashMap<String, List<P>>  (config.getTypeCapacity());
-        attributesPerId         = new HashMap<String, A>        (config.getAttributeCapacity());
-        attributesPerQualifier  = new HashMap<String, List<A>>  (config.getQualifierCapacity());
+        presentationModels      = new HashMap<>(config.getPmCapacity());
+        modelsPerType           = new HashMap<>(config.getTypeCapacity());
+        attributesPerId         = new HashMap<>(config.getAttributeCapacity());
+        attributesPerQualifier  = new HashMap<>(config.getQualifierCapacity());
     }
 
     /**
@@ -185,7 +185,7 @@ public class ModelStore<A extends Attribute, P extends PresentationModel<A>> {
         if (Assert.isBlank(qualifier)) return;
         List<A> list = attributesPerQualifier.get(qualifier);
         if (null == list) {
-            list = new ArrayList<A>();
+            list = new ArrayList<>();
             attributesPerQualifier.put(qualifier, list);
         }
         if (!list.contains(attribute)) list.add(attribute);
@@ -207,7 +207,7 @@ public class ModelStore<A extends Attribute, P extends PresentationModel<A>> {
         if (Assert.isBlank(type)) return;
         List<P> list = modelsPerType.get(type);
         if (null == list) {
-            list = new ArrayList<P>();
+            list = new ArrayList<>();
             modelsPerType.put(type, list);
         }
         if (!list.contains(model)) list.add(model);
@@ -322,7 +322,7 @@ public class ModelStore<A extends Attribute, P extends PresentationModel<A>> {
 
     public void addModelStoreListener(final String presentationModelType, final ModelStoreListener<A, P> listener) {
         if (null == listener) return;
-        final ModelStoreListenerWrapper<A, P> wrapper = new ModelStoreListenerWrapper<A, P>(presentationModelType, listener);
+        final ModelStoreListenerWrapper<A, P> wrapper = new ModelStoreListenerWrapper<>(presentationModelType, listener);
         if (!modelStoreListeners.contains(wrapper)) modelStoreListeners.add(wrapper);
     }
 
@@ -332,7 +332,7 @@ public class ModelStore<A extends Attribute, P extends PresentationModel<A>> {
 
     public void removeModelStoreListener(final String presentationModelType, final ModelStoreListener<A, P> listener) {
         if (null == listener) return;
-        modelStoreListeners.remove(new ModelStoreListenerWrapper<A, P>(presentationModelType, listener));
+        modelStoreListeners.remove(new ModelStoreListenerWrapper<>(presentationModelType, listener));
     }
 
     public boolean hasModelStoreListener(final ModelStoreListener<A, P> listener) {
@@ -341,12 +341,12 @@ public class ModelStore<A extends Attribute, P extends PresentationModel<A>> {
 
     public boolean hasModelStoreListener(final String presentationModelType, final ModelStoreListener<A, P> listener) {
         return null != listener &&
-                modelStoreListeners.contains(new ModelStoreListenerWrapper<A, P>(presentationModelType, listener));
+                modelStoreListeners.contains(new ModelStoreListenerWrapper<>(presentationModelType, listener));
     }
 
     protected void fireModelStoreChangedEvent(final P model, final ModelStoreEvent.Type eventType) {
         if (modelStoreListeners.isEmpty()) return;
-        final ModelStoreEvent<A, P> event = new ModelStoreEvent<A, P>(eventType, model);
+        final ModelStoreEvent<A, P> event = new ModelStoreEvent<>(eventType, model);
         for (ModelStoreListener<A, P> listener : modelStoreListeners) {
             listener.modelStoreChanged(event);
         }

@@ -104,7 +104,7 @@ public class DistributedEventBus extends AbstractEventBus {
         try {
             Assert.requireNonNull(topic, "hazelcastTopic");
 
-            final String registrationId = topic.addMessageListener(new com.hazelcast.core.MessageListener<MessageEventImpl<T>>() {
+            final String registrationId = topic.addMessageListener(new com.hazelcast.core.MessageListener<>() {
                 @Override
                 public void onMessage(com.hazelcast.core.Message<MessageEventImpl<T>> message) {
                     final MessageEventImpl<T> event = message.getMessageObject();
