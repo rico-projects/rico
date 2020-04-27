@@ -130,7 +130,7 @@ public class ControllerHandler {
             firePostChildCreated(parentController, instance);
         }
 
-        LOG.trace("Created Controller of type %s and id %s for name %s", ControllerUtils.getControllerName(controllerClass), id, name);
+        LOG.trace("Created Controller of type {} and id {} for name {}", ControllerUtils.getControllerName(controllerClass), id, name);
 
         return id;
     }

@@ -125,7 +125,7 @@ public class SimpleConfiguration implements Configuration {
 
     public void setProperty(final String key, final String value) {
         if (value == null) {
-            LOG.warn("Setting property '{}' to null value will be ignored.");
+            LOG.warn("Setting property '{}' to null value will be ignored.", key);
         } else {
             internalProperties.setProperty(key, value);
         }

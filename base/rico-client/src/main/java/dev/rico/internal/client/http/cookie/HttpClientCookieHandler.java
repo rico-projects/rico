@@ -56,7 +56,7 @@ public class HttpClientCookieHandler {
                 if (cookie == null || cookie.isEmpty()) {
                     continue;
                 }
-                LOG.debug("will parse '{}' header content '{}'", cookie);
+                LOG.debug("will parse '{}' header content '{}'", SET_COOKIE_HEADER, cookie);
                 final List<HttpCookie> cookies = new ArrayList<>();
                 try {
                     cookies.addAll(HttpCookie.parse(cookie));
