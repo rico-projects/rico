@@ -55,7 +55,7 @@ public final class ValueChangedCommand extends Command {
 
     @Override
     public String toString() {
-        return super.toString() + " attr:" + attributeId + " -> " + String.valueOf(newValue);
+        return super.toString() + " attr:" + attributeId + " -> " + newValue;
     }
 
 }

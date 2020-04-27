@@ -69,6 +69,6 @@ public final class AttributeMetadataChangedCommand extends Command {
 
     @Override
     public String toString() {
-        return super.toString() + " attr:" + attributeId + ", metadataName:" + metadataName + " value:" + String.valueOf(value);
+        return super.toString() + " attr:" + attributeId + ", metadataName:" + metadataName + " value:" + value;
     }
 }
