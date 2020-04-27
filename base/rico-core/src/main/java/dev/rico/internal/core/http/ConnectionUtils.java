@@ -16,6 +16,7 @@
  */
 package dev.rico.internal.core.http;
 
+import dev.rico.core.http.HttpHeader;
 import dev.rico.internal.core.Assert;
 import dev.rico.core.http.ByteArrayProvider;
 import dev.rico.core.http.HttpResponse;
@@ -124,9 +125,9 @@ public class ConnectionUtils {
         Assert.requireNonNull(response, "response");
         return response.getHeaders().stream()
                 .filter(h -> Objects.equals(CONTENT_DISPOSITION_HEADER_NAME, h.getName()))
-                .map(h -> h.getContent())
-                .flatMap(v -> Arrays.asList(v.split(";")).stream())
-                .map(v -> v.trim())
+                .map(HttpHeader::getContent)
+                .flatMap(v -> Arrays.stream(v.split(";")))
+                .map(String::trim)
                 .filter(v -> v.startsWith("filename=\""))
                 .map(v -> v.substring("filename=\"" .length(), v.length() - 1))
                 .findAny()

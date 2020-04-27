@@ -207,21 +207,18 @@ public class ControllerHandler {
         Assert.requireNonNull(parameters, "parameters");
         Assert.requireNonNull(controller, "controller");
 
-        final List<Field> allFields = ReflectionHelper.getInheritedDeclaredFields(controller.getClass());
-        allFields.stream()
-                .forEach(f -> {
-                    ReflectionHelper.getAnnotationOrMetaAnnotation(f, RemotingValue.class).ifPresent(annotation -> {
-                        final String name = StringUtils.nonEmpty(annotation.value()).orElse(f.getName());
-                        if (parameters.containsKey(name)) {
-                            ReflectionHelper.setPrivileged(f, controller, parameters.get(name));
-                        } else {
-                            if (!annotation.optional()) {
-                                throw new IllegalStateException("No value defined for configuration value '" + name + "' in controller '" + controller.getClass() + "'");
-                            }
-                        }
-                    });
-
-                });
+        for (Field f : ReflectionHelper.getInheritedDeclaredFields(controller.getClass())) {
+            ReflectionHelper.getAnnotationOrMetaAnnotation(f, RemotingValue.class).ifPresent(annotation -> {
+                final String name = StringUtils.nonEmpty(annotation.value()).orElse(f.getName());
+                if (parameters.containsKey(name)) {
+                    ReflectionHelper.setPrivileged(f, controller, parameters.get(name));
+                } else {
+                    if (!annotation.optional()) {
+                        throw new IllegalStateException("No value defined for configuration value '" + name + "' in controller '" + controller.getClass() + "'");
+                    }
+                }
+            });
+        }
     }
 
     private void attachModel(final String controllerId, final Object controller) {

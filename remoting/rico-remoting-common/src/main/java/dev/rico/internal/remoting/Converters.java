@@ -68,7 +68,8 @@ public class Converters {
     private boolean isAnyConversionTypeAlreadyAdded(final ConverterFactory converterFactory) {
         Assert.requireNonNull(converterFactory, "converterFactory");
         for(ConverterFactory factory : converterFactories){
-            return factory.getSupportedTypes().stream().filter(type -> converterFactory.getSupportedTypes().contains(type)).findAny().map(c -> true).orElse(false);
+            return factory.getSupportedTypes().stream()
+                    .anyMatch(type -> converterFactory.getSupportedTypes().contains(type));
         }
         return false;
     }

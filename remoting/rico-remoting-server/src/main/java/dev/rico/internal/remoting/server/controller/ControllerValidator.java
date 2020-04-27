@@ -141,11 +141,8 @@ public class ControllerValidator {
 
     private boolean checkMethodForMissingParamAnnotation(final Method method) {
         Assert.requireNonNull(method, "method");
-        return Arrays.asList(method.getParameters()).stream().
-                filter(param -> !param.isAnnotationPresent(Param.class)).
-                findAny().
-                map(param -> true).
-                orElse(false);
+        return Arrays.stream(method.getParameters())
+                .anyMatch(param -> !param.isAnnotationPresent(Param.class));
     }
 
     private boolean isMoreThanOneModel(final Class<?> clazz) {
