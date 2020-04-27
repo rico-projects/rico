@@ -33,6 +33,14 @@ buildscript {
     }
 }
 
+plugins {
+    id 'extra-java-module-info' // apply plugin written in buildSrc
+}
+
+extraJavaModuleInfo {
+    autoConvert = true
+}
+
 //noinspection GroovyAssignabilityCheck
 subprojects { proj ->
 
@@ -41,27 +49,19 @@ subprojects { proj ->
         apply plugin: 'java-library'
         apply plugin: 'com.adarshr.test-logger'
 
-        afterEvaluate {
-            if (proj.publishJars.toBoolean()) {
-                compileJava {
-                    inputs.property("moduleName", "dev.rico." + proj.name.replace("rico-", "").replaceAll("-", "."))
-                    doFirst {
-                        options.compilerArgs = [
-                                '--module-path', classpath.asPath,
-                        ]
-                        classpath = files()
-                    }
-                }
-                javadoc {
-                    options.addStringOption("-module-path", classpath.asPath)
-                    classpath = files()
-                }
+        if (proj.publishJars.toBoolean()) {
+            java {
+                modularity.inferModulePath = true
+                //release = 8
             }
         }
 
         proj.tasks.withType(JavaCompile) {
-            sourceCompatibility = proj.sourceCompatibility
-            targetCompatibility = proj.targetCompatibility
+            doFirst {
+                println "Args for for $name are $options.allCompilerArgs"
+            }
+            //sourceCompatibility = proj.sourceCompatibility
+            //targetCompatibility = proj.targetCompatibility
 
             //options.compilerArgs << '-Xlint:deprecation'
             //options.compilerArgs << '-Xlint:unchecked'
