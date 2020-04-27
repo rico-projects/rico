@@ -25,9 +25,9 @@ import java.util.zip.ZipEntry;
  */
 abstract public class ExtraModuleInfoTransform implements TransformAction<ExtraModuleInfoPluginExtension> {
 
-    private static Pattern modulePattern = Pattern.compile("(?:META-INF/versions/\\d+/){0,1}module-info.class");
-    private static Pattern digits = Pattern.compile("\\d");
-    private static Pattern surplusAndJarEnding = Pattern.compile("(-|\\\\.)+(jar)*$");
+    private static final Pattern modulePattern = Pattern.compile("(?:META-INF/versions/\\d+/){0,1}module-info.class");
+    private static final Pattern digits = Pattern.compile("\\d");
+    private static final Pattern surplusAndJarEnding = Pattern.compile("(-|\\\\.)+(jar)*$");
 
 
     @InputArtifact
