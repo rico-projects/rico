@@ -19,6 +19,7 @@ package dev.rico.remoting.server.event;
 import org.apiguardian.api.API;
 
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.UUID;
 
 import static org.apiguardian.api.API.Status.MAINTAINED;
@@ -89,7 +90,7 @@ public class Topic<T extends Serializable> implements Serializable {
 
         Topic<?> topic = (Topic<?>) o;
 
-        return name != null ? name.equals(topic.name) : topic.name == null;
+        return Objects.equals(name, topic.name);
 
     }
 
