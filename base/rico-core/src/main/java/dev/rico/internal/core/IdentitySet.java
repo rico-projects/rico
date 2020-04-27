@@ -28,7 +28,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class IdentitySet<E> implements Set<E> {
 
-    private IdentityHashMap<E, E> internalMap;
+    private final IdentityHashMap<E, E> internalMap;
 
     public IdentitySet() {
         internalMap = new IdentityHashMap<>();

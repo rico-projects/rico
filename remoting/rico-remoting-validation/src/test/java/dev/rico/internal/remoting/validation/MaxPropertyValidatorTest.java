@@ -36,19 +36,19 @@ public class MaxPropertyValidatorTest {
     @RemotingBean
     private static class MaxBean {
         @Max(1)
-        private Property<BigDecimal> bigDecimal = new MockedProperty<>();
+        private final Property<BigDecimal> bigDecimal = new MockedProperty<>();
 
         @Max(1)
-        private Property<BigInteger> bigInteger = new MockedProperty<>();
+        private final Property<BigInteger> bigInteger = new MockedProperty<>();
 
         @Max(1)
-        private Property<Long> longProperty = new MockedProperty<>();
+        private final Property<Long> longProperty = new MockedProperty<>();
 
         @Max(1)
-        private Property<Byte> byteProperty = new MockedProperty<>();
+        private final Property<Byte> byteProperty = new MockedProperty<>();
 
         @Max(1)
-        private Property<String> string = new MockedProperty<>();
+        private final Property<String> string = new MockedProperty<>();
 
         public Property<BigDecimal> bigDecimalProperty() {
             return bigDecimal;

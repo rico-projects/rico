@@ -26,7 +26,7 @@ import javax.validation.constraints.Past;
 class TestBeanPastInvalidAnnotation {
 
     @Past
-    private Property<Short> date = new MockedProperty<>();
+    private final Property<Short> date = new MockedProperty<>();
 
     public Property<Short> dateProperty() {
         return date;

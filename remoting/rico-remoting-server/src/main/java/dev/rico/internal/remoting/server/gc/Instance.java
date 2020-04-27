@@ -35,14 +35,14 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class Instance {
 
-    private Object bean;
+    private final Object bean;
 
-    private boolean rootBean;
+    private final boolean rootBean;
 
-    private IdentitySet<Property> properties;
-    private IdentitySet<ObservableList> lists;
+    private final IdentitySet<Property> properties;
+    private final IdentitySet<ObservableList> lists;
 
-    private List<Reference> references;
+    private final List<Reference> references;
 
     /**
      * Constructor

@@ -27,10 +27,10 @@ import java.util.Date;
 @RemotingBean
 public class TestBeanPast {
     @Past
-    private Property<Date> date = new MockedProperty<>();
+    private final Property<Date> date = new MockedProperty<>();
 
     @Past
-    private Property<Calendar> calendar = new MockedProperty<>();
+    private final Property<Calendar> calendar = new MockedProperty<>();
 
     public Property<Date> dateProperty() {
         return date;

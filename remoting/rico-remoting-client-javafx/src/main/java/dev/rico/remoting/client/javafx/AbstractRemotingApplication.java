@@ -59,7 +59,7 @@ public abstract class AbstractRemotingApplication extends Application {
 
     private Stage primaryStage;
 
-    private AtomicBoolean connectInProgress = new AtomicBoolean(false);
+    private final AtomicBoolean connectInProgress = new AtomicBoolean(false);
 
     /**
      * Returns the server url of the remoting server endpoint.

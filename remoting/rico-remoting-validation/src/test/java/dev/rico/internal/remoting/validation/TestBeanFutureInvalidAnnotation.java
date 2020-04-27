@@ -26,7 +26,7 @@ import javax.validation.constraints.Future;
 class TestBeanFutureInvalidAnnotation {
 
     @Future
-    private Property<Short> date = new MockedProperty<>();
+    private final Property<Short> date = new MockedProperty<>();
 
     public Property<Short> dateProperty() {
         return date;

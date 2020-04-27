@@ -28,10 +28,10 @@ import java.util.Date;
 public class TestBeanFuture {
 
     @Future
-    private Property<Date> date = new MockedProperty<>();
+    private final Property<Date> date = new MockedProperty<>();
 
     @Future
-    private Property<Calendar> calendar = new MockedProperty<>();
+    private final Property<Calendar> calendar = new MockedProperty<>();
 
     public Property<Date> dateProperty() {
         return date;

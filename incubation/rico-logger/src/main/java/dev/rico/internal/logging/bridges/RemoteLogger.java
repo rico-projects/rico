@@ -57,7 +57,7 @@ public class RemoteLogger implements LoggerBridge {
 
     private final HttpURLConnectionFactory connectionFactory;
 
-    private Level level;
+    private final Level level;
 
     private final AtomicBoolean remotingError = new AtomicBoolean(false);
 

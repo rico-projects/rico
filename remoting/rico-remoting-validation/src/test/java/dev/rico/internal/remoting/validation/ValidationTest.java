@@ -49,7 +49,7 @@ public class ValidationTest {
         @RemotingBean
         class TestedClass {
             @Pattern(regexp = "^a.*b$",flags = Pattern.Flag.CASE_INSENSITIVE)
-            private Property<CharSequence> value = new MockedProperty<>();
+            private final Property<CharSequence> value = new MockedProperty<>();
         }
 
         TestedClass bean = new TestedClass();
@@ -76,7 +76,7 @@ public class ValidationTest {
         @RemotingBean
         class TestedClass {
             @NotNull
-            private Property<Object> value = new MockedProperty<>();
+            private final Property<Object> value = new MockedProperty<>();
         }
 
         TestedClass bean = new TestedClass();
@@ -99,7 +99,7 @@ public class ValidationTest {
         @RemotingBean
         class TestedClass {
             @Null
-            private Property<Object> value = new MockedProperty<>();
+            private final Property<Object> value = new MockedProperty<>();
         }
 
         TestedClass bean = new TestedClass();
@@ -122,7 +122,7 @@ public class ValidationTest {
         @RemotingBean
         class TestedClass {
             @AssertTrue
-            private Property<Boolean> value = new MockedProperty<>();
+            private final Property<Boolean> value = new MockedProperty<>();
         }
 
         TestedClass bean = new TestedClass();
@@ -145,7 +145,7 @@ public class ValidationTest {
         @RemotingBean
         class TestedClass {
             @AssertFalse
-            private Property<Boolean> value = new MockedProperty<>();
+            private final Property<Boolean> value = new MockedProperty<>();
         }
 
         TestedClass bean = new TestedClass();
@@ -446,7 +446,7 @@ public class ValidationTest {
         @RemotingBean
         class TestedClass {
             @Digits(integer=4,fraction=2)
-            private Property<CharSequence> value = new MockedProperty<>();
+            private final Property<CharSequence> value = new MockedProperty<>();
         }
 
         TestedClass bean = new TestedClass();

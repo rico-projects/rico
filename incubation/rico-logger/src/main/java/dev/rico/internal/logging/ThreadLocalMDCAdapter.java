@@ -24,7 +24,7 @@ import java.util.Map;
 
 public class ThreadLocalMDCAdapter implements MDCAdapter {
 
-    private ThreadLocal<Map<String, String>> mapThreadLocal = new ThreadLocal<>();
+    private final ThreadLocal<Map<String, String>> mapThreadLocal = new ThreadLocal<>();
 
     @Override
     public void put(String key, String val) {

@@ -32,7 +32,7 @@ import static dev.rico.internal.core.http.HttpHeaderConstants.SERVER_TIMING_HEAD
 
 public class ServerTimingImpl implements ServerTiming {
 
-    private List<Metric> metrics = new ArrayList<>();
+    private final List<Metric> metrics = new ArrayList<>();
 
     public void clear() {
         metrics.clear();

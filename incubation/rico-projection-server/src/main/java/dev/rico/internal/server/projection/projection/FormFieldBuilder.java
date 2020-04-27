@@ -46,7 +46,7 @@ public class FormFieldBuilder<T, S extends FormField<T>> {
 
     private String iconCode;
 
-    private Class<T> contentType;
+    private final Class<T> contentType;
 
     private boolean mandatory;
 
@@ -56,13 +56,13 @@ public class FormFieldBuilder<T, S extends FormField<T>> {
 
     private T value;
 
-    private Class<S> beanType;
+    private final Class<S> beanType;
 
-    private List<ValueChangeListener<? super T>> listeners = new ArrayList<>();
+    private final List<ValueChangeListener<? super T>> listeners = new ArrayList<>();
 
-    private List<UpdateHandlerWrapper<Object>> updateHandlerWrappers = new ArrayList<>();
+    private final List<UpdateHandlerWrapper<Object>> updateHandlerWrappers = new ArrayList<>();
 
-    private Map<String, Object> metadata = new HashMap<>();
+    private final Map<String, Object> metadata = new HashMap<>();
 
     public FormFieldBuilder(Class<T> contentType, Class<S> beanType, BeanManager beanManager) {
         this.contentType = contentType;

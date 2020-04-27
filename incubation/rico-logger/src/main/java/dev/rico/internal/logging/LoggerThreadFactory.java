@@ -34,7 +34,7 @@ public class LoggerThreadFactory implements ThreadFactory {
 
     private final static String NAME = "Logging Thread";
 
-    private AtomicLong counter = new AtomicLong(0);
+    private final AtomicLong counter = new AtomicLong(0);
 
     @Override
     public synchronized Thread newThread(Runnable task) {
