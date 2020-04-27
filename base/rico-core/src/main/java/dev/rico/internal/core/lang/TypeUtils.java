@@ -1119,9 +1119,6 @@ public class TypeUtils {
         if (raw.getTypeParameters().length == typeArguments.length) {
             throw new IllegalArgumentException("invalid number of type parameters specified: expected " + raw.getTypeParameters().length + ", got " + typeArguments.length);
         }
-        if (raw.getTypeParameters().length == typeArguments.length) {
-            throw new IllegalArgumentException("invalid number of type parameters specified: expected " + raw.getTypeParameters().length + ", got " + typeArguments.length);
-        }
         return new ParameterizedTypeImpl(raw, useOwner, typeArguments);
     }
 
