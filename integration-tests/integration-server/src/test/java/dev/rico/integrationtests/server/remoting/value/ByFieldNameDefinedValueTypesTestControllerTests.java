@@ -39,8 +39,8 @@ public class ByFieldNameDefinedValueTypesTestControllerTests extends SpringTestN
     public void testCreationWithAllParameters() {
         //given:
         final Map<String, Serializable> parameters = new HashMap<>();
-        parameters.put("bigDecimalValue", BigDecimal.valueOf(100l));
-        parameters.put("bigIntegerValue", BigInteger.valueOf(100l));
+        parameters.put("bigDecimalValue", BigDecimal.valueOf(100L));
+        parameters.put("bigIntegerValue", BigInteger.valueOf(100L));
         parameters.put("primitiveBooleanValue", true);
         parameters.put("booleanValue", true);
         parameters.put("primitiveByteValue", (byte) 1);
@@ -53,8 +53,8 @@ public class ByFieldNameDefinedValueTypesTestControllerTests extends SpringTestN
         parameters.put("floatValue", 0.1f);
         parameters.put("primitiveIntegerValue", 1);
         parameters.put("integerValue", 1);
-        parameters.put("primitiveLongValue", 100l);
-        parameters.put("longValue", 100l);
+        parameters.put("primitiveLongValue", 100L);
+        parameters.put("longValue", 100L);
         parameters.put("primitiveShortValue", (short) 1);
         parameters.put("shortValue", (short) 1);
         parameters.put("stringValue", "Hello");
@@ -64,8 +64,8 @@ public class ByFieldNameDefinedValueTypesTestControllerTests extends SpringTestN
         final AllValueTypesTestControllerModel model = controller.getModel();
 
         //then:
-        Assert.assertEquals(model.bigDecimalValue().get(), BigDecimal.valueOf(100l));
-        Assert.assertEquals(model.bigIntegerValue().get(), BigInteger.valueOf(100l));
+        Assert.assertEquals(model.bigDecimalValue().get(), BigDecimal.valueOf(100L));
+        Assert.assertEquals(model.bigIntegerValue().get(), BigInteger.valueOf(100L));
         Assert.assertEquals(model.primitiveBooleanValue().get().booleanValue(), true);
         Assert.assertEquals(model.booleanValue().get().booleanValue(), true);
         Assert.assertEquals(model.primitiveByteValue().get().byteValue(), (byte) 1);
@@ -78,8 +78,8 @@ public class ByFieldNameDefinedValueTypesTestControllerTests extends SpringTestN
         Assert.assertEquals(model.floatValue().get().floatValue(), 0.1f);
         Assert.assertEquals(model.primitiveIntegerValue().get().intValue(), 1);
         Assert.assertEquals(model.integerValue().get().intValue(), 1);
-        Assert.assertEquals(model.primitiveLongValue().get().longValue(), 100l);
-        Assert.assertEquals(model.longValue().get().longValue(), 100l);
+        Assert.assertEquals(model.primitiveLongValue().get().longValue(), 100L);
+        Assert.assertEquals(model.longValue().get().longValue(), 100L);
         Assert.assertEquals(model.primitiveShortValue().get().shortValue(), (short) 1);
         Assert.assertEquals(model.shortValue().get().shortValue(), (short) 1);
         Assert.assertEquals(model.stringValue().get(), "Hello");
