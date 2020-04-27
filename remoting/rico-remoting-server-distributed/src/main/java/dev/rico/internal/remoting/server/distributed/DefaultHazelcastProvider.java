@@ -21,7 +21,6 @@ import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.config.SerializerConfig;
 import com.hazelcast.core.HazelcastInstance;
-import dev.rico.remoting.server.distributed.HazelcastConfig;
 import dev.rico.remoting.server.distributed.HazelcastProvider;
 import org.apiguardian.api.API;
 import org.slf4j.Logger;
@@ -41,7 +40,7 @@ public class DefaultHazelcastProvider implements HazelcastProvider {
 
     private HazelcastInstance hazelcastInstance;
 
-    public synchronized HazelcastInstance getHazelcastInstance(final HazelcastConfig configuration) {
+    public synchronized HazelcastInstance getHazelcastInstance(final DefaultHazelcastConfig configuration) {
         if (hazelcastInstance == null) {
             final String serverName = configuration.getServerName();
             final String serverPort = configuration.getServerPort();

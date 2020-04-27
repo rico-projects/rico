@@ -16,57 +16,24 @@
  */
 package dev.rico.remoting.server.distributed;
 
-import dev.rico.core.Configuration;
-import dev.rico.internal.core.Assert;
 import org.apiguardian.api.API;
 
 import java.io.Serializable;
 
-import static dev.rico.internal.remoting.server.distributed.DistributedEventBusConfigProvider.DEFAULT_HAZELCAST_CONNECTION_ATTEMPT_COUNT;
-import static dev.rico.internal.remoting.server.distributed.DistributedEventBusConfigProvider.DEFAULT_HAZELCAST_CONNECTION_ATTEMPT_PERIOD;
-import static dev.rico.internal.remoting.server.distributed.DistributedEventBusConfigProvider.DEFAULT_HAZELCAST_CONNECTION_TIMEOUT;
-import static dev.rico.internal.remoting.server.distributed.DistributedEventBusConfigProvider.DEFAULT_HAZELCAST_GROUP_NAME;
-import static dev.rico.internal.remoting.server.distributed.DistributedEventBusConfigProvider.DEFAULT_HAZELCAST_PORT;
-import static dev.rico.internal.remoting.server.distributed.DistributedEventBusConfigProvider.DEFAULT_HAZELCAST_SERVER;
-import static dev.rico.internal.remoting.server.distributed.DistributedEventBusConfigProvider.HAZELCAST_CONNECTION_ATTEMPT_COUNT;
-import static dev.rico.internal.remoting.server.distributed.DistributedEventBusConfigProvider.HAZELCAST_CONNECTION_ATTEMPT_PERIOD;
-import static dev.rico.internal.remoting.server.distributed.DistributedEventBusConfigProvider.HAZELCAST_CONNECTION_TIMEOUT;
-import static dev.rico.internal.remoting.server.distributed.DistributedEventBusConfigProvider.HAZELCAST_GROUP_NAME;
-import static dev.rico.internal.remoting.server.distributed.DistributedEventBusConfigProvider.HAZELCAST_SERVER_NAME;
-import static dev.rico.internal.remoting.server.distributed.DistributedEventBusConfigProvider.HAZELCAST_SERVER_PORT;
-import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
-@API(since = "0.x", status = INTERNAL)
-public class HazelcastConfig implements Serializable {
+@API(since = "1.1", status = EXPERIMENTAL)
+public interface HazelcastConfig {
 
-    private final Configuration configuration;
+     String getServerName();
 
-    public HazelcastConfig(final Configuration configuration) {
-        this.configuration = Assert.requireNonNull(configuration, "configuration");
-    }
+     String getServerPort();
 
-    public String getServerName() {
-        return configuration.getProperty(HAZELCAST_SERVER_NAME, DEFAULT_HAZELCAST_SERVER);
-    }
+     String getGroupName();
 
-    public String getServerPort() {
-        return configuration.getProperty(HAZELCAST_SERVER_PORT, DEFAULT_HAZELCAST_PORT);
-    }
+     int getConnectionAttemptLimit();
 
-    public String getGroupName() {
-        return configuration.getProperty(HAZELCAST_GROUP_NAME, DEFAULT_HAZELCAST_GROUP_NAME);
-    }
+     int getConnectionAttemptPeriod();
 
-    public int getConnectionAttemptLimit() {
-        return configuration.getIntProperty(HAZELCAST_CONNECTION_ATTEMPT_COUNT, DEFAULT_HAZELCAST_CONNECTION_ATTEMPT_COUNT);
-    }
-
-    public int getConnectionAttemptPeriod() {
-        return configuration.getIntProperty(HAZELCAST_CONNECTION_ATTEMPT_PERIOD, DEFAULT_HAZELCAST_CONNECTION_ATTEMPT_PERIOD);
-    }
-
-    public int getConnectionTimeout() {
-        return configuration.getIntProperty(HAZELCAST_CONNECTION_TIMEOUT, DEFAULT_HAZELCAST_CONNECTION_TIMEOUT);
-    }
-
+     int getConnectionTimeout();
 }

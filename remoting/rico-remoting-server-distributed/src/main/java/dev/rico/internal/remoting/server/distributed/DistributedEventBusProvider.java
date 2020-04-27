@@ -17,7 +17,6 @@
 package dev.rico.internal.remoting.server.distributed;
 
 import dev.rico.internal.remoting.server.config.RemotingConfiguration;
-import dev.rico.remoting.server.distributed.HazelcastConfig;
 import dev.rico.remoting.server.distributed.HazelcastProvider;
 import dev.rico.remoting.server.event.spi.EventBusProvider;
 import dev.rico.remoting.server.event.RemotingEventBus;
@@ -62,7 +61,7 @@ public class DistributedEventBusProvider implements EventBusProvider {
 
         LOG.debug("Using Hazelcast provider {}", hazelcastProvider.getClass());
 
-        return new DistributedEventBus(hazelcastProvider.getHazelcastInstance(new HazelcastConfig(configuration.getConfiguration())));
+        return new DistributedEventBus(hazelcastProvider.getHazelcastInstance(new DefaultHazelcastConfig(configuration.getConfiguration())));
     }
 
 }

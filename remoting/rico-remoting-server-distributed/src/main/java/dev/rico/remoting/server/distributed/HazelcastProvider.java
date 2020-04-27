@@ -19,9 +19,9 @@ package dev.rico.remoting.server.distributed;
 import com.hazelcast.core.HazelcastInstance;
 import org.apiguardian.api.API;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
-@API(since = "0.x", status = INTERNAL)
+@API(since = "0.x", status = EXPERIMENTAL)
 public interface HazelcastProvider {
 
     HazelcastInstance getHazelcastInstance(HazelcastConfig configuration);
