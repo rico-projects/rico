@@ -54,7 +54,7 @@ public class QualifierTestController {
     @Inject
     private PropertyBinder binder;
 
-    final private List<Binding> bindings = new ArrayList<>();
+    private final List<Binding> bindings = new ArrayList<>();
 
     @PostConstruct
     public void init() {

@@ -23,7 +23,7 @@ import java.util.zip.ZipEntry;
  * The transformation fails the build if a Jar does not contain information and no extra information
  * was defined for it. This way we make sure that all Jars are turned into modules.
  */
-abstract public class ExtraModuleInfoTransform implements TransformAction<ExtraModuleInfoPluginExtension> {
+public abstract class ExtraModuleInfoTransform implements TransformAction<ExtraModuleInfoPluginExtension> {
 
     private static final Pattern modulePattern = Pattern.compile("(?:META-INF/versions/\\d+/){0,1}module-info.class");
     private static final Pattern digits = Pattern.compile("\\d");
