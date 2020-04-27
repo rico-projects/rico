@@ -42,7 +42,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DefaultMessageEventImplBusTest {
 
-    private final static Topic<String> TEST_TOPIC = Topic.create();
+    private static final Topic<String> TEST_TOPIC = Topic.create();
 
     @Test
     public void TestPublishOutsideSession() {

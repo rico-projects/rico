@@ -35,7 +35,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class ClientScopeContext extends AbstractContext {
 
-    private final static String CLIENT_STORAGE_ATTRIBUTE = "ClientSessionCdiContextualStorage";
+    private static final String CLIENT_STORAGE_ATTRIBUTE = "ClientSessionCdiContextualStorage";
 
     private final BeanManager beanManager;
 

@@ -25,7 +25,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class FloatRemotingBinder extends AbstractNumericRemotingBinder<Float> {
 
-    private final static double EPSILON = 1e-10f;
+    private static final double EPSILON = 1e-10f;
 
     public FloatRemotingBinder(final Property<Float> property) {
         super(property);

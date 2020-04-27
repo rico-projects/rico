@@ -16,7 +16,7 @@ import java.util.Optional;
 @Interceptor
 public class TimingInterceptor {
 
-    private final static String UNKNOWN_NAME = "UNKNOWN";
+    private static final String UNKNOWN_NAME = "UNKNOWN";
 
     private final ServerTiming serverTiming;
 

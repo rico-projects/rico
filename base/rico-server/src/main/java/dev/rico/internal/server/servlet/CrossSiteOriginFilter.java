@@ -42,7 +42,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class CrossSiteOriginFilter implements Filter {
 
-    private final static Logger LOG = LoggerFactory.getLogger(CrossSiteOriginFilter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CrossSiteOriginFilter.class);
 
     private final Configuration configuration;
 

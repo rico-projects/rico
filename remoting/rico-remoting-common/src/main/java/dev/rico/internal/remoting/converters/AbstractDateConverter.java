@@ -20,7 +20,7 @@ import java.text.DateFormat;
 
 public abstract class AbstractDateConverter<T> extends AbstractStringConverter<T> {
 
-    private final static ThreadLocal<DateFormat> dateFormat = new ThreadLocal<>();
+    private static final ThreadLocal<DateFormat> dateFormat = new ThreadLocal<>();
 
     protected DateFormat getDateFormat() {
         final DateFormat format = dateFormat.get();

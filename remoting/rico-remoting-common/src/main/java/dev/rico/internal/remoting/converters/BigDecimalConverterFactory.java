@@ -34,9 +34,9 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class BigDecimalConverterFactory extends AbstractConverterFactory {
     
-    public final static int FIELD_TYPE_BIGDECIMAL = 12;
+    public static final int FIELD_TYPE_BIGDECIMAL = 12;
     
-    private final static Converter CONVERTER = new AbstractNumberConverter<BigDecimal> () {
+    private static final Converter CONVERTER = new AbstractNumberConverter<BigDecimal> () {
         @Override
         public BigDecimal convertFromRemoting(final Number value) throws ValueConverterException {
             try {

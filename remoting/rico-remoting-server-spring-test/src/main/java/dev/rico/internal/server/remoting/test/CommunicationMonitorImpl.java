@@ -25,7 +25,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CommunicationMonitorImpl implements CommunicationMonitor {
 
-    private final static long SLEEP_TIME = 100;
+    private static final long SLEEP_TIME = 100;
 
     private final TestClientContext clientContext;
 

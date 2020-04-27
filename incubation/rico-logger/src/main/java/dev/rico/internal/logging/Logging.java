@@ -29,7 +29,7 @@ import java.util.function.Consumer;
 
 public class Logging {
 
-    private final static Logging INSTANCE = new Logging();
+    private static final Logging INSTANCE = new Logging();
 
     private Logging() {
     }

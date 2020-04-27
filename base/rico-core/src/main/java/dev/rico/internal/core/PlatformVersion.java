@@ -25,7 +25,7 @@ import java.util.Properties;
 
 public class PlatformVersion {
 
-    private final static Logger LOG = LoggerFactory.getLogger(PlatformVersion.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PlatformVersion.class);
 
     private static final String DEFAULT_LOCATION = "build.properties";
 

@@ -47,7 +47,7 @@ import static dev.rico.core.http.RequestMethod.POST;
 
 public class RemoteLogger implements LoggerBridge {
 
-    private final static Logger LOG = LoggerFactory.getLogger(RemoteLogger.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RemoteLogger.class);
 
     private final URI remoteUrl;
 

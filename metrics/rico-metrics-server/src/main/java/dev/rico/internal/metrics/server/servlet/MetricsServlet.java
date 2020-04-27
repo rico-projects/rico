@@ -29,7 +29,7 @@ import java.io.IOException;
 
 public class MetricsServlet extends HttpServlet {
 
-    private final static Logger LOG = LoggerFactory.getLogger(MetricsServlet.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MetricsServlet.class);
 
     private final PrometheusMeterRegistry prometheusRegistry;
 

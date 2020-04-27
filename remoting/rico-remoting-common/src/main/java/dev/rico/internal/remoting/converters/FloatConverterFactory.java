@@ -27,9 +27,9 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class FloatConverterFactory extends AbstractConverterFactory {
 
-    public final static int FIELD_TYPE_FLOAT = 5;
+    public static final int FIELD_TYPE_FLOAT = 5;
 
-    private final static Converter CONVERTER = new AbstractNumberConverter<Float>() {
+    private static final Converter CONVERTER = new AbstractNumberConverter<Float>() {
 
         @Override
         public Float convertFromRemoting(final Number value) {

@@ -34,9 +34,9 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class CalendarConverterFactory extends AbstractConverterFactory {
 
-    private final static Converter CONVERTER = new CalendarConverter();
+    private static final Converter CONVERTER = new CalendarConverter();
 
-    public final static int FIELD_TYPE_CALENDAR = 11;
+    public static final int FIELD_TYPE_CALENDAR = 11;
 
     @Override
     public List<Class> getSupportedTypes() {

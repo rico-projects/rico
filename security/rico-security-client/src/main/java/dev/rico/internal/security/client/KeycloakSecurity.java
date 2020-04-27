@@ -61,11 +61,11 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.19.0", status = INTERNAL)
 public class KeycloakSecurity implements Security {
 
-    private final static long TOKEN_EXPIRES_DELTA = 10_000;
+    private static final long TOKEN_EXPIRES_DELTA = 10_000;
 
-    private final static long MIN_TOKEN_EXPIRES_RUN = 30_000;
+    private static final long MIN_TOKEN_EXPIRES_RUN = 30_000;
 
-    private final static Logger LOG = LoggerFactory.getLogger(KeycloakSecurity.class);
+    private static final Logger LOG = LoggerFactory.getLogger(KeycloakSecurity.class);
 
     private final String authEndpoint;
 

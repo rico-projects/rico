@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class KeycloakAuthentificationManager {
 
-    private final static KeycloakAuthentificationManager INSTANCE = new KeycloakAuthentificationManager();
+    private static final KeycloakAuthentificationManager INSTANCE = new KeycloakAuthentificationManager();
 
     private final AtomicReference<KeycloakAuthentification> auth;
 

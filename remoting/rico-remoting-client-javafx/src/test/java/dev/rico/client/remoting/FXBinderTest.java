@@ -49,7 +49,7 @@ import static org.testng.Assert.assertTrue;
 
 public class FXBinderTest {
 
-    private final static double EPSILON = 1e-10;
+    private static final double EPSILON = 1e-10;
 
     @Test
     public void testJavaFXDoubleUnidirectional() {

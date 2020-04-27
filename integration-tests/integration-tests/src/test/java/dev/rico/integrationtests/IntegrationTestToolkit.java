@@ -22,7 +22,7 @@ import dev.rico.internal.core.Assert;
 
 public class IntegrationTestToolkit implements Toolkit {
 
-    private final static String NAME = "integration test toolkit";
+    private static final String NAME = "integration test toolkit";
 
 
     @Override

@@ -44,13 +44,13 @@ import static dev.rico.internal.core.http.HttpStatus.HTTP_OK;
 @Test(groups = INTEGRATION_TESTS_TEST_GROUP)
 public class AbstractIntegrationTest {
 
-    private final static Logger LOG = LoggerFactory.getLogger(AbstractIntegrationTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractIntegrationTest.class);
 
     private final int timeoutInMinutes = 3;
 
-    public final static String ENDPOINTS_DATAPROVIDER = "endpoints";
+    public static final String ENDPOINTS_DATAPROVIDER = "endpoints";
 
-    public final static String INTEGRATION_TESTS_TEST_GROUP = "INTEGRATION-TESTS";
+    public static final String INTEGRATION_TESTS_TEST_GROUP = "INTEGRATION-TESTS";
 
     private final DockerCompose dockerCompose;
 

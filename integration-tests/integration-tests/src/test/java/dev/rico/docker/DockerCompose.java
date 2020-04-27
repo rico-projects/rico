@@ -19,9 +19,9 @@ import java.util.regex.Pattern;
 
 public class DockerCompose {
 
-    private final static Logger LOG = LoggerFactory.getLogger(DockerCompose.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DockerCompose.class);
 
-    private final static String WHALE_EMOJI = "\uD83D\uDC33";
+    private static final String WHALE_EMOJI = "\uD83D\uDC33";
 
     private final Path composeFile;
 

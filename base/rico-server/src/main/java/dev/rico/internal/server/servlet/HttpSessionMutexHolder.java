@@ -33,7 +33,7 @@ public class HttpSessionMutexHolder implements HttpSessionListener {
 
     private final Map<String, WeakReference<Mutex>> sessionMutexMap = new HashMap<>();
 
-    private final static String SESSION_MUTEX_ATTRIBUTE = "Session-Mutex";
+    private static final String SESSION_MUTEX_ATTRIBUTE = "Session-Mutex";
 
     @Override
     public void sessionCreated(final HttpSessionEvent sessionEvent) {

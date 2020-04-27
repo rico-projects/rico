@@ -28,9 +28,9 @@ import java.util.ResourceBundle;
  */
 public class Utf8ResourceBundle {
 
-    private final static String ISO_8859_1 = "ISO-8859-1";
+    private static final String ISO_8859_1 = "ISO-8859-1";
 
-    private final static String UTF_8 = "UTF-8";
+    private static final String UTF_8 = "UTF-8";
 
     /**
      * Gets the unicode friendly resource bundle

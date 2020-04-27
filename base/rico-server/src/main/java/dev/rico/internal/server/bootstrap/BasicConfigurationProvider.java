@@ -51,27 +51,27 @@ public class BasicConfigurationProvider extends SimpleConfigurationProvider {
 
     public static final String CORS_ENDPOINTS_URL_MAPPINGS = "corsUrlMappings";
 
-    public final static int SESSION_TIMEOUT_DEFAULT_VALUE = 900;
+    public static final int SESSION_TIMEOUT_DEFAULT_VALUE = 900;
 
-    public final static boolean USE_CROSS_SITE_ORIGIN_FILTER_DEFAULT_VALUE = true;
+    public static final boolean USE_CROSS_SITE_ORIGIN_FILTER_DEFAULT_VALUE = true;
 
-    public final static boolean M_BEAN_REGISTRATION_DEFAULT_VALUE = false;
+    public static final boolean M_BEAN_REGISTRATION_DEFAULT_VALUE = false;
 
-    public final static boolean ACTIVE_DEFAULT_VALUE = true;
+    public static final boolean ACTIVE_DEFAULT_VALUE = true;
 
-    public final static List<String> ACCESS_CONTROL_ALLOW_HEADERS_DEFAULT_VALUE = Arrays.asList("Content-Type", "x-requested-with", "origin", "authorization", "accept", "client-security-token", "X-platform-security-bearer-only", "X-platform-security-realm", "X-platform-security-application");
+    public static final List<String> ACCESS_CONTROL_ALLOW_HEADERS_DEFAULT_VALUE = Arrays.asList("Content-Type", "x-requested-with", "origin", "authorization", "accept", "client-security-token", "X-platform-security-bearer-only", "X-platform-security-realm", "X-platform-security-application");
 
-    public final static List<String> ACCESS_CONTROL_ALLOW_METHODS_DEFAULT_VALUE = Arrays.asList("*");
+    public static final List<String> ACCESS_CONTROL_ALLOW_METHODS_DEFAULT_VALUE = Arrays.asList("*");
 
-    public final static boolean ACCESS_CONTROL_ALLOW_CREDENTIALS_DEFAULT_VALUE = true;
+    public static final boolean ACCESS_CONTROL_ALLOW_CREDENTIALS_DEFAULT_VALUE = true;
 
-    public final static long ACCESS_CONTROL_MAX_AGE_DEFAULT_VALUE = 86400;
+    public static final long ACCESS_CONTROL_MAX_AGE_DEFAULT_VALUE = 86400;
 
-    public final static int MAX_CLIENTS_PER_SESSION_DEFAULT_VALUE = 10;
+    public static final int MAX_CLIENTS_PER_SESSION_DEFAULT_VALUE = 10;
 
-    public final static List<String> ID_FILTER_URL_MAPPINGS_DEFAULT_VALUE = Arrays.asList("/remoting");
+    public static final List<String> ID_FILTER_URL_MAPPINGS_DEFAULT_VALUE = Arrays.asList("/remoting");
 
-    public final static List<String> CORS_ENDPOINTS_URL_MAPPINGS_DEFAULT_VALUE = Arrays.asList("/*");
+    public static final List<String> CORS_ENDPOINTS_URL_MAPPINGS_DEFAULT_VALUE = Arrays.asList("/*");
 
     public BasicConfigurationProvider() {
         addInt(SESSION_TIMEOUT, SESSION_TIMEOUT_DEFAULT_VALUE);

@@ -27,9 +27,9 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class LongConverterFactory extends AbstractConverterFactory {
 
-    public final static int FIELD_TYPE_LONG = 4;
+    public static final int FIELD_TYPE_LONG = 4;
 
-    private final static Converter CONVERTER = new AbstractNumberConverter<Long>() {
+    private static final Converter CONVERTER = new AbstractNumberConverter<Long>() {
 
         @Override
         public Long convertFromRemoting(final Number value) {
