@@ -62,41 +62,41 @@ public enum JsonPrimitiveType {
     public <T> T getValueOfElement(final JsonElement element) {
         Assert.requireNonNull(element, "element");
 
-        if(element.isJsonNull()) {
+        if (element.isJsonNull()) {
             return null;
         }
 
-        if(Objects.equals(this, BIG_DECIMAL)) {
+        if (this == BIG_DECIMAL) {
             return (T) element.getAsBigDecimal();
         }
-        if(Objects.equals(this, BIG_INTEGER)) {
+        if (this == BIG_INTEGER) {
             return (T) element.getAsBigInteger();
         }
-        if(Objects.equals(this, BOOLEAN)) {
+        if (this == BOOLEAN) {
             return (T) Boolean.valueOf(element.getAsBoolean());
         }
-        if(Objects.equals(this, BYTE)) {
+        if (this == BYTE) {
             return (T) Byte.valueOf(element.getAsByte());
         }
-        if(Objects.equals(this, CHARACTER)) {
+        if (this == CHARACTER) {
             return (T) Character.valueOf(element.getAsCharacter());
         }
-        if(Objects.equals(this, DOUBLE)) {
+        if (this == DOUBLE) {
             return (T) Double.valueOf(element.getAsDouble());
         }
-        if(Objects.equals(this, FLOAT)) {
+        if (this == FLOAT) {
             return (T) Float.valueOf(element.getAsFloat());
         }
-        if(Objects.equals(this, INT)) {
+        if (this == INT) {
             return (T) Integer.valueOf(element.getAsInt());
         }
-        if(Objects.equals(this, LONG)) {
+        if (this == LONG) {
             return (T) Long.valueOf(element.getAsLong());
         }
-        if(Objects.equals(this, SHORT)) {
+        if (this == SHORT) {
             return (T) Short.valueOf(element.getAsShort());
         }
-        if(Objects.equals(this, STRING)) {
+        if (this == STRING) {
             return (T) element.getAsString();
         }
         throw new IllegalStateException("Type can not be defined!");

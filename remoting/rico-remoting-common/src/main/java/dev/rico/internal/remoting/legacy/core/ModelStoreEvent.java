@@ -39,7 +39,7 @@ public class ModelStoreEvent<A extends Attribute, P extends PresentationModel<A>
     }
 
     public String toString() {
-        return new StringBuilder().append("PresentationModel ").append(type.equals(Type.ADDED) ? "ADDED" : "REMOVED").append(" ").append(presentationModel.getId()).toString();
+        return new StringBuilder().append("PresentationModel ").append(type == Type.ADDED ? "ADDED" : "REMOVED").append(" ").append(presentationModel.getId()).toString();
     }
 
     private final Type type;

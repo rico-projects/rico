@@ -199,7 +199,7 @@ public class DownloadInputStreamImpl extends DownloadInputStream {
             LOG.trace("Downloaded {} bytes of {}", currentSize, dataSize);
             lastUpdateSize.set(currentSize);
             updateExecutor.execute(() -> {
-                if(Objects.equals(downloadType, DownloadType.NORMAL)) {
+                if(downloadType == DownloadType.NORMAL) {
                     final double percentageDone = (((double) currentSize) / ((double) dataSize / 100.0)) / 100.0;
                     LOG.trace("Downloaded {} %", percentageDone);
                     downloadPercentageListeners.forEach(l -> l.accept(percentageDone));

@@ -16,9 +16,9 @@
  */
 package dev.rico.internal.client.logging.widgets;
 
-import dev.rico.internal.logging.spi.LogMessage;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import dev.rico.internal.logging.spi.LogMessage;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
@@ -73,7 +73,7 @@ public class LogListView extends HBox {
 
     private void update() {
         final LogMessage message = logMessage.get();
-        if(message == null) {
+        if (message == null) {
             messageLabel.setText(null);
             levelIconView.setIcon(FontAwesomeIcon.QUESTION);
             levelIconView.setFill(Color.TRANSPARENT);
@@ -86,15 +86,15 @@ public class LogListView extends HBox {
 
             final FontAwesomeIcon icon = Optional.ofNullable(message.getLevel()).
                     map(l -> {
-                        if(l.equals(Level.INFO)) {
+                        if (l == Level.INFO) {
                             return FontAwesomeIcon.INFO_CIRCLE;
-                        } else if(l.equals(Level.DEBUG)) {
+                        } else if (l == Level.DEBUG) {
                             return FontAwesomeIcon.BUG;
-                        } else if(l.equals(Level.ERROR)) {
+                        } else if (l == Level.ERROR) {
                             return FontAwesomeIcon.TIMES_CIRCLE;
-                        } else if(l.equals(Level.TRACE)) {
+                        } else if (l == Level.TRACE) {
                             return FontAwesomeIcon.MINUS_CIRCLE;
-                        } else if(l.equals(Level.WARN)) {
+                        } else if (l == Level.WARN) {
                             return FontAwesomeIcon.WARNING;
                         } else {
                             return FontAwesomeIcon.QUESTION;
@@ -104,15 +104,15 @@ public class LogListView extends HBox {
 
             final Paint iconFill = Optional.ofNullable(message.getLevel()).
                     map(l -> {
-                        if(l.equals(Level.INFO)) {
+                        if (l == Level.INFO) {
                             return Color.LIGHTBLUE;
-                        } else if(l.equals(Level.DEBUG)) {
+                        } else if (l == Level.DEBUG) {
                             return Color.LIGHTBLUE;
-                        } else if(l.equals(Level.ERROR)) {
+                        } else if (l == Level.ERROR) {
                             return Color.RED;
-                        } else if(l.equals(Level.TRACE)) {
+                        } else if (l == Level.TRACE) {
                             return Color.LIGHTBLUE;
-                        } else if(l.equals(Level.WARN)) {
+                        } else if (l == Level.WARN) {
                             return Color.ORANGE;
                         } else {
                             return Color.LIGHTBLUE;
@@ -126,7 +126,7 @@ public class LogListView extends HBox {
             timestampLabel.setText(timestamp);
 
             detailsLabel.setText(message.getExceptionDetail());
-            if(Optional.ofNullable(detailsLabel.getText()).orElse("").length() == 0) {
+            if (Optional.ofNullable(detailsLabel.getText()).orElse("").length() == 0) {
                 detailsLabel.setVisible(false);
                 detailsLabel.setManaged(false);
             } else {

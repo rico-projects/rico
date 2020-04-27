@@ -2,8 +2,6 @@ package dev.rico.internal.core.http;
 
 import dev.rico.core.http.ByteUnit;
 
-import java.util.Objects;
-
 public enum DecimalByteUnit implements ByteUnit {
 
     BYTE("B", "byte", 0),
@@ -38,14 +36,14 @@ public enum DecimalByteUnit implements ByteUnit {
     }
 
     public double convertBytesToUnit(final long byteCount) {
-        if(Objects.equals(this, DecimalByteUnit.BYTE)) {
+        if(this == DecimalByteUnit.BYTE) {
             return byteCount;
         }
         return byteCount / Math.pow(UNIT, exponent);
     }
 
     public double convertToUnit(final double countInUnit, final ByteUnit unit) {
-        if(Objects.equals(this, DecimalByteUnit.BYTE)) {
+        if(this == DecimalByteUnit.BYTE) {
             return unit.convertBytesToUnit((long) countInUnit);
         }
         final long byteCount = (long) (countInUnit * Math.pow(UNIT, exponent));

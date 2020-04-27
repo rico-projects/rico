@@ -39,13 +39,13 @@ public class SimpleRicoLogger implements LoggerBridge {
     public void log(final LogMessage logMessage) {
         final String textColor = Optional.ofNullable(logMessage.getLevel()).
                 map(l -> {
-                    if (l.equals(Level.ERROR)) {
+                    if (l == Level.ERROR) {
                         return AnsiOut.ANSI_RED;
                     }
-                    if (l.equals(Level.WARN)) {
+                    if (l == Level.WARN) {
                         return AnsiOut.ANSI_YELLOW;
                     }
-                    if (l.equals(Level.INFO)) {
+                    if (l == Level.INFO) {
                         return AnsiOut.ANSI_BLUE;
                     }
                     return AnsiOut.ANSI_CYAN;

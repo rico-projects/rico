@@ -142,7 +142,7 @@ public class ProcessChainImpl<T> implements ProcessChain<T> {
 
     private <U, V> V execute(final U inputParameter, final ProcessDescription<U, V> processDescription) throws InterruptedException, ExecutionException {
         Assert.requireNonNull(processDescription, "processDescription");
-        if (Objects.equals(processDescription.getThreadType(), ThreadType.EXECUTOR)) {
+        if (processDescription.getThreadType() == ThreadType.EXECUTOR) {
             return processDescription.getFunction().apply(inputParameter);
         } else {
             final CompletableFuture<V> futureResult = new CompletableFuture<>();

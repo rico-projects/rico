@@ -82,7 +82,7 @@ public class HttpClientConnection {
     public void writeRequestContent(final byte[] content) throws IOException {
         Assert.requireNonNull(content, "content");
         if (content.length > 0) {
-            if (method.equals(GET)) {
+            if (method == GET) {
                 LOG.warn("You are currently defining a request content for a HTTP GET call for endpoint '{}'", url);
             }
             addRequestHeader(CONTENT_LENGHT_HEADER, content.length + "");
@@ -98,7 +98,7 @@ public class HttpClientConnection {
             final OutputStream outputStream = connection.getOutputStream();
             final long length = ConnectionUtils.copy(inputStream, outputStream);
             if (length > 0) {
-                if (method.equals(GET)) {
+                if (method == GET) {
                     LOG.warn("You are currently defining a request content for a HTTP GET call for endpoint '{}'", url);
                 }
             }

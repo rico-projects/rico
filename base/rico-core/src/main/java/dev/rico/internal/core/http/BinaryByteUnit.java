@@ -38,14 +38,14 @@ public enum BinaryByteUnit implements ByteUnit {
     }
 
     public double convertBytesToUnit(final long byteCount) {
-        if(Objects.equals(this, DecimalByteUnit.BYTE)) {
+        if (Objects.equals(this, DecimalByteUnit.BYTE)) {
             return byteCount;
         }
         return byteCount / Math.pow(UNIT, exponent);
     }
 
     public double convertToUnit(final double countInUnit, final ByteUnit unit) {
-        if(Objects.equals(this, BinaryByteUnit.BYTE)) {
+        if (this == BinaryByteUnit.BYTE) {
             return unit.convertBytesToUnit((long) countInUnit);
         }
         final long byteCount = (long) (countInUnit * Math.pow(UNIT, exponent));
