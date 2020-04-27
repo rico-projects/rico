@@ -17,8 +17,11 @@
 
 dependencies {
     api project(':rico-client-javafx')
-    implementation "org.openjfx:javafx-base:$javafxVersion:mac"
-    implementation "org.openjfx:javafx-fxml:$javafxVersion:mac"
-    implementation "org.openjfx:javafx-graphics:$javafxVersion:mac"
     api project(':rico-remoting-client')
+    implementation "org.openjfx:javafx-base:$javafxVersion"
+    implementation "org.openjfx:javafx-fxml:$javafxVersion"
+    implementation "org.openjfx:javafx-graphics:$javafxVersion"
+    compileOnly "org.openjfx:javafx-base:$javafxVersion:$osQualifier"
+    compileOnly "org.openjfx:javafx-fxml:$javafxVersion:$osQualifier"
+    compileOnly "org.openjfx:javafx-graphics:$javafxVersion:$osQualifier"
 }

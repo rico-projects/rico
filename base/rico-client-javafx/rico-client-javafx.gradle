@@ -17,6 +17,8 @@
 
 dependencies {
     api project(':rico-client')
-    implementation "org.openjfx:javafx-graphics:$javafxVersion:mac"
-    implementation "org.openjfx:javafx-base:$javafxVersion:mac"
+    implementation "org.openjfx:javafx-graphics:$javafxVersion"
+    implementation "org.openjfx:javafx-base:$javafxVersion"
+    compileOnly "org.openjfx:javafx-graphics:$javafxVersion:$osQualifier"
+    compileOnly "org.openjfx:javafx-base:$javafxVersion:$osQualifier"
 }

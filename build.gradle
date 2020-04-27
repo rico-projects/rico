@@ -41,6 +41,19 @@ extraJavaModuleInfo {
     autoConvert = true
 }
 
+ext {
+    osQualifier = {
+        def os = org.gradle.internal.os.OperatingSystem.current()
+        if (os.isWindows()) {
+            return 'win'
+        } else if (os.isMacOsX()) {
+            return 'mac'
+        } else {
+            return 'linux'
+        }
+    }()
+}
+
 //noinspection GroovyAssignabilityCheck
 subprojects { proj ->
 
@@ -130,6 +143,17 @@ subprojects { proj ->
                     from components.java
                     artifact sourcesJar
                     artifact javadocJar
+                }
+
+                mavenJava(MavenPublication) {
+                    from components.java
+                    pom.withXml {
+                        asNode().dependencies.'*'.findAll() {
+                            it.scope.text() == 'runtime'  && it.groupId.text() == 'org.openjfx'
+                        }.each() {
+                            it.scope*.value = 'provided'
+                        }
+                    }
                 }
             }
         }
