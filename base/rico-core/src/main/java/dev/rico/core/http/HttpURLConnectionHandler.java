@@ -19,7 +19,6 @@ package dev.rico.core.http;
 import org.apiguardian.api.API;
 
 import java.net.HttpURLConnection;
-import java.net.URISyntaxException;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
