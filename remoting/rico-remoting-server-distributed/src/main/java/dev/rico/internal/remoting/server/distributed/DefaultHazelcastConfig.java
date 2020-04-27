@@ -18,6 +18,7 @@ package dev.rico.internal.remoting.server.distributed;
 
 import dev.rico.core.Configuration;
 import dev.rico.internal.core.Assert;
+import dev.rico.remoting.server.distributed.HazelcastConfig;
 import org.apiguardian.api.API;
 
 import java.io.Serializable;
@@ -37,34 +38,40 @@ import static dev.rico.internal.remoting.server.distributed.DistributedEventBusC
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
-public class HazelcastConfig implements Serializable {
+public class DefaultHazelcastConfig implements HazelcastConfig, Serializable {
 
     private final Configuration configuration;
 
-    public HazelcastConfig(final Configuration configuration) {
+    public DefaultHazelcastConfig(final Configuration configuration) {
         this.configuration = Assert.requireNonNull(configuration, "configuration");
     }
 
+    @Override
     public String getServerName() {
         return configuration.getProperty(HAZELCAST_SERVER_NAME, DEFAULT_HAZELCAST_SERVER);
     }
 
+    @Override
     public String getServerPort() {
         return configuration.getProperty(HAZELCAST_SERVER_PORT, DEFAULT_HAZELCAST_PORT);
     }
 
+    @Override
     public String getGroupName() {
         return configuration.getProperty(HAZELCAST_GROUP_NAME, DEFAULT_HAZELCAST_GROUP_NAME);
     }
 
+    @Override
     public int getConnectionAttemptLimit() {
         return configuration.getIntProperty(HAZELCAST_CONNECTION_ATTEMPT_COUNT, DEFAULT_HAZELCAST_CONNECTION_ATTEMPT_COUNT);
     }
 
+    @Override
     public int getConnectionAttemptPeriod() {
         return configuration.getIntProperty(HAZELCAST_CONNECTION_ATTEMPT_PERIOD, DEFAULT_HAZELCAST_CONNECTION_ATTEMPT_PERIOD);
     }
 
+    @Override
     public int getConnectionTimeout() {
         return configuration.getIntProperty(HAZELCAST_CONNECTION_TIMEOUT, DEFAULT_HAZELCAST_CONNECTION_TIMEOUT);
     }

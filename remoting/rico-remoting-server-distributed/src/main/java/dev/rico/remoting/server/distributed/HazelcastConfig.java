@@ -16,14 +16,24 @@
  */
 package dev.rico.remoting.server.distributed;
 
-import com.hazelcast.core.HazelcastInstance;
 import org.apiguardian.api.API;
+
+import java.io.Serializable;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
-@API(since = "0.x", status = EXPERIMENTAL)
-public interface HazelcastProvider {
+@API(since = "1.1", status = EXPERIMENTAL)
+public interface HazelcastConfig {
 
-    HazelcastInstance getHazelcastInstance(HazelcastConfig configuration);
+     String getServerName();
 
+     String getServerPort();
+
+     String getGroupName();
+
+     int getConnectionAttemptLimit();
+
+     int getConnectionAttemptPeriod();
+
+     int getConnectionTimeout();
 }

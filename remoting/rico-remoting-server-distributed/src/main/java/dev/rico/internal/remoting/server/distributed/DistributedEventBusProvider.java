@@ -61,7 +61,7 @@ public class DistributedEventBusProvider implements EventBusProvider {
 
         LOG.debug("Using Hazelcast provider {}", hazelcastProvider.getClass());
 
-        return new DistributedEventBus(hazelcastProvider.getHazelcastInstance(new HazelcastConfig(configuration.getConfiguration())));
+        return new DistributedEventBus(hazelcastProvider.getHazelcastInstance(new DefaultHazelcastConfig(configuration.getConfiguration())));
     }
 
 }

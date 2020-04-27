@@ -22,8 +22,10 @@ module dev.rico.remoting.server {
             dev.rico.remoting.server.spring,
             dev.rico.remoting.server.spring.test;
     exports dev.rico.internal.remoting.server.controller to dev.rico.remoting.server.spring.test;
+    exports dev.rico.internal.remoting.server.model to dev.rico.remoting.server.spring.test;
     exports dev.rico.internal.remoting.server.binding to dev.rico.remoting.server.spring.test;
     exports dev.rico.internal.remoting.server.legacy to dev.rico.remoting.server.spring.test;
+    exports dev.rico.internal.remoting.server.legacy.action to dev.rico.remoting.server.spring.test;
     exports dev.rico.internal.remoting.server.legacy.communication to dev.rico.remoting.server.spring.test;
 
     uses EventBusProvider;
