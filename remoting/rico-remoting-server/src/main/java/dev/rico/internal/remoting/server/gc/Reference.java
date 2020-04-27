@@ -29,9 +29,9 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public abstract class Reference {
 
-    private Instance parent;
+    private final Instance parent;
 
-    private Instance child;
+    private final Instance child;
 
     /**
      * Constructor

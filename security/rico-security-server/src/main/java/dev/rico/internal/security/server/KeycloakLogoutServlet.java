@@ -37,7 +37,7 @@ import static dev.rico.internal.security.SecurityConstants.REALM_NAME_HEADER;
 
 public class KeycloakLogoutServlet extends HttpServlet {
 
-    private final static Logger LOG = LoggerFactory.getLogger(KeycloakTokenServlet.class);
+    private static final Logger LOG = LoggerFactory.getLogger(KeycloakTokenServlet.class);
 
     private final KeycloakConfiguration configuration;
 

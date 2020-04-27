@@ -6,13 +6,13 @@ import java.net.URISyntaxException;
 public enum IntegrationEndpoint {
     WILDFLY("Wildfly", 8083), TOMEE("TomEE", 8082);
 
-    private final static String ENDPOINT_URI_PREFIX = "http://localhost:";
+    private static final String ENDPOINT_URI_PREFIX = "http://localhost:";
 
-    private final static String CONTEXT_PATH = "/integration-tests";
+    private static final String CONTEXT_PATH = "/integration-tests";
 
-    private final static String HEALTH_PATH = "/rest/health";
+    private static final String HEALTH_PATH = "/rest/health";
 
-    private final static String REMOTING_PATH = "/remoting";
+    private static final String REMOTING_PATH = "/remoting";
 
     private final String name;
     private final int port;

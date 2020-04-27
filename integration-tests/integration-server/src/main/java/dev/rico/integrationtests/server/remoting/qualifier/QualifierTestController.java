@@ -39,11 +39,11 @@ import static dev.rico.integrationtests.remoting.qualifier.QualifierTestConstant
 @RemotingController(QUALIFIER_CONTROLLER_NAME)
 public class QualifierTestController {
 
-    private final static Qualifier<String> STRING_QUALIFIER = Qualifier.create();
+    private static final Qualifier<String> STRING_QUALIFIER = Qualifier.create();
 
-    private final static Qualifier<Boolean> BOOLEAN_QUALIFIER = Qualifier.create();
+    private static final Qualifier<Boolean> BOOLEAN_QUALIFIER = Qualifier.create();
 
-    private final static Qualifier<Integer> INTEGER_QUALIFIER = Qualifier.create();
+    private static final Qualifier<Integer> INTEGER_QUALIFIER = Qualifier.create();
 
     @RemotingModel
     private QualifierTestBean model;

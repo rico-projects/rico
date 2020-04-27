@@ -23,15 +23,15 @@ import dev.rico.remoting.Property;
 @RemotingBean
 public class BeanWithProperties {
 
-    private Property<String> stringProperty;
+    private final Property<String> stringProperty;
 
-    private Property<Boolean> booleanProperty;
+    private final Property<Boolean> booleanProperty;
 
-    private Property<Double> doubleProperty;
+    private final Property<Double> doubleProperty;
 
-    private Property<BeanWithProperties> beanProperty;
+    private final Property<BeanWithProperties> beanProperty;
 
-    private Property<BeanWithLists> listBeanProperty;
+    private final Property<BeanWithLists> listBeanProperty;
 
     public BeanWithProperties(GarbageCollector garbageCollector) {
         this.stringProperty = new PropertyWithGcSupport<>(garbageCollector);

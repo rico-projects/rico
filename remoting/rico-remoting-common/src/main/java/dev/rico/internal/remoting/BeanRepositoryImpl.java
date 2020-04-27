@@ -43,7 +43,7 @@ public class BeanRepositoryImpl implements BeanRepository {
     private final List<BeanAddedListener<Object>> anyBeanAddedListeners = new ArrayList<>();
     private final Map<Class<?>, List<BeanRemovedListener<?>>> beanRemovedListenerMap = new HashMap<>();
 
-    private List<BeanRemovedListener<Object>> anyBeanRemovedListeners = new ArrayList<>();
+    private final List<BeanRemovedListener<Object>> anyBeanRemovedListeners = new ArrayList<>();
 
     public BeanRepositoryImpl(final ModelStore modelStore, final EventDispatcher dispatcher) {
         this.modelStore = Assert.requireNonNull(modelStore, "modelStore");

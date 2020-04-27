@@ -273,7 +273,7 @@ public class EventStreamSerializerTests {
         }
     }
 
-    private class JsonBasedObjectDataInput implements ObjectDataInput {
+    private static class JsonBasedObjectDataInput implements ObjectDataInput {
 
         private final JsonElement jsonElement;
 
@@ -442,7 +442,7 @@ public class EventStreamSerializerTests {
         }
     }
 
-    private class ByteObjectDataOutput implements ObjectDataOutput {
+    private static class ByteObjectDataOutput implements ObjectDataOutput {
 
         private final StringBuffer content = new StringBuffer();
 

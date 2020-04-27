@@ -27,9 +27,9 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class ByteConverterFactory extends AbstractConverterFactory {
 
-    public final static int FIELD_TYPE_BYTE = 1;
+    public static final int FIELD_TYPE_BYTE = 1;
 
-    private final static Converter<Byte, Number> CONVERTER = new AbstractNumberConverter<>() {
+    private static final Converter<Byte, Number> CONVERTER = new AbstractNumberConverter<>() {
 
         @Override
         public Byte convertFromRemoting(final Number value) {

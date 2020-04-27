@@ -41,8 +41,8 @@ public class NonOptionalValueTypesTestControllerTests extends SpringTestNGContro
     public void testCreationWithAllParameters() {
         //given:
         final Map<String, Serializable> parameters = new HashMap<>();
-        parameters.put(ValueTestConstants.BIG_DECIMAL_VALUE, BigDecimal.valueOf(100l));
-        parameters.put(ValueTestConstants.BIG_INTEGER_VALUE, BigInteger.valueOf(100l));
+        parameters.put(ValueTestConstants.BIG_DECIMAL_VALUE, BigDecimal.valueOf(100L));
+        parameters.put(ValueTestConstants.BIG_INTEGER_VALUE, BigInteger.valueOf(100L));
         parameters.put(ValueTestConstants.PRIMITIVE_BOOLEAN_VALUE, true);
         parameters.put(ValueTestConstants.BOOLEAN_VALUE, true);
         parameters.put(ValueTestConstants.PRIMITIVE_BYTE_VALUE, (byte) 1);
@@ -55,8 +55,8 @@ public class NonOptionalValueTypesTestControllerTests extends SpringTestNGContro
         parameters.put(ValueTestConstants.FLOAT_VALUE, 0.1f);
         parameters.put(ValueTestConstants.PRIMITIVE_INTEGER_VALUE, 1);
         parameters.put(ValueTestConstants.INTEGER_VALUE, 1);
-        parameters.put(ValueTestConstants.PRIMITIVE_LONG_VALUE, 100l);
-        parameters.put(ValueTestConstants.LONG_VALUE, 100l);
+        parameters.put(ValueTestConstants.PRIMITIVE_LONG_VALUE, 100L);
+        parameters.put(ValueTestConstants.LONG_VALUE, 100L);
         parameters.put(ValueTestConstants.PRIMITIVE_SHORT_VALUE, (short) 1);
         parameters.put(ValueTestConstants.SHORT_VALUE, (short) 1);
         parameters.put(ValueTestConstants.STRING_VALUE, "Hello");
@@ -66,8 +66,8 @@ public class NonOptionalValueTypesTestControllerTests extends SpringTestNGContro
         final AllValueTypesTestControllerModel model = controller.getModel();
 
         //then:
-        Assert.assertEquals(model.bigDecimalValue().get(), BigDecimal.valueOf(100l));
-        Assert.assertEquals(model.bigIntegerValue().get(), BigInteger.valueOf(100l));
+        Assert.assertEquals(model.bigDecimalValue().get(), BigDecimal.valueOf(100L));
+        Assert.assertEquals(model.bigIntegerValue().get(), BigInteger.valueOf(100L));
         Assert.assertEquals(model.primitiveBooleanValue().get().booleanValue(), true);
         Assert.assertEquals(model.booleanValue().get().booleanValue(), true);
         Assert.assertEquals(model.primitiveByteValue().get().byteValue(), (byte) 1);
@@ -80,8 +80,8 @@ public class NonOptionalValueTypesTestControllerTests extends SpringTestNGContro
         Assert.assertEquals(model.floatValue().get().floatValue(), 0.1f);
         Assert.assertEquals(model.primitiveIntegerValue().get().intValue(), 1);
         Assert.assertEquals(model.integerValue().get().intValue(), 1);
-        Assert.assertEquals(model.primitiveLongValue().get().longValue(), 100l);
-        Assert.assertEquals(model.longValue().get().longValue(), 100l);
+        Assert.assertEquals(model.primitiveLongValue().get().longValue(), 100L);
+        Assert.assertEquals(model.longValue().get().longValue(), 100L);
         Assert.assertEquals(model.primitiveShortValue().get().shortValue(), (short) 1);
         Assert.assertEquals(model.shortValue().get().shortValue(), (short) 1);
         Assert.assertEquals(model.stringValue().get(), "Hello");
@@ -97,7 +97,7 @@ public class NonOptionalValueTypesTestControllerTests extends SpringTestNGContro
         parameters.put(ValueTestConstants.PRIMITIVE_DOUBLE_VALUE, 0.1d);
         parameters.put(ValueTestConstants.PRIMITIVE_FLOAT_VALUE, 0.1f);
         parameters.put(ValueTestConstants.PRIMITIVE_INTEGER_VALUE, 1);
-        parameters.put(ValueTestConstants.PRIMITIVE_LONG_VALUE, 100l);
+        parameters.put(ValueTestConstants.PRIMITIVE_LONG_VALUE, 100L);
         parameters.put(ValueTestConstants.PRIMITIVE_SHORT_VALUE, (short) 1);
 
         //when:

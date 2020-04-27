@@ -1,7 +1,5 @@
 package dev.rico.docker;
 
-import dev.rico.client.Client;
-import dev.rico.integrationtests.AbstractIntegrationTest;
 import dev.rico.internal.core.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,16 +13,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.regex.Pattern;
 
 public class DockerCompose {
 
-    private final static Logger LOG = LoggerFactory.getLogger(DockerCompose.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DockerCompose.class);
 
-    private final static String WHALE_EMOJI = "\uD83D\uDC33";
+    private static final String WHALE_EMOJI = "\uD83D\uDC33";
 
     private final Path composeFile;
 

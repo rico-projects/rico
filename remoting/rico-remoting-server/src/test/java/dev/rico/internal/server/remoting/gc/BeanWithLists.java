@@ -23,15 +23,15 @@ import dev.rico.remoting.RemotingBean;
 @RemotingBean
 public class BeanWithLists {
 
-    private ObservableList<String> stringList;
+    private final ObservableList<String> stringList;
 
-    private ObservableList<Boolean> booleanList;
+    private final ObservableList<Boolean> booleanList;
 
-    private ObservableList<Double> doubleList;
+    private final ObservableList<Double> doubleList;
 
-    private ObservableList<BeanWithLists> beansList;
+    private final ObservableList<BeanWithLists> beansList;
 
-    private ObservableList<BeanWithProperties> beansList2;
+    private final ObservableList<BeanWithProperties> beansList2;
 
     public BeanWithLists(GarbageCollector garbageCollector) {
         stringList = new ObservableListWithGcSupport<>(garbageCollector);

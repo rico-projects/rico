@@ -4,6 +4,7 @@ import dev.rico.remoting.server.event.spi.EventBusProvider;
 import dev.rico.server.spi.ConfigurationProvider;
 
 module dev.rico.remoting.server.distributed {
+    uses dev.rico.remoting.server.distributed.HazelcastProvider;
 
     exports dev.rico.remoting.server.distributed;
 

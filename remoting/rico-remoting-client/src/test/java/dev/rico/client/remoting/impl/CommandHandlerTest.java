@@ -34,7 +34,7 @@ import static org.testng.Assert.assertEquals;
 
 public class CommandHandlerTest extends AbstractRemotingTest {
 
-    private final class TestChangeCommand extends Command {
+    private static final class TestChangeCommand extends Command {
         public TestChangeCommand() {
             super(TestChangeCommand.class.getSimpleName());
         }

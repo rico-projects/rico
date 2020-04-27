@@ -40,7 +40,7 @@ public class LongRemotingBinder extends AbstractNumericRemotingBinder<Long> {
         if (n == null && aLong == null) {
             return true;
         }
-        return  n.longValue() - aLong.longValue() == 0l;
+        return  n.longValue() - aLong.longValue() == 0L;
     }
 
     @Override
@@ -49,7 +49,7 @@ public class LongRemotingBinder extends AbstractNumericRemotingBinder<Long> {
             @Override
             public Number convertBack(final Long value) {
                 if (value == null) {
-                    return 0l;
+                    return 0L;
                 }
                 return value;
             }
@@ -57,7 +57,7 @@ public class LongRemotingBinder extends AbstractNumericRemotingBinder<Long> {
             @Override
             public Long convert(final Number value) {
                 if (value == null) {
-                    return 0l;
+                    return 0L;
                 }
                 return value.longValue();
             }

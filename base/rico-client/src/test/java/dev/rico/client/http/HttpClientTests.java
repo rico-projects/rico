@@ -459,7 +459,7 @@ public class HttpClientTests {
     /**
      * Dummy class for JSON serialization and deserialization.
      */
-    public class DummyJson {
+    public static class DummyJson {
         String name;
         int age;
         boolean isJavaChampion;

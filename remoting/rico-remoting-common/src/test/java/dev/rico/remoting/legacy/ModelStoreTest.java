@@ -44,7 +44,6 @@ public class ModelStoreTest {
 
         Assert.assertNotNull(storeListener.getEvent());
         Assert.assertNotNull(storeListener.getEvent().toString());
-        Assert.assertNotNull(storeListener.getEvent().hashCode());
         Assert.assertEquals(parent, storeListener.getEvent().getPresentationModel());
         Assert.assertEquals(ModelStoreEvent.Type.ADDED, storeListener.getEvent().getType());
         Assert.assertNotNull(parentStoreListener.getEvent());

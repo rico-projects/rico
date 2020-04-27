@@ -86,7 +86,7 @@ public class LocalDateTimeConverterTest {
             final LocalDateTimeConverterFactory factory = new LocalDateTimeConverterFactory();
             final LocalDateTime time = LocalDateTime.now();
             final Converter converter = factory.getConverterForType(LocalDateTime.class);
-            final TimeZone differentZone = Arrays.asList(TimeZone.getAvailableIDs()).stream()
+            final TimeZone differentZone = Arrays.stream(TimeZone.getAvailableIDs())
                     .map(id -> TimeZone.getTimeZone(id))
                     .filter(zone -> !Objects.equals(defaultZone, zone))
                     .findAny()

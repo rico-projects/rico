@@ -35,7 +35,7 @@ public class RemotingEventContext<T extends Serializable> implements MessageEven
 
     private final long timestamp;
 
-    private Map<String, Serializable> metadata = new HashMap<>();
+    private final Map<String, Serializable> metadata = new HashMap<>();
 
     public RemotingEventContext(final Topic<T> topic, final long timestamp) {
         this.topic = Assert.requireNonNull(topic, "topic");

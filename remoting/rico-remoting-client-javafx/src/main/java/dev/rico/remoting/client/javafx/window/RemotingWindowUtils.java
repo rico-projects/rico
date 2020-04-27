@@ -95,7 +95,7 @@ public class RemotingWindowUtils {
 	 *
 	 * @param <M> type of the model
 	 */
-    public static final <M> Window createWindow(final AbstractViewController<M> viewBinder) {
+    public static <M> Window createWindow(final AbstractViewController<M> viewBinder) {
        Assert.requireNonNull(viewBinder, "viewBinder");
 	   return new RemotingWindow<>(viewBinder);
     }
@@ -105,7 +105,7 @@ public class RemotingWindowUtils {
 	 * call {@link AbstractViewController#destroy()} when the stage becomes hidden.
 	 * @param <M> type of the model
 	 */
-    public static final <M> Stage createStage(final AbstractViewController<M> viewBinder) {
+    public static <M> Stage createStage(final AbstractViewController<M> viewBinder) {
     	Assert.requireNonNull(viewBinder, "viewBinder");
     	return new RemotingStage<>(viewBinder);
      }

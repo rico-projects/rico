@@ -64,8 +64,7 @@ public class LoggerConfiguration {
     public Level getLevelFor(final String loggerName) {
         return loggerLevelMap.keySet().stream().
                 filter(v -> loggerName.startsWith(v)).
-                sorted((a, b) -> a.compareTo(b)).
-                findFirst().
+                min((a, b) -> a.compareTo(b)).
                 map(v -> loggerLevelMap.get(v)).
                 orElse(getGlobalLevel());
     }

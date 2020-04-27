@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
@@ -35,9 +34,9 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class CalendarConverterFactory extends AbstractConverterFactory {
 
-    private final static Converter CONVERTER = new CalendarConverter();
+    private static final Converter CONVERTER = new CalendarConverter();
 
-    public final static int FIELD_TYPE_CALENDAR = 11;
+    public static final int FIELD_TYPE_CALENDAR = 11;
 
     @Override
     public List<Class> getSupportedTypes() {

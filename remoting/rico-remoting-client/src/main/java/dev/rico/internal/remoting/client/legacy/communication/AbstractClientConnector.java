@@ -105,7 +105,7 @@ public abstract class AbstractClientConnector {
                 }
 
                 if (LOG.isDebugEnabled()) {
-                    final StringBuffer buffer = new StringBuffer();
+                    final StringBuilder buffer = new StringBuilder();
                     for (Command command : commands) {
                         buffer.append(command.getClass().getSimpleName());
                         buffer.append(", ");
@@ -170,7 +170,7 @@ public abstract class AbstractClientConnector {
     protected void processResults(final List<? extends Command> response, final List<CommandAndHandler> commandsAndHandlers) {
 
         if (LOG.isDebugEnabled() && response.size() > 0) {
-            final StringBuffer buffer = new StringBuffer();
+            final StringBuilder buffer = new StringBuilder();
             for (final Command command : response) {
                 buffer.append(command.getClass().getSimpleName());
                 buffer.append(", ");

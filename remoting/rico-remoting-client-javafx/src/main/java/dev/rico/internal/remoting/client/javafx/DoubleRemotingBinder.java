@@ -25,7 +25,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class DoubleRemotingBinder extends AbstractNumericRemotingBinder<Double> {
 
-    private final static double EPSILON = 1e-10;
+    private static final double EPSILON = 1e-10;
 
     public DoubleRemotingBinder(final Property<Double> property) {
         super(property);

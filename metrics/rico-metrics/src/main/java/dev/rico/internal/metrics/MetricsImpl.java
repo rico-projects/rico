@@ -41,9 +41,9 @@ import java.util.stream.Collectors;
 
 public class MetricsImpl implements Metrics {
 
-    private final static Logger LOG = LoggerFactory.getLogger(MetricsImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MetricsImpl.class);
 
-    private final static MetricsImpl INSTANCE = new MetricsImpl();
+    private static final MetricsImpl INSTANCE = new MetricsImpl();
 
     private final AtomicReference<MeterRegistry> registry;
 

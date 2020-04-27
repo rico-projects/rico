@@ -2,7 +2,6 @@ package dev.rico.docker;
 
 import dev.rico.client.Client;
 import dev.rico.core.http.HttpClient;
-import dev.rico.integrationtests.AbstractIntegrationTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

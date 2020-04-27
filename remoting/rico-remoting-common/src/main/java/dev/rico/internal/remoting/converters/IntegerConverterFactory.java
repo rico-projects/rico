@@ -27,9 +27,9 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class IntegerConverterFactory extends AbstractConverterFactory {
 
-    public final static int FIELD_TYPE_INT = 3;
+    public static final int FIELD_TYPE_INT = 3;
 
-    private final static Converter CONVERTER = new AbstractNumberConverter<Integer>() {
+    private static final Converter CONVERTER = new AbstractNumberConverter<Integer>() {
 
         @Override
         public Integer convertFromRemoting(final Number value) {

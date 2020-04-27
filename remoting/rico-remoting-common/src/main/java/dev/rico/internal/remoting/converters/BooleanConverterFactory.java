@@ -27,9 +27,9 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class BooleanConverterFactory extends AbstractConverterFactory {
 
-    public final static int FIELD_TYPE_BOOLEAN = 7;
+    public static final int FIELD_TYPE_BOOLEAN = 7;
 
-    private final static Converter<Boolean, Boolean> CONVERTER = new AbstractBooleanConverter<>() {
+    private static final Converter<Boolean, Boolean> CONVERTER = new AbstractBooleanConverter<>() {
 
         @Override
         public Boolean convertFromRemoting(final Boolean value) {

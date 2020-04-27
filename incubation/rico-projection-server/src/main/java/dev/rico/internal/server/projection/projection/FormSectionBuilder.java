@@ -46,9 +46,9 @@ public class FormSectionBuilder<T extends FormSection> {
 
     private String iconCode;
 
-    private List<FormField> fields = new ArrayList<>();
+    private final List<FormField> fields = new ArrayList<>();
 
-    private Map<String, Object> metadata = new HashMap<>();
+    private final Map<String, Object> metadata = new HashMap<>();
 
     private final BeanLocalization localization;
 

@@ -29,7 +29,7 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 @API(since = "0.19.0", status = EXPERIMENTAL)
 public class HeadlessToolkit implements Toolkit {
 
-    private final static Executor EXECUTOR = Executors.newSingleThreadExecutor();
+    private static final Executor EXECUTOR = Executors.newSingleThreadExecutor();
 
     @Override
     public UiExecutor getUiExecutor() {

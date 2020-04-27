@@ -28,13 +28,13 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class LoggerThreadFactory implements ThreadFactory {
 
-    private final static Logger LOG = LoggerFactory.getLogger(LoggerThreadFactory.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LoggerThreadFactory.class);
 
-    private final static Marker RICO_LOGGING_MARKER = RicoLogger.createMarker("RicoLogging");
+    private static final Marker RICO_LOGGING_MARKER = RicoLogger.createMarker("RicoLogging");
 
-    private final static String NAME = "Logging Thread";
+    private static final String NAME = "Logging Thread";
 
-    private AtomicLong counter = new AtomicLong(0);
+    private final AtomicLong counter = new AtomicLong(0);
 
     @Override
     public synchronized Thread newThread(Runnable task) {

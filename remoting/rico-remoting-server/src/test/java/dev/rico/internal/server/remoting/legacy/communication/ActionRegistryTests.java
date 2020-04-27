@@ -29,7 +29,7 @@ public class ActionRegistryTests {
 
     private ActionRegistry registry;
 
-    private final class TestDataCommand extends Command {
+    private static final class TestDataCommand extends Command {
         public TestDataCommand() {
             super(TestDataCommand.class.getSimpleName());
         }

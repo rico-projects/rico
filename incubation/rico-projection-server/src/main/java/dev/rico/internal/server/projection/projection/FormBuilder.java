@@ -54,11 +54,11 @@ public class FormBuilder<T extends Form> {
 
     private String iconCode;
 
-    private List<FormSection> sections = new ArrayList<>();
+    private final List<FormSection> sections = new ArrayList<>();
 
-    private List<Action> actions = new ArrayList<>();
+    private final List<Action> actions = new ArrayList<>();
 
-    private Map<String, Object> metadata = new HashMap<>();
+    private final Map<String, Object> metadata = new HashMap<>();
 
     private final BeanLocalization localization;
 

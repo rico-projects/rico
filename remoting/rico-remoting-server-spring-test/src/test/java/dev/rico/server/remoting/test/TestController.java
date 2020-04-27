@@ -40,7 +40,7 @@ public class TestController {
     @RemotingModel
     private TestModel model;
 
-    private static Topic<String> TEST_TOPIC = Topic.create();
+    private static final Topic<String> TEST_TOPIC = Topic.create();
 
     @PostConstruct
     public void init() {

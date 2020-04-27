@@ -34,9 +34,9 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class BigIntegerConverterFactory extends AbstractConverterFactory {
 
-    public final static int FIELD_TYPE_BIGINTEGER = 13;
+    public static final int FIELD_TYPE_BIGINTEGER = 13;
 
-    private final static Converter CONVERTER = new AbstractNumberConverter<BigInteger>() {
+    private static final Converter CONVERTER = new AbstractNumberConverter<BigInteger>() {
         @Override
         public BigInteger convertFromRemoting(final Number value) throws ValueConverterException {
             try {

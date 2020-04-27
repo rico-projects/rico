@@ -37,7 +37,7 @@ import static dev.rico.internal.core.ReflectionHelper.isParameterizedType;
 
 public class ActionErrorHandler {
 
-    private final static Logger LOG = LoggerFactory.getLogger(ActionErrorHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ActionErrorHandler.class);
 
     public <T extends Throwable> boolean handle(final T throwable, final Object controller, final String controllerName, final String actionName) {
         Assert.requireNonNull(throwable, "throwable");

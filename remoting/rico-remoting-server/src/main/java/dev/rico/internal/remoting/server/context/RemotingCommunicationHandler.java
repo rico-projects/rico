@@ -44,7 +44,7 @@ public class RemotingCommunicationHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(RemotingCommunicationHandler.class);
 
-    private final static String REMOTING_CONTEXT_ATTRIBUTE_NAME = "ServerRemotingContext";
+    private static final String REMOTING_CONTEXT_ATTRIBUTE_NAME = "ServerRemotingContext";
 
     private final ClientSessionProvider sessionProvider;
 

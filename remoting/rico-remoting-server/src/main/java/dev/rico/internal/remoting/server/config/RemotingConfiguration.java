@@ -48,15 +48,15 @@ public class RemotingConfiguration implements Serializable {
 
     public static final boolean ACTIVE_DEFAULT_VALUE = true;
 
-    public final static String SERVLET_MAPPING_DEFAULT_VALUE = "/remoting";
+    public static final String SERVLET_MAPPING_DEFAULT_VALUE = "/remoting";
 
-    public final static String INTERRUPT_SERVLET_MAPPING_DEFAULT_VALUE = "/remoting-interrupt";
+    public static final String INTERRUPT_SERVLET_MAPPING_DEFAULT_VALUE = "/remoting-interrupt";
 
-    public final static String EVENTBUS_TYPE_DEFAULT_VALUE = DefaultEventBusProvider.DEFAULT_EVENTBUS_NAME;
+    public static final String EVENTBUS_TYPE_DEFAULT_VALUE = DefaultEventBusProvider.DEFAULT_EVENTBUS_NAME;
 
-    public final static long MAX_POLL_TIME_DEFAULT_VALUE = 5000;
+    public static final long MAX_POLL_TIME_DEFAULT_VALUE = 5000;
 
-    public final static boolean USE_GC_DEFAULT_VALUE = true;
+    public static final boolean USE_GC_DEFAULT_VALUE = true;
 
     private final Configuration configuration;
 

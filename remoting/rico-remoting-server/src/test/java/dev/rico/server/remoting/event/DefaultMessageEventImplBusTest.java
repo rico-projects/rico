@@ -42,7 +42,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DefaultMessageEventImplBusTest {
 
-    private final static Topic<String> TEST_TOPIC = Topic.create();
+    private static final Topic<String> TEST_TOPIC = Topic.create();
 
     @Test
     public void TestPublishOutsideSession() {
@@ -146,7 +146,7 @@ public class DefaultMessageEventImplBusTest {
             throw new RuntimeException("FAIL", e);
         }
     }
-    private class ManagedBeanFactoryMock implements ManagedBeanFactory {
+    private static class ManagedBeanFactoryMock implements ManagedBeanFactory {
 
         @Override
         public void init(ServletContext servletContext) {

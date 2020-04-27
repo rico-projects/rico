@@ -31,7 +31,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class PersistenceContextImpl implements PersistanceContext {
 
-    private final static PersistenceContextImpl instance = new PersistenceContextImpl();
+    private static final PersistenceContextImpl instance = new PersistenceContextImpl();
 
     private final List<PersistenceListener> globalListeners;
 
@@ -46,7 +46,7 @@ public class PersistenceContextImpl implements PersistanceContext {
      * Returns the singleton
      * @return the singleton
      */
-    public static final PersistenceContextImpl getInstance() {
+    public static PersistenceContextImpl getInstance() {
         return instance;
     }
 

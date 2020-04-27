@@ -25,17 +25,17 @@ import static dev.rico.internal.server.bootstrap.BasicConfigurationProvider.USE_
 
 public class TestConfigurationProvider extends ConfigurationProviderAdapter {
 
-    public final static String PROPERTY_1_NAME = "testProperty1";
+    public static final String PROPERTY_1_NAME = "testProperty1";
 
-    public final static String PROPERTY_2_NAME = "testProperty2";
+    public static final String PROPERTY_2_NAME = "testProperty2";
 
-    public final static String PROPERTY_3_NAME = "testProperty3";
+    public static final String PROPERTY_3_NAME = "testProperty3";
 
-    public final static String PROPERTY_1_VALUE = "YEAH!";
+    public static final String PROPERTY_1_VALUE = "YEAH!";
 
-    public final static String PROPERTY_2_VALUE = "JUHU";
+    public static final String PROPERTY_2_VALUE = "JUHU";
 
-    public final static String PROPERTY_3_VALUE = null;
+    public static final String PROPERTY_3_VALUE = null;
 
     @Override
     public Map<String, String> getStringProperties() {

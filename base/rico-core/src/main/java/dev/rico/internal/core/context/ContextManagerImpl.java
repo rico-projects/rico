@@ -41,9 +41,9 @@ import static dev.rico.internal.core.RicoConstants.UNNAMED_APPLICATION;
 
 public class ContextManagerImpl implements ContextManager {
 
-    private final static Logger LOG = LoggerFactory.getLogger(ContextManagerImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ContextManagerImpl.class);
 
-    private final static ContextManagerImpl INSTANCE = new ContextManagerImpl();
+    private static final ContextManagerImpl INSTANCE = new ContextManagerImpl();
 
     private final Set<Context> globalContexts;
 

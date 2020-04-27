@@ -176,13 +176,14 @@ public class ReflectionHelper {
         Assert.requireNonNull(type, "type");
         Assert.requireNonNull(name, "name");
 
-        final Class<?> i = type;
+        Class<?> i = type;
         while (i != null && i != Object.class) {
             for (final Field field : Arrays.asList(i.getDeclaredFields())) {
                 if (field.getName().equals(name)) {
                     return field;
                 }
             }
+            i = type.getSuperclass();
         }
         return null;
     }

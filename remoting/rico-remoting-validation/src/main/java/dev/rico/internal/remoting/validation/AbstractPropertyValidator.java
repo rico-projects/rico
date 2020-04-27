@@ -35,7 +35,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.19.0", status = INTERNAL)
 public abstract class AbstractPropertyValidator<T extends Annotation, U> implements ConstraintValidator<T, Property> {
 
-    private Class<U> supportedValueClass;
+    private final Class<U> supportedValueClass;
 
     /**
      * Constructor

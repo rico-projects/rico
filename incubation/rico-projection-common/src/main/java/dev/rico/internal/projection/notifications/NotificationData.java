@@ -22,11 +22,11 @@ import java.io.Serializable;
 
 public class NotificationData implements Serializable{
 
-    private String title;
+    private final String title;
 
-    private String text;
+    private final String text;
 
-    private MessageType messageType;
+    private final MessageType messageType;
 
     public NotificationData(String title, String text, MessageType messageType) {
         this.title = title;

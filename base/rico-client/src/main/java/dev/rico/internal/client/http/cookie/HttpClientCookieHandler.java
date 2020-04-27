@@ -28,6 +28,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static dev.rico.internal.core.http.HttpHeaderConstants.COOKIE_HEADER;
 import static dev.rico.internal.core.http.HttpHeaderConstants.SET_COOKIE_HEADER;
@@ -56,7 +57,7 @@ public class HttpClientCookieHandler {
                 if (cookie == null || cookie.isEmpty()) {
                     continue;
                 }
-                LOG.debug("will parse '{}' header content '{}'", cookie);
+                LOG.debug("will parse '{}' header content '{}'", SET_COOKIE_HEADER, cookie);
                 final List<HttpCookie> cookies = new ArrayList<>();
                 try {
                     cookies.addAll(HttpCookie.parse(cookie));
@@ -77,13 +78,14 @@ public class HttpClientCookieHandler {
         Assert.requireNonNull(connection, "connection");
         LOG.debug("adding cookies from cookie store to request");
         if (cookieStore.getCookies().size() > 0) {
-            String cookieValue = "";
-            for (final HttpCookie cookie : cookieStore.get(connection.getURL().toURI())) {
-                LOG.trace("Cookie '{}' is for Domain '{}' at Ports '{}' with Path '{}", cookie.getValue(), cookie.getDomain(), cookie.getPortlist(), cookie.getPath());
-                cookieValue = cookieValue + cookie + ";";
-            }
+            final String cookieValue = cookieStore.get(connection.getURL().toURI()).stream().
+                    map(cookie -> {
+                        LOG.trace("Cookie '{}' is for Domain '{}' at Ports '{}' with Path '{}", cookie.getValue(), cookie.getDomain(), cookie.getPortlist(), cookie.getPath());
+                        return cookie.toString();
+                    }).
+                    collect(Collectors.joining("; "));
+
             if (!cookieValue.isEmpty()) {
-                cookieValue = cookieValue.substring(0, cookieValue.length());
                 LOG.debug("Adding '{}' header to request. Content: {}", SET_COOKIE_HEADER, cookieValue);
                 connection.setRequestProperty(COOKIE_HEADER, cookieValue);
             }

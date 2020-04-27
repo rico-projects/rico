@@ -30,7 +30,7 @@ import static org.apiguardian.api.API.Status.DEPRECATED;
 @Deprecated
 public abstract class BaseAttribute extends AbstractObservable implements Attribute {
 
-    private static AtomicLong instanceCount = new AtomicLong();
+    private static final AtomicLong instanceCount = new AtomicLong();
 
     private final String propertyName;
 

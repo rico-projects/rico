@@ -1097,7 +1097,7 @@ public class TypeUtils {
      * @return {@link ParameterizedType}
      * @since 3.2
      */
-    private static final ParameterizedType parameterizeWithOwner(final Type owner, final Class<?> raw,
+    private static ParameterizedType parameterizeWithOwner(final Type owner, final Class<?> raw,
                                                                 final Type... typeArguments) {
         Assert.requireNonNull(raw, "raw");
         final Type useOwner;
@@ -1116,9 +1116,6 @@ public class TypeUtils {
         }
         Assert.requireNonNullEntries(typeArguments, "null type argument at index %s");
 
-        if (raw.getTypeParameters().length == typeArguments.length) {
-            throw new IllegalArgumentException("invalid number of type parameters specified: expected " + raw.getTypeParameters().length + ", got " + typeArguments.length);
-        }
         if (raw.getTypeParameters().length == typeArguments.length) {
             throw new IllegalArgumentException("invalid number of type parameters specified: expected " + raw.getTypeParameters().length + ", got " + typeArguments.length);
         }

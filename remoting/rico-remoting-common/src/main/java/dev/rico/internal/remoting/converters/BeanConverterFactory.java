@@ -32,7 +32,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class BeanConverterFactory implements ConverterFactory {
 
-    public final static int FIELD_TYPE_REMOTING_BEAN = 0;
+    public static final int FIELD_TYPE_REMOTING_BEAN = 0;
 
     private Converter<Object, String> converter;
 
@@ -63,7 +63,7 @@ public class BeanConverterFactory implements ConverterFactory {
     }
 
     @SuppressWarnings("deprecation")
-    private class RemotingBeanConverter extends AbstractStringConverter<Object> {
+    private static class RemotingBeanConverter extends AbstractStringConverter<Object> {
 
         private final BeanRepo beanRepository;
 

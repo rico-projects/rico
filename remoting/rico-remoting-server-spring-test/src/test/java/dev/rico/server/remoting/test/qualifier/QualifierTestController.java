@@ -48,7 +48,7 @@ public class QualifierTestController {
     @Autowired
     private PropertyBinder binder;
 
-    private List<Binding> bindings = new ArrayList<>();
+    private final List<Binding> bindings = new ArrayList<>();
 
     @PostConstruct
     public void init() {

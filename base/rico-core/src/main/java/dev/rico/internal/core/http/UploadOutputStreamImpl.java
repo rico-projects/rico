@@ -16,7 +16,7 @@ import java.util.function.Consumer;
 
 public class UploadOutputStreamImpl extends OutputStream {
 
-    private final static Logger LOG = LoggerFactory.getLogger(UploadOutputStreamImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UploadOutputStreamImpl.class);
 
     private final OutputStream wrappedStream;
 

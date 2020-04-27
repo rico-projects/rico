@@ -36,8 +36,7 @@ public class SingleInstanceChecker {
             throw new RuntimeException("Instance checker went wrong!", e);
         } finally {
             final Thread shutdownHookThread = new Thread(() -> {
-                shutdownRunnables.stream()
-                        .collect(Collectors.toCollection(LinkedList::new))
+                new LinkedList<>(shutdownRunnables)
                         .descendingIterator()
                         .forEachRemaining(task -> {
                             try {

@@ -26,7 +26,7 @@ import java.util.List;
 
 public class ClassConverterFactory implements ConverterFactory {
 
-    private final static ClassConverter CONVERTER = new ClassConverter();
+    private static final ClassConverter CONVERTER = new ClassConverter();
 
     @Override
     @SuppressWarnings("deprecation")
