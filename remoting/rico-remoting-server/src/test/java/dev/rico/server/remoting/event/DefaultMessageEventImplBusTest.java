@@ -146,7 +146,7 @@ public class DefaultMessageEventImplBusTest {
             throw new RuntimeException("FAIL", e);
         }
     }
-    private class ManagedBeanFactoryMock implements ManagedBeanFactory {
+    private static class ManagedBeanFactoryMock implements ManagedBeanFactory {
 
         @Override
         public void init(ServletContext servletContext) {

@@ -91,7 +91,7 @@ public class TestConfiguration {
         return remotingTestContext;
     }
 
-    private class ClientSessionProviderMock implements ClientSessionProvider {
+    private static class ClientSessionProviderMock implements ClientSessionProvider {
 
         private ServerRemotingContext currentContext;
 

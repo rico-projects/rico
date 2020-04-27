@@ -298,7 +298,7 @@ public class ClientConnectorTests {
 
     private CountDownLatch syncDone;
 
-    public class TestClientConnector extends AbstractClientConnector {
+    public static class TestClientConnector extends AbstractClientConnector {
         public TestClientConnector(ClientModelStore modelStore, Executor uiExecutor) {
             super(modelStore, uiExecutor, new CommandBatcher(), new SimpleExceptionHandler(), Executors.newCachedThreadPool());
         }
@@ -342,7 +342,7 @@ public class ClientConnectorTests {
         private List<Command> transmittedCommands = new ArrayList<Command>();
     }
 
-    public class ExtendedAttribute extends ClientAttribute {
+    public static class ExtendedAttribute extends ClientAttribute {
         public ExtendedAttribute(String propertyName, Object initialValue, String qualifier) {
             super(propertyName, initialValue, qualifier);
         }

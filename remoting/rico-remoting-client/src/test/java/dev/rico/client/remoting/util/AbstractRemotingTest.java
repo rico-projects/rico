@@ -44,7 +44,7 @@ import java.util.ArrayList;
 
 public abstract class AbstractRemotingTest {
 
-    public class TestConfiguration {
+    public static class TestConfiguration {
 
         private final ClientModelStore clientModelStore;
 

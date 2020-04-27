@@ -165,7 +165,7 @@ public class ServerRemotingContextTest {
         }, new ManagedBeanFactoryMock(), new ControllerRepository(classpathScanner), v -> {});
     }
 
-    private class ManagedBeanFactoryMock implements ManagedBeanFactory {
+    private static class ManagedBeanFactoryMock implements ManagedBeanFactory {
 
         @Override
         public void init(ServletContext servletContext) {

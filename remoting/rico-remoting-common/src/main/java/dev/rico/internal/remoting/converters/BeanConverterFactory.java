@@ -63,7 +63,7 @@ public class BeanConverterFactory implements ConverterFactory {
     }
 
     @SuppressWarnings("deprecation")
-    private class RemotingBeanConverter extends AbstractStringConverter<Object> {
+    private static class RemotingBeanConverter extends AbstractStringConverter<Object> {
 
         private final BeanRepo beanRepository;
 

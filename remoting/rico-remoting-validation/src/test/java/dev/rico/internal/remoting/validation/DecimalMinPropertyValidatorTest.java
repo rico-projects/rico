@@ -35,7 +35,7 @@ import static org.testng.Assert.assertEquals;
 public class DecimalMinPropertyValidatorTest {
 
     @RemotingBean
-    private class MinBean {
+    private static class MinBean {
         // inclusive = true by default
         @DecimalMin(value = "1234.5E-4")
         private Property<BigDecimal> bigDecimal = new MockedProperty<>();
