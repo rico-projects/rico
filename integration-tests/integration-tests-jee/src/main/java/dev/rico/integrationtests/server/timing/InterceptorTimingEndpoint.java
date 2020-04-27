@@ -5,6 +5,9 @@ import dev.rico.server.javaee.timing.Timing;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.Response;
+
+import static dev.rico.integrationtests.server.HealthEndpoint.RESPONSE_200_OK;
 
 @Path("/interceptor-timing")
 public class InterceptorTimingEndpoint {
@@ -12,21 +15,24 @@ public class InterceptorTimingEndpoint {
     @GET
     @Path("/1")
     @Timing
-    public void testTiming1() throws InterruptedException {
+    public Response testTiming1() throws InterruptedException {
         Thread.sleep(100);
+        return RESPONSE_200_OK;
     }
 
     @GET
     @Path("/2")
     @Timing(TimingConstants.METRICS_NAME)
-    public void testTiming2() throws InterruptedException {
+    public Response testTiming2() throws InterruptedException {
         Thread.sleep(100);
+        return RESPONSE_200_OK;
     }
 
     @GET
     @Path("/3")
     @Timing(value = TimingConstants.METRICS_NAME, description = TimingConstants.METRICS_DESCRIPTION)
-    public void testTiming3() throws InterruptedException {
+    public Response testTiming3() throws InterruptedException {
         Thread.sleep(100);
+        return RESPONSE_200_OK;
     }
 }
