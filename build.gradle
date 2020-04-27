@@ -29,7 +29,7 @@ buildscript {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.5'
         classpath 'com.adarshr:gradle-test-logger-plugin:2.0.0'
         classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:4.15.1'
-        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.9.2'
+        classpath 'org.asciidoctor:asciidoctor-gradle-jvm:3.2.0'
     }
 }
 
@@ -166,12 +166,17 @@ subprojects { proj ->
     }
 
     if (proj.documentationProject.toBoolean()) {
-        apply plugin: 'org.asciidoctor.convert'
+        apply plugin: "org.asciidoctor.jvm.convert"
+
+        repositories {
+            jcenter()
+            mavenCentral()
+        }
 
         asciidoctor {
-            options doctype: 'book'
+            baseDirFollowsSourceFile()
 
-            backends = ['html5']
+            options doctype: 'book'
 
             attributes = [
                     toc                    : 'left',
