@@ -26,7 +26,7 @@ public class StaticMDCBinder {
     private StaticMDCBinder() {
     }
 
-    public static final StaticMDCBinder getSingleton() {
+    public static StaticMDCBinder getSingleton() {
         return SINGLETON;
     }
 

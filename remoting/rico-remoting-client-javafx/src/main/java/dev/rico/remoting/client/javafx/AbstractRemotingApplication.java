@@ -90,7 +90,7 @@ public abstract class AbstractRemotingApplication extends Application {
 //        }
 //    }
 
-    private final ClientContext createClientContext() throws Exception {
+    private ClientContext createClientContext() throws Exception {
         return Client.getService(ClientContextFactory.class).create(Client.getClientConfiguration(), getServerEndpoint().toURI());
     }
 
@@ -240,7 +240,7 @@ public abstract class AbstractRemotingApplication extends Application {
         Platform.exit();
     }
 
-    private final void handleInitializationError(final Stage primaryStage, final ClientInitializationException initializationException) {
+    private void handleInitializationError(final Stage primaryStage, final ClientInitializationException initializationException) {
         final Iterable<RuntimeException> possibleCauses = Collections.unmodifiableList(runtimeExceptionsAtInitialization);
         runtimeExceptionsAtInitialization.clear();
         onInitializationError(primaryStage, initializationException, possibleCauses);
