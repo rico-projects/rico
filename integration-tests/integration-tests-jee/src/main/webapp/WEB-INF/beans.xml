@@ -2,7 +2,4 @@
        xsi:schemaLocation="
 http://java.sun.com/xml/ns/javaee
 http://java.sun.com/xml/ns/javaee/beans_1_0.xsd">
-    <interceptors>
-        <class>dev.rico.internal.server.javaee.timing.TimingInterceptor</class>
-    </interceptors>
 </beans>

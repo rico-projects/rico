@@ -1,8 +1,10 @@
 package dev.rico.integrationtests.server.timing;
 
 import dev.rico.integrationtests.timing.TimingConstants;
+import dev.rico.internal.server.javaee.timing.TimingInterceptor;
 import dev.rico.server.javaee.timing.Timing;
 
+import javax.interceptor.Interceptors;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
@@ -10,6 +12,7 @@ import javax.ws.rs.core.Response;
 import static dev.rico.integrationtests.server.HealthEndpoint.RESPONSE_200_OK;
 
 @Path("/interceptor-timing")
+@Interceptors(TimingInterceptor.class)
 public class InterceptorTimingEndpoint {
 
     @GET
