@@ -2,8 +2,8 @@ ifndef::imagesdir[:imagesdir: images]
 
 = Rico
 
-include::build-rico.adoc[]
+include::build-doc/build-rico.adoc[]
 
-include::project-structure.adoc[]
+include::build-doc/project-structure.adoc[]
 
-include::sub-doc/subdoc.adoc[]
+include::documentation-best-practices.adoc[]

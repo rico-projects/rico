@@ -1,0 +1,82 @@
+ifndef::imagesdir[:imagesdir: images]
+
+== Best practices for documentation
+
+This chapter contains some best practices that Rico commiters should have a look
+at when working on the documentation of Rico.
+
+=== Documentation structure
+
+The documentation of Rico is placed in the `documentation` subfolder of the project.
+It is defined as a module by gradle and the complete documentation is written
+in https://asciidoctor.org[AsciiDoc].
+
+The documentation can be found in the `src/docs/asciidoc` folder of the `documentation`
+module. The documentation is splitted in several `adoc` file. Whenever a new
+chapter is started for the documentation a new `adoc` file should be created.
+All `adoc` file are referenced in the `index.adoc` file. By doing so all
+files will be rendered in one huge documenation. Including adoc files in
+the index.adoc looks like shown in the following code snippet:
+
+....
+\include::project-structure.adoc[]
+
+\include::sub-doc/subdoc.adoc[]
+....
+
+As you can see in the snippet documents can easily stored in subfolders.
+
+=== Writing AsciiDoc based documents
+
+A general documentation of the AsciiDoc syntax can be found
+https://asciidoctor.org/docs/asciidoc-syntax-quick-reference/[here].
+Next to this general syntax rules we have introduced some best practices for the
+Rico documentation.
+
+==== The title of a document
+
+Each document should start with a headline (Level 1 Section Title). So not
+use a document title since the document will be included in the `index.adoc`
+that defines the document title.
+
+
+==== Adding images
+
+All images are current placed in the `src/docs/asciidoc/images` folder.
+An image can be added to a document just by refering the name if the image
+as if it would be in the same folder as the document. The follwoing snippet
+shows an example:
+
+....
+/image:example-pic.svg[]
+....
+
+You do not need to define the path to the image dir since each adoc file
+contains a `ifndef` statement at the beginning that defines the location of
+the image folder if it was not defined before (for example if a document is
+included in another document). The `ifndef` looks like this:
+
+....
+/ifndef::imagesdir[:imagesdir: images]
+....
+
+Instead of using pixel based images we try to use vector based images wherever
+possible. Therefore all technical diagramms should be created by using
+https://www.diagrams.net[diagrams.net] (sucessor of draw.io).
+
+image:diagrams-net.png[]
+
+As you can see in the `images` folder we store a `xml` file and a `svg` file for each
+diagramm. While the `svg` is used in the AsciiDoc documents the `xml` file can be reopend
+in diagrams.net. Whenever a new diagramm is created or an old diagramm is changed the
+`xml` file must be updated next to the `svg` file.
+
+
+=== Creating the documentation
+
+The documentation will automatically created as a HTML based documentation
+when calling the gradle `build` task. Therefore whenever you <<build-doc/build-rico.adoc,build>> the Rico
+project the complete documentation will automatically be build. Next to this you can
+execute the `asciidoctor` Gradle task if you onyl want to generate the documentation.
+The generated documentation can be found under the `build/docs/asciidoc` folder of
+the documentation module.
