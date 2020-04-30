@@ -1,9 +1,9 @@
 ifndef::imagesdir[:imagesdir: images]
 
-= Main Header
+= Rico
 
-include::document.adoc[]
+include::build-rico.adoc[]
 
-include::document-2.adoc[]
+include::project-structure.adoc[]
 
 include::sub-doc/subdoc.adoc[]

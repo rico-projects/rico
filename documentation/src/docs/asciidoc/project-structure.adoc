@@ -1,0 +1,47 @@
+ifndef::imagesdir[:imagesdir: images]
+
+== Project structure
+
+Rico is structured in several modules. All this modules are defined as gradle modules
+for the build that will create a jar per module. Next to this each module is defined
+as a Java module.
+
+[NOTE]
+====
+Rico contains several projects that are in incubation state. All such projects
+are located in the incubation folder. Next to this Rico contains several projects
+that are only needed for internal unit and integration tests
+(see folder integration-tests). All this modules must not follow all the rules and
+structure that is defined here.
+====
+
+=== Gradle build
+
+TODO
+- build.gradle defines everything
+
+=== Gradle modules
+
+All gradle modules are defined in the `settings.gradle` file that is located in
+the root folder of the project.
+
+Next to this each project provides it own gradle file. Such file must have the
+same name as the gradle module (based on the common code in `settings.gradle`).
+The gradle file for the `rico-client` module must be named `rico-client.gradle`.
+Each of this gradle files defines the dependencies of a module (for the gradle build).
+
+=== Package structure
+
+TODO: Internal / public
+
+=== Project Graph
+
+Test123
+
+image:base-gradle-modules.svg[]
+
+
+
+
+image:basic-gradle-modules.png[]
+
