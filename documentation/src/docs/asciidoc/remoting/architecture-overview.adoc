@@ -1,0 +1,27 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+=== Architecture overview
+
+When using remoting as part of a client-server-application all models
+will automatically be synchronized between client and server.
+Thus, you don’t need to think about any specific endpoints or requests.
+
+.Synchronization of the model
+image:remoting-architecture-1.svg[]
+
+Based on this, the remoting API defines server side controllers
+that contain all the controller logic for a specific view.
+The lifecycle of these controllers is automatically synchronized with
+the view lifecycle. With this approach you have a MVC group for each
+client view with a synchronized model and a managed controller.
+
+The Rico remoting API provides a server and client framework that
+let you easily write applications based on the described pattern.
+To do so the platform contains support for well known sever framework
+like JakartaEE or Spring and several implementations to create clients
+by using for example JavaFX or Angular.
+
+.Supported frameworks and clients
+image:remoting-supported-framworks.svg[]
+
+
