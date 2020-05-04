@@ -1,0 +1,62 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+=== The Model API
+
+One of the core features and maybe the most important concept of
+the remote presentation model is the model synchronization between
+client and server. For each view in the client a controller instance
+"lives" in the server that defines all the logic of the view.
+A model is automatically shared and synchronized between the client
+view and the controller on the server.
+
+.Synchronization of the model
+image:remoting-architecture-1.svg[]
+
+Such a model can be a bean or a hierarchy of several beans.
+Rico provides an API to create full observable beans for the model
+layer.
+
+==== Defining a model
+
+A model can simply be defined as a Java bean, but instead of using
+primitive date types for all the attributes of the bean
+Rico provides the `dev.rico.remoting.Property<T>` interface that should be used to
+define attributes. Based on this, a definition for a bean with only
+one String attribute will look like this:
+
+[source,java]
+----
+@RemotingBean
+public class MyModel {
+
+    private Property<String> value;
+
+    public Property<String> valueProperty() {
+        return value;
+    }
+
+    public String getValue() {
+        return value.get();
+    }
+
+    public void setValue(String value) {
+        value.set(value);
+    }
+
+}
+----
+
+[NOTE]
+====
+Maybe you ask yourself why the @RemotingBean annotation is needed.
+Internally Rico checks if a bean class is annotated with @RemotingBean and will
+trow a BeanDefinitionException if the annotation is not present.
+By doing so it will be easy to check if you use the right model classes.
+We plan to add some additional features based on the annotation in the future.
+One example can be an annotation processor that checks, if all classes that are
+defined as remoting beans (by adding the @RemotingBean annotation) are
+valid beans (use Property interface correctly and so on).
+====
+
+
+

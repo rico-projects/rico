@@ -1,0 +1,10 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+== Remoting
+
+The remoting part of Rico provides an implementation of the remote
+ presentation model pattern.
+
+include::architecture-overview.adoc[]
+
+include::remote-presentation-model.adoc[]
