@@ -16,10 +16,10 @@
  */
 package dev.rico.internal.client.projection.projection;
 
-import dev.rico.internal.projection.action.ServerAction;
 import dev.rico.internal.client.projection.action.ServerActionButton;
-import dev.rico.client.remoting.ClientContext;
-import dev.rico.client.remoting.ControllerProxy;
+import dev.rico.internal.projection.action.ServerAction;
+import dev.rico.remoting.client.ClientContext;
+import dev.rico.remoting.client.ControllerProxy;
 import javafx.scene.Parent;
 
 public class ServerActionFactory implements ProjectionFactory<ServerAction> {

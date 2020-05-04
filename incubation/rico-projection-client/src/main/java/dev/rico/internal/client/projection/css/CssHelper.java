@@ -16,12 +16,12 @@
  */
 package dev.rico.internal.client.projection.css;
 
-import com.sun.javafx.css.converters.EnumConverter;
 import javafx.css.CssMetaData;
 import javafx.css.SimpleStyleableObjectProperty;
 import javafx.css.StyleConverter;
 import javafx.css.Styleable;
 import javafx.css.StyleableObjectProperty;
+import javafx.css.converter.EnumConverter;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
@@ -42,6 +42,7 @@ public class CssHelper {
 
     /**
      * Creates a List of CssMetaData instances that is merged by the given parameters
+     *
      * @param baseList A basic list. All elements of the list will be in the returned list
      * @param metaData An array of CssMetaData instances. All instances will be in the returned list
      * @return A list with all given CssMetaData instances
@@ -54,6 +55,7 @@ public class CssHelper {
 
     /**
      * Creates a List of CssMetaData instances that is merged by the given parameters
+     *
      * @param metaData An array of CssMetaData instances. All instances will be in the returned list
      * @return A list with all given CssMetaData instances
      */
@@ -63,12 +65,12 @@ public class CssHelper {
 
     /**
      * Creates a StyleableObjectProperty instance that is parametrized by the given parameters. The returned property must be defined as a field in the given Styleable class. The property will be a <tt>SimpleStyleableObjectProperty</tt>
-     * @param metaData The CssMetaData instance
-     * @param styleable The styleable that contains the property field. Mostly this will be a JavaFX Control class
-     * @param <S> Type of the Styleable
-     * @param <V> value type of the property
-     * @return a styleable property that can be used in a Styleable class like a Control
      *
+     * @param metaData  The CssMetaData instance
+     * @param styleable The styleable that contains the property field. Mostly this will be a JavaFX Control class
+     * @param <S>       Type of the Styleable
+     * @param <V>       value type of the property
+     * @return a styleable property that can be used in a Styleable class like a Control
      * @see SimpleStyleableObjectProperty
      */
     public static <S extends Styleable, V> StyleableObjectProperty<V> createProperty(DefaultPropertyBasedCssMetaData<S, V> metaData, S styleable) {
@@ -77,12 +79,12 @@ public class CssHelper {
 
     /**
      * Creates a StyleableObjectProperty instance that is parametrized by the given parameters. The property will be a <tt>SimpleStyleableObjectProperty</tt>. The returned property must be defined as a field in the Skin class of the given Control class.
-     * @param metaData The CssMetaData instance
-     * @param skin The Skin that contains the property field.
-     * @param <S> Type of the Control
-     * @param <V> value type of the property
-     * @return a styleable property that can be used in the Skin of a Control
      *
+     * @param metaData The CssMetaData instance
+     * @param skin     The Skin that contains the property field.
+     * @param <S>      Type of the Control
+     * @param <V>      value type of the property
+     * @return a styleable property that can be used in the Skin of a Control
      * @see SimpleStyleableObjectProperty
      */
     public static <S extends Control, V> StyleableObjectProperty<V> createProperty(SkinPropertyBasedCssMetaData<S, V> metaData, SkinBase<S> skin) {
@@ -92,12 +94,12 @@ public class CssHelper {
     /**
      * Creates a CssMetaData instance that can be used in a Styleable class.
      *
-     * @param property name of the CSS property
-     * @param converter the StyleConverter used to convert the CSS parsed value to a Java object.
+     * @param property     name of the CSS property
+     * @param converter    the StyleConverter used to convert the CSS parsed value to a Java object.
      * @param propertyName Name of the property field in the Styleable class
      * @param defaultValue The default value of the corresponding StyleableProperty
-     * @param <S> Type of the Styleable instance
-     * @param <V> Value type of the property
+     * @param <S>          Type of the Styleable instance
+     * @param <V>          Value type of the property
      * @return the CssMetaData instance
      */
     public static <S extends Styleable, V> DefaultPropertyBasedCssMetaData<S, V> createMetaData(String property, StyleConverter<?, V> converter, String propertyName, V defaultValue) {
@@ -107,12 +109,12 @@ public class CssHelper {
     /**
      * Creates a CssMetaData instance that can be used in the Skin of a Control.
      *
-     * @param property name of the CSS property
-     * @param converter the StyleConverter used to convert the CSS parsed value to a Java object.
+     * @param property     name of the CSS property
+     * @param converter    the StyleConverter used to convert the CSS parsed value to a Java object.
      * @param propertyName Name of the property field in the Skin class
      * @param defaultValue The default value of the corresponding StyleableProperty
-     * @param <S> Type of the Control
-     * @param <V> Value type of the property
+     * @param <S>          Type of the Control
+     * @param <V>          Value type of the property
      * @return the CssMetaData instance
      */
     public static <S extends Control, V> SkinPropertyBasedCssMetaData<S, V> createSkinMetaData(String property, StyleConverter<?, V> converter, String propertyName, V defaultValue) {
