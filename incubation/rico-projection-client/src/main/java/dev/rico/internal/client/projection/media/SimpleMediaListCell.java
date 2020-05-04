@@ -16,10 +16,10 @@
  */
 package dev.rico.internal.client.projection.media;
 
-import dev.rico.internal.projection.media.Media;
 import dev.rico.core.functional.Binding;
 import dev.rico.core.functional.Subscription;
-import dev.rico.client.remoting.FXBinder;
+import dev.rico.internal.projection.media.Media;
+import dev.rico.remoting.client.javafx.FXBinder;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;

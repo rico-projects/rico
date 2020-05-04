@@ -19,6 +19,7 @@ package dev.rico.internal.client.projection.form;
 import dev.rico.internal.client.projection.projection.Utils;
 import dev.rico.internal.projection.form.FormField;
 import dev.rico.remoting.client.javafx.BidirectionalConverter;
+import dev.rico.remoting.client.javafx.Converter;
 import dev.rico.remoting.client.javafx.FXBinder;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;

@@ -22,6 +22,7 @@ import dev.rico.internal.projection.graph.GraphDataBean;
 import dev.rico.internal.projection.graph.GraphMetadata;
 import dev.rico.internal.projection.graph.GraphType;
 import dev.rico.internal.projection.metadata.MetadataUtilities;
+import dev.rico.remoting.client.javafx.FXBinder;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.chart.BarChart;
