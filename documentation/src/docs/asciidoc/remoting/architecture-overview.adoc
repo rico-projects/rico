@@ -17,7 +17,7 @@ client view with a synchronized model and a managed controller.
 
 The Rico remoting API provides a server and client framework that
 let you easily write applications based on the described pattern.
-To do so the platform contains support for well known sever framework
+To do so the platform contains support for well known sever frameworks
 like JakartaEE or Spring and several implementations to create clients
 by using for example JavaFX or Angular.
 
