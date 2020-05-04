@@ -16,14 +16,12 @@
  */
 package dev.rico.internal.client.projection.lazy;
 
+import dev.rico.core.functional.Subscription;
 import dev.rico.internal.core.ReflectionHelper;
 import dev.rico.internal.projection.lazy.LazyList;
 import dev.rico.internal.projection.lazy.LazyListElement;
-import dev.rico.core.functional.Subscription;
 import dev.rico.remoting.ListChangeListener;
 import dev.rico.remoting.ValueChangeListener;
-import com.sun.javafx.scene.control.skin.VirtualContainerBase;
-import com.sun.javafx.scene.control.skin.VirtualFlow;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
@@ -33,6 +31,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TableView;
+import javafx.scene.control.skin.VirtualContainerBase;
+import javafx.scene.control.skin.VirtualFlow;
 
 import java.util.stream.IntStream;
 
@@ -66,7 +66,7 @@ public class LazyLoadingBehavior<T extends LazyListElement> {
 
         this.model = new SimpleObjectProperty<>();
 
-        selectionModel.getSelectedItems().addListener((javafx.collections.ListChangeListener<? super T>)  e -> {
+        selectionModel.getSelectedItems().addListener((javafx.collections.ListChangeListener<? super T>) e -> {
             getModel().setSelectedValue(selectionModel.getSelectedItem());
             getModel().getSelectedValues().setAll(selectionModel.getSelectedItems());
         });
@@ -112,7 +112,7 @@ public class LazyLoadingBehavior<T extends LazyListElement> {
         });
 
         control.skinProperty().addListener(e -> init());
-        if(control.getSkin() != null) {
+        if (control.getSkin() != null) {
             init();
         }
     }

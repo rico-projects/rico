@@ -20,8 +20,8 @@ import dev.rico.internal.client.projection.form.SimpleForm;
 import dev.rico.internal.projection.form.Form;
 import dev.rico.internal.projection.metadata.MetadataUtilities;
 import dev.rico.internal.projection.view.ViewMetadata;
-import dev.rico.client.remoting.ClientContext;
-import dev.rico.client.remoting.ControllerProxy;
+import dev.rico.remoting.client.ClientContext;
+import dev.rico.remoting.client.ControllerProxy;
 import javafx.scene.Parent;
 
 public class FormFactory implements ProjectionFactory<Form> {

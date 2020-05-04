@@ -16,12 +16,12 @@
  */
 package dev.rico.internal.client.projection.projection;
 
+import dev.rico.internal.projection.base.View;
 import dev.rico.internal.projection.base.WithLayoutMetadata;
 import dev.rico.internal.projection.metadata.MetadataUtilities;
-import dev.rico.internal.projection.base.View;
 import dev.rico.internal.projection.view.ViewMetadata;
-import dev.rico.client.remoting.ClientContext;
-import dev.rico.client.remoting.ControllerProxy;
+import dev.rico.remoting.client.ClientContext;
+import dev.rico.remoting.client.ControllerProxy;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -57,7 +57,7 @@ public class ViewFactory implements ProjectionFactory<View> {
             mainPane.getChildren().clear();
         }
         Pane internalPane = Optional.of(projectable).map(p -> {
-            if(ViewMetadata.isOrientationVertical(p)) {
+            if (ViewMetadata.isOrientationVertical(p)) {
                 return new HBox();
             } else {
                 return new VBox();
