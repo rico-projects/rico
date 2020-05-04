@@ -15,7 +15,7 @@ before_install:
 install:
   - sdk install java 11.0.6.hs-adpt || true
 
-script: "./gradlew clean build --info"
+script: "./gradlew clean build --info -x :integration-tests:test"
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
