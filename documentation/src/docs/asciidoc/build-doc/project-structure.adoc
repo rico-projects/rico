@@ -2,40 +2,38 @@ ifndef::imagesdir[:imagesdir: ../images]
 
 == Project structure
 
-Rico is structured in several modules. All this modules are defined as gradle modules
-for the build that will create a jar per module. Next to this each module is defined
+Rico is structured in several modules. All these modules are defined as gradle subprojects, 
+which will create a jar per module. Next to this each module is defined
 as a Java module.
 
 [NOTE]
 ====
-Rico contains several projects that are in incubation state. All such projects
-are located in the incubation folder. Next to this Rico contains several projects
-that are only needed for internal unit and integration tests
-(see folder integration-tests). All this modules must not follow all the rules and
-structure that is defined here.
+Rico contains in the incubation folder several modules that are in incubation state.
+Furthermore Rico contains several modules only needed for internal unit and integration tests
+(see folder integration-tests). All these modules may not follow all the rules and
+structure defined here.
 ====
 
 === Gradle build
 
 In the root folder of the project you can find the `build.gradle` file that defines
-the build for the rico project and all subprojects. Instead of externalize build
-tasks in the subprojects we decided to define the build steps for different module
+the build for the rico project and all subprojects. Instead of externalizing build
+tasks in the subprojects we decided to define the build steps for different subprojects
 types (java module or documentation) in this central file.
 
-==== Gradle modules
+==== Gradle subprojects
 
-All gradle modules are defined in the `settings.gradle` file that is located in
-the root folder of the project.
+All gradle subprojects are defined in the `settings.gradle` located in the root folder of the project.
 
-Next to this each project provides it own gradle file. Such file must have the
-same name as the gradle module (based on the common code in `settings.gradle`).
-The gradle file for the `rico-client` module must be named `rico-client.gradle`.
-Each of this gradle files defines the dependencies of a module (for the gradle build).
-Normally such file does not contain any additional information next to the dependencies
-definition since the general build is defined in the global `build.gradle` file that
-can be found in the root folder.
+Each subproject provides its own gradle file, which must have the
+same name as the gradle module (based on the entry in `settings.gradle`).
+The gradle file for the `rico-client` subproject must be named `rico-client.gradle`.
+Each of these gradle files defines the dependencies of the subproject. 
+Normally they do not contain any additional information next to the dependencies
+definition, since the general build is defined in the global `build.gradle` file 
+found in the root folder.
 
-Gradle modules in Rico won't be released by default. To add a module to releases of Rico
+Gradle subprojects in Rico won't be released by default. To add a module to releases of Rico
 the `publishJars` gradle property must be set to `true`. This is done in in the
 `gradle.properties` file that is located in all modules that will be included in
 a release. The concrete effect of the `publishJars` property can be found in the `build.gradle`
@@ -43,12 +41,11 @@ file in the project root folder.
 
 === Package structure
 
-Each module has it sources splitted up in a public and a private part. This split
-is additionally defined in the Java module config and hides all private APIs
-to developers that will Rico to create applications. For all modules the packages
-that contain the private sources starts with `dev.rico.internal`. While each module
-defines its own base package to be compatible with the Java module system you can
-find a structure like the following one in each module:
+Each subproject has its sources split into public and private. This split
+is additionally defined in the Java module config and hides all private APIs. 
+While the public API defines its own base package, the packages containing the private API start with `dev.rico.internal`.
+This is done to be compatible with the Java module system.
+You can then find a structure like the following one in each module:
 
 ....
 dev.rico.internal.MODULE_BASE_PACKAGE <- private API
@@ -58,9 +55,8 @@ dev.rico.MODULE_BASE_PACKAGE <- public API
 
 === Java Module definition
 
-Each module must be defined as a Java Module and must contain
-a `module-info.java` file in the `scr/main/java` folder. By doing so
-we can hide private API of Rico from application developers.
+Each subproject must be defined as a Java Module and must contain
+a `module-info.java` file in the `scr/main/java` folder. 
 
 === Project Graph
 
