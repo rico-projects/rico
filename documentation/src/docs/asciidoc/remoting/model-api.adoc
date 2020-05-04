@@ -18,10 +18,10 @@ layer.
 
 ==== Defining a model
 
-A model can simply be defined as a Java bean but instead of using
+A model can simply be defined as a Java bean, but instead of using
 primitive date types for all the attributes of the bean
 Rico provides the `dev.rico.remoting.Property<T>` interface that should be used to
-define attributes. Based on this a definition for a bean with only
+define attributes. Based on this, a definition for a bean with only
 one String attribute will look like this:
 
 [source,java]
@@ -53,8 +53,8 @@ Internally Rico checks if a bean class is annotated with @RemotingBean and will
 trow a BeanDefinitionException if the annotation is not present.
 By doing so it will be easy to check if you use the right model classes.
 We plan to add some additional features based on the annotation in the future.
-One example can be an annotation processor that checks if all classes that are
-defined as remoting beas (by adding the @RemotingBean annotation) are
+One example can be an annotation processor that checks, if all classes that are
+defined as remoting beans (by adding the @RemotingBean annotation) are
 valid beans (use Property interface correctly and so on).
 ====
 
