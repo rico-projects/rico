@@ -126,7 +126,7 @@ public class ZonedDateTimeConverterTest {
     }
 
     @Test
-    public void testRawSameTimeZone2() throws ValueConverterException, ParseException {
+    public void testRawSameTimeZoneByName() throws ValueConverterException, ParseException {
         final TimeZone defaultZone = TimeZone.getDefault();
         try {
 
