@@ -17,7 +17,7 @@
 package dev.rico.internal.client.projection.projection;
 
 import dev.rico.internal.projection.base.WithDescription;
-import dev.rico.client.remoting.FXWrapper;
+import dev.rico.remoting.client.javafx.FXWrapper;
 import javafx.scene.control.Control;
 import javafx.scene.control.Tooltip;
 

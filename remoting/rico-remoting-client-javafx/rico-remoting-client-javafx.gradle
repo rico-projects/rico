@@ -24,4 +24,10 @@ dependencies {
     compileOnly "org.openjfx:javafx-base:$javafxVersion:$osQualifier"
     compileOnly "org.openjfx:javafx-fxml:$javafxVersion:$osQualifier"
     compileOnly "org.openjfx:javafx-graphics:$javafxVersion:$osQualifier"
+
+    testImplementation "org.openjfx:javafx-base:$javafxVersion:$osQualifier"
+    testImplementation "org.openjfx:javafx-fxml:$javafxVersion:$osQualifier"
+    testImplementation "org.openjfx:javafx-graphics:$javafxVersion:$osQualifier"
+
+
 }
