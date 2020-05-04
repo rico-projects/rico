@@ -1,0 +1,20 @@
+ifndef::imagesdir[:imagesdir: images]
+
+== Building Rico
+
+The build of Rico is based on Gradle. Based on the Gradle plugins that we use for the build
+we currently rely on Gradle version `6.4-rc-1`. Since the gradle wrapper is used, you do not need
+to install Gradle on your system. Based on a bug in the `javadoc` executable of
+early versions of Java 11 you need Java version `11.0.6` as a minimum version to build rico.
+By using older Java 11 releases the build step of the JavaDoc creation will fail. For executing
+the integration tests of Rico `docker-compose` (and `docker`) is needed.
+
+A complete build can be started by
+
+....
+./gradlew build
+....
+
+The build task does not only build all modules. By calling the task the documentation is created and all integration
+tests will be executed.
+
