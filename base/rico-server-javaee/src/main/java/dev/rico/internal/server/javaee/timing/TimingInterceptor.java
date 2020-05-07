@@ -18,12 +18,8 @@ public class TimingInterceptor {
 
     private static final String UNKNOWN_NAME = "UNKNOWN";
 
-    private final ServerTiming serverTiming;
-
     @Inject
-    public TimingInterceptor(final ServerTiming serverTiming) {
-        this.serverTiming = Assert.requireNonNull(serverTiming, "serverTiming");
-    }
+    private ServerTiming serverTiming;
 
     @AroundInvoke
     public Object handle(final InvocationContext joinPoint) throws Exception {
