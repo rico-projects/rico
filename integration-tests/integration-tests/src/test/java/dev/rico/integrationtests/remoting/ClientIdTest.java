@@ -26,6 +26,7 @@ public class ClientIdTest extends AbstractRemotingIntegrationTest {
     public void testThatClientIdIsNotNull(String containerType, String endpoint) {
         ClientContext context = connect(endpoint);
         Assert.assertNotNull(context.getClientId());
+        disconnect(context, endpoint);
     }
 
 }

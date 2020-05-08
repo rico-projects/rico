@@ -18,6 +18,7 @@ package dev.rico.internal.remoting.client;
 
 import dev.rico.client.concurrent.BackgroundExecutor;
 import dev.rico.client.concurrent.UiExecutor;
+import dev.rico.internal.remoting.commands.CreateContextCommand;
 import dev.rico.remoting.client.RemotingExceptionHandler;
 import dev.rico.core.http.HttpClient;
 import dev.rico.core.http.RequestMethod;
@@ -35,6 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -55,7 +57,7 @@ public class HttpClientConnector extends AbstractClientConnector {
 
     private final HttpClient client;
 
-    private final AtomicBoolean disconnecting = new AtomicBoolean(false);
+    private final AtomicBoolean hasContext = new AtomicBoolean(false);
 
     public HttpClientConnector(final URI servletUrl, final UiExecutor uiExecutor, final BackgroundExecutor backgroundExecutor, final ClientModelStore clientModelStore, final Codec codec, final RemotingExceptionHandler onException, final HttpClient client) {
         super(clientModelStore, uiExecutor, new BlindCommandBatcher(), onException, backgroundExecutor);
@@ -67,37 +69,52 @@ public class HttpClientConnector extends AbstractClientConnector {
     public List<Command> transmit(final List<Command> commands) throws RemotingException {
         Assert.requireNonNull(commands, "commands");
 
-        if (disconnecting.get()) {
-            LOG.warn("Canceled communication based on disconnect");
-            return Collections.emptyList();
-        }
+        final List<Command> commandsToSend = new ArrayList<>();
 
-        //block if diconnect is called in other thread (poll / release)
         for (Command command : commands) {
+            if (command instanceof CreateContextCommand) {
+                hasContext.set(true);
+            }
+            if (hasContext.get()) {
+                commandsToSend.add(command);
+            }
             if (command instanceof DestroyContextCommand) {
-                disconnecting.set(true);
+                hasContext.set(false);
             }
         }
 
         try {
-            final String data = codec.encode(commands);
-            final String receivedContent = client.request(servletUrl, RequestMethod.POST).withContent(data, HttpHeaderConstants.JSON_MIME_TYPE).readString().execute().get().getContent();
-            return codec.decode(receivedContent);
+            final String data = codec.encode(commandsToSend);
+
+            connectedFlagLock.lock();
+            try {
+                if (!connectedFlag.get()) {
+                    LOG.warn("No connection, aborting request.");
+                    return Collections.emptyList();
+                }
+
+                final String receivedContent = client.request(servletUrl, RequestMethod.POST).withContent(data, HttpHeaderConstants.JSON_MIME_TYPE).readString().execute().get().getContent();
+                return codec.decode(receivedContent);
+            }
+            finally {
+                connectedFlagLock.unlock();
+            }
         } catch (final Exception e) {
             throw new RemotingException("Error in remoting layer", e);
         }
     }
 
     @Override
-    public void connect() {
-        disconnecting.set(false);
-        super.connect();
-    }
-
-    @Override
     public void disconnect() {
+        if (hasContext.get()) {
+            try {
+                transmit(Collections.singletonList(new DestroyContextCommand()));
+            } catch (RemotingException ignored) {
+                // best effort. If it fails it fails
+                LOG.error("Ignoring exception during destroy command", ignored);
+            }
+        }
         super.disconnect();
-        disconnecting.set(false);
     }
 }
 

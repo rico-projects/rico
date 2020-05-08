@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.ReentrantLock;
 
 import static org.apiguardian.api.API.Status.DEPRECATED;
 
@@ -57,6 +58,8 @@ public abstract class AbstractClientConnector {
 
     protected final AtomicBoolean connectedFlag = new AtomicBoolean(false);
 
+    protected final ReentrantLock connectedFlagLock = new ReentrantLock();
+
     protected final AtomicBoolean useLongPolling = new AtomicBoolean(false);
 
     protected boolean connectionFlagForUiExecutor = false;
@@ -81,15 +84,12 @@ public abstract class AbstractClientConnector {
 
         disconnect();
 
-        uiExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                connectionFlagForUiExecutor = false;
-                if (exception instanceof RemotingException) {
-                    remotingExceptionHandler.handle((RemotingException) exception);
-                } else {
-                    remotingExceptionHandler.handle(new RemotingException("internal remoting error", exception));
-                }
+        uiExecutor.execute(() -> {
+            connectionFlagForUiExecutor = false;
+            if (exception instanceof RemotingException) {
+                remotingExceptionHandler.handle((RemotingException) exception);
+            } else {
+                remotingExceptionHandler.handle(new RemotingException("internal remoting error", exception));
             }
         });
     }
@@ -115,14 +115,10 @@ public abstract class AbstractClientConnector {
                     LOG.trace("Sending {} commands to server", commands.size());
                 }
 
-                final List<? extends Command> answers = transmit(commands);
-
-                uiExecutor.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        processResults(answers, toProcess);
-                    }
-                });
+                if (connectedFlag.get()) {
+                    final List<? extends Command> answers = transmit(commands);
+                    uiExecutor.execute(() -> processResults(answers, toProcess));
+                }
             } catch (Exception e) {
                 if (connectedFlag.get()) {
                     handleError(e);
@@ -130,13 +126,8 @@ public abstract class AbstractClientConnector {
                     LOG.warn("Remoting error based on broken connection in parallel request", e);
                 }
             }
-            if(!longPollingActivated && useLongPolling.get()) {
-                uiExecutor.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        listen();
-                    }
-                });
+            if (!longPollingActivated && useLongPolling.get()) {
+                uiExecutor.execute(this::listen);
                 longPollingActivated = true;
             }
         }
@@ -210,12 +201,9 @@ public abstract class AbstractClientConnector {
 
         releaseNeeded.set(true);
         try {
-            send(pushListener, new OnFinishedHandler() {
-                @Override
-                public void onFinished() {
-                    releaseNeeded.set(false);
-                    listen();
-                }
+            send(pushListener, () -> {
+                releaseNeeded.set(false);
+                listen();
             });
         } catch (Exception e) {
             LOG.error("Error in sending long poll", e);
@@ -232,39 +220,31 @@ public abstract class AbstractClientConnector {
         }
 
         releaseNeeded.set(false);// release is under way
-        backgroundExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    final List<Command> releaseCommandList = new ArrayList<>(Collections.singletonList(releaseCommand));
-                    transmit(releaseCommandList);
-                } catch (RemotingException e) {
-                    handleError(e);
-                }
+        backgroundExecutor.execute(() -> {
+            try {
+                final List<Command> releaseCommandList = new ArrayList<>(Collections.singletonList(releaseCommand));
+                transmit(releaseCommandList);
+            } catch (RemotingException e) {
+                handleError(e);
             }
         });
     }
 
     public void connect(final boolean longPoll) {
-        if (connectedFlag.get()) {
-            throw new IllegalStateException("Can not call connect on a connected connection");
+        connectedFlagLock.lock();
+        try {
+            if (connectedFlag.get()) {
+                throw new IllegalStateException("Can not call connect on a connected connection");
+            }
+
+            connectedFlag.set(true);
+            uiExecutor.execute(() -> connectionFlagForUiExecutor = true);
+
+            backgroundExecutor.execute(this::commandProcessing);
+            useLongPolling.set(longPoll);
+        } finally {
+            connectedFlagLock.unlock();
         }
-
-        connectedFlag.set(true);
-        uiExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                connectionFlagForUiExecutor = true;
-            }
-        });
-
-        backgroundExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                commandProcessing();
-            }
-        });
-        useLongPolling.set(longPoll);
     }
 
     public void connect() {
@@ -272,20 +252,15 @@ public abstract class AbstractClientConnector {
     }
 
     public void disconnect() {
-        if (!connectedFlag.get()) {
-            throw new IllegalStateException("Can not call disconnect on a disconnected connection");
-        }
-        connectedFlag.set(false);
-        uiExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                connectionFlagForUiExecutor = false;
+        connectedFlagLock.lock();
+        try {
+            if (!connectedFlag.get()) {
+                throw new IllegalStateException("Can not call disconnect on a disconnected connection");
             }
-        });
+            connectedFlag.set(false);
+            uiExecutor.execute(() -> connectionFlagForUiExecutor = false);
+        } finally {
+            connectedFlagLock.unlock();
+        }
     }
-
-    protected Command getReleaseCommand() {
-        return releaseCommand;
-    }
-
 }

@@ -16,15 +16,17 @@
  */
 package dev.rico.integrationtests;
 
-import dev.rico.client.Client;
-import dev.rico.client.concurrent.BackgroundExecutor;
 import dev.rico.docker.DockerCompose;
 import dev.rico.docker.Wait;
 import dev.rico.internal.core.Assert;
+import dev.rico.internal.core.SimpleThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.ITest;
+import org.testng.ITestContext;
 import org.testng.annotations.AfterGroups;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeGroups;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -36,6 +38,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -47,9 +51,9 @@ public class AbstractIntegrationTest implements ITest {
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractIntegrationTest.class);
 
-    private ThreadLocal<String> testName = new ThreadLocal<>();
+    private static final ThreadLocal<String> testName = new ThreadLocal<>();
 
-    private final int timeoutInMinutes = 3;
+    private final int timeoutInMinutes = 1;
 
     public static final String ENDPOINTS_DATAPROVIDER = "endpoints";
 
@@ -64,7 +68,7 @@ public class AbstractIntegrationTest implements ITest {
         try {
             final URL dockerComposeURL = AbstractIntegrationTest.class.getClassLoader().getResource("docker-compose.yml");
             final Path dockerComposeFile = Paths.get(dockerComposeURL.toURI());
-            final BackgroundExecutor backgroundExecutor = Client.getService(BackgroundExecutor.class);
+            final Executor backgroundExecutor = Executors.newCachedThreadPool(new SimpleThreadFactory());
             dockerCompose = new DockerCompose(backgroundExecutor, dockerComposeFile);
         } catch (Exception e) {
             throw new RuntimeException("Can not create Docker environment!", e);
@@ -86,15 +90,18 @@ public class AbstractIntegrationTest implements ITest {
     }
 
     @BeforeMethod
-    public void onTest(final Method method, final Object[] data) {
+    public void beforeMethod(final Method method, final Object[] data) {
         Assert.requireNonNull(method, "method");
         Assert.requireNonNull(data, "data");
-        LOG.info("Starting test " + method.getDeclaringClass().getSimpleName() +"." + method.getName() + " for " + data[0]);
+        final String name = method.getDeclaringClass().getSimpleName() + "." + method.getName() + "_" + data[0];
+        LOG.info("Starting test " + name);
+        testName.set(name);
     }
 
-    @BeforeMethod
-    public void BeforeMethod(Method method, Object[] testData){
-        testName.set(method.getName() + "_" + testData[0] + "_" + testData[1]);
+    @AfterMethod
+    public void afterMethod(){
+        final String name = testName.get();
+        LOG.error("DONE test " + name);
     }
 
     @Override
@@ -108,6 +115,11 @@ public class AbstractIntegrationTest implements ITest {
                 .map(e -> new String[]{e.getName(), e.getEndpoint().toString()})
                 .collect(Collectors.toList())
                 .toArray(new String[][]{});
+    }
+
+    @BeforeClass
+    public void setDataProviderThreadCount(ITestContext context) {
+        context.getCurrentXmlTest().getSuite().setDataProviderThreadCount(1);
     }
 
     public int getTimeoutInMinutes() {

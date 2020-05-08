@@ -95,7 +95,7 @@ public class HttpCallResponseBuilderImpl implements HttpCallResponseBuilder {
 
     @Override
     public Promise<HttpResponse<ByteArrayProvider>, HttpException> readBytes() {
-        final ResponseContentConverter<ByteArrayProvider> converter = b -> new SimpleByteArrayProvider(b);
+        final ResponseContentConverter<ByteArrayProvider> converter = SimpleByteArrayProvider::new;
         return createExecutor(converter);
     }
 
@@ -145,7 +145,7 @@ public class HttpCallResponseBuilderImpl implements HttpCallResponseBuilder {
     }
 
     private Promise<HttpResponse<InputStream>, HttpException> createExecutor() {
-        return new HttpCallExecutorImpl<>(configuration, () -> handleRequest());
+        return new HttpCallExecutorImpl<>(configuration, this::handleRequest);
     }
 
     private <R> HttpResponse<R> handleRequest(final ResponseContentConverter<R> converter) throws HttpException {
