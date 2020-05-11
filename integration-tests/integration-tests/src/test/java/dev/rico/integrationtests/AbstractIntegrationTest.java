@@ -23,6 +23,7 @@ import dev.rico.docker.Wait;
 import dev.rico.internal.core.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.ITest;
 import org.testng.annotations.AfterGroups;
 import org.testng.annotations.BeforeGroups;
 import org.testng.annotations.BeforeMethod;
@@ -42,9 +43,11 @@ import static dev.rico.integrationtests.AbstractIntegrationTest.INTEGRATION_TEST
 import static dev.rico.internal.core.http.HttpStatus.HTTP_OK;
 
 @Test(groups = INTEGRATION_TESTS_TEST_GROUP)
-public class AbstractIntegrationTest {
+public class AbstractIntegrationTest implements ITest {
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractIntegrationTest.class);
+
+    private ThreadLocal<String> testName = new ThreadLocal<>();
 
     private final int timeoutInMinutes = 3;
 
@@ -87,6 +90,16 @@ public class AbstractIntegrationTest {
         Assert.requireNonNull(method, "method");
         Assert.requireNonNull(data, "data");
         LOG.info("Starting test " + method.getDeclaringClass().getSimpleName() +"." + method.getName() + " for " + data[0]);
+    }
+
+    @BeforeMethod
+    public void BeforeMethod(Method method, Object[] testData){
+        testName.set(method.getName() + "_" + testData[0] + "_" + testData[1]);
+    }
+
+    @Override
+    public String getTestName() {
+        return testName.get();
     }
 
     @DataProvider(name = ENDPOINTS_DATAPROVIDER, parallel = false)
