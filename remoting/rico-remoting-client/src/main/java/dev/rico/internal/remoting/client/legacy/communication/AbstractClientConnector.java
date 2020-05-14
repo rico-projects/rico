@@ -16,6 +16,7 @@
  */
 package dev.rico.internal.remoting.client.legacy.communication;
 
+import dev.rico.client.concurrent.BackgroundExecutor;
 import dev.rico.internal.remoting.client.legacy.ClientModelStore;
 import dev.rico.internal.remoting.legacy.commands.InterruptLongPollCommand;
 import dev.rico.internal.remoting.legacy.commands.StartLongPollCommand;
@@ -225,12 +226,18 @@ public abstract class AbstractClientConnector {
         }
 
         releaseNeeded.set(false);// release is under way
+
         backgroundExecutor.execute(() -> {
-            try {
-                final List<Command> releaseCommandList = new ArrayList<>(Collections.singletonList(releaseCommand));
-                transmit(releaseCommandList);
-            } catch (RemotingException e) {
-                handleError(e);
+            connectedFlagLock.lock();
+            if (connectedFlag.get()) {
+                try {
+                    final List<Command> releaseCommandList = new ArrayList<>(Collections.singletonList(releaseCommand));
+                    transmit(releaseCommandList);
+                } catch (RemotingException e) {
+                    handleError(e);
+                } finally {
+                    connectedFlagLock.unlock();
+                }
             }
         });
     }
