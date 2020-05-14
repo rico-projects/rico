@@ -91,7 +91,7 @@ public class HttpClientConnector extends AbstractClientConnector {
             connectedFlagLock.lock();
             try {
                 if (!connectedFlag.get()) {
-                    LOG.warn("No connection, aborting request.");
+                    LOG.warn("No connection, aborting request - {}", data);
                     return Collections.emptyList();
                 }
 
