@@ -48,6 +48,7 @@ import java.io.Serializable;
 import java.net.URI;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -129,41 +130,25 @@ public class ClientContextImpl implements ClientContext {
 
     @Override
     public synchronized CompletableFuture<Void> disconnect() {
-        final CompletableFuture<Void> result = new CompletableFuture<>();
-        final BackgroundExecutor backgroundExecutor = Client.getService(BackgroundExecutor.class);
-        backgroundExecutor.execute(() -> {
-            commandHandler.invokeCommand(new DestroyContextCommand()).handle((Void aVoid, Throwable throwable) -> {
-
-                clientConnector.disconnect();
-                clientSessionStore.resetSession(endpoint);
-                if (throwable != null) {
-                    result.completeExceptionally(new RemotingException("Can't disconnect", throwable));
-                } else {
-                    result.complete(null);
-                }
-                return null;
-            });
-        });
-        return result;
+        return commandHandler.
+                invokeCommand(new DestroyContextCommand()).
+                thenAccept(aVoid -> {
+                    clientConnector.disconnect();
+                    clientSessionStore.resetSession(endpoint);
+                }).
+                exceptionally(throwable -> {
+                    throw new CompletionException(new RemotingException("Can't disconnect", throwable));
+                });
     }
 
     @Override
     public CompletableFuture<Void> connect() {
-
-        final CompletableFuture<Void> result = new CompletableFuture<>();
         clientConnector.connect();
-        final BackgroundExecutor backgroundExecutor = Client.getService(BackgroundExecutor.class);
-        backgroundExecutor.execute(() -> {
-            commandHandler.invokeCommand(new CreateContextCommand()).handle((Void aVoid, Throwable throwable) -> {
-                if (throwable != null) {
-                    result.completeExceptionally(new ClientInitializationException("Can't call init action!", throwable));
-                } else {
-                }
-                result.complete(null);
-                return null;
-            });
+        return commandHandler.
+            invokeCommand(new CreateContextCommand()).
+            exceptionally(throwable -> {
+                throw new CompletionException(new ClientInitializationException("Can't call init action!", throwable));
         });
-        return result;
     }
 
     @Override

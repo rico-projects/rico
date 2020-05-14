@@ -101,7 +101,7 @@ public class AbstractIntegrationTest implements ITest {
     @AfterMethod
     public void afterMethod(){
         final String name = testName.get();
-        LOG.error("DONE test " + name);
+        LOG.info("DONE test " + name);
     }
 
     @Override
