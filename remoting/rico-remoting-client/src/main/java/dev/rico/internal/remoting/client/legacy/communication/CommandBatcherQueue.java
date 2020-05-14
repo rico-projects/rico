@@ -43,7 +43,7 @@ public class CommandBatcherQueue implements DataflowQueue<List<CommandAndHandler
                 emptyCondition.await();
             }
             if (internalQueue.isEmpty()) {
-                return null;
+                throw new IllegalStateException("Internal queue must not be empty");
             }
             return internalQueue.remove(0);
         } finally {
