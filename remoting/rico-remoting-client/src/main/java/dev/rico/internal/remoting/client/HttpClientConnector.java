@@ -77,6 +77,8 @@ public class HttpClientConnector extends AbstractClientConnector {
             }
             if (hasContext.get()) {
                 commandsToSend.add(command);
+            } else {
+                LOG.debug("No context - ignoring command: {}", command);
             }
             if (command instanceof DestroyContextCommand) {
                 hasContext.set(false);

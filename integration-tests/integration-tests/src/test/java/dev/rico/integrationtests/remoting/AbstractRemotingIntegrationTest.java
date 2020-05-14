@@ -104,7 +104,7 @@ public class AbstractRemotingIntegrationTest extends AbstractIntegrationTest {
         try {
             clientContext.disconnect().get(getTimeoutInMinutes(), TimeUnit.MINUTES);
         } catch (Exception e) {
-            //do nothing
+            throw new RuntimeException("Can not disconnect from endpoint " + endpoint, e);
         }
     }
 }
