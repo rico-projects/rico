@@ -115,9 +115,14 @@ public abstract class AbstractClientConnector {
                     LOG.trace("Sending {} commands to server", commands.size());
                 }
 
-                if (connectedFlag.get()) {
-                    final List<? extends Command> answers = transmit(commands);
-                    uiExecutor.execute(() -> processResults(answers, toProcess));
+                connectedFlagLock.lock();
+                try {
+                    if (connectedFlag.get()) {
+                        final List<? extends Command> answers = transmit(commands);
+                        uiExecutor.execute(() -> processResults(answers, toProcess));
+                    }
+                } finally {
+                    connectedFlagLock.unlock();
                 }
             } catch (Exception e) {
                 if (connectedFlag.get()) {
