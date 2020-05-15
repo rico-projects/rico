@@ -34,7 +34,7 @@ import static dev.rico.integrationtests.remoting.value.ValueTestConstants.ALL_VA
 public class AllValueTypesTestControllerTest extends AbstractRemotingIntegrationTest {
 
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER)
-    public void testCreationWithAllParameters(final String containerType, final String endpoint) throws ExecutionException, InterruptedException {
+    public void testCreationWithAllParameters(final String containerType, final String endpoint) {
         //given:
         final Map<String, Serializable> parameters = new HashMap<>();
         parameters.put(ValueTestConstants.BIG_DECIMAL_VALUE, BigDecimal.valueOf(100L));
@@ -83,12 +83,12 @@ public class AllValueTypesTestControllerTest extends AbstractRemotingIntegration
         Assert.assertEquals(model.shortValue().get().shortValue(), (short) 1);
         Assert.assertEquals(model.stringValue().get(), "Hello");
 
-        controller.destroy().get();
-        context.disconnect().get();
+        destroy(controller, endpoint);
+        disconnect(context, endpoint);
     }
 
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER)
-    public void testCreationWithPrimitiveParameters(final String containerType, final String endpoint) throws ExecutionException, InterruptedException {
+    public void testCreationWithPrimitiveParameters(final String containerType, final String endpoint) {
         //given:
         final Map<String, Serializable> parameters = new HashMap<>();
         parameters.put(ValueTestConstants.PRIMITIVE_BOOLEAN_VALUE, true);
@@ -126,12 +126,12 @@ public class AllValueTypesTestControllerTest extends AbstractRemotingIntegration
         Assert.assertEquals(model.primitiveLongValue().get().longValue(), 100L);
         Assert.assertEquals(model.primitiveShortValue().get().shortValue(), (short) 1);
 
-        controller.destroy().get();
-        context.disconnect().get();
-    }
+        destroy(controller, endpoint);
+        disconnect(context, endpoint);
+   }
 
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER)
-    public void testCreationWithEmptyParameters(final String containerType, final String endpoint) throws ExecutionException, InterruptedException {
+    public void testCreationWithEmptyParameters(final String containerType, final String endpoint)  {
         //given:
         final Map<String, Serializable> parameters = new HashMap<>();
 
@@ -163,8 +163,8 @@ public class AllValueTypesTestControllerTest extends AbstractRemotingIntegration
         Assert.assertEquals(model.primitiveLongValue().get().longValue(), 0L);
         Assert.assertEquals(model.primitiveShortValue().get().shortValue(), (short) 0);
 
-        controller.destroy().get();
-        context.disconnect().get();
+        destroy(controller, endpoint);
+        disconnect(context, endpoint);
     }
 
     //Currently we do not handle controller creation errors on the client.
@@ -183,7 +183,7 @@ public class AllValueTypesTestControllerTest extends AbstractRemotingIntegration
     }
 
     @Test(dataProvider = ENDPOINTS_DATAPROVIDER)
-    public void testCreationWithoutParameters(final String containerType, final String endpoint) throws ExecutionException, InterruptedException {
+    public void testCreationWithoutParameters(final String containerType, final String endpoint) {
         //when:
         final ClientContext context = connect(endpoint);
         final ControllerProxy<AllValueTypesTestControllerModel> controller = createController(context, ALL_VALUE_TYPES_CONTROLLER);
@@ -212,7 +212,7 @@ public class AllValueTypesTestControllerTest extends AbstractRemotingIntegration
         Assert.assertEquals(model.primitiveLongValue().get().longValue(), 0L);
         Assert.assertEquals(model.primitiveShortValue().get().shortValue(), (short) 0);
 
-        controller.destroy().get();
-        context.disconnect().get();
+        destroy(controller, endpoint);
+        disconnect(context, endpoint);
     }
 }

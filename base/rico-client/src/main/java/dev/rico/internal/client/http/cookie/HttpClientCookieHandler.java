@@ -76,7 +76,7 @@ public class HttpClientCookieHandler {
 
     public void setRequestCookies(final HttpURLConnection connection) throws URISyntaxException {
         Assert.requireNonNull(connection, "connection");
-        LOG.debug("adding cookies from cookie store to request");
+        LOG.debug("Adding cookies from cookie store to request");
         if (cookieStore.getCookies().size() > 0) {
             final String cookieValue = cookieStore.get(connection.getURL().toURI()).stream().
                     map(cookie -> {
@@ -88,7 +88,9 @@ public class HttpClientCookieHandler {
             if (!cookieValue.isEmpty()) {
                 LOG.debug("Adding '{}' header to request. Content: {}", SET_COOKIE_HEADER, cookieValue);
                 connection.setRequestProperty(COOKIE_HEADER, cookieValue);
+                return;
             }
         }
+        LOG.debug("No cookies to add");
     }
 }

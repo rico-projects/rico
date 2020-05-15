@@ -70,11 +70,6 @@ public class TestClientConnectorImpl extends AbstractClientConnector {
     }
 
     @Override
-    public void send(Command command) {
-        send(command, null);
-    }
-
-    @Override
     protected void listen() {
         //TODO: no implementation since EventBus is used in a different way for this tests. Should be refactored in parent class.
     }
@@ -83,7 +78,7 @@ public class TestClientConnectorImpl extends AbstractClientConnector {
     protected List<Command> transmit(List<Command> commands) {
         ArrayList<Command> realCommands = new ArrayList<>(commands);
         realCommands.add(new StartLongPollCommand());
-        return communicationFunction.apply(commands);
+        return communicationFunction.apply(commands); // FIXME: should we pass `realCommands` ??
     }
 
 }

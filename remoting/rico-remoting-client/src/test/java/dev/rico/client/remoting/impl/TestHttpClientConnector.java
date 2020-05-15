@@ -105,6 +105,7 @@ public class TestHttpClientConnector {
 
         final ClientModelStore clientModelStore = new ClientModelStore(new DefaultModelSynchronizer(() -> null));
         final HttpClientConnector connector = new HttpClientConnector(getDummyURL(), uiExecutor, backgroundExecutor, clientModelStore, new JsonCodec(), new SimpleExceptionHandler(), Client.getService(HttpClient.class));
+        connector.connect();
 
         final CreatePresentationModelCommand command = new CreatePresentationModelCommand();
         command.setPmId("p1");
@@ -152,8 +153,8 @@ public class TestHttpClientConnector {
         final UiExecutor uiExecutor = Client.getService(UiExecutor.class);
         final BackgroundExecutor backgroundExecutor = Client.getService(BackgroundExecutor.class);
 
-
         final HttpClientConnector connector = new HttpClientConnector(getDummyURL(), uiExecutor, backgroundExecutor, clientModelStore, new JsonCodec(), new SimpleExceptionHandler(), new HttpClientImpl(new Gson(), Client.getClientConfiguration()));
+        connector.connect();
 
         final List<Command> commands = new ArrayList<>();
         commands.add(new CreateContextCommand());
