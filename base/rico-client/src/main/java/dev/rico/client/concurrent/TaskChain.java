@@ -27,8 +27,6 @@ interface TaskChain {
 
     TaskChain onException(Consumer<Throwable> consumer);
 
-    <T> TaskChainWithInput<T> onException(Function<Throwable, T> function);
-
     CompletableFuture<Void> thenFinally(Runnable runnable);
 
     CompletableFuture<Void> run();
