@@ -2,7 +2,6 @@ package dev.rico.internal.client.concurrent;
 
 import dev.rico.client.concurrent.RunnableTaskChain;
 import dev.rico.core.functional.CheckedFunction;
-import dev.rico.internal.core.Assert;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -60,10 +59,14 @@ abstract class RunnableTaskChainImpl<T> implements RunnableTaskChain<T> {
 
     private Object handleExceptionCase(ChainStep step, Throwable t) {
         try {
-            if (step.taskType != TASK) {
+            if (step.taskType == TASK) {
+                throw t;
+            } else if (step.taskType == EXCEPTION_HANDLER) {
+                return step.task.apply(t);
+            } else {
                 step.task.apply(t);
+                throw t;
             }
-            throw t;
         } catch (Throwable e) {
             throw toRuntimeException(e);
         }
