@@ -12,6 +12,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static java.util.Arrays.asList;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
@@ -55,9 +56,32 @@ public class TaskChainTest {
         chain.get(100, TimeUnit.MILLISECONDS);
 
         // then
-        assertEquals(usedExecutors.size(), 1);
-        assertEquals(usedExecutors.get(0), backgroundExecutor);
+        assertEquals(usedExecutors, asList(backgroundExecutor));
         assertTrue(hasBeenExecuted.get());
+    }
+
+    @Test
+    public void switchingFromAndToUiWorks() throws Exception {
+        // given
+        final AtomicBoolean backgroundHasBeenExecuted = new AtomicBoolean(false);
+        final AtomicBoolean uiHasBeenExecuted = new AtomicBoolean(false);
+        final CompletableFuture<Void> chain = emptyChain
+                .execute(() -> backgroundHasBeenExecuted.set(true))
+                .ui()
+                .execute(() -> uiHasBeenExecuted.set(true))
+                .execute(() -> {})
+                .background()
+                .execute(() -> {})
+                .execute(() -> {})
+                .run();
+
+        // when
+        chain.get(100, TimeUnit.MILLISECONDS);
+
+        // then
+        assertEquals(usedExecutors, asList(backgroundExecutor, uiExecutor, uiExecutor, backgroundExecutor, backgroundExecutor));
+        assertTrue(backgroundHasBeenExecuted.get());
+        assertTrue(uiHasBeenExecuted.get());
     }
 
 
@@ -72,45 +96,44 @@ public class TaskChainTest {
     }
 
     @Test(expectedExceptions = NullPointerException.class)
-    public void throwsNpeForMissingRunnable() throws Exception {
+    public void throwsNpeForMissingRunnable() {
         emptyChain.execute(null);
     }
 
     @Test(expectedExceptions = NullPointerException.class)
-    public void throwsNpeForMissingSupplier() throws Exception {
+    public void throwsNpeForMissingSupplier() {
         emptyChain.supply(null);
     }
 
     @Test(expectedExceptions = NullPointerException.class)
-    public void throwsNpeForMissingExceptionHandler() throws Exception {
+    public void throwsNpeForMissingExceptionHandler() {
         emptyChain.onException(null);
     }
 
     @Test(expectedExceptions = NullPointerException.class)
-    public void throwsNpeForMissingFinally() throws Exception {
+    public void throwsNpeForMissingFinally() {
         emptyChain.thenFinally(null);
     }
 
     @Test(expectedExceptions = NullPointerException.class)
-    public void throwsNpeForMissingMapper() throws Exception {
+    public void throwsNpeForMissingMapper() {
         emptyChain.supply(() -> 0).map(null);
     }
 
     @Test(expectedExceptions = NullPointerException.class)
-    public void throwsNpeForMissingConsumer() throws Exception {
+    public void throwsNpeForMissingConsumer() {
         emptyChain.supply(() -> 0).consume(null);
     }
 
     @Test(expectedExceptions = NullPointerException.class)
-    public void throwsNpeForMissingExceptionHandlerWithOutput() throws Exception {
+    public void throwsNpeForMissingExceptionHandlerWithOutput() {
         emptyChain.supply(() -> 0).onException(null);
     }
 
     @Test(expectedExceptions = NullPointerException.class)
-    public void throwsNpeForMissingFinallyWithOutput() throws Exception {
+    public void throwsNpeForMissingFinallyWithOutput() {
         emptyChain.supply(() -> 0).thenFinally(null);
     }
-
 
 
     private class TestingExecutor implements Executor {
