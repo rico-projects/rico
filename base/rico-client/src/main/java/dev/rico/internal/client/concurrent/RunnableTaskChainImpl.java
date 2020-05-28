@@ -2,11 +2,16 @@ package dev.rico.internal.client.concurrent;
 
 import dev.rico.client.concurrent.RunnableTaskChain;
 import dev.rico.core.functional.CheckedFunction;
+import dev.rico.internal.core.Assert;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.Executor;
+
+import static dev.rico.internal.client.concurrent.TaskType.EXCEPTION_HANDLER;
+import static dev.rico.internal.client.concurrent.TaskType.TASK;
+import static dev.rico.internal.core.Assert.requireNonNull;
 
 abstract class RunnableTaskChainImpl<T> implements RunnableTaskChain<T> {
 
@@ -15,8 +20,8 @@ abstract class RunnableTaskChainImpl<T> implements RunnableTaskChain<T> {
     protected Executor executor;
 
     RunnableTaskChainImpl(List<ChainStep> steps, Executor executor) {
-        this.steps = steps;
-        this.executor = executor;
+        this.steps = requireNonNull(steps, "steps");
+        this.executor = requireNonNull(executor, "executor");
     }
 
     void switchExecutor(Executor executor) {
@@ -43,7 +48,7 @@ abstract class RunnableTaskChainImpl<T> implements RunnableTaskChain<T> {
 
     private Object handleNormalCase(ChainStep step, Object input) {
         try {
-            if (step.taskType == TaskType.EXCEPTION_HANDLER) {
+            if (step.taskType == EXCEPTION_HANDLER) {
                 return input;
             } else {
                 return step.task.apply(input);
@@ -55,11 +60,10 @@ abstract class RunnableTaskChainImpl<T> implements RunnableTaskChain<T> {
 
     private Object handleExceptionCase(ChainStep step, Throwable t) {
         try {
-            if (step.taskType == TaskType.TASK) {
-                throw t;
-            } else {
-                return step.task.apply(t);
+            if (step.taskType != TASK) {
+                step.task.apply(t);
             }
+            throw t;
         } catch (Throwable e) {
             throw toRuntimeException(e);
         }

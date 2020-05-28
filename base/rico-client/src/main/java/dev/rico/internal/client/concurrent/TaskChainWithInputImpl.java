@@ -10,19 +10,22 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.function.Function;
 
+import static dev.rico.internal.core.Assert.requireNonNull;
+
 class TaskChainWithInputImpl<T> extends RunnableTaskChainImpl<T> implements TaskChainWithInput<T> {
     private final Executor backgroundExecutor;
     private final Executor uiExecutor;
 
     TaskChainWithInputImpl(List<RunnableTaskChainImpl.ChainStep> steps, Executor executor, Executor backgroundExecutor, Executor uiExecutor) {
         super(steps, executor);
-        this.backgroundExecutor = backgroundExecutor;
-        this.uiExecutor = uiExecutor;
+        this.backgroundExecutor = requireNonNull(backgroundExecutor, "backgroundExecutor");
+        this.uiExecutor = requireNonNull(uiExecutor, "uiExecutor");
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <U> TaskChainWithInput<U> map(CheckedFunction<T, U> function) {
+        requireNonNull(function, "function");
         steps.add(new ChainStep(executor, TaskType.TASK, i -> function.apply((T) i)));
         return (TaskChainWithInput<U>) this;
     }
@@ -30,6 +33,7 @@ class TaskChainWithInputImpl<T> extends RunnableTaskChainImpl<T> implements Task
     @Override
     @SuppressWarnings("unchecked")
     public TaskChain consume(CheckedConsumer<T> consumer) {
+        requireNonNull(consumer, "consumer");
         steps.add(new ChainStep(executor, TaskType.TASK, i -> {consumer.accept((T) i); return null;}));
         return new TaskChainImpl(steps, executor, backgroundExecutor, uiExecutor);
     }
@@ -48,13 +52,15 @@ class TaskChainWithInputImpl<T> extends RunnableTaskChainImpl<T> implements Task
 
     @Override
     public TaskChainWithInput<T> onException(Function<Throwable, T> exceptionHandler) {
+        requireNonNull(exceptionHandler, "exceptionHandler");
         steps.add(new ChainStep(executor, TaskType.EXCEPTION_HANDLER, i -> exceptionHandler.apply((Throwable) i)));
         return this;
     }
 
     @Override
     public RunnableTaskChain<T> thenFinally(Runnable runnable) {
-        steps.add(new ChainStep(executor, TaskType.FINALLY, i -> {runnable.run(); return null;}));
+        requireNonNull(runnable, "runnable");
+        steps.add(new ChainStep(executor, TaskType.FINALLY, i -> {runnable.run(); return i;}));
         return this;
     }
 }
