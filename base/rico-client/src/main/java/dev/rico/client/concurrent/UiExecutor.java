@@ -1,5 +1,7 @@
 package dev.rico.client.concurrent;
 
+import dev.rico.client.Client;
+import dev.rico.internal.client.concurrent.TaskChainImpl;
 import dev.rico.internal.core.Assert;
 
 import java.util.concurrent.CompletableFuture;
@@ -21,4 +23,19 @@ public interface UiExecutor extends Executor {
         return future;
     }
 
+    default TaskChain createUiTaskChain() {
+        return createBackgroundTaskChain().ui();
+    }
+
+    default TaskChain createUiTaskChain(Executor backgroundExecutor) {
+        return createBackgroundTaskChain(backgroundExecutor).ui();
+    }
+
+    default TaskChain createBackgroundTaskChain() {
+        return createBackgroundTaskChain(Client.getService(BackgroundExecutor.class));
+    }
+
+    default TaskChain createBackgroundTaskChain(Executor backgroundExecutor) {
+        return new TaskChainImpl(backgroundExecutor, this);
+    }
 }
