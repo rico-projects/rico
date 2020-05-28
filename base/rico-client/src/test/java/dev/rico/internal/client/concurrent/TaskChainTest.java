@@ -7,12 +7,13 @@ import org.testng.annotations.Test;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static java.util.Arrays.asList;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
@@ -41,7 +42,7 @@ public class TaskChainTest {
         final CompletableFuture<Void> chain = emptyChain.run();
 
         // then
-        chain.get(100, TimeUnit.MILLISECONDS);
+        chain.get(100, MILLISECONDS);
     }
 
     @Test
@@ -53,7 +54,7 @@ public class TaskChainTest {
                 .run();
 
         // when
-        chain.get(100, TimeUnit.MILLISECONDS);
+        chain.get(100, MILLISECONDS);
 
         // then
         assertEquals(usedExecutors, asList(backgroundExecutor));
@@ -69,19 +70,75 @@ public class TaskChainTest {
                 .execute(() -> backgroundHasBeenExecuted.set(true))
                 .ui()
                 .execute(() -> uiHasBeenExecuted.set(true))
-                .execute(() -> {})
+                .execute(() -> {
+                })
                 .background()
-                .execute(() -> {})
-                .execute(() -> {})
+                .execute(() -> {
+                })
+                .execute(() -> {
+                })
                 .run();
 
         // when
-        chain.get(100, TimeUnit.MILLISECONDS);
+        chain.get(100, MILLISECONDS);
 
         // then
         assertEquals(usedExecutors, asList(backgroundExecutor, uiExecutor, uiExecutor, backgroundExecutor, backgroundExecutor));
         assertTrue(backgroundHasBeenExecuted.get());
         assertTrue(uiHasBeenExecuted.get());
+    }
+
+    @Test
+    public void getResultOfChain() throws Exception {
+        // given
+        final CompletableFuture<Integer> chain = emptyChain
+                .supply(() -> 42)
+                .run();
+
+        // when
+        final Integer result = chain.get(100, MILLISECONDS);
+
+        // then
+        assertEquals(result, (Integer) 42);
+    }
+
+    @Test
+    public void getPassResultToOtherThread() throws Exception {
+        // given
+        final CompletableFuture<Integer> chain = emptyChain
+                .supply(() -> 7)
+                .ui()
+                .map(i -> i * 3)
+                .background()
+                .map(i -> i * 2)
+                .run();
+
+        // when
+        final Integer result = chain.get(100, MILLISECONDS);
+
+        // then
+        assertEquals(result, (Integer) 42);
+    }
+
+    @Test
+    public void completeExceptionally() throws Exception {
+        // given
+        final IllegalArgumentException ex = new IllegalArgumentException("bla");
+        final CompletableFuture<Void> chain = emptyChain
+                .execute(() -> {
+                    throw ex;
+                })
+                .run();
+
+        // when
+        try {
+            chain.get(100, MILLISECONDS);
+        }
+
+        // then
+        catch (ExecutionException e) {
+            assertEquals(e.getCause(), ex);
+        }
     }
 
 
