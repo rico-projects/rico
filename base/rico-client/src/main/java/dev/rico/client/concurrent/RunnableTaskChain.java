@@ -9,9 +9,9 @@ import java.util.concurrent.CompletableFuture;
  */
 public interface RunnableTaskChain<T> {
     /**
-     * Completes the batch and triggers its execution.
+     * Completes the chain and triggers its execution.
      *
-     * @return a future which will be completed once all tasks of the batch have completed
+     * @return a future which will be completed once all tasks of the chain have completed
      */
     CompletableFuture<T> run();
 }
