@@ -2,7 +2,6 @@ import dev.rico.client.spi.ServiceProvider;
 import dev.rico.core.http.spi.RequestHandlerProvider;
 import dev.rico.core.http.spi.ResponseHandlerProvider;
 import dev.rico.internal.client.concurrent.BackgroundExecutorProvider;
-import dev.rico.internal.client.concurrent.ProcessChainProvider;
 import dev.rico.internal.client.concurrent.SchedulerProvider;
 import dev.rico.internal.client.concurrent.UiExecutorProvider;
 import dev.rico.internal.client.context.ContextManagerServiceProvider;
@@ -37,7 +36,6 @@ module dev.rico.client {
             CookieHandlerProvider,
             ContextManagerServiceProvider,
             SchedulerProvider,
-            ProcessChainProvider,
             BackgroundExecutorProvider,
             UiExecutorProvider;
 
