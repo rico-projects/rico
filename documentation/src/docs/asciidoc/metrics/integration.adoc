@@ -54,13 +54,9 @@ Rico metrics provide the following configuration properties:
 
 |metrics.active
 |true
-|Cell in column 3, row 1
+|Defines if the metrics should be active (if the metrics module will be bootstrapped)
 
 |metrics.endpoint
 |/metrics
-|Cell in column 3, row 2
-
-|metrics.noop
-|false
-|Cell in column 3, row 2
+|Defines the endpoint for prometheus
 |===

@@ -2,4 +2,4 @@ ifndef::imagesdir[:imagesdir: ../images]
 
 === Provide metrics for monitoring
 
-todo
+An application that uses Rico metrics will provide a `/metrics` endpoint by default.
