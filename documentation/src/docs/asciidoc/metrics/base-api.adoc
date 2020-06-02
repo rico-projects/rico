@@ -98,8 +98,73 @@ Examples where a counter can be used:
 
 ==== Gauge
 
-todo
+A gauge defines a number based metric.
+The value of a gauge can be set to any number between `Long.MIN_VALUE` and `Long.MAX_VALUE`.
+A gauge is defined by the `dev.rico.metrics.types.Gauge` interface and instances should be created by using the factory methods of the `dev.rico.metrics.Metrics` interface.
+The `dev.rico.metrics.types.Gauge` interface provides a method to set the value of the gauge.
+
+The following sample shows how a gauge can be used:
+
+[source,java]
+----
+final Metric metrics = .... // <1>
+
+final Gauge gauge = metrics.getOrCreateCounter("user-count"); // <2>
+final long userCount = getUserCount();
+gauge.setValue(userCount); // <2>
+----
+<1> it depends on your environment how you will get an instance
+<2> creates the gauge metric or returns it if a gauge metric with the given name exists
+<3> set the value of the gauge
+
+Examples where a gauge can be used:
+
+- measure how many users are logged in
+- measure how many threads are running
+- measure the CPU usage
 
 ==== Timer
 
-todo
+A timer defines a duration based metric.
+The value of a times can be set to any duration.
+To define a duration `java.util.concurrent.TimeUnit` is used.
+A gauge is defined by the `dev.rico.metrics.types.Timer` interface and instances should be created by using the factory methods of the `dev.rico.metrics.Metrics` interface.
+The `dev.rico.metrics.types.Timer` interface provides several methods to record the duration of a task.
+
+The following sample shows how a timer can be used:
+
+[source,java]
+----
+final Metric metrics = .... // <1>
+
+final Timer timer = metrics.getOrCreateTimer("server-request-timer"); // <2>
+final long start = System.currentTimeMillis();
+try {
+    doServerRequest();
+} finally {
+    final long end = System.currentTimeMillis();
+    timer.record(end - start, TimeUnit.MILLISECONDS); // <3>
+}
+----
+<1> it depends on your environment how you will get an instance
+<2> creates the gauge metric or returns it if a gauge metric with the given name exists
+<3> records the duration of the task
+
+The `dev.rico.metrics.types.Timer` interface provides some methods that make the recording of a duration much easier.
+The following code snippte does exactly the same as the last one:
+
+[source,java]
+----
+final Metric metrics = .... // <1>
+
+final Timer timer = metrics.getOrCreateTimer("server-request-timer");
+timer.record(() -> doServerRequest()); // <2>
+----
+<1> it depends on your environment how you will get an instance
+<2> creates the gauge metric or returns it if a gauge metric with the given name exists
+<3> records the duration of the task
+
+Examples where a timer can be used:
+
+- measure the duration of a request
+- measure the duration of a DB call
