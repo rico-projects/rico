@@ -3,3 +3,59 @@ ifndef::imagesdir[:imagesdir: ../images]
 === Provide metrics for monitoring
 
 An application that uses Rico metrics will provide a `/metrics` endpoint by default.
+This endpopint provides all metrics information in a format that can be read by https://prometheus.io[prometheus].
+Based on this a custom monitoring solution can be created.
+
+==== Using Prometheus
+
+Prometheus is a open source monitoring system and time series database.
+A correctly configured Prometheus instance can fetch the metrics of a running application and store them in timeseries.
+
+.Metrics interfaces
+image:connect-prometheus.svg[]
+
+The easiest way to use Prometheus is by docker.
+Prometheus already provides ready-to-use docker containers that fit perfect to Rico metrics.
+Only the endpoint of the application or applications must be configured.
+To do so we can create a custom configuration for Prometheus in a `prometheus.yml` YAML file:
+
+[source,yml]
+----
+global:
+  scrape_interval:     10s # <1>
+
+scrape_configs:
+  - job_name: 'rico-metrics' # <2>
+
+    metrics_path: '/metrics' # <3>
+    static_configs:
+      - targets: ['app-server:8080'] # <4>
+----
+<1> This defines the interval in that Prometheus will fetch metrics records from the server
+<2> Name of the internal job that will fetch the data
+<3> The endpoint on the server.
+Here we use the default `/metrics`
+<4> An array of servers.
+Prometheus will try to fetch metrics records from each servewr in this array
+
+Next to this wer need to create a Docker file that extends the default Docker image from Prometheus and adds our custom configuration:
+
+[source,docker]
+----
+FROM prom/prometheus:v2.18.1
+MAINTAINER Hendrik Ebbers, karakun.com
+ADD prometheus.yml /etc/prometheus/
+----
+
+todo: short description of UI / pic of prometheus
+
+==== Predefined and custom metrics
+
+todo: How to query metrics.
+What kind of metrics will Rico provide by default (cpu, threads, ...) ...
+
+==== Grafana
+
+todo: How to create reuseable dashboards with Grafana
+
+

@@ -37,6 +37,28 @@ public class ServerApplication {
 
 The metrics API of Rico provides a managed bean for the `dev.rico.metrics.Metrics` interface.
 In both Spring and JakartaEE the bean is provided as a singleton and can be injected in any other managed bean.
+The following sample shows how metrics can be injected and used in a Spring based REST endpoint:
+
+[source,java]
+----
+@RestController
+@RequestMapping("/api/sample")
+public class SampleEndpoint {
+
+    private final Metrics metrics;
+
+    @Autowired
+    public SampleEndpoint(final Metrics metrics) {
+        this.metrics = metrics;
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    public void doMetrics() throws Exception {
+        final Counter counter = metrics.getOrCreateCounter("myCounter");
+        counter.increment();
+    }
+}
+----
 
 ==== Metrics endpoint
 
