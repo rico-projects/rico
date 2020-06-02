@@ -1,0 +1,105 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+=== The Metrics API
+
+The `rico-metrics` module (`dev.rico.metrics` jigsaw module) provides the basic interfaces of the metrics api.
+The `dev.rico.metrics.Metrics` interface provides factory methods to create or access metrics.
+Currenty 3 different metric types are supported:
+
+- `dev.rico.metrics.types.Counter`
+- `dev.rico.metrics.types.Gauge`
+- `dev.rico.metrics.types.Timer`
+
+All this metric types extend the common interface `dev.rico.metrics.Metric` as you can see in the following graph:
+
+.Metrics interfaces
+image:metrics-interface.svg[]
+
+As we will see later you receive an instance of the `dev.rico.metrics.Metrics`
+interface depending on your environment (Java client, Spring, Jakarta...).
+You should always use this instance to create or access metrics.
+
+The following example shows how a timer is created an used:
+
+[source,java]
+----
+final Metric metrics = .... // <1>
+
+final Timer timer = metrics.getOrCreateTimer("server-request-timer"); // <2>
+final long start = System.currentTimeMillis(); // <3>
+doServerRequest(); // <4>
+final long end = System.currentTimeMillis(); // <5>
+timer.record(end - start, TimeUnit.MILLISECONDS); // <6>
+----
+<1> it depends on your environment how you will get an instance
+<2> creates the timer metric or returns it if a timer metric with the given name exists
+<3> the start time
+<4> here a task is executed.
+The main goal of the code snippet is to measure the execution time of this task
+<5> the end time
+<6> the execution time of the task is recorded by the timer
+
+The timer metric that is used in the given snippet can be used later to visualize the execution time of the server request in a dashboard or trigger specific alarms for long running tasks.
+The following image shows how such result might look like in a monitoring dashboard by showing a graph of all the timer recordings over time:
+
+.sample graph based on metric
+image:diagram-sample.png[]
+
+==== Metrics
+
+As already mentioned all metrics in Rico implement the `dev.rico.metrics.Metric`
+interface.This provides access to the name and context information of the metric.
+The name of a metric is always unique and can not be changed.
+All factory methods for metrics in the `dev.rico.metrics.Metrics` interface will only create a new metric of no metric with the given name exists.
+Otherwise the existing metric will be returned.
+By doing so you can always receive all values of a metric for monitoring and maintenance issues later by knowing the unique name of the metric.
+
+Next to the name a `dev.rico.metrics.Metric` instance provides a context.
+Such context is defined by the Rico context API.
+At the moment only the global context of the Rico context is used for metrics.
+The thread context is never added to the context of a metric.
+Next to this custom values can be added to the context of a metric by passing them to the specific factory methods of the `dev.rico.metrics.Metrics` interface.
+
+[NOTE]
+====
+You might ask yourself why the thread specific context values are not automatically added to the context of a metric.
+This is an issue that should be discussed in future and might change based on discussions.
+The context of a metric is defined once the metric is created.
+A metric can be used any time later to record values in a totally different thread.
+If we would add the thread based context values of Rico at creation time of the metric we might end in a wrong information when using the metric later for monitoring.
+====
+
+==== Counter
+
+A counter defines a number based metric that can only be incremented (up to `Long.MAX_VALUE`).
+A counter is defined by the `dev.rico.metrics.types.Counter` interface and instances should be created by using the factory methods of the `dev.rico.metrics.Metrics` interface.
+The `dev.rico.metrics.types.Counter` interface provides a method to increment the counter by a given number and a convenience method to increment the counter by 1.
+
+The following sample shows how a counter can be used:
+
+[source,java]
+----
+final Metric metrics = .... // <1>
+
+final Counter counter = metrics.getOrCreateCounter("server-request-call-counter"); // <2>
+try {
+    doServerRequest();
+} finally {
+    counter.increment(); // <3>
+}
+----
+<1> it depends on your environment how you will get an instance
+<2> creates the counter metric or returns it if a counter metric with the given name exists
+<3> here the counter is incremented.
+
+Examples where a counter can be used:
+
+- measure how often a specific functionallity is called
+
+==== Gauge
+
+todo
+
+==== Timer
+
+todo
