@@ -21,6 +21,7 @@ import dev.rico.metrics.Metric;
 
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 public interface Timer extends Metric {
 
@@ -29,5 +30,24 @@ public interface Timer extends Metric {
     default void record(final Duration duration) {
         Assert.requireNonNull(duration, "duration");
         record(duration.toNanos(), TimeUnit.NANOSECONDS);
+    }
+
+    default void record(final Runnable task) {
+        Assert.requireNonNull(task, "task");
+        final Supplier<Void> supplier = () -> {
+            task.run();
+            return null;
+        };
+        record(supplier);
+    }
+
+    default <T> T record(final Supplier<T> task) {
+        Assert.requireNonNull(task, "task");
+        final long nanos = System.nanoTime();
+        try {
+            return task.get();
+        } finally {
+            record(System.nanoTime() - nanos, TimeUnit.NANOSECONDS);
+        }
     }
 }
