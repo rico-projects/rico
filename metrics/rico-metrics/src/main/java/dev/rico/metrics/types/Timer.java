@@ -16,12 +16,13 @@
  */
 package dev.rico.metrics.types;
 
+import dev.rico.core.functional.CheckedRunnable;
+import dev.rico.core.functional.CheckedSupplier;
 import dev.rico.internal.core.Assert;
 import dev.rico.metrics.Metric;
 
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Supplier;
 
 public interface Timer extends Metric {
 
@@ -32,16 +33,25 @@ public interface Timer extends Metric {
         record(duration.toNanos(), TimeUnit.NANOSECONDS);
     }
 
-    default void record(final Runnable task) {
+    default void record(final Runnable task) throws Exception {
         Assert.requireNonNull(task, "task");
-        final Supplier<Void> supplier = () -> {
+        final CheckedSupplier<Void> supplier = () -> {
             task.run();
             return null;
         };
         record(supplier);
     }
 
-    default <T> T record(final Supplier<T> task) {
+    default void record(final CheckedRunnable task) throws Exception {
+        Assert.requireNonNull(task, "task");
+        final CheckedSupplier<Void> supplier = () -> {
+            task.run();
+            return null;
+        };
+        record(supplier);
+    }
+
+    default <T> T record(final CheckedSupplier<T> task) throws Exception {
         Assert.requireNonNull(task, "task");
         final long nanos = System.nanoTime();
         try {
