@@ -7,6 +7,6 @@ Next to this Rico metrics add preconfigured endpoints to collect and visualize s
 
 include::base-api.adoc[]
 
-include::managed-beans.adoc[]
+include::integration.adoc[]
 
 include::provide-metrics.adoc[]

@@ -1,5 +1,0 @@
-ifndef::imagesdir[:imagesdir: ../images]
-
-=== Managed beans of the Metrics API
-
-todo
