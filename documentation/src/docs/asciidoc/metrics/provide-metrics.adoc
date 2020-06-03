@@ -47,6 +47,8 @@ MAINTAINER Hendrik Ebbers, karakun.com
 ADD prometheus.yml /etc/prometheus/
 ----
 
+////
+
 todo: short description of UI / pic of prometheus
 
 ==== Predefined and custom metrics
@@ -58,4 +60,5 @@ What kind of metrics will Rico provide by default (cpu, threads, ...) ...
 
 todo: How to create reuseable dashboards with Grafana
 
+////
 
