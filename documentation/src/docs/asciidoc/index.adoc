@@ -6,8 +6,6 @@ include::metrics/index.adoc[]
 
 include::remoting/index.adoc[]
 
-include::build-doc/build-rico.adoc[]
-
-include::build-doc/project-structure.adoc[]
+include::build-doc/index.adoc[]
 
 include::documentation-best-practices.adoc[]
