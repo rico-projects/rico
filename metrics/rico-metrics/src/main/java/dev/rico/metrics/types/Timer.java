@@ -33,15 +33,6 @@ public interface Timer extends Metric {
         record(duration.toNanos(), TimeUnit.NANOSECONDS);
     }
 
-    default void record(final Runnable task) throws Exception {
-        Assert.requireNonNull(task, "task");
-        final CheckedSupplier<Void> supplier = () -> {
-            task.run();
-            return null;
-        };
-        record(supplier);
-    }
-
     default void record(final CheckedRunnable task) throws Exception {
         Assert.requireNonNull(task, "task");
         final CheckedSupplier<Void> supplier = () -> {
