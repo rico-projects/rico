@@ -26,7 +26,6 @@ public class AssertTest {
 
     @Test
     public void testRequireNonNull() {
-        org.testng.Assert.fail();
         Assert.requireNonNull("Hello", "message");
     }
 
