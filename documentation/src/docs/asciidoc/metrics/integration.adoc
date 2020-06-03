@@ -30,7 +30,7 @@ public class ServerApplication {
 }
 
 ----
-<1> it depends on your environment how you will get an instance
+<1> Default Rico Spring Boot annotation
 <2> Enables Metrics support for Spring
 
 ==== Managed beans of the Metrics API
