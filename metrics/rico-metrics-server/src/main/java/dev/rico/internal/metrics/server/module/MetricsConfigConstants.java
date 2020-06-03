@@ -31,9 +31,4 @@ public interface MetricsConfigConstants {
     String METRICS_ENDPOINT_PROPERTY = "metrics.endpoint";
 
     String METRICS_ENDPOINT_DEFAULT = "/metrics";
-
-    String METRICS_NOOP_PROPERTY = "metrics.noop";
-
-    boolean METRICS_NOOP_DEFAULT = false;
-
 }

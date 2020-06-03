@@ -45,7 +45,6 @@ import java.util.List;
 
 import static dev.rico.internal.metrics.server.module.MetricsConfigConstants.METRICS_ACTIVE_PROPERTY;
 import static dev.rico.internal.metrics.server.module.MetricsConfigConstants.METRICS_ENDPOINT_PROPERTY;
-import static dev.rico.internal.metrics.server.module.MetricsConfigConstants.METRICS_NOOP_PROPERTY;
 import static dev.rico.internal.metrics.server.module.MetricsConfigConstants.METRICS_SERVLET_FILTER_NAME;
 import static dev.rico.internal.metrics.server.module.MetricsConfigConstants.METRICS_SERVLET_NAME;
 import static dev.rico.internal.metrics.server.module.MetricsConfigConstants.MODULE_NAME;
@@ -73,27 +72,24 @@ public class MetricsModule extends AbstractBaseModule {
         final Configuration configuration = coreComponents.getConfiguration();
         final ServletContext servletContext = coreComponents.getInstance(ServletContext.class);
 
-        if(!configuration.getBooleanProperty(METRICS_NOOP_PROPERTY, true)) {
+        final PrometheusMeterRegistry prometheusRegistry = new PrometheusMeterRegistry(PrometheusConfig.DEFAULT);
 
-            final PrometheusMeterRegistry prometheusRegistry = new PrometheusMeterRegistry(PrometheusConfig.DEFAULT);
+        final List<Tag> tagList = TagUtil.convertTags(ContextManagerImpl.getInstance().getGlobalContexts());
 
-            final List<Tag> tagList = TagUtil.convertTags(ContextManagerImpl.getInstance().getGlobalContexts());
+        new ClassLoaderMetrics(tagList).bindTo(prometheusRegistry);
+        new JvmMemoryMetrics(tagList).bindTo(prometheusRegistry);
+        new JvmGcMetrics(tagList).bindTo(prometheusRegistry);
+        new ProcessorMetrics(tagList).bindTo(prometheusRegistry);
+        new JvmThreadMetrics(tagList).bindTo(prometheusRegistry);
 
-            new ClassLoaderMetrics(tagList).bindTo(prometheusRegistry);
-            new JvmMemoryMetrics(tagList).bindTo(prometheusRegistry);
-            new JvmGcMetrics(tagList).bindTo(prometheusRegistry);
-            new ProcessorMetrics(tagList).bindTo(prometheusRegistry);
-            new JvmThreadMetrics(tagList).bindTo(prometheusRegistry);
+        servletContext.addFilter(METRICS_SERVLET_FILTER_NAME, new RequestMetricsFilter())
+                .addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, ALL_URL_MAPPING);
 
-            servletContext.addFilter(METRICS_SERVLET_FILTER_NAME, new RequestMetricsFilter())
-                    .addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, ALL_URL_MAPPING);
+        servletContext.addListener(new MetricsHttpSessionListener());
 
-            servletContext.addListener(new MetricsHttpSessionListener());
+        servletContext.addServlet(METRICS_SERVLET_NAME, new MetricsServlet(prometheusRegistry))
+                .addMapping(configuration.getProperty(METRICS_ENDPOINT_PROPERTY));
 
-            servletContext.addServlet(METRICS_SERVLET_NAME, new MetricsServlet(prometheusRegistry))
-                    .addMapping(configuration.getProperty(METRICS_ENDPOINT_PROPERTY));
-
-            MetricsImpl.getInstance().init(prometheusRegistry);
-        }
+        MetricsImpl.getInstance().init(prometheusRegistry);
     }
 }
