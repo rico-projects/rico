@@ -12,8 +12,6 @@ before_install:
   - echo sdkman_auto_selfupdate=true >> $HOME/.sdkman/etc/config
   - source "/home/travis/.sdkman/bin/sdkman-init.sh"
 
-# script: "./gradlew clean build --info"
-
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
