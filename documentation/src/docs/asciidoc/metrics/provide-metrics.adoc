@@ -36,9 +36,9 @@ scrape_configs:
 <3> The endpoint on the server.
 Here we use the default `/metrics`
 <4> An array of servers.
-Prometheus will try to fetch metrics records from each servewr in this array
+Prometheus will try to fetch metrics records from each server in this array
 
-Next to this wer need to create a Docker file that extends the default Docker image from Prometheus and adds our custom configuration:
+Next to this we need to create a Docker file that extends the default Docker image from Prometheus and adds our custom configuration:
 
 [source,docker]
 ----
