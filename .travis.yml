@@ -30,6 +30,6 @@ jobs:
       name: "Build & Test"
       script: ./gradlew clean build --info
     - stage: "Deploy"
-      if: branch = travis-deploy-test
+      if: branch = master
       name: "Deploy to JFrog OSS"
       script: ./gradlew artifactoryPublish -x test
