@@ -12,10 +12,7 @@ before_install:
   - echo sdkman_auto_selfupdate=true >> $HOME/.sdkman/etc/config
   - source "/home/travis/.sdkman/bin/sdkman-init.sh"
 
-install:
-  - sdk install java 11.0.6.hs-adpt || true
-
-script: "./gradlew clean build --info"
+# script: "./gradlew clean build --info"
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -27,3 +24,12 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 
+jobs:
+  include:
+    - stage: "Build"
+      name: "Build & Test"
+      script: ./gradlew clean build --info
+    - stage: "Deploy"
+      if: branch = master
+      name: "Deploy to JFrog OSS"
+      script: ./gradlew artifactoryPublish -x test
