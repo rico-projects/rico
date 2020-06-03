@@ -1,0 +1,84 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+=== Server integration and usage
+
+Rico metrics can be used in Spring Boot and JakartaEE based application.
+While the metrics API is not incompatible with other application frameworks an integration is currently missing.
+
+==== Integration in JakartaEE
+
+Metrics will be automatically active once the `dev.rico.metrics.server.javaee` java module is on the classpath.
+
+[NOTE]
+====
+After the migration to Java 11 and Java modules the metrics functionallity was never tested in a JakartaEE based app.
+====
+
+==== Integration in Spring
+
+In Spring the configuration of the application must be annotated with the `dev.rico.metrics.server.spring.EnableMetrics` annotation:
+
+[source,java]
+----
+@RicoApplication // <1>
+@EnableMetrics // <2>
+public class ServerApplication {
+
+    public static void main(final String[] args) {
+        SpringApplication.run(ServerApplication.class);
+    }
+}
+
+----
+<1> Default Rico Spring Boot annotation
+<2> Enables Metrics support for Spring
+
+==== Managed beans of the Metrics API
+
+The metrics API of Rico provides a managed bean for the `dev.rico.metrics.Metrics` interface.
+In both Spring and JakartaEE the bean is provided as a singleton and can be injected in any other managed bean.
+The following sample shows how metrics can be injected and used in a Spring based REST endpoint:
+
+[source,java]
+----
+@RestController
+@RequestMapping("/api/sample")
+public class SampleEndpoint {
+
+    private final Metrics metrics;
+
+    @Autowired
+    public SampleEndpoint(final Metrics metrics) {
+        this.metrics = metrics;
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    public void doMetrics() throws Exception {
+        final Counter counter = metrics.getOrCreateCounter("myCounter");
+        counter.increment();
+    }
+}
+----
+
+==== Metrics endpoint
+
+To provide the metrics to an external tool for monitoring an endpoint is needed.
+Rico metrics provide a http endpoint that implements the protocol that is needed for https://prometheus.io[prometheus].
+The endpoint is provided by default at `/metrics` but can be configured by the `metrics.endpoint` property.
+
+==== Configuration properties
+
+Rico metrics provide the following configuration properties:
+
+.Metrics configuration properties
+|===
+|property name |default value |description
+
+|metrics.active
+|true
+|Defines if the metrics should be active (if the metrics module will be bootstrapped)
+
+|metrics.endpoint
+|/metrics
+|Defines the endpoint for prometheus
+|===
