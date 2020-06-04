@@ -7,6 +7,7 @@ module dev.rico.metrics {
             dev.rico.metrics.server.spring;
 
     requires transitive dev.rico.core;
+    requires static org.apiguardian.api;
     requires micrometer.core;
     requires org.slf4j;
 }
