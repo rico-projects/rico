@@ -16,7 +16,7 @@
  */
 package dev.rico.internal.metrics;
 
-import dev.rico.core.lang.Tuple;
+import dev.rico.core.lang.StringPair;
 import dev.rico.internal.core.Assert;
 import io.micrometer.core.instrument.Tag;
 
@@ -30,8 +30,8 @@ public final class TagUtil {
     private TagUtil() {
     }
 
-    @SafeVarargs
-    public static List<Tag> convertTags(final Tuple<String, String>... contexts) {
+    public static List<Tag> convertTags(final StringPair... contexts) {
+        Assert.requireNonNull(contexts, "contexts");
         return Arrays.stream(contexts)
                 .map(t -> Tag.of(t.getKey(), t.getValue()))
                 .collect(Collectors.toList());

@@ -16,7 +16,7 @@
  */
 package dev.rico.internal.server.context;
 
-import dev.rico.core.lang.Tuple;
+import dev.rico.core.lang.StringPair;
 import dev.rico.internal.core.Assert;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,27 +26,27 @@ public final class ContextServerUtil {
 
     private ContextServerUtil() {}
 
-    public static Tuple<String, String> createPortTag(final HttpServletRequest request) {
+    public static StringPair createPortTag(final HttpServletRequest request) {
         Assert.requireNonNull(request, "request");
-        return Tuple.of("port", String.valueOf(request.getServerPort()));
+        return StringPair.of("port", String.valueOf(request.getServerPort()));
     }
 
-    public static Tuple<String, String> createMethodTag(final HttpServletRequest request) {
+    public static StringPair createMethodTag(final HttpServletRequest request) {
         Assert.requireNonNull(request, "request");
         final String method = Optional.ofNullable(request.getMethod()).orElse("UNKNOWN");
-        return Tuple.of("method", method.isEmpty() ? "UNKNOWN" : method);
+        return StringPair.of("method", method.isEmpty() ? "UNKNOWN" : method);
     }
 
-    public static Tuple<String, String> createUriTag(final HttpServletRequest request) {
+    public static StringPair createUriTag(final HttpServletRequest request) {
         Assert.requireNonNull(request, "request");
         final String uri = Optional.ofNullable(request.getRequestURI()).orElse("/");
-        return Tuple.of("uri", uri.isEmpty() ? "root" : uri);
+        return StringPair.of("uri", uri.isEmpty() ? "root" : uri);
     }
 
-    public static Tuple<String, String> createContextPathTag(final HttpServletRequest request) {
+    public static StringPair createContextPathTag(final HttpServletRequest request) {
         Assert.requireNonNull(request, "request");
         final String path = Optional.ofNullable(request.getContextPath()).orElse("/");
-        return Tuple.of("contextPath", path.isEmpty() ? "" : path);
+        return StringPair.of("contextPath", path.isEmpty() ? "" : path);
     }
 
 }

@@ -16,7 +16,7 @@
  */
 package dev.rico.internal.metrics;
 
-import dev.rico.core.lang.Tuple;
+import dev.rico.core.lang.StringPair;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.context.ContextManagerImpl;
 import dev.rico.metrics.Metrics;
@@ -55,7 +55,7 @@ public class MetricsImpl implements Metrics {
 
     @Override
     @SafeVarargs
-    public final Counter getOrCreateCounter(final String name, final Tuple<String, String>... tags) {
+    public final Counter getOrCreateCounter(final String name, final StringPair... tags) {
         final List<Tag> tagList = new ArrayList<>();
         tagList.addAll(TagUtil.convertTags(tags));
         tagList.addAll(TagUtil.convertTags(ContextManagerImpl.getInstance().getGlobalAttributes()));
@@ -76,10 +76,10 @@ public class MetricsImpl implements Metrics {
             }
 
             @Override
-            public List<Tuple<String, String >> getContext() {
+            public List<StringPair> getContext() {
                 return counter.getId().getTags()
                         .stream()
-                        .map(t -> Tuple.of(t.getKey(), t.getValue()))
+                        .map(t -> StringPair.of(t.getKey(), t.getValue()))
                         .collect(Collectors.toList());
             }
 
@@ -92,7 +92,7 @@ public class MetricsImpl implements Metrics {
 
     @Override
     @SafeVarargs
-    public final Timer getOrCreateTimer(final String name, final Tuple<String, String>... tags) {
+    public final Timer getOrCreateTimer(final String name, final StringPair... tags) {
         final List<io.micrometer.core.instrument.Tag> tagList = new ArrayList<>();
         tagList.addAll(TagUtil.convertTags(tags));
         tagList.addAll(TagUtil.convertTags(ContextManagerImpl.getInstance().getGlobalAttributes()));
@@ -109,10 +109,10 @@ public class MetricsImpl implements Metrics {
             }
 
             @Override
-            public List<Tuple<String, String >> getContext() {
+            public List<StringPair> getContext() {
                 return timer.getId().getTags()
                         .stream()
-                        .map(t -> Tuple.of(t.getKey(), t.getValue()))
+                        .map(t -> StringPair.of(t.getKey(), t.getValue()))
                         .collect(Collectors.toList());
             }
 
@@ -125,7 +125,7 @@ public class MetricsImpl implements Metrics {
 
     @Override
     @SafeVarargs
-    public final Gauge getOrCreateGauge(final String name, final Tuple<String, String>... tags) {
+    public final Gauge getOrCreateGauge(final String name, final StringPair... tags) {
         final List<io.micrometer.core.instrument.Tag> tagList = new ArrayList<>();
         tagList.addAll(TagUtil.convertTags(tags));
         tagList.addAll(TagUtil.convertTags(ContextManagerImpl.getInstance().getGlobalAttributes()));
@@ -148,10 +148,10 @@ public class MetricsImpl implements Metrics {
             }
 
             @Override
-            public List<Tuple<String, String >> getContext() {
+            public List<StringPair> getContext() {
                 return gauge.getId().getTags()
                         .stream()
-                        .map(t -> Tuple.of(t.getKey(), t.getValue()))
+                        .map(t -> StringPair.of(t.getKey(), t.getValue()))
                         .collect(Collectors.toList());
             }
 

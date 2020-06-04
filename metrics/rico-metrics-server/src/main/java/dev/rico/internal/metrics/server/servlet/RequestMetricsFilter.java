@@ -16,7 +16,7 @@
  */
 package dev.rico.internal.metrics.server.servlet;
 
-import dev.rico.core.lang.Tuple;
+import dev.rico.core.lang.StringPair;
 import dev.rico.internal.metrics.MetricsImpl;
 import dev.rico.internal.server.context.ContextServerUtil;
 
@@ -47,10 +47,10 @@ public class RequestMetricsFilter implements Filter {
             chain.doFilter(request, response);
         } finally {
             final long timeInMs = System.currentTimeMillis() - startTime;
-            final Tuple<String, String> methodTag = ContextServerUtil.createMethodTag((HttpServletRequest) request);
-            final Tuple<String, String> uriTag = ContextServerUtil.createUriTag((HttpServletRequest) request);
-            final Tuple<String, String> contextPathTag = ContextServerUtil.createContextPathTag((HttpServletRequest) request);
-            final Tuple<String, String> portTag = ContextServerUtil.createPortTag((HttpServletRequest) request);
+            final StringPair methodTag = ContextServerUtil.createMethodTag((HttpServletRequest) request);
+            final StringPair uriTag = ContextServerUtil.createUriTag((HttpServletRequest) request);
+            final StringPair contextPathTag = ContextServerUtil.createContextPathTag((HttpServletRequest) request);
+            final StringPair portTag = ContextServerUtil.createPortTag((HttpServletRequest) request);
             MetricsImpl.getInstance()
                     .getOrCreateTimer(HTTP_REQUESTS_METRIC_NAME, contextPathTag, uriTag, methodTag, portTag)
                     .record(timeInMs, TimeUnit.MILLISECONDS);
