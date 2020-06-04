@@ -16,7 +16,7 @@
  */
 package dev.rico.metrics;
 
-import dev.rico.core.context.Context;
+import dev.rico.core.lang.Tuple;
 
 import java.util.List;
 
@@ -33,5 +33,8 @@ public interface Metric extends AutoCloseable {
      */
     String getName();
 
-    List<Context> getContext();
+    List<Tuple<String, String>> getContext();
+
+    @Override
+    void close();
 }

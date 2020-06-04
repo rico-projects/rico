@@ -74,7 +74,7 @@ public class MetricsModule extends AbstractBaseModule {
 
         final PrometheusMeterRegistry prometheusRegistry = new PrometheusMeterRegistry(PrometheusConfig.DEFAULT);
 
-        final List<Tag> tagList = TagUtil.convertTags(ContextManagerImpl.getInstance().getGlobalContexts());
+        final List<Tag> tagList = TagUtil.convertTags(ContextManagerImpl.getInstance().getGlobalAttributes());
 
         new ClassLoaderMetrics(tagList).bindTo(prometheusRegistry);
         new JvmMemoryMetrics(tagList).bindTo(prometheusRegistry);

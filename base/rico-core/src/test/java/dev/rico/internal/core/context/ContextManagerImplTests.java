@@ -16,24 +16,22 @@
  */
 package dev.rico.internal.core.context;
 
-import dev.rico.core.context.Context;
 import dev.rico.core.context.ContextManager;
 import dev.rico.core.functional.Subscription;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.Optional;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 public class ContextManagerImplTests {
 
     @Test
     public void testGlobalContextDefaults() {
-        // when:
+        // when
         final ContextManager manager = new ContextManagerImpl();
 
-
-        // then:
-        Assert.assertEquals(manager.getGlobalContexts().size(), 5);
+        // then
+        assertEquals(manager.getGlobalAttributes().size(), 5);
         checkForGlobalContext(manager, "hostName");
         checkForGlobalContext(manager, "platform.version");
         checkForGlobalContext(manager, "canonicalHostName");
@@ -43,14 +41,14 @@ public class ContextManagerImplTests {
 
     @Test
     public void testGlobalContext() {
-        //given:
+        //given
         final ContextManager manager = new ContextManagerImpl();
 
-        //when:
-        manager.addGlobalContext("KEY", "VALUE");
+        //when
+        manager.setGlobalAttribute("KEY", "VALUE");
 
-        //then:
-        Assert.assertEquals(manager.getGlobalContexts().size(), 6);
+        //then
+        assertEquals(manager.getGlobalAttributes().size(), 6);
         checkForGlobalContext(manager, "KEY", "VALUE");
     }
 
@@ -60,11 +58,11 @@ public class ContextManagerImplTests {
         final ContextManager manager = new ContextManagerImpl();
 
         //when:
-        manager.addGlobalContext("KEY", "VALUE");
-        manager.addGlobalContext("KEY", "VALUE-2");
+        manager.setGlobalAttribute("KEY", "VALUE");
+        manager.setGlobalAttribute("KEY", "VALUE-2");
 
         //then:
-        Assert.assertEquals(manager.getGlobalContexts().size(), 6);
+        assertEquals(manager.getGlobalAttributes().size(), 6);
         checkForGlobalContext(manager, "KEY", "VALUE-2");
     }
 
@@ -74,37 +72,26 @@ public class ContextManagerImplTests {
         final ContextManager manager = new ContextManagerImpl();
 
         //when:
-        final Subscription subscription = manager.addGlobalContext("KEY", "VALUE");
+        final Subscription subscription = manager.setGlobalAttribute("KEY", "VALUE");
         subscription.unsubscribe();
 
         //then:
-        Assert.assertEquals(manager.getGlobalContexts().size(), 5);
+        assertEquals(manager.getGlobalAttributes().size(), 5);
         checkForGlobalContextMissing(manager, "KEY");
     }
 
-    private void checkForGlobalContextMissing(final ContextManager manager, final String type) {
-        final Optional<Context> context = manager.getGlobalContexts()
-                .stream()
-                .filter(c -> c.getType().equals(type))
-                .findAny();
-        Assert.assertFalse(context.isPresent(), "Context of type " + type + " was found.");
+    private void checkForGlobalContextMissing(final ContextManager manager, final String name) {
+        checkForGlobalContext(manager, name, null);
     }
 
-    private void checkForGlobalContext(final ContextManager manager, final String type) {
-        final Optional<Context> context = manager.getGlobalContexts()
-                .stream()
-                .filter(c -> c.getType().equals(type))
-                .findAny();
-        Assert.assertTrue(context.isPresent(), "Context of type " + type + " not found.");
+    private void checkForGlobalContext(final ContextManager manager, final String name) {
+        final String foundValue = manager.getGlobalAttributes().get(name);
+        assertNotNull(foundValue, "Global attribute with name '" + name + "' not found");
     }
 
-    private void checkForGlobalContext(final ContextManager manager, final String type, final String value) {
-        final Optional<Context> context = manager.getGlobalContexts()
-                .stream()
-                .filter(c -> c.getType().equals(type))
-                .filter(c -> c.getValue().equals(value))
-                .findAny();
-        Assert.assertTrue(context.isPresent(), "Context of type " + type + " and value " + value + " not found.");
+    private void checkForGlobalContext(final ContextManager manager, final String name, final String expectedValue) {
+        final String foundValue = manager.getGlobalAttributes().get(name);
+        assertEquals(foundValue, expectedValue, "Wrong global attribute with name '" + name + "' expected '" + expectedValue + "' but found'" + foundValue +"'");
     }
 
 }

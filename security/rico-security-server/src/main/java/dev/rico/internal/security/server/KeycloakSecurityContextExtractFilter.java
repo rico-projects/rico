@@ -69,7 +69,7 @@ public class KeycloakSecurityContextExtractFilter implements Filter, AccessDenie
         final Subscription userContextSubscription = Optional.ofNullable(securityContext)
                 .map(c -> c.getToken())
                 .map(t -> t.getPreferredUsername())
-                .map(u -> ContextManagerImpl.getInstance().addThreadContext(USER_CONTEXT, u))
+                .map(u -> ContextManagerImpl.getInstance().setThreadLocalAttribute(USER_CONTEXT, u))
                 .orElse(null);
         try {
             chain.doFilter(request, response);

@@ -287,9 +287,9 @@ public class ControllerHandler {
         final Class controllerClass = controllerClassMapping.get(controllerId);
 
         final Subscription controllerContextSubscription = ContextManagerImpl.getInstance()
-                .addThreadContext(CONTROLLER_CONTEXT, Optional.ofNullable(controllerClass).map(c -> c.getSimpleName()).orElse(UNKNOWN_CONTROLLER_CONTEXT));
+                .setThreadLocalAttribute(CONTROLLER_CONTEXT, Optional.ofNullable(controllerClass).map(c -> c.getSimpleName()).orElse(UNKNOWN_CONTROLLER_CONTEXT));
         final Subscription controllerActionContextSubscription = ContextManagerImpl.getInstance()
-                .addThreadContext(CONTROLLER_ACTION_CONTEXT, actionName);
+                .setThreadLocalAttribute(CONTROLLER_ACTION_CONTEXT, actionName);
         try {
             if (controller == null) {
                 throw new InvokeActionException("No controller for id " + controllerId + " found");

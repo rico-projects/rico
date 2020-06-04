@@ -61,7 +61,7 @@ public class PlatformBootstrap {
         Assert.requireNonNull(servletContext, "servletContext");
         Assert.requireNonNull(configuration, "configuration");
 
-        ContextManagerImpl.getInstance().addGlobalContext(APPLICATION_CONTEXT, configuration.getProperty(APPLICATION_NAME_PROPERTY));
+        ContextManagerImpl.getInstance().setGlobalAttribute(APPLICATION_CONTEXT, configuration.getProperty(APPLICATION_NAME_PROPERTY));
 
         if(configuration.getBooleanProperty(PLATFORM_ACTIVE)) {
             PlatformLogo.printLogo();

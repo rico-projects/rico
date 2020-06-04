@@ -16,7 +16,7 @@
  */
 package dev.rico.metrics;
 
-import dev.rico.core.context.Context;
+import dev.rico.core.lang.Tuple;
 import dev.rico.metrics.types.Counter;
 import dev.rico.metrics.types.Gauge;
 import dev.rico.metrics.types.Timer;
@@ -38,7 +38,7 @@ public interface Metrics {
      * @param context the context
      * @return the counter
      */
-    Counter getOrCreateCounter(String name, Context... context);
+    Counter getOrCreateCounter(String name, Tuple<String, String>... context);
 
     /**
      * Returns a new timer if no timer instance exists for the given name and context.
@@ -48,7 +48,7 @@ public interface Metrics {
      * @param context the context
      * @return the timer
      */
-    Timer getOrCreateTimer(String name, Context... context);
+    Timer getOrCreateTimer(String name, Tuple<String, String>... context);
 
     /**
      * Returns a new gauge if no gauge instance exists for the given name and context.
@@ -58,6 +58,6 @@ public interface Metrics {
      * @param context the context
      * @return the gauge
      */
-    Gauge getOrCreateGauge(String name, Context... context);
+    Gauge getOrCreateGauge(String name, Tuple<String, String>... context);
 
 }

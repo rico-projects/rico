@@ -16,9 +16,8 @@
  */
 package dev.rico.internal.metrics;
 
-import dev.rico.core.context.Context;
+import dev.rico.core.lang.Tuple;
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.core.context.ContextImpl;
 import dev.rico.internal.core.context.ContextManagerImpl;
 import dev.rico.metrics.Metrics;
 import dev.rico.metrics.types.Counter;
@@ -30,8 +29,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -57,10 +54,11 @@ public class MetricsImpl implements Metrics {
     }
 
     @Override
-    public Counter getOrCreateCounter(final String name, final Context... tags) {
+    @SafeVarargs
+    public final Counter getOrCreateCounter(final String name, final Tuple<String, String>... tags) {
         final List<Tag> tagList = new ArrayList<>();
         tagList.addAll(TagUtil.convertTags(tags));
-        tagList.addAll(TagUtil.convertTags(ContextManagerImpl.getInstance().getGlobalContexts()));
+        tagList.addAll(TagUtil.convertTags(ContextManagerImpl.getInstance().getGlobalAttributes()));
         final io.micrometer.core.instrument.Counter counter = registry.get()
                 .counter(name, tagList);
         return new Counter() {
@@ -78,25 +76,26 @@ public class MetricsImpl implements Metrics {
             }
 
             @Override
-            public List<Context> getContext() {
+            public List<Tuple<String, String >> getContext() {
                 return counter.getId().getTags()
                         .stream()
-                        .map(t -> new ContextImpl(t.getKey(), t.getValue()))
+                        .map(t -> Tuple.of(t.getKey(), t.getValue()))
                         .collect(Collectors.toList());
             }
 
             @Override
-            public void close() throws Exception {
+            public void close() {
                 counter.close();
             }
         };
     }
 
     @Override
-    public Timer getOrCreateTimer(final String name, final Context... tags) {
+    @SafeVarargs
+    public final Timer getOrCreateTimer(final String name, final Tuple<String, String>... tags) {
         final List<io.micrometer.core.instrument.Tag> tagList = new ArrayList<>();
         tagList.addAll(TagUtil.convertTags(tags));
-        tagList.addAll(TagUtil.convertTags(ContextManagerImpl.getInstance().getGlobalContexts()));
+        tagList.addAll(TagUtil.convertTags(ContextManagerImpl.getInstance().getGlobalAttributes()));
         io.micrometer.core.instrument.Timer timer = registry.get().timer(name, tagList);
         return new Timer() {
             @Override
@@ -110,22 +109,26 @@ public class MetricsImpl implements Metrics {
             }
 
             @Override
-            public List<Context> getContext() {
-                return Collections.unmodifiableList(Arrays.asList(tags));
+            public List<Tuple<String, String >> getContext() {
+                return timer.getId().getTags()
+                        .stream()
+                        .map(t -> Tuple.of(t.getKey(), t.getValue()))
+                        .collect(Collectors.toList());
             }
 
             @Override
-            public void close() throws Exception {
+            public void close() {
                 timer.close();
             }
         };
     }
 
     @Override
-    public Gauge getOrCreateGauge(final String name, final Context... tags) {
+    @SafeVarargs
+    public final Gauge getOrCreateGauge(final String name, final Tuple<String, String>... tags) {
         final List<io.micrometer.core.instrument.Tag> tagList = new ArrayList<>();
         tagList.addAll(TagUtil.convertTags(tags));
-        tagList.addAll(TagUtil.convertTags(ContextManagerImpl.getInstance().getGlobalContexts()));
+        tagList.addAll(TagUtil.convertTags(ContextManagerImpl.getInstance().getGlobalAttributes()));
         final AtomicReference<Double> internalValue = new AtomicReference<>(0d);
 
         io.micrometer.core.instrument.Gauge gauge = io.micrometer.core.instrument.Gauge
@@ -145,12 +148,16 @@ public class MetricsImpl implements Metrics {
             }
 
             @Override
-            public List<Context> getContext() {
-                return Collections.unmodifiableList(Arrays.asList(tags));
+            public List<Tuple<String, String >> getContext() {
+                return gauge.getId().getTags()
+                        .stream()
+                        .map(t -> Tuple.of(t.getKey(), t.getValue()))
+                        .collect(Collectors.toList());
             }
 
             @Override
-            public void close() throws Exception {
+            public void close() {
+                gauge.close();
             }
         };
     }
