@@ -1,0 +1,7 @@
+ifndef::imagesdir[:imagesdir: images]
+
+include::build-rico.adoc[]
+
+include::snapshot-releases.adoc[]
+
+include::project-structure.adoc[]
