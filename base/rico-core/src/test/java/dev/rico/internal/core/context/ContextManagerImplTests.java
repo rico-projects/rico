@@ -14,9 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.core.context;
+package dev.rico.internal.core.context;
 
-import dev.rico.internal.core.context.ContextManagerImpl;
+import dev.rico.core.context.Context;
+import dev.rico.core.context.ContextManager;
 import dev.rico.core.functional.Subscription;
 import org.testng.Assert;
 import org.testng.annotations.Test;

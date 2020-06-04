@@ -51,7 +51,7 @@ public class ContextManagerImpl implements ContextManager {
 
     private final ThreadLocal<Set<Context>> threadContexts;
 
-    public ContextManagerImpl() {
+    ContextManagerImpl() {
         globalContexts = new HashSet<>();
         threadContexts = new ThreadLocal<>();
         globalContextsLock = new ReentrantLock();
