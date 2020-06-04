@@ -47,11 +47,149 @@ MAINTAINER Hendrik Ebbers, karakun.com
 ADD prometheus.yml /etc/prometheus/
 ----
 
+==== Predefined metrics
+
+The following table gives an overview about all metrics that rico measures automatically:
+
+.Predefined metrics
+[cols="3,^2,^2,10",options="header"]
+|===
+|metrics name |type |unit |description
+
+|jvm.classes.loaded
+|Gauge
+|classes
+|The number of classes that are currently loaded in the Java virtual machine
+
+|jvm.classes.unloaded
+|Counter
+|classes
+|The total number of classes unloaded since the Java virtual machine has started execution
+
+|jvm.buffer.count
+|Gauge
+|buffers
+|An estimate of the number of buffers in the pool
+
+|jvm.buffer.memory.used
+|Gauge
+|bytes
+|An estimate of the memory that the Java virtual machine is using for this buffer pool
+
+|jvm.buffer.total.capacity
+|Gauge
+|bytes
+|An estimate of the total capacity of the buffers in this pool
+
+|jvm.memory.used
+|Gauge
+|bytes
+|The amount of used memory (available for several memory pools, defined by tag/context "id")
+
+|jvm.memory.committed
+|Gauge
+|bytes
+|The amount of memory in bytes that is committed for the Java virtual machine to use (available for several memory pools, defined by tag/context "id")
+
+|jvm.memory.max
+|Gauge
+|bytes
+|The maximum amount of memory in bytes that can be used for memory management (available for several memory pools, defined by tag/context "id")
+
+|jvm.gc.max.data.size
+|Gauge
+|bytes
+|Max size of old generation memory pool
+
+|jvm.gc.live.data.size
+|Gauge
+|bytes
+|Size of old generation memory pool after a full GC
+
+|jvm.gc.memory.promoted
+|Counter
+|bytes
+|Count of positive increases in the size of the old generation memory pool before GC to after GC
+
+|jvm.gc.memory.allocated
+|Counter
+|bytes
+|Incremented for an increase in the size of the young generation memory pool after one GC to before the next
+
+|jvm.gc.concurrent.phase.time
+|Timer
+|milliseconds
+|Time spent in concurrent phase
+
+|jvm.gc.pause
+|Timer
+|milliseconds
+|Time spent in GC pause
+
+|system.cpu.count
+|Gauge
+|-
+|The number of processors available to the Java virtual machine
+
+|system.load.average.1m
+|Gauge
+|-
+|The sum of the number of runnable entities queued to available processors and the number of runnable entities running on the available processors averaged over a period of time
+
+|system.cpu.usage
+|Gauge
+|-
+|The "recent cpu usage" for the whole system
+
+|process.cpu.usage
+|Gauge
+|-
+|The "recent cpu usage" for the Java Virtual Machine process
+
+|jvm.threads.peak
+|Gauge
+|threads
+|The peak live thread count since the Java virtual machine started or peak was reset
+
+|jvm.threads.daemon
+|Gauge
+|threads
+|The current number of live daemon threads
+
+|jvm.threads.live
+|Gauge
+|threads
+|The current number of live threads including both daemon and non-daemon threads
+
+|jvm.threads.states
+|Gauge
+|threads
+|The current number of threads having a specific state. The state is defined by tag/context "state"
+
+|request
+|Timer
+|milliseconds
+|Time for a HTTP request. The endpoint is defined by tag/context "uri"
+
+|requestCounter
+|Counter
+|-
+|Counter for all HTTP requests. The endpoint is defined by tag/context "uri"
+
+|httpSessions
+|Gauge
+|-
+|Number of active http sessions
+|===
+
 ////
 
 todo: short description of UI / pic of prometheus
 
-==== Predefined and custom metrics
+==== Custom metrics
+
+
+
 
 todo: How to query metrics.
 What kind of metrics will Rico provide by default (cpu, threads, ...) ...
