@@ -2,10 +2,14 @@ ifndef::imagesdir[:imagesdir: images]
 
 == Client API
 
-Rico provides libraries with some general functionality that can be used in any JavaFX or Swing based application.
-Next to an ui toolkit independent library Rico provides on top of this a swing specific and a JavaFX specific library:
+Rico provides some general functionality, that can be used in any JavaFX or Swing based application:
 
 image:client-modules.svg[]
+
+Next to the UI toolkit independent library rico-client, a Swing client will need rico-client-swing and a JavaFX client will need rico-client-javafx. 
+The Swing and JavaFX specific libraries may provide additional UI toolkit dependent functionality. 
+The toolkit specific libraries should not be used together.
+
 
 include::task-chain.adoc[]
 
