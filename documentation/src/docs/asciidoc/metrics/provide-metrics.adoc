@@ -49,7 +49,6 @@ ADD prometheus.yml /etc/prometheus/
 
 ==== Predefined metrics
 
-Rico already provides several predefined metrics.
 The following table gives an overview about all metrics that rico measures automatically:
 
 .Predefined metrics
