@@ -16,10 +16,10 @@
  */
 package dev.rico.internal.metrics;
 
+import dev.rico.core.context.Context;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.context.ContextImpl;
 import dev.rico.internal.core.context.ContextManagerImpl;
-import dev.rico.core.context.Context;
 import dev.rico.metrics.Metrics;
 import dev.rico.metrics.types.Counter;
 import dev.rico.metrics.types.Gauge;
@@ -66,7 +66,7 @@ public class MetricsImpl implements Metrics {
         return new Counter() {
             @Override
             public void increment(final long amount) {
-                if(amount < 0) {
+                if (amount < 0) {
                     LOG.warn("Counter metric can not be incremented with negative value!");
                 }
                 counter.increment(amount);
@@ -151,7 +151,6 @@ public class MetricsImpl implements Metrics {
 
             @Override
             public void close() throws Exception {
-
             }
         };
     }

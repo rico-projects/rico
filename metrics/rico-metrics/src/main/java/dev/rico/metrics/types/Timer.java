@@ -24,15 +24,35 @@ import dev.rico.metrics.Metric;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * A timer metric
+ */
 public interface Timer extends Metric {
 
+    /**
+     * Adds a duration to the timer
+     *
+     * @param amount the amount of the duration
+     * @param unit   the time unit of the duration
+     */
     void record(long amount, TimeUnit unit);
 
+    /**
+     * Adds a duration to the timer
+     *
+     * @param duration the duration
+     */
     default void record(final Duration duration) {
         Assert.requireNonNull(duration, "duration");
         record(duration.toNanos(), TimeUnit.NANOSECONDS);
     }
 
+    /**
+     * Executes the given task and adds the duration of execution to the timer metric
+     *
+     * @param task the task
+     * @throws Exception forwarded exception of the task
+     */
     default void record(final CheckedRunnable task) throws Exception {
         Assert.requireNonNull(task, "task");
         final CheckedSupplier<Void> supplier = () -> {
@@ -42,6 +62,14 @@ public interface Timer extends Metric {
         record(supplier);
     }
 
+    /**
+     * Executes the given task and adds the duration of execution to the timer metric
+     *
+     * @param task the task
+     * @param <T>  return type of the task
+     * @return the result of the task
+     * @throws Exception forwarded exception of the task
+     */
     default <T> T record(final CheckedSupplier<T> task) throws Exception {
         Assert.requireNonNull(task, "task");
         final long nanos = System.nanoTime();

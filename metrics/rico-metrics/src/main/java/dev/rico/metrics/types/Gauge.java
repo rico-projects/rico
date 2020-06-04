@@ -18,8 +18,16 @@ package dev.rico.metrics.types;
 
 import dev.rico.metrics.Metric;
 
+/**
+ * A gauge metric
+ */
 public interface Gauge extends Metric {
 
+    /**
+     * Sets the value of the gauge
+     *
+     * @param value the value
+     */
     void setValue(double value);
 
 }

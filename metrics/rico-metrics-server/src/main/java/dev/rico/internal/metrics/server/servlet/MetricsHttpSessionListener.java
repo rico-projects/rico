@@ -22,19 +22,21 @@ import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 import java.util.concurrent.atomic.AtomicLong;
 
+import static dev.rico.internal.metrics.server.module.MetricsNameConstants.HTTP_SESSIONS_METRIC_NAME;
+
 public class MetricsHttpSessionListener implements HttpSessionListener {
 
     private final AtomicLong counter = new AtomicLong();
 
     @Override
     public void sessionCreated(final HttpSessionEvent se) {
-        MetricsImpl.getInstance().getOrCreateGauge("httpSessions")
+        MetricsImpl.getInstance().getOrCreateGauge(HTTP_SESSIONS_METRIC_NAME)
                 .setValue(counter.incrementAndGet());
     }
 
     @Override
     public void sessionDestroyed(final HttpSessionEvent se) {
-        MetricsImpl.getInstance().getOrCreateGauge("httpSessions")
+        MetricsImpl.getInstance().getOrCreateGauge(HTTP_SESSIONS_METRIC_NAME)
                 .setValue(counter.decrementAndGet());
     }
 }
