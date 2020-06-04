@@ -1,0 +1,83 @@
+ifndef::imagesdir[:imagesdir: images]
+
+== TaskChain API
+
+The TaskChain API provides an easy way to create a chain of individual tasks.
+Between tasks the chain can switch between the UI thread and background threads.
+
+When creating a client application with UI you normally need to implement long running tasks like a server call.
+If such a task is executed on the UI thread no user interaction or repaint / layout of the application can happen till the task is finished execution.
+This will always end up in a bad behavior, since the application looks like it is frozen and maybe pixel artifacts are rendered on the screen if the application is resized, for example.
+To avoid these problems long running tasks should always be executed on a background thread.
+
+image:ui-thread.svg[]
+
+A background thread in Java can easily be created and used by using the factory methods in `java.util.concurrent.Executors`.
+Much more complex code is needed if we want to react on the result of a background thread in the ui thread.
+This pattern is quite normal in a client.
+Let's asume you want to trigger a server endpoint and display the result of the call in the client.
+Maybe you even want to show a loading animation in the client while the server call is executed and show an error if an exception happens.
+The following diagram gives an overview of the needed task:
+
+image:task-chain-base-workflow.svg[]
+
+By using only basic API such a use case will result in a lot of code in Swing or JavaFX.
+The following code snippet shows how such a workflow can be created in Swing:
+
+[source,java]
+----
+//We assume that we are already on the ui-Thread
+
+showLoadingAnimation();
+backgroundExecutors.execute(() -> {
+    try {
+        final String result = callServer();
+        SwingUtilties.invokeAndWait(() -> updateUi(result));
+    } catch(final Exception e) {
+       SwingUtilties.invokeLater(() -> showErrorDialog(e));
+    } finally {
+        SwingUtilties.invokeLater(() -> hideLoadingAnimation(e));
+    }
+});
+----
+
+As you can see this is really a lot of code for a common default workflow that you might need multiple times per application.
+
+The TaskChain API helps you to create better readable and maintainable code for scenarios like the described one.
+The TaskChain provides a fluent API that let you define workflows with multiple switches between background threads and the ui thread.
+Before we have a deeper look at the API let's see how the given example would look like by using the TaskChain API:
+
+[source,java]
+----
+UiExecutor.createUiTaskChain()
+    .execute(() -> showLoadingAnimation())
+    .background()
+    .supply(() -> callServer())
+    .ui()
+    .consume(v -> updateUi(v))
+    .onException(e -> showErrorDialog(e))
+    .thenFinally(() -> hideLoadingAnimation())
+    .run();
+----
+
+////
+todo: some description of the code
+////
+
+The main entry point of the TaskChain API is the `dev.rico.client.concurrent.TaskChain` interface.
+New instances should always be created by factory methods that are provided by the `dev.rico.client.concurrent.UiExecutor` interface.
+
+[source,java]
+----
+final TaskChain chain = UiExecutor.createUiTaskChain();
+----
+
+////
+
+todo: some samples with ui() / background()
+
+todo: some samples onException() / thenFinally()
+
+todo: calling run() at the end to execute the chain
+
+////

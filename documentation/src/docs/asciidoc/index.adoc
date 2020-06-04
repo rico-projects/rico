@@ -2,6 +2,8 @@ ifndef::imagesdir[:imagesdir: images]
 
 = Rico
 
+include::client/index.adoc[]
+
 include::metrics/index.adoc[]
 
 include::remoting/index.adoc[]
