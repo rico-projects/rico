@@ -54,8 +54,7 @@ public class MetricsImpl implements Metrics {
     }
 
     @Override
-    @SafeVarargs
-    public final Counter getOrCreateCounter(final String name, final StringPair... tags) {
+    public Counter getOrCreateCounter(final String name, final StringPair... tags) {
         final List<Tag> tagList = new ArrayList<>();
         tagList.addAll(TagUtil.convertTags(tags));
         tagList.addAll(TagUtil.convertTags(ContextManagerImpl.getInstance().getGlobalAttributes()));
@@ -91,8 +90,7 @@ public class MetricsImpl implements Metrics {
     }
 
     @Override
-    @SafeVarargs
-    public final Timer getOrCreateTimer(final String name, final StringPair... tags) {
+    public Timer getOrCreateTimer(final String name, final StringPair... tags) {
         final List<io.micrometer.core.instrument.Tag> tagList = new ArrayList<>();
         tagList.addAll(TagUtil.convertTags(tags));
         tagList.addAll(TagUtil.convertTags(ContextManagerImpl.getInstance().getGlobalAttributes()));
@@ -124,8 +122,7 @@ public class MetricsImpl implements Metrics {
     }
 
     @Override
-    @SafeVarargs
-    public final Gauge getOrCreateGauge(final String name, final StringPair... tags) {
+    public Gauge getOrCreateGauge(final String name, final StringPair... tags) {
         final List<io.micrometer.core.instrument.Tag> tagList = new ArrayList<>();
         tagList.addAll(TagUtil.convertTags(tags));
         tagList.addAll(TagUtil.convertTags(ContextManagerImpl.getInstance().getGlobalAttributes()));
