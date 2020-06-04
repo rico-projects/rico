@@ -3,17 +3,17 @@ ifndef::imagesdir[:imagesdir: images]
 == TaskChain API
 
 The TaskChain API provides an easy way to create a chain of individual tasks.
-Between tasks the chain can switch between the ui thread and background threads.
+Between tasks the chain can switch between the UI thread and background threads.
 
-When creating a client application you normally need to implement long running tasks like a server call.
-Any long running task should always be executed on a background thread.
-If such task is executed on the ui thread no user interaction or repaint / layout of the application can happen will the task is executed.
-This will always end in a bad behavior since the application looks like it is frozen and maybe wrong pixel artifacts are rendered on the screen if the application is resized, for example.
+When creating a client application with UI you normally need to implement long running tasks like a server call.
+If such a task is executed on the UI thread no user interaction or repaint / layout of the application can happen till the task is finished execution.
+This will always end up in a bad behavior, since the application looks like it is frozen and maybe pixel artifacts are rendered on the screen if the application is resized, for example.
+To avoid these problems long running tasks should always be executed on a background thread.
 
 image:ui-thread.svg[]
 
 A background thread in Java can easily be created and used by using the factory methods in `java.util.concurrent.Executors`.
-Much more complexe code is needed if we want to react on the result of a background thread in the ui thread.
+Much more complex code is needed if we want to react on the result of a background thread in the ui thread.
 This pattern is quite normal in a client.
 Let's asume you want to trigger a server endpoint and display the result of the call in the client.
 Maybe you even want to show a loading animation in the client while the server call is executed and show an error if an exception happens.
@@ -21,8 +21,8 @@ The following diagram gives an overview of the needed task:
 
 image:task-chain-base-workflow.svg[]
 
-By using only basic API such use case will end in a lot of code in Swing or JavaFX.
-The following code snippet shows how such workflow can be created in Swing:
+By using only basic API such a use case will result in a lot of code in Swing or JavaFX.
+The following code snippet shows how such a workflow can be created in Swing:
 
 [source,java]
 ----
