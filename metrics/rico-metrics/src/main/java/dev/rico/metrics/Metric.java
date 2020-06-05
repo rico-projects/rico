@@ -27,12 +27,13 @@ import java.util.List;
 public interface Metric extends AutoCloseable {
 
     /**
-     * Returns the name of the metric
-     *
-     * @return the name
+     * @return the name of the metric
      */
     String getName();
 
+    /**
+     * @return the context for this metric.
+     */
     List<StringPair> getContext();
 
     @Override
