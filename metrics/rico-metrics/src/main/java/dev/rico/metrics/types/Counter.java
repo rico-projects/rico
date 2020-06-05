@@ -18,12 +18,23 @@ package dev.rico.metrics.types;
 
 import dev.rico.metrics.Metric;
 
+/**
+ * A counter metric.
+ */
 public interface Counter extends Metric {
 
+    /**
+     * Increment the value of the counter by 1
+     */
     default void increment() {
         increment(1);
     }
 
+    /**
+     * Increement the value of the counter by the given amount.
+     *
+     * @param amount the amount
+     */
     void increment(long amount);
 
 }

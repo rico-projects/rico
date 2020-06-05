@@ -20,13 +20,44 @@ import dev.rico.core.context.Context;
 import dev.rico.metrics.types.Counter;
 import dev.rico.metrics.types.Gauge;
 import dev.rico.metrics.types.Timer;
+import org.apiguardian.api.API;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+/**
+ * Facade interface for the metrics API. This interface provides several factory methods to create metrics.
+ */
+@API(since = "1.1.0", status = EXPERIMENTAL)
 public interface Metrics {
 
+    /**
+     * Returns a new counter if no counter instance exists for the given name and context.
+     * Otherwise the existing counter instance will be returned.
+     *
+     * @param name    the name of the counter
+     * @param context the context
+     * @return the counter
+     */
     Counter getOrCreateCounter(String name, Context... context);
 
+    /**
+     * Returns a new timer if no timer instance exists for the given name and context.
+     * Otherwise the existing timer instance will be returned.
+     *
+     * @param name    the name of the timer
+     * @param context the context
+     * @return the timer
+     */
     Timer getOrCreateTimer(String name, Context... context);
 
+    /**
+     * Returns a new gauge if no gauge instance exists for the given name and context.
+     * Otherwise the existing gauge instance will be returned.
+     *
+     * @param name    the name of the gauge
+     * @param context the context
+     * @return the gauge
+     */
     Gauge getOrCreateGauge(String name, Context... context);
 
 }

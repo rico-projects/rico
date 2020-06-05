@@ -16,9 +16,9 @@
  */
 package dev.rico.internal.metrics.server.servlet;
 
+import dev.rico.core.context.Context;
 import dev.rico.internal.metrics.MetricsImpl;
 import dev.rico.internal.server.context.ContextServerUtil;
-import dev.rico.core.context.Context;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -30,10 +30,15 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import static dev.rico.internal.metrics.server.module.MetricsNameConstants.HTTP_REQUESTS_METRIC_NAME;
+import static dev.rico.internal.metrics.server.module.MetricsNameConstants.HTTP_REQUEST_TIME_METRIC_NAME;
+
 public class RequestMetricsFilter implements Filter {
 
     @Override
-    public void init(final FilterConfig filterConfig) throws ServletException {}
+    public void init(final FilterConfig filterConfig) {
+        // do nothing on init
+    }
 
     @Override
     public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException {
@@ -47,14 +52,16 @@ public class RequestMetricsFilter implements Filter {
             final Context contextPathTag = ContextServerUtil.createContextPathTag((HttpServletRequest) request);
             final Context portTag = ContextServerUtil.createPortTag((HttpServletRequest) request);
             MetricsImpl.getInstance()
-                    .getOrCreateTimer("request", contextPathTag, uriTag, methodTag, portTag)
+                    .getOrCreateTimer(HTTP_REQUESTS_METRIC_NAME, contextPathTag, uriTag, methodTag, portTag)
                     .record(timeInMs, TimeUnit.MILLISECONDS);
             MetricsImpl.getInstance()
-                    .getOrCreateCounter("requestCounter", contextPathTag, uriTag, methodTag, portTag)
+                    .getOrCreateCounter(HTTP_REQUEST_TIME_METRIC_NAME, contextPathTag, uriTag, methodTag, portTag)
                     .increment();
         }
     }
 
     @Override
-    public void destroy() {}
+    public void destroy() {
+        // nothing needs to be destroyed
+    }
 }

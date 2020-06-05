@@ -17,12 +17,12 @@
 package dev.rico.internal.metrics.server.servlet;
 
 import dev.rico.internal.metrics.MetricsImpl;
-import dev.rico.internal.core.context.ContextImpl;
-import dev.rico.core.context.Context;
 
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 import java.util.concurrent.atomic.AtomicLong;
+
+import static dev.rico.internal.metrics.server.module.MetricsNameConstants.HTTP_SESSIONS_METRIC_NAME;
 
 public class MetricsHttpSessionListener implements HttpSessionListener {
 
@@ -30,15 +30,13 @@ public class MetricsHttpSessionListener implements HttpSessionListener {
 
     @Override
     public void sessionCreated(final HttpSessionEvent se) {
-        final Context idTag = new ContextImpl("sessionId", se.getSession().getId());
-        MetricsImpl.getInstance().getOrCreateGauge("httpSessions", idTag)
+        MetricsImpl.getInstance().getOrCreateGauge(HTTP_SESSIONS_METRIC_NAME)
                 .setValue(counter.incrementAndGet());
     }
 
     @Override
     public void sessionDestroyed(final HttpSessionEvent se) {
-        final Context idTag = new ContextImpl("sessionId", se.getSession().getId());
-        MetricsImpl.getInstance().getOrCreateGauge("httpSessions", idTag)
+        MetricsImpl.getInstance().getOrCreateGauge(HTTP_SESSIONS_METRIC_NAME)
                 .setValue(counter.decrementAndGet());
     }
 }

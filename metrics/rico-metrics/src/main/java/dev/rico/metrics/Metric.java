@@ -20,8 +20,17 @@ import dev.rico.core.context.Context;
 
 import java.util.List;
 
+/**
+ * Basic interface for all metric types (see {@code dev.rico.metrics.types.Gauge},
+ * {@code dev.rico.metrics.types.Counter} and {@code dev.rico.metrics.types.Timer}).
+ */
 public interface Metric extends AutoCloseable {
 
+    /**
+     * Returns the name of the metric
+     *
+     * @return the name
+     */
     String getName();
 
     List<Context> getContext();

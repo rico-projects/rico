@@ -17,31 +17,28 @@
 package dev.rico.internal.metrics.server.servlet;
 
 import dev.rico.internal.metrics.MetricsImpl;
-import dev.rico.internal.core.context.ContextImpl;
-import dev.rico.core.context.Context;
 import dev.rico.server.ServerListener;
 import dev.rico.server.client.ClientSession;
 import dev.rico.server.client.ClientSessionListener;
 
 import java.util.concurrent.atomic.AtomicLong;
 
+import static dev.rico.internal.metrics.server.module.MetricsNameConstants.HTTP_CLIENT_SESSIONS_METRIC_NAME;
+
 @ServerListener
 public class MetricsClientSessionListener implements ClientSessionListener {
 
     private final AtomicLong counter = new AtomicLong();
-
-
+    
     @Override
     public void sessionCreated(final ClientSession clientSession) {
-        final Context idTag = new ContextImpl("sessionId", clientSession.getId());
-        MetricsImpl.getInstance().getOrCreateGauge("clientSessions", idTag)
+        MetricsImpl.getInstance().getOrCreateGauge(HTTP_CLIENT_SESSIONS_METRIC_NAME)
                 .setValue(counter.incrementAndGet());
     }
 
     @Override
     public void sessionDestroyed(final ClientSession clientSession) {
-        final Context idTag = new ContextImpl("sessionId", clientSession.getId());
-        MetricsImpl.getInstance().getOrCreateGauge("clientSessions", idTag)
+        MetricsImpl.getInstance().getOrCreateGauge(HTTP_CLIENT_SESSIONS_METRIC_NAME)
                 .setValue(counter.incrementAndGet());
     }
 }
