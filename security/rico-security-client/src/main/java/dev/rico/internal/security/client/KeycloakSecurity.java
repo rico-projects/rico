@@ -130,7 +130,7 @@ public class KeycloakSecurity implements Security {
                     final KeycloakAuthentification auth = new KeycloakAuthentification(accessToken.get(), appName, realmName);
                     KeycloakAuthentificationManager.getInstance().setAuth(auth);
                     authorized.set(true);
-                    userContextSubscription.set(ContextManagerImpl.getInstance().addGlobalContext(USER_CONTEXT, user));
+                    userContextSubscription.set(ContextManagerImpl.getInstance().setGlobalAttribute(USER_CONTEXT, user));
                     startTokenRefreshRunner(connectResult, realmName, encodedAppName);
                 } catch (final IOException | URISyntaxException e) {
                     throw new RuntimeException("Can not receive security token!", e);

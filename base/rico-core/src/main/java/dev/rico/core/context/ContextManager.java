@@ -1,6 +1,5 @@
 /*
  * Copyright 2018-2019 Karakun AG.
- * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,17 +17,65 @@ package dev.rico.core.context;
 
 import dev.rico.core.functional.Subscription;
 
-import java.util.Set;
+import java.util.Map;
+import java.util.Optional;
 
+/**
+ * Holder of attributes.
+ * An attribute can either be global or thread local.
+ */
 public interface ContextManager {
 
-    Subscription addGlobalContext(String type, String value);
+    /**
+     * Sets a global property.
+     * <p>
+     * Both name and value must not be {@code null}.
+     *
+     * @param name  the name of the property
+     * @param value the value of the property
+     * @return a callable which will remove the property when executed.
+     */
+    Subscription setGlobalAttribute(String name, String value);
 
-    Subscription addThreadContext(String type, String value);
+    /**
+     * Sets a thread local property.
+     * <p>
+     * Both name and value must not be {@code null}.
+     *
+     * @param name  the name of the property
+     * @param value the value of the property
+     * @return a callable which will remove the property when executed.
+     */
+    Subscription setThreadLocalAttribute(String name, String value);
 
-    Set<Context> getGlobalContexts();
+    /**
+     * Gets a single attribute.
+     * If the attribute is defined in both the global and the thread local context,
+     * then the thread local context takes precedence.
+     * <p>
+     * If the attribute is not present {@link Optional#empty()} is returned.
+     *
+     * @param name the name of the attribute
+     * @return the value of the attribute or {@link Optional#empty()}
+     */
+    Optional<String> getAttribute(String name);
 
-    Set<Context> getThreadContexts();
+    /**
+     * @return an unmodifiable copy of the current global context.
+     */
+    Map<String, String> getGlobalAttributes();
 
+    /**
+     * @return an unmodifiable copy of the current thread local context.
+     */
+    Map<String, String> getThreadLocalAttributes();
 
+    /**
+     * Gets a unmodifiable copy of the union of global and thread local context.
+     * If a attribute is defined in both the global and the thread local context,
+     * then the thread local context takes precedence.
+     *
+     * @return a unmodifiable map of global and thread local context
+     */
+    Map<String, String> getAttributes();
 }

@@ -1,6 +1,5 @@
 /*
  * Copyright 2018-2019 Karakun AG.
- * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,28 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.metrics;
+package dev.rico.core.lang;
 
-import dev.rico.core.lang.StringPair;
-
-import java.util.List;
+import dev.rico.internal.core.lang.DefaultStringPair;
 
 /**
- * Basic interface for all metric types (see {@link dev.rico.metrics.types.Gauge},
- * {@link dev.rico.metrics.types.Counter} and {@link dev.rico.metrics.types.Timer}).
+ * Defines a key-value pair both of which are strings
  */
-public interface Metric extends AutoCloseable {
+public interface StringPair extends Tuple<String, String> {
 
     /**
-     * @return the name of the metric
+     * Generates a new {@link StringPair} based on the given key and value
+     * @param key the key
+     * @param value the value
+     * @return the pair
      */
-    String getName();
-
-    /**
-     * @return the context for this metric.
-     */
-    List<StringPair> getContext();
-
-    @Override
-    void close();
+    static StringPair of(String key, String value) {
+        return new DefaultStringPair(key, value);
+    }
 }

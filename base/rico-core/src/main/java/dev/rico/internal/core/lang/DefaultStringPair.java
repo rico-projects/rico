@@ -1,6 +1,5 @@
 /*
  * Copyright 2018-2019 Karakun AG.
- * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,28 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.metrics;
+package dev.rico.internal.core.lang;
 
 import dev.rico.core.lang.StringPair;
 
-import java.util.List;
-
 /**
- * Basic interface for all metric types (see {@link dev.rico.metrics.types.Gauge},
- * {@link dev.rico.metrics.types.Counter} and {@link dev.rico.metrics.types.Timer}).
+ * Default implementation of {@link StringPair}
  */
-public interface Metric extends AutoCloseable {
-
-    /**
-     * @return the name of the metric
-     */
-    String getName();
-
-    /**
-     * @return the context for this metric.
-     */
-    List<StringPair> getContext();
-
-    @Override
-    void close();
+public class DefaultStringPair extends DefaultTuple<String, String> implements StringPair {
+    public DefaultStringPair(String key, String value) {
+        super(key, value);
+    }
 }

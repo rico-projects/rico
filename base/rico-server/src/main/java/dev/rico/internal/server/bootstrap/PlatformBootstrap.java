@@ -42,6 +42,7 @@ import java.util.ServiceLoader;
 import java.util.Set;
 
 import static dev.rico.internal.core.RicoConstants.APPLICATION_CONTEXT;
+import static dev.rico.internal.core.RicoConstants.APPLICATION_NAME_DEFAULT;
 import static dev.rico.internal.core.RicoConstants.APPLICATION_NAME_PROPERTY;
 import static dev.rico.internal.server.bootstrap.BasicConfigurationProvider.MBEAN_REGISTRATION;
 import static dev.rico.internal.server.bootstrap.BasicConfigurationProvider.PLATFORM_ACTIVE;
@@ -61,7 +62,7 @@ public class PlatformBootstrap {
         Assert.requireNonNull(servletContext, "servletContext");
         Assert.requireNonNull(configuration, "configuration");
 
-        ContextManagerImpl.getInstance().addGlobalContext(APPLICATION_CONTEXT, configuration.getProperty(APPLICATION_NAME_PROPERTY));
+        ContextManagerImpl.getInstance().setGlobalAttribute(APPLICATION_CONTEXT, configuration.getProperty(APPLICATION_NAME_PROPERTY, APPLICATION_NAME_DEFAULT));
 
         if(configuration.getBooleanProperty(PLATFORM_ACTIVE)) {
             PlatformLogo.printLogo();

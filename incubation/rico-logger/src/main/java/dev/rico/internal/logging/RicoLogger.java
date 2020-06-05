@@ -17,8 +17,8 @@
 package dev.rico.internal.logging;
 
 import dev.rico.internal.core.context.ContextManagerImpl;
-import dev.rico.internal.logging.spi.LoggerBridge;
 import dev.rico.internal.logging.spi.LogMessage;
+import dev.rico.internal.logging.spi.LoggerBridge;
 import org.slf4j.Logger;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
@@ -30,10 +30,8 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.locks.Lock;
@@ -432,11 +430,7 @@ public class RicoLogger implements Logger {
                 logMessage.setTimestamp(ZonedDateTime.now());
                 logMessage.setThreadName(Thread.currentThread().getName());
 
-
-                final Map<String, String> context = new HashMap<>();
-                ContextManagerImpl.getInstance().getGlobalContexts().forEach(c -> context.put(c.getType(), c.getValue()));
-                ContextManagerImpl.getInstance().getThreadContexts().forEach(c -> context.put(c.getType(), c.getValue()));
-                logMessage.setContext(Collections.unmodifiableMap(context));
+                logMessage.setContext(ContextManagerImpl.getInstance().getAttributes());
 
                 logMessage.setMarker(currentMarkers);
 

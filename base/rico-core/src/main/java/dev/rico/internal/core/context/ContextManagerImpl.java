@@ -1,6 +1,5 @@
 /*
  * Copyright 2018-2019 Karakun AG.
- * Copyright 2015-2018 Canoo Engineering AG.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,21 +15,19 @@
  */
 package dev.rico.internal.core.context;
 
-import dev.rico.internal.core.Assert;
-import dev.rico.internal.core.PlatformVersion;
-import dev.rico.core.context.Context;
 import dev.rico.core.context.ContextManager;
 import dev.rico.core.functional.Subscription;
+import dev.rico.internal.core.Assert;
+import dev.rico.internal.core.PlatformVersion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.InetAddress;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static dev.rico.internal.core.RicoConstants.APPLICATION_CONTEXT;
 import static dev.rico.internal.core.RicoConstants.CANONICAL_HOST_NAME_CONTEXT;
@@ -45,86 +42,69 @@ public class ContextManagerImpl implements ContextManager {
 
     private static final ContextManagerImpl INSTANCE = new ContextManagerImpl();
 
-    private final Set<Context> globalContexts;
+    private final Map<String, String> globalContexts = new ConcurrentHashMap<>();
 
-    private final Lock globalContextsLock;
-
-    private final ThreadLocal<Set<Context>> threadContexts;
+    private final ThreadLocal<Map<String, String>> threadContexts = ThreadLocal.withInitial(HashMap::new);
 
     ContextManagerImpl() {
-        globalContexts = new HashSet<>();
-        threadContexts = new ThreadLocal<>();
-        globalContextsLock = new ReentrantLock();
-
-        addGlobalContext(APPLICATION_CONTEXT, UNNAMED_APPLICATION);
-
-        addGlobalContext(PLATFORM_VERSION_CONTEXT, PlatformVersion.getVersion());
+        setGlobalAttribute(APPLICATION_CONTEXT, UNNAMED_APPLICATION);
+        setGlobalAttribute(PLATFORM_VERSION_CONTEXT, PlatformVersion.getVersion());
 
         try {
             final InetAddress address = InetAddress.getLocalHost();
-            addGlobalContext(HOST_NAME_CONTEXT, address.getHostName());
-            addGlobalContext(CANONICAL_HOST_NAME_CONTEXT, address.getCanonicalHostName());
-            addGlobalContext(HOST_ADDRESS_CONTEXT, address.getHostAddress());
+            setGlobalAttribute(HOST_NAME_CONTEXT, address.getHostName());
+            setGlobalAttribute(CANONICAL_HOST_NAME_CONTEXT, address.getCanonicalHostName());
+            setGlobalAttribute(HOST_ADDRESS_CONTEXT, address.getHostAddress());
         } catch (Exception e) {
             LOG.error("Can not define InetAddress for context!", e);
         }
-
     }
 
     @Override
-    public Subscription addGlobalContext(final String type, final String value) {
-        Assert.requireNonNull(type, "type");
-        final Context context = new ContextImpl(type, value);
-        globalContextsLock.lock();
-        try {
-            if(globalContexts.contains(context)) {
-                globalContexts.remove(context);
-            }
-            globalContexts.add(context);
-        } finally {
-            globalContextsLock.unlock();
+    public Subscription setGlobalAttribute(final String name, final String value) {
+        Assert.requireNonNull(name, "name");
+        Assert.requireNonNull(value, "value");
+
+        globalContexts.put(name, value);
+        return () -> globalContexts.remove(name);
+    }
+
+    @Override
+    public Subscription setThreadLocalAttribute(final String name, String value) {
+        Assert.requireNonNull(name, "name");
+        Assert.requireNonNull(value, "value");
+
+        final Map<String, String> map = threadContexts.get();
+        map.put(name, value);
+        return () -> map.remove(name);
+    }
+
+    @Override
+    public Optional<String> getAttribute(String name) {
+        Assert.requireNonNull(name, "name");
+
+        final Map<String, String> map = threadContexts.get();
+        if (map.containsKey(name)) {
+            return Optional.of(map.get(name));
         }
-        return () -> {
-            globalContextsLock.lock();
-            try {
-                globalContexts.remove(context);
-            } finally {
-                globalContextsLock.unlock();
-            }
-        };
+        return Optional.ofNullable(globalContexts.get(name));
     }
 
     @Override
-    public Subscription addThreadContext(final String type, String value) {
-        Assert.requireNonNull(type, "type");
-        final Set<Context> set = getOrCreateThreadContexts();
-        final Context context = new ContextImpl(type, value);
-        if(set.contains(context)) {
-            set.remove(context);
-        }
-        set.add(context);
-        return () -> set.remove(context);
+    public Map<String, String> getGlobalAttributes() {
+        return Map.copyOf(globalContexts);
     }
 
     @Override
-    public Set<Context> getGlobalContexts() {
-        globalContextsLock.lock();
-        try {
-            return Collections.unmodifiableSet(globalContexts);
-        } finally {
-            globalContextsLock.unlock();
-        }
+    public Map<String, String> getThreadLocalAttributes() {
+        return Map.copyOf(threadContexts.get());
     }
 
     @Override
-    public Set<Context> getThreadContexts() {
-        return Collections.unmodifiableSet(getOrCreateThreadContexts());
-    }
-
-    private Set<Context> getOrCreateThreadContexts() {
-        final Set<Context> set = Optional.ofNullable(threadContexts.get()).orElse(new HashSet<>());
-        threadContexts.set(set);
-        return set;
+    public Map<String, String> getAttributes() {
+        final HashMap<String, String> result = new HashMap<>(globalContexts);
+        result.putAll(threadContexts.get());
+        return Collections.unmodifiableMap(result);
     }
 
     public static ContextManagerImpl getInstance() {

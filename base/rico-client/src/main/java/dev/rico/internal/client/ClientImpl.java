@@ -57,7 +57,7 @@ public class ClientImpl {
         this.clientConfiguration = ConfigurationFileLoader.loadConfiguration(ClientConstants.CONFIG_DEFAULT_LOCATION);
         Assert.requireNonNull(clientConfiguration, "clientConfiguration");
 
-        ContextManagerImpl.getInstance().addGlobalContext(APPLICATION_CONTEXT, clientConfiguration.getProperty(APPLICATION_NAME_PROPERTY, APPLICATION_NAME_DEFAULT));
+        ContextManagerImpl.getInstance().setGlobalAttribute(APPLICATION_CONTEXT, clientConfiguration.getProperty(APPLICATION_NAME_PROPERTY, APPLICATION_NAME_DEFAULT));
 
         final ServiceLoader<ServiceProvider> loader = ServiceLoader.load(ServiceProvider.class);
         final Iterator<ServiceProvider> iterator = loader.iterator();
@@ -87,7 +87,7 @@ public class ClientImpl {
         this.toolkit = Assert.requireNonNull(toolkit, "toolkit");
         services.clear();
         isToolkitSet.set(true);
-        ContextManagerImpl.getInstance().addGlobalContext(UI_CONTEXT, toolkit.getName());
+        ContextManagerImpl.getInstance().setGlobalAttribute(UI_CONTEXT, toolkit.getName());
     }
 
     private Set<Class<?>> implGetAllServiceTypes() {

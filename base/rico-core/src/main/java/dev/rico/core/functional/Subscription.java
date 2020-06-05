@@ -21,10 +21,10 @@ import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
 /**
- * Defines a function interface that is used to handle a unsubscription or unregistration procedure.
+ * Defines a function interface that is used to handle a unsubscription or un-registration procedure.
  * Whenever you register for example a handler or listener in the Rico API you will get a
  * {@link Subscription} instance as return value of the methods that does the registration. The {@link Subscription}
- * instance can be used to unregister / unsibscribe the registration by just calling the {@link #unsubscribe()} method.
+ * instance can be used to unregister / unsubscribe the registration by just calling the {@link #unsubscribe()} method.
  *
  * Example:
  *
@@ -48,7 +48,7 @@ import static org.apiguardian.api.API.Status.MAINTAINED;
 public interface Subscription {
 
     /**
-     * Unsusbscribe / unregister the handling that is defined by the {@link Subscription} instance.
+     * Unsubscribe / unregister the handling that is defined by the {@link Subscription} instance.
      */
     void unsubscribe();
 }
