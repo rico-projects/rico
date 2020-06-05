@@ -37,6 +37,7 @@ public class RequestMetricsFilter implements Filter {
 
     @Override
     public void init(final FilterConfig filterConfig) {
+        // do nothing on init
     }
 
     @Override
@@ -61,5 +62,6 @@ public class RequestMetricsFilter implements Filter {
 
     @Override
     public void destroy() {
+        // nothing needs to be destroyed
     }
 }
