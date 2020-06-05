@@ -21,8 +21,8 @@ import dev.rico.core.lang.StringPair;
 import java.util.List;
 
 /**
- * Basic interface for all metric types (see {@code dev.rico.metrics.types.Gauge},
- * {@code dev.rico.metrics.types.Counter} and {@code dev.rico.metrics.types.Timer}).
+ * Basic interface for all metric types (see {@link dev.rico.metrics.types.Gauge},
+ * {@link dev.rico.metrics.types.Counter} and {@link dev.rico.metrics.types.Timer}).
  */
 public interface Metric extends AutoCloseable {
 
