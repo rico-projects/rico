@@ -16,36 +16,36 @@
  */
 package dev.rico.core.lang;
 
-import dev.rico.internal.core.lang.DefaultTuple;
+import dev.rico.internal.core.lang.DefaultPair;
 
 /**
- * Defines a tuple that holds a key-value pair
+ * Defines a pair that holds a key-value pair.
+ *
  * @param <K> type of the key
  * @param <V> type of the value
  */
-public interface Tuple<K, V> {
+public interface Pair<K, V> {
 
     /**
-     * Returns the key
      * @return the key
      */
     K getKey();
 
     /**
-     * Returns the value
      * @return the value
      */
     V getValue();
 
     /**
-     * Generates a new {@link Tuple} based on the given key and value
-     * @param key the key
+     * Generates a new {@link Pair} based on the given key and value.
+     *
+     * @param key   the key
      * @param value the value
-     * @param <A> type of the key
-     * @param <B> type of the value
-     * @return the tuple
+     * @param <A>   type of the key
+     * @param <B>   type of the value
+     * @return the pair
      */
-    static <A, B> Tuple<A, B> of(A key, B value) {
-        return new DefaultTuple<>(key, value);
+    static <A, B> Pair<A, B> of(A key, B value) {
+        return new DefaultPair<>(key, value);
     }
 }

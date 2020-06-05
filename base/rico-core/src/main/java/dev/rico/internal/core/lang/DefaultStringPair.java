@@ -18,9 +18,9 @@ package dev.rico.internal.core.lang;
 import dev.rico.core.lang.StringPair;
 
 /**
- * Default implementation of {@link StringPair}
+ * Default implementation of {@link StringPair}.
  */
-public class DefaultStringPair extends DefaultTuple<String, String> implements StringPair {
+public class DefaultStringPair extends DefaultPair<String, String> implements StringPair {
     public DefaultStringPair(String key, String value) {
         super(key, value);
     }
