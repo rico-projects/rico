@@ -48,6 +48,8 @@ include 'security/rico-security-server'
 include 'security/rico-security-server-javaee'
 include 'security/rico-security-server-spring'
 
+include 'logging/rico-context-logback-appender'
+
 include 'incubation/rico-logger'
 include 'incubation/rico-logger-widget-common'
 include 'incubation/rico-logger-widget-client-javafx'
