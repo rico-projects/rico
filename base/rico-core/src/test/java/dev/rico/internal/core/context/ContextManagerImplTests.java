@@ -35,6 +35,8 @@ import static org.testng.Assert.assertTrue;
 
 public class ContextManagerImplTests {
 
+    private static final int INITIAL_SIZE = 8;
+
     private static final String key_1 = "KEY-1";
     private static final String key_2 = "KEY-2";
     private static final String value_1 = "VALUE-1";
@@ -51,14 +53,14 @@ public class ContextManagerImplTests {
     public void testInitialState() {
         assertEquals(manager.getThreadLocalAttributes().size(), 0);
 
-        assertEquals(manager.getGlobalAttributes().size(), 5);
+        assertEquals(manager.getGlobalAttributes().size(), INITIAL_SIZE);
         assertNameExists(manager.getGlobalAttributes(), HOST_NAME_CONTEXT);
         assertNameExists(manager.getGlobalAttributes(), PLATFORM_VERSION_CONTEXT);
         assertNameExists(manager.getGlobalAttributes(), CANONICAL_HOST_NAME_CONTEXT);
         assertNameExists(manager.getGlobalAttributes(), HOST_ADDRESS_CONTEXT);
         assertNameExists(manager.getGlobalAttributes(), APPLICATION_NAME_CONTEXT);
 
-        assertEquals(manager.getAttributes().size(), 5);
+        assertEquals(manager.getAttributes().size(), INITIAL_SIZE);
         assertNameExists(manager.getAttributes(), HOST_NAME_CONTEXT);
         assertNameExists(manager.getAttributes(), PLATFORM_VERSION_CONTEXT);
         assertNameExists(manager.getAttributes(), CANONICAL_HOST_NAME_CONTEXT);
@@ -74,24 +76,34 @@ public class ContextManagerImplTests {
 
     @Test
     public void testSettingGlobalContext() {
+        //given
+        final int initialGlobalSize = manager.getGlobalAttributes().size();
+        final int initialThreadSize = manager.getThreadLocalAttributes().size();
+        final int initialMergedSize = manager.getAttributes().size();
+
         // when
         manager.setGlobalAttribute(key_1, value_1);
 
         // then
         assertValue(manager.getAttribute(key_1), value_1);
 
-        assertEquals(manager.getThreadLocalAttributes().size(), 0);
+        assertEquals(manager.getThreadLocalAttributes().size(), initialThreadSize);
         assertNameDoesNotExist(manager.getThreadLocalAttributes(), key_1);
 
-        assertEquals(manager.getGlobalAttributes().size(), 6);
+        assertEquals(manager.getGlobalAttributes().size(), initialGlobalSize + 1);
         assertContainsKeyValue(manager.getGlobalAttributes(), key_1, value_1);
 
-        assertEquals(manager.getAttributes().size(), 6);
+        assertEquals(manager.getAttributes().size(), initialMergedSize + 1);
         assertContainsKeyValue(manager.getAttributes(), key_1, value_1);
     }
 
     @Test
     public void testOverrideGlobalContext() {
+        //given
+        final int initialGlobalSize = manager.getGlobalAttributes().size();
+        final int initialThreadSize = manager.getThreadLocalAttributes().size();
+        final int initialMergedSize = manager.getAttributes().size();
+
         // when
         manager.setGlobalAttribute(key_1, value_1);
         manager.setGlobalAttribute(key_1, value_2);
@@ -99,18 +111,23 @@ public class ContextManagerImplTests {
         // then
         assertValue(manager.getAttribute(key_1), value_2);
 
-        assertEquals(manager.getThreadLocalAttributes().size(), 0);
+        assertEquals(manager.getThreadLocalAttributes().size(), initialThreadSize);
         assertNameDoesNotExist(manager.getThreadLocalAttributes(), key_1);
 
-        assertEquals(manager.getGlobalAttributes().size(), 6);
+        assertEquals(manager.getGlobalAttributes().size(), initialGlobalSize + 1);
         assertContainsKeyValue(manager.getGlobalAttributes(), key_1, value_2);
 
-        assertEquals(manager.getAttributes().size(), 6);
+        assertEquals(manager.getAttributes().size(), initialMergedSize + 1);
         assertContainsKeyValue(manager.getAttributes(), key_1, value_2);
     }
 
     @Test
     public void testTwoGlobalContext() {
+        //given
+        final int initialGlobalSize = manager.getGlobalAttributes().size();
+        final int initialThreadSize = manager.getThreadLocalAttributes().size();
+        final int initialMergedSize = manager.getAttributes().size();
+
         // when
         manager.setGlobalAttribute(key_1, value_1);
         manager.setGlobalAttribute(key_2, value_2);
@@ -119,21 +136,26 @@ public class ContextManagerImplTests {
         assertValue(manager.getAttribute(key_1), value_1);
         assertValue(manager.getAttribute(key_2), value_2);
 
-        assertEquals(manager.getThreadLocalAttributes().size(), 0);
+        assertEquals(manager.getThreadLocalAttributes().size(), initialThreadSize);
         assertNameDoesNotExist(manager.getThreadLocalAttributes(), key_1);
         assertNameDoesNotExist(manager.getThreadLocalAttributes(), key_2);
 
-        assertEquals(manager.getGlobalAttributes().size(), 7);
+        assertEquals(manager.getGlobalAttributes().size(), initialGlobalSize + 2);
         assertContainsKeyValue(manager.getGlobalAttributes(), key_1, value_1);
         assertContainsKeyValue(manager.getGlobalAttributes(), key_2, value_2);
 
-        assertEquals(manager.getAttributes().size(), 7);
+        assertEquals(manager.getAttributes().size(), initialMergedSize + 2);
         assertContainsKeyValue(manager.getAttributes(), key_1, value_1);
         assertContainsKeyValue(manager.getAttributes(), key_2, value_2);
     }
 
     @Test
     public void testRemoveGlobalContext() {
+        //given
+        final int initialGlobalSize = manager.getGlobalAttributes().size();
+        final int initialThreadSize = manager.getThreadLocalAttributes().size();
+        final int initialMergedSize = manager.getAttributes().size();
+
         // when
         final Subscription subscription = manager.setGlobalAttribute(key_1, value_1);
         subscription.unsubscribe();
@@ -141,36 +163,46 @@ public class ContextManagerImplTests {
         // then
         assertFalse(manager.getAttribute(key_1).isPresent());
 
-        assertEquals(manager.getThreadLocalAttributes().size(), 0);
+        assertEquals(manager.getThreadLocalAttributes().size(), initialThreadSize);
         assertNameDoesNotExist(manager.getThreadLocalAttributes(), key_1);
 
-        assertEquals(manager.getGlobalAttributes().size(), 5);
+        assertEquals(manager.getGlobalAttributes().size(), initialGlobalSize);
         assertNameDoesNotExist(manager.getGlobalAttributes(), key_1);
 
-        assertEquals(manager.getAttributes().size(), 5);
+        assertEquals(manager.getAttributes().size(), initialMergedSize);
         assertNameDoesNotExist(manager.getAttributes(), key_1);
     }
 
     @Test
     public void testSettingThreadLocalContext() {
+        //given
+        final int initialGlobalSize = manager.getGlobalAttributes().size();
+        final int initialThreadSize = manager.getThreadLocalAttributes().size();
+        final int initialMergedSize = manager.getAttributes().size();
+
         // when
         manager.setThreadLocalAttribute(key_1, value_1);
 
         // then
         assertValue(manager.getAttribute(key_1), value_1);
 
-        assertEquals(manager.getThreadLocalAttributes().size(), 1);
+        assertEquals(manager.getThreadLocalAttributes().size(), initialThreadSize + 1);
         assertContainsKeyValue(manager.getThreadLocalAttributes(), key_1, value_1);
 
-        assertEquals(manager.getGlobalAttributes().size(), 5);
+        assertEquals(manager.getGlobalAttributes().size(), initialGlobalSize);
         assertNameDoesNotExist(manager.getGlobalAttributes(), key_1);
 
-        assertEquals(manager.getAttributes().size(), 6);
+        assertEquals(manager.getAttributes().size(), initialMergedSize + 1);
         assertContainsKeyValue(manager.getAttributes(), key_1, value_1);
     }
 
     @Test
     public void testOverrideThreadLocalContext() {
+        //given
+        final int initialGlobalSize = manager.getGlobalAttributes().size();
+        final int initialThreadSize = manager.getThreadLocalAttributes().size();
+        final int initialMergedSize = manager.getAttributes().size();
+
         // when
         manager.setThreadLocalAttribute(key_1, value_1);
         manager.setThreadLocalAttribute(key_1, value_2);
@@ -178,18 +210,23 @@ public class ContextManagerImplTests {
         // then
         assertValue(manager.getAttribute(key_1), value_2);
 
-        assertEquals(manager.getThreadLocalAttributes().size(), 1);
+        assertEquals(manager.getThreadLocalAttributes().size(), initialThreadSize + 1);
         assertContainsKeyValue(manager.getThreadLocalAttributes(), key_1, value_2);
 
-        assertEquals(manager.getGlobalAttributes().size(), 5);
+        assertEquals(manager.getGlobalAttributes().size(), initialGlobalSize);
         assertNameDoesNotExist(manager.getGlobalAttributes(), key_1);
 
-        assertEquals(manager.getAttributes().size(), 6);
+        assertEquals(manager.getAttributes().size(), initialMergedSize + 1);
         assertContainsKeyValue(manager.getAttributes(), key_1, value_2);
     }
 
     @Test
     public void testTwoThreadLocalContext() {
+        //given
+        final int initialGlobalSize = manager.getGlobalAttributes().size();
+        final int initialThreadSize = manager.getThreadLocalAttributes().size();
+        final int initialMergedSize = manager.getAttributes().size();
+
         // when
         manager.setThreadLocalAttribute(key_1, value_1);
         manager.setThreadLocalAttribute(key_2, value_2);
@@ -198,21 +235,26 @@ public class ContextManagerImplTests {
         assertValue(manager.getAttribute(key_1), value_1);
         assertValue(manager.getAttribute(key_2), value_2);
 
-        assertEquals(manager.getThreadLocalAttributes().size(), 2);
+        assertEquals(manager.getThreadLocalAttributes().size(), initialThreadSize + 2);
         assertContainsKeyValue(manager.getThreadLocalAttributes(), key_1, value_1);
         assertContainsKeyValue(manager.getThreadLocalAttributes(), key_2, value_2);
 
-        assertEquals(manager.getGlobalAttributes().size(), 5);
+        assertEquals(manager.getGlobalAttributes().size(), initialGlobalSize);
         assertNameDoesNotExist(manager.getGlobalAttributes(), key_1);
         assertNameDoesNotExist(manager.getGlobalAttributes(), key_2);
 
-        assertEquals(manager.getAttributes().size(), 7);
+        assertEquals(manager.getAttributes().size(), initialMergedSize + 2);
         assertContainsKeyValue(manager.getAttributes(), key_1, value_1);
         assertContainsKeyValue(manager.getAttributes(), key_2, value_2);
     }
 
     @Test
     public void testRemoveThreadLocalContext() {
+        //given
+        final int initialGlobalSize = manager.getGlobalAttributes().size();
+        final int initialThreadSize = manager.getThreadLocalAttributes().size();
+        final int initialMergedSize = manager.getAttributes().size();
+
         // when
         final Subscription subscription = manager.setThreadLocalAttribute(key_1, value_1);
         subscription.unsubscribe();
@@ -220,19 +262,24 @@ public class ContextManagerImplTests {
         // then
         assertFalse(manager.getAttribute(key_1).isPresent());
 
-        assertEquals(manager.getThreadLocalAttributes().size(), 0);
+        assertEquals(manager.getThreadLocalAttributes().size(), initialThreadSize);
         assertNameDoesNotExist(manager.getThreadLocalAttributes(), key_1);
 
-        assertEquals(manager.getGlobalAttributes().size(), 5);
+        assertEquals(manager.getGlobalAttributes().size(), initialGlobalSize);
         assertNameDoesNotExist(manager.getGlobalAttributes(), key_1);
 
-        assertEquals(manager.getAttributes().size(), 5);
+        assertEquals(manager.getAttributes().size(), initialMergedSize);
         assertNameDoesNotExist(manager.getAttributes(), key_1);
     }
 
 
     @Test
     public void testThreadLocalContextOverwritesGlobalContext() {
+        //given
+        final int initialGlobalSize = manager.getGlobalAttributes().size();
+        final int initialThreadSize = manager.getThreadLocalAttributes().size();
+        final int initialMergedSize = manager.getAttributes().size();
+
         // when
         manager.setGlobalAttribute(key_1, value_1);
         manager.setThreadLocalAttribute(key_1, value_2);
@@ -241,13 +288,13 @@ public class ContextManagerImplTests {
         // then
         assertValue(manager.getAttribute(key_1), value_2);
 
-        assertEquals(manager.getGlobalAttributes().size(), 6);
+        assertEquals(manager.getGlobalAttributes().size(), initialGlobalSize + 1);
         assertContainsKeyValue(manager.getGlobalAttributes(), key_1, value_1);
 
-        assertEquals(manager.getThreadLocalAttributes().size(), 1);
+        assertEquals(manager.getThreadLocalAttributes().size(), initialThreadSize + 1);
         assertContainsKeyValue(manager.getThreadLocalAttributes(), key_1, value_2);
 
-        assertEquals(manager.getAttributes().size(), 6);
+        assertEquals(manager.getAttributes().size(), initialMergedSize + 1);
         assertContainsKeyValue(manager.getAttributes(), key_1, value_2);
     }
 
