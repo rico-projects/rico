@@ -47,6 +47,11 @@ MAINTAINER Hendrik Ebbers, karakun.com
 ADD prometheus.yml /etc/prometheus/
 ----
 
+Prometheus provides a simple web frontend that can be used to visualize metrics.
+
+.Prometheus frontend
+image:prometheus-pic.png[]
+
 ==== Predefined metrics
 
 The following table gives an overview about all metrics that rico measures automatically:
