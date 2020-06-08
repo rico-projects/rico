@@ -40,6 +40,8 @@ include 'metrics/rico-metrics-server'
 include 'metrics/rico-metrics-server-spring'
 include 'metrics/rico-metrics-server-javaee'
 
+include 'logging/rico-context-log4j-appender'
+
 include 'security/rico-security-common'
 include 'security/rico-security-client'
 include 'security/rico-security-server'
