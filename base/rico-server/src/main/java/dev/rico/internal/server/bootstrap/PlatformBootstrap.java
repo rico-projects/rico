@@ -41,9 +41,9 @@ import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.Set;
 
-import static dev.rico.internal.core.RicoConstants.APPLICATION_CONTEXT;
 import static dev.rico.internal.core.RicoConstants.APPLICATION_NAME_DEFAULT;
 import static dev.rico.internal.core.RicoConstants.APPLICATION_NAME_PROPERTY;
+import static dev.rico.internal.core.context.ContextConstants.APPLICATION_NAME_CONTEXT;
 import static dev.rico.internal.server.bootstrap.BasicConfigurationProvider.MBEAN_REGISTRATION;
 import static dev.rico.internal.server.bootstrap.BasicConfigurationProvider.PLATFORM_ACTIVE;
 import static dev.rico.internal.server.bootstrap.BasicConfigurationProvider.ROOT_PACKAGE_FOR_CLASSPATH_SCAN;
@@ -62,9 +62,9 @@ public class PlatformBootstrap {
         Assert.requireNonNull(servletContext, "servletContext");
         Assert.requireNonNull(configuration, "configuration");
 
-        ContextManagerImpl.getInstance().setGlobalAttribute(APPLICATION_CONTEXT, configuration.getProperty(APPLICATION_NAME_PROPERTY, APPLICATION_NAME_DEFAULT));
+        ContextManagerImpl.getInstance().setGlobalAttribute(APPLICATION_NAME_CONTEXT, configuration.getProperty(APPLICATION_NAME_PROPERTY, APPLICATION_NAME_DEFAULT));
 
-        if(configuration.getBooleanProperty(PLATFORM_ACTIVE)) {
+        if (configuration.getBooleanProperty(PLATFORM_ACTIVE)) {
             PlatformLogo.printLogo();
             try {
                 LOG.info("Will boot Rico now");
@@ -83,7 +83,7 @@ public class PlatformBootstrap {
 
                 final Map<String, ServerModule> modules = new HashMap<>();
                 for (final Class<?> moduleClass : moduleClasses) {
-                    if(!ServerModule.class.isAssignableFrom(moduleClass)) {
+                    if (!ServerModule.class.isAssignableFrom(moduleClass)) {
                         throw new RuntimeException("Class " + moduleClass + " is annoated with " + ModuleDefinition.class.getSimpleName() + " but do not implement " + ServerModule.class.getSimpleName());
                     }
                     final ModuleDefinition moduleDefinition = moduleClass.getAnnotation(ModuleDefinition.class);
