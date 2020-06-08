@@ -28,6 +28,9 @@ import static dev.rico.internal.core.context.ContextConstants.APPLICATION_NAME_C
 import static dev.rico.internal.core.context.ContextConstants.CANONICAL_HOST_NAME_CONTEXT;
 import static dev.rico.internal.core.context.ContextConstants.HOST_ADDRESS_CONTEXT;
 import static dev.rico.internal.core.context.ContextConstants.HOST_NAME_CONTEXT;
+import static dev.rico.internal.core.context.ContextConstants.JAVA_VENDOR_CONTEXT;
+import static dev.rico.internal.core.context.ContextConstants.JAVA_VERSION_CONTEXT;
+import static dev.rico.internal.core.context.ContextConstants.OS_CONTEXT;
 import static dev.rico.internal.core.context.ContextConstants.PLATFORM_VERSION_CONTEXT;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -59,6 +62,9 @@ public class ContextManagerImplTests {
         assertNameExists(manager.getGlobalAttributes(), CANONICAL_HOST_NAME_CONTEXT);
         assertNameExists(manager.getGlobalAttributes(), HOST_ADDRESS_CONTEXT);
         assertNameExists(manager.getGlobalAttributes(), APPLICATION_NAME_CONTEXT);
+        assertNameExists(manager.getGlobalAttributes(), JAVA_VERSION_CONTEXT);
+        assertNameExists(manager.getGlobalAttributes(), JAVA_VENDOR_CONTEXT);
+        assertNameExists(manager.getGlobalAttributes(), OS_CONTEXT);
 
         assertEquals(manager.getAttributes().size(), INITIAL_SIZE);
         assertNameExists(manager.getAttributes(), HOST_NAME_CONTEXT);
@@ -66,12 +72,18 @@ public class ContextManagerImplTests {
         assertNameExists(manager.getAttributes(), CANONICAL_HOST_NAME_CONTEXT);
         assertNameExists(manager.getAttributes(), HOST_ADDRESS_CONTEXT);
         assertNameExists(manager.getAttributes(), APPLICATION_NAME_CONTEXT);
+        assertNameExists(manager.getAttributes(), JAVA_VERSION_CONTEXT);
+        assertNameExists(manager.getAttributes(), JAVA_VENDOR_CONTEXT);
+        assertNameExists(manager.getAttributes(), OS_CONTEXT);
 
         assertTrue(manager.getAttribute(HOST_NAME_CONTEXT).isPresent());
         assertTrue(manager.getAttribute(PLATFORM_VERSION_CONTEXT).isPresent());
         assertTrue(manager.getAttribute(CANONICAL_HOST_NAME_CONTEXT).isPresent());
         assertTrue(manager.getAttribute(HOST_ADDRESS_CONTEXT).isPresent());
         assertTrue(manager.getAttribute(APPLICATION_NAME_CONTEXT).isPresent());
+        assertTrue(manager.getAttribute(JAVA_VERSION_CONTEXT).isPresent());
+        assertTrue(manager.getAttribute(JAVA_VENDOR_CONTEXT).isPresent());
+        assertTrue(manager.getAttribute(OS_CONTEXT).isPresent());
     }
 
     @Test
