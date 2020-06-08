@@ -87,6 +87,7 @@ public class ContextManagerImpl implements ContextManager {
 
         final Map<String, String> map = threadContexts.get();
         map.put(name, value);
+
         return () -> map.remove(name);
     }
 
