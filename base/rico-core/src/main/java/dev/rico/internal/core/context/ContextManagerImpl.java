@@ -19,6 +19,7 @@ import dev.rico.core.context.ContextManager;
 import dev.rico.core.functional.Subscription;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.PlatformVersion;
+import dev.rico.internal.core.os.OperationSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,12 +30,17 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static dev.rico.internal.core.RicoConstants.APPLICATION_CONTEXT;
-import static dev.rico.internal.core.RicoConstants.CANONICAL_HOST_NAME_CONTEXT;
-import static dev.rico.internal.core.RicoConstants.HOST_ADDRESS_CONTEXT;
-import static dev.rico.internal.core.RicoConstants.HOST_NAME_CONTEXT;
-import static dev.rico.internal.core.RicoConstants.PLATFORM_VERSION_CONTEXT;
-import static dev.rico.internal.core.RicoConstants.UNNAMED_APPLICATION;
+import static dev.rico.internal.core.context.ContextConstants.APPLICATION_NAME_CONTEXT;
+import static dev.rico.internal.core.context.ContextConstants.CANONICAL_HOST_NAME_CONTEXT;
+import static dev.rico.internal.core.context.ContextConstants.HOST_ADDRESS_CONTEXT;
+import static dev.rico.internal.core.context.ContextConstants.HOST_NAME_CONTEXT;
+import static dev.rico.internal.core.context.ContextConstants.JAVA_VENDOR_CONTEXT;
+import static dev.rico.internal.core.context.ContextConstants.JAVA_VENDOR_SYSTEM_PROPERTY;
+import static dev.rico.internal.core.context.ContextConstants.JAVA_VERSION_CONTEXT;
+import static dev.rico.internal.core.context.ContextConstants.JAVA_VERSION_SYSTEM_PROPERTY;
+import static dev.rico.internal.core.context.ContextConstants.OS_CONTEXT;
+import static dev.rico.internal.core.context.ContextConstants.PLATFORM_VERSION_CONTEXT;
+import static dev.rico.internal.core.context.ContextConstants.UNNAMED_APPLICATION;
 
 public class ContextManagerImpl implements ContextManager {
 
@@ -47,8 +53,13 @@ public class ContextManagerImpl implements ContextManager {
     private final ThreadLocal<Map<String, String>> threadContexts = ThreadLocal.withInitial(HashMap::new);
 
     ContextManagerImpl() {
-        setGlobalAttribute(APPLICATION_CONTEXT, UNNAMED_APPLICATION);
+        setGlobalAttribute(APPLICATION_NAME_CONTEXT, UNNAMED_APPLICATION);
         setGlobalAttribute(PLATFORM_VERSION_CONTEXT, PlatformVersion.getVersion());
+
+        setGlobalAttribute(OS_CONTEXT, OperationSystem.getLocalSystem().getShortName());
+
+        setGlobalAttribute(JAVA_VERSION_CONTEXT, System.getProperty(JAVA_VERSION_SYSTEM_PROPERTY));
+        setGlobalAttribute(JAVA_VENDOR_CONTEXT, System.getProperty(JAVA_VENDOR_SYSTEM_PROPERTY));
 
         try {
             final InetAddress address = InetAddress.getLocalHost();
