@@ -14,25 +14,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.internal.core;
+package dev.rico.core.lang;
 
-import org.apiguardian.api.API;
-
-import static org.apiguardian.api.API.Status.INTERNAL;
+import dev.rico.internal.core.lang.DefaultPair;
 
 /**
- * Utility class for OS related functionalities.
+ * Defines a pair that holds a key-value pair.
+ *
+ * @param <K> type of the key
+ * @param <V> type of the value
  */
-@API(since = "0.x", status = INTERNAL)
-public class OsUtil {
+public interface Pair<K, V> {
 
     /**
-     * Returns {@code true} if we are on windows.
-     * @return
+     * @return the key
      */
-    public static boolean isWindows() {
-        String operSys = System.getProperty(RicoConstants.OS_NAME).toLowerCase();
-        return (operSys.contains(RicoConstants.WIN));
-    }
+    K getKey();
 
+    /**
+     * @return the value
+     */
+    V getValue();
+
+    /**
+     * Generates a new {@link Pair} based on the given key and value.
+     *
+     * @param key   the key
+     * @param value the value
+     * @param <A>   type of the key
+     * @param <B>   type of the value
+     * @return the pair
+     */
+    static <A, B> Pair<A, B> of(A key, B value) {
+        return new DefaultPair<>(key, value);
+    }
 }

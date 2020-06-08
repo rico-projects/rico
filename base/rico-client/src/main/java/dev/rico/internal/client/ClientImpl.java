@@ -34,9 +34,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static dev.rico.internal.client.ClientConstants.UI_CONTEXT;
-import static dev.rico.internal.core.RicoConstants.APPLICATION_CONTEXT;
 import static dev.rico.internal.core.RicoConstants.APPLICATION_NAME_DEFAULT;
 import static dev.rico.internal.core.RicoConstants.APPLICATION_NAME_PROPERTY;
+import static dev.rico.internal.core.context.ContextConstants.APPLICATION_NAME_CONTEXT;
 
 public class ClientImpl {
 
@@ -48,7 +48,7 @@ public class ClientImpl {
 
     private final ClientConfiguration clientConfiguration;
 
-    private final AtomicBoolean isToolkitSet =  new AtomicBoolean(false);
+    private final AtomicBoolean isToolkitSet = new AtomicBoolean(false);
 
     private Toolkit toolkit;
 
@@ -57,13 +57,13 @@ public class ClientImpl {
         this.clientConfiguration = ConfigurationFileLoader.loadConfiguration(ClientConstants.CONFIG_DEFAULT_LOCATION);
         Assert.requireNonNull(clientConfiguration, "clientConfiguration");
 
-        ContextManagerImpl.getInstance().setGlobalAttribute(APPLICATION_CONTEXT, clientConfiguration.getProperty(APPLICATION_NAME_PROPERTY, APPLICATION_NAME_DEFAULT));
+        ContextManagerImpl.getInstance().setGlobalAttribute(APPLICATION_NAME_CONTEXT, clientConfiguration.getProperty(APPLICATION_NAME_PROPERTY, APPLICATION_NAME_DEFAULT));
 
         final ServiceLoader<ServiceProvider> loader = ServiceLoader.load(ServiceProvider.class);
         final Iterator<ServiceProvider> iterator = loader.iterator();
         while (iterator.hasNext()) {
             final ServiceProvider provider = iterator.next();
-            if(provider.isActive(clientConfiguration)) {
+            if (provider.isActive(clientConfiguration)) {
                 final Class serviceClass = provider.getServiceType();
                 Assert.requireNonNull(serviceClass, "serviceClass");
                 if (providers.containsKey(serviceClass)) {
@@ -96,7 +96,7 @@ public class ClientImpl {
 
     private <S> boolean hasServiceImpl(final Class<S> serviceClass) {
         Assert.requireNonNull(serviceClass, "serviceClass");
-        if(!isToolkitSet.get()){
+        if (!isToolkitSet.get()) {
             throw new RuntimeException("Toolkit is not set!");
         }
         return providers.containsKey(serviceClass);
@@ -104,15 +104,15 @@ public class ClientImpl {
 
     private synchronized <S> S getServiceImpl(final Class<S> serviceClass) {
         Assert.requireNonNull(serviceClass, "serviceClass");
-        if(!isToolkitSet.get()){
+        if (!isToolkitSet.get()) {
             throw new RuntimeException("Toolkit is not set!");
         }
-        if(services.containsKey(serviceClass)) {
+        if (services.containsKey(serviceClass)) {
             final S service = (S) services.get(serviceClass);
             return service;
         }
         final ServiceProvider<S> serviceProvider = providers.get(serviceClass);
-        if(serviceProvider == null) {
+        if (serviceProvider == null) {
             throw new IllegalStateException("Can ot find service provider for '" + serviceClass + "'");
         }
         final S service = serviceProvider.getService(clientConfiguration);
@@ -142,7 +142,7 @@ public class ClientImpl {
     }
 
     private static synchronized ClientImpl getInstance() {
-        if(INSTANCE == null) {
+        if (INSTANCE == null) {
             INSTANCE = new ClientImpl();
         }
         return INSTANCE;

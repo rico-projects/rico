@@ -20,10 +20,11 @@ import dev.rico.internal.core.lang.DefaultStringPair;
 /**
  * Defines a key-value pair both of which are strings
  */
-public interface StringPair extends Tuple<String, String> {
+public interface StringPair extends Pair<String, String> {
 
     /**
-     * Generates a new {@link StringPair} based on the given key and value
+     * Generates a new {@link StringPair} based on the given key and value.
+     *
      * @param key the key
      * @param value the value
      * @return the pair
