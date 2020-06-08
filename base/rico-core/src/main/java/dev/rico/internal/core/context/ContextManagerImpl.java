@@ -21,7 +21,6 @@ import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.PlatformVersion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 
 import java.net.InetAddress;
 import java.util.Collections;
@@ -75,15 +74,10 @@ public class ContextManagerImpl implements ContextManager {
         Assert.requireNonNull(name, "name");
         Assert.requireNonNull(value, "value");
 
-        MDC.put(name, value);
-
         final Map<String, String> map = threadContexts.get();
         map.put(name, value);
 
-        return () -> {
-            map.remove(name);
-            MDC.remove(name);
-        };
+        return () -> map.remove(name);
     }
 
     @Override
