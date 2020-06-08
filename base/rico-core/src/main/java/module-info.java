@@ -39,7 +39,8 @@ module dev.rico.core {
             dev.rico.remoting.server,
             dev.rico.security.client,
             dev.rico.security.server,
-            dev.rico.logback.appender;
+            dev.rico.logback.appender,
+            dev.rico.log4j.appender;
     exports dev.rico.internal.core.http to dev.rico.client,
             dev.rico.server,
             dev.rico.remoting.client,
