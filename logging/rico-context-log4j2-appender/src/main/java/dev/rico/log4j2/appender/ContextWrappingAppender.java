@@ -1,4 +1,4 @@
-package dev.rico.log4j.appender;
+package dev.rico.log4j2.appender;
 
 import dev.rico.internal.core.context.ContextManagerImpl;
 import org.apache.logging.log4j.core.Appender;

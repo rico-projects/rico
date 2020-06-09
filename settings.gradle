@@ -40,15 +40,14 @@ include 'metrics/rico-metrics-server'
 include 'metrics/rico-metrics-server-spring'
 include 'metrics/rico-metrics-server-javaee'
 
-include 'logging/rico-context-log4j-appender'
+include 'logging/rico-context-logback-appender'
+include 'logging/rico-context-log4j2-appender'
 
 include 'security/rico-security-common'
 include 'security/rico-security-client'
 include 'security/rico-security-server'
 include 'security/rico-security-server-javaee'
 include 'security/rico-security-server-spring'
-
-include 'logging/rico-context-logback-appender'
 
 include 'incubation/rico-logger'
 include 'incubation/rico-logger-widget-common'
