@@ -47,6 +47,13 @@ MAINTAINER Hendrik Ebbers, karakun.com
 ADD prometheus.yml /etc/prometheus/
 ----
 
+Prometheus provides a simple web frontend that can be used to visualize metrics.
+Any metric that has been created in a Java application by using the Rico metrics API can be displayed.
+Next to the custom metrics of an application Rico already provides some general metrics.
+
+.Prometheus frontend
+image:prometheus-pic.png[]
+
 ==== Predefined metrics
 
 The following table gives an overview about all metrics that rico measures automatically:
@@ -182,21 +189,23 @@ The following table gives an overview about all metrics that rico measures autom
 |Number of active http sessions
 |===
 
-////
+==== Create reuseable dashboards with Grafana
 
-todo: short description of UI / pic of prometheus
+While Prometheus can be used to visualize a graph of 1 metric or query you normally expect much more functionality for modern application monitoring.
+Since the data storage and query handlung is the main task of Prometheus an additional tool should be used to visualize all the metrics.
+Here https://grafana.com[Grafana] is a very good choose.
+The open source tool can be used to create dashboards with several graphs based on data that is available in Prometheus.
 
-==== Custom metrics
+.Grafana and Prometheus
+image:prometheus-grafana.svg[]
 
+The following picture shows a sample dashboard that was created with grafana.
+Next to this a live demo can be found https://play.grafana.org/[here].
 
+.Grafana dashboard
+image:grafana.png[]
 
-
-todo: How to query metrics.
-What kind of metrics will Rico provide by default (cpu, threads, ...) ...
-
-==== Grafana
-
-todo: How to create reuseable dashboards with Grafana
-
-////
-
+As already described for Prometheus we can start Grafana in a Docker container, too.
+Information about running Grafana in Docker can be found https://grafana.com/docs/grafana/latest/installation/docker/[here].
+If you want to automate the configuration and provisioning of Grafana https://grafana.com/docs/grafana/latest/administration/provisioning/[this link] will be helpfull.
+Next to this we provide a https://docs.docker.com/compose/[docker-compose] based sample in https://github.com/rico-projects/rico-samples/tree/master/metrics-sample[the Rico samples repository].
