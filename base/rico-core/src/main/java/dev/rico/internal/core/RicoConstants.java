@@ -27,17 +27,7 @@ public interface RicoConstants {
 
     String HASH_ALGORITHM = "MD5";
 
-    String APPLICATION_CONTEXT = "application.name";
-
     String THREAD_CONTEXT = "thread";
-
-    String UNNAMED_APPLICATION = "UNNAMED";
-
-    String HOST_NAME_CONTEXT = "hostName";
-
-    String CANONICAL_HOST_NAME_CONTEXT = "canonicalHostName";
-
-    String HOST_ADDRESS_CONTEXT = "hostAddress";
 
     String APPLICATION_NAME_PROPERTY = "application.name";
 
@@ -50,8 +40,6 @@ public interface RicoConstants {
     String THREAD_NAME_PREFIX = "Rico-Background-Thread-";
 
     String THREAD_GROUP_NAME = "Rico executors";
-
-    String PLATFORM_VERSION_CONTEXT = "platform.version";
 
     String OS_NAME = "os.name";
 

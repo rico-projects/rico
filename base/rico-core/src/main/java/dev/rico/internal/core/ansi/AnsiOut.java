@@ -16,7 +16,7 @@
  */
 package dev.rico.internal.core.ansi;
 
-import dev.rico.internal.core.OsUtil;
+import dev.rico.internal.core.os.OperationSystem;
 import org.apiguardian.api.API;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
@@ -47,10 +47,11 @@ public interface AnsiOut {
 
     /**
      * Returns true if the current platform supports ANSI codes
+     *
      * @return true if the current platform supports ANSI codes
      */
     static boolean isSupported() {
-        return !OsUtil.isWindows();
+        return OperationSystem.getLocalSystem().isWindows();
     }
 
 }

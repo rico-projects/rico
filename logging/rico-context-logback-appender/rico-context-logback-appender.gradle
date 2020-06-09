@@ -14,25 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.internal.core;
 
-import org.apiguardian.api.API;
-
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-/**
- * Utility class for OS related functionalities.
- */
-@API(since = "0.x", status = INTERNAL)
-public class OsUtil {
-
-    /**
-     * Returns {@code true} if we are on windows.
-     * @return
-     */
-    public static boolean isWindows() {
-        String operSys = System.getProperty(RicoConstants.OS_NAME).toLowerCase();
-        return (operSys.contains(RicoConstants.WIN));
-    }
-
+dependencies {
+    api project(':rico-core')
+    implementation "ch.qos.logback:logback-classic:$logbackVersion"
 }
