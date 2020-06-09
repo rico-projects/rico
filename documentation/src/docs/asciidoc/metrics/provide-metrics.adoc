@@ -48,6 +48,8 @@ ADD prometheus.yml /etc/prometheus/
 ----
 
 Prometheus provides a simple web frontend that can be used to visualize metrics.
+Any metric that has been created in a Java application by using the Rico metrics API can be displayed.
+Next to the custom metrics of an application Rico already provides some general metrics.
 
 .Prometheus frontend
 image:prometheus-pic.png[]
@@ -186,6 +188,18 @@ The following table gives an overview about all metrics that rico measures autom
 |-
 |Number of active http sessions
 |===
+
+==== Create reuseable dashboards with Grafana
+
+While Prometheus can be used to visualize a graph of 1 metric or query you normally expect much more functionality for modern application monitoring.
+Since the data storage and query handlung is the main task of Prometheus an additional tool should be used to visualize all the metrics.
+Here https://grafana.com[Grafana] is a very good choose.
+The open source tool can be used to create dashboards with several graphs based on data that is available in Prometheus.
+The following picture shows a sample dashboard that was created with grafana.
+Next to this a live demo can be found https://play.grafana.org/[here].
+
+.Grafana dashboard
+image:grafana.png[]
 
 ////
 
