@@ -195,6 +195,10 @@ While Prometheus can be used to visualize a graph of 1 metric or query you norma
 Since the data storage and query handlung is the main task of Prometheus an additional tool should be used to visualize all the metrics.
 Here https://grafana.com[Grafana] is a very good choose.
 The open source tool can be used to create dashboards with several graphs based on data that is available in Prometheus.
+
+.Grafana and Prometheus
+image:prometheus-grafana.svg[]
+
 The following picture shows a sample dashboard that was created with grafana.
 Next to this a live demo can be found https://play.grafana.org/[here].
 
