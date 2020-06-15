@@ -25,7 +25,7 @@ import dev.rico.internal.core.http.DownloadInputStreamImpl;
 import dev.rico.internal.core.http.HttpClientConnection;
 import dev.rico.internal.core.http.HttpHeaderImpl;
 import dev.rico.client.ClientConfiguration;
-import dev.rico.core.functional.Promise;
+import dev.rico.core.http.Promise;
 import dev.rico.core.http.ByteArrayProvider;
 import dev.rico.core.http.ConnectionException;
 import dev.rico.core.http.HttpCallResponseBuilder;

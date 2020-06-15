@@ -20,7 +20,7 @@ import dev.rico.client.Client;
 import dev.rico.client.ClientConfiguration;
 import dev.rico.client.concurrent.BackgroundExecutor;
 import dev.rico.client.concurrent.UiExecutor;
-import dev.rico.core.functional.Promise;
+import dev.rico.core.http.Promise;
 import dev.rico.core.http.BadResponseException;
 import dev.rico.core.http.HttpException;
 import dev.rico.core.http.HttpResponse;

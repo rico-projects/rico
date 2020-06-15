@@ -16,7 +16,6 @@
  */
 package dev.rico.core.http;
 
-import dev.rico.core.functional.Promise;
 import org.apiguardian.api.API;
 
 import java.io.InputStream;
