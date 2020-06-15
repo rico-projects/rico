@@ -22,6 +22,7 @@ dependencies {
     compileOnly "jakarta.enterprise:jakarta.enterprise.cdi-api:$jakartaEnterpriseCdiApiVersion"
     compileOnly "jakarta.servlet:jakarta.servlet-api:$jakartaServletApiVersion"
     compileOnly "jakarta.interceptor:jakarta.interceptor-api:$jakartaInterceptorApiVersion"
+    compileOnly "jakarta.enterprise.concurrent:jakarta.enterprise.concurrent-api:$jakartaConcurrentApiVersion"
 
     testImplementation "jakarta.enterprise:jakarta.enterprise.cdi-api:$jakartaEnterpriseCdiApiVersion"
     testImplementation "jakarta.servlet:jakarta.servlet-api:$jakartaServletApiVersion"

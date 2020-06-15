@@ -21,6 +21,7 @@ import dev.rico.server.spi.components.ManagedBeanFactory;
 import dev.rico.internal.server.beans.PostConstructInterceptor;
 import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.core.util.bean.BeanBuilder;
+import org.apache.deltaspike.core.util.metadata.builder.ContextualLifecycle;
 import org.apache.deltaspike.core.util.metadata.builder.DelegatingContextualLifecycle;
 import org.apiguardian.api.API;
 
@@ -34,6 +35,7 @@ import javax.servlet.ServletContext;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
@@ -45,47 +47,38 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class CdiManagedBeanFactory implements ManagedBeanFactory {
 
-    private final Map<Object, CreationalContext> contextMap = new HashMap<>();
+    private final Map<Object, CreationalContext<?>> contextMap = new HashMap<>();
 
-    private final Map<Object, Bean> beanMap = new HashMap<>();
+    private final Map<Object, Bean<?>> beanMap = new HashMap<>();
 
     @Override
     public void init(final ServletContext servletContext) {}
 
-    @SuppressWarnings("unchecked")
     @Override
     public <T> T createDependentInstance(final Class<T> cls) {
         Assert.requireNonNull(cls, "cls");
-        final BeanManager bm = BeanManagerProvider.getInstance().getBeanManager();
-        final AnnotatedType annotatedType = bm.createAnnotatedType(cls);
-        final InjectionTarget<T> injectionTarget = bm.createInjectionTarget(annotatedType);
-        final Bean<T> bean = new BeanBuilder<T>(bm)
-                .beanClass(cls)
-                .name(UUID.randomUUID().toString())
-                .scope(Dependent.class)
-                .beanLifecycle(new DelegatingContextualLifecycle<>(injectionTarget))
-                .create();
-        final Class<?> beanClass = bean.getBeanClass();
-        final CreationalContext<T> creationalContext = bm.createCreationalContext(bean);
-        final T instance = (T) bm.getReference(bean, beanClass, creationalContext);
-        contextMap.put(instance, creationalContext);
-        beanMap.put(instance, bean);
-        return instance;
+        return createDependentInstanceInternal(cls, DelegatingContextualLifecycle::new);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public <T> T createDependentInstance(final Class<T> cls, final PostConstructInterceptor<T> interceptor) {
         Assert.requireNonNull(cls, "cls");
         Assert.requireNonNull(interceptor, "interceptor");
-        BeanManager bm = BeanManagerProvider.getInstance().getBeanManager();
-        final AnnotatedType annotatedType = bm.createAnnotatedType(cls);
+        return createDependentInstanceInternal(cls, injectionTarget -> new RicoContextualLifecycle<>(injectionTarget, interceptor));
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> T createDependentInstanceInternal(Class<T> cls, Function<InjectionTarget<T>, ContextualLifecycle<T>> supl) {
+        Assert.requireNonNull(cls, "cls");
+        final BeanManager bm = BeanManagerProvider.getInstance().getBeanManager();
+        final AnnotatedType<T> annotatedType = bm.createAnnotatedType(cls);
         final InjectionTarget<T> injectionTarget = bm.createInjectionTarget(annotatedType);
+        final ContextualLifecycle<T> beanLifecycle = supl.apply(injectionTarget);
         final Bean<T> bean = new BeanBuilder<T>(bm)
                 .beanClass(cls)
                 .name(UUID.randomUUID().toString())
                 .scope(Dependent.class)
-                .beanLifecycle(new RicoContextualLifecycle<>(injectionTarget, interceptor))
+                .beanLifecycle(beanLifecycle)
                 .create();
         final Class<?> beanClass = bean.getBeanClass();
         final CreationalContext<T> creationalContext = bm.createCreationalContext(bean);
@@ -99,8 +92,8 @@ public class CdiManagedBeanFactory implements ManagedBeanFactory {
     @Override
     public <T> void destroyDependentInstance(final T instance, final Class<T> cls) {
         Assert.requireNonNull(instance, "instance");
-        final Bean bean = beanMap.remove(instance);
-        final CreationalContext context = contextMap.remove(instance);
+        final Bean<T> bean = (Bean<T>) beanMap.remove(instance);
+        final CreationalContext<T> context = (CreationalContext<T>) contextMap.remove(instance);
         bean.destroy(instance, context);
     }
 

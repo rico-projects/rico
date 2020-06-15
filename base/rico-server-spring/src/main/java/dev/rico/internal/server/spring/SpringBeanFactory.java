@@ -16,7 +16,9 @@
  */
 package dev.rico.internal.server.spring;
 
+import dev.rico.core.concurrent.Scheduler;
 import dev.rico.internal.core.Assert;
+import dev.rico.internal.core.concurrent.SchedulerImpl;
 import dev.rico.internal.core.context.ContextManagerImpl;
 import dev.rico.internal.server.bootstrap.PlatformBootstrap;
 import dev.rico.internal.server.client.ClientSessionProvider;
@@ -26,15 +28,20 @@ import dev.rico.server.client.ClientSession;
 import dev.rico.server.spring.ClientScope;
 import dev.rico.server.timing.ServerTiming;
 import org.apiguardian.api.API;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.CustomScopeConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.SchedulingTaskExecutor;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.context.annotation.ApplicationScope;
 import org.springframework.web.context.annotation.RequestScope;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.concurrent.Executor;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
@@ -44,6 +51,15 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @Configuration
 @API(since = "0.x", status = INTERNAL)
 public class SpringBeanFactory {
+
+    @Value("${rico.threadPool.coreSize:5}")
+    private int threadPoolCoreSize;
+
+    @Value("${rico.threadPool.maxSize:10}")
+    private int threadPoolMaxSize;
+
+    @Value("${rico.threadPool.waitOnShutdown:false}")
+    private boolean threadPoolWaitForJobsOnShutdown;
 
     @Bean(name = "clientSession")
     @ClientScope
@@ -75,5 +91,22 @@ public class SpringBeanFactory {
                 return method.invoke(ServerTimingFilter.getCurrentTiming(), args);
             }
         });
+    }
+
+    @Bean(name = "scheduler")
+    @ApplicationScope
+    protected Scheduler createScheduler(@Qualifier("ricoThreadPool") final Executor executor) {
+        Assert.requireNonNull(executor, "executor");
+        return new SchedulerImpl(executor);
+    }
+
+    @Bean(name = "ricoThreadPool")
+    @ApplicationScope
+    protected SchedulingTaskExecutor createCachedThreadPool() {
+        final ThreadPoolTaskExecutor result = new ThreadPoolTaskExecutor();
+        result.setCorePoolSize(threadPoolCoreSize);
+        result.setMaxPoolSize(threadPoolMaxSize);
+        result.setWaitForTasksToCompleteOnShutdown(threadPoolWaitForJobsOnShutdown);
+        return result;
     }
 }
