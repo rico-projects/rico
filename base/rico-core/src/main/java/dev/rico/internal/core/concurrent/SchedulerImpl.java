@@ -14,14 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.internal.client.concurrent;
+package dev.rico.internal.core.concurrent;
 
-import dev.rico.internal.core.Assert;
 import dev.rico.core.concurrent.Scheduler;
 import dev.rico.core.concurrent.Trigger;
+import dev.rico.internal.core.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -32,6 +35,8 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class SchedulerImpl implements Scheduler {
 
+    private static final Logger LOG = LoggerFactory.getLogger(SchedulerImpl.class);
+
     private final Executor executor;
 
     private final List<ScheduledTask> tasks;
@@ -40,12 +45,12 @@ public class SchedulerImpl implements Scheduler {
 
     private final Condition taskCondition;
 
-    private final ScheduledTaskComparator comparator;
+    private final Comparator<ScheduledTask> comparator;
 
     public SchedulerImpl(final Executor executor) {
         this.executor = Assert.requireNonNull(executor, "executor");
         this.tasks = new CopyOnWriteArrayList<>();
-        this.comparator = new ScheduledTaskComparator();
+        this.comparator = Comparator.comparing(ScheduledTask::getScheduledStartDate);
         this.taskLock = new ReentrantLock();
         this.taskCondition = taskLock.newCondition();
 
@@ -53,21 +58,22 @@ public class SchedulerImpl implements Scheduler {
             while (!Thread.currentThread().isInterrupted()) {
                 taskLock.lock();
                 try {
-                    if(!tasks.isEmpty()) {
+                    if (!tasks.isEmpty()) {
                         tasks.sort(comparator);
                         final ScheduledTask nextTask = tasks.get(0);
                         final LocalDateTime now = LocalDateTime.now();
-                        if(nextTask.getScheduledStartDate().isBefore(now) || nextTask.getScheduledStartDate().isEqual(now)) {
+                        if (nextTask.getScheduledStartDate().isBefore(now) || nextTask.getScheduledStartDate().isEqual(now)) {
                             tasks.remove(nextTask);
-                            schedule(nextTask);
+                            executeScheduledTask(nextTask);
                         } else {
-                            try {
-                                taskCondition.awaitNanos(Duration.between(now, nextTask.getScheduledStartDate()).toNanos());
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
+                            taskCondition.awaitNanos(Duration.between(now, nextTask.getScheduledStartDate()).toNanos());
                         }
+                    } else {
+                        taskCondition.await();
                     }
+                } catch (InterruptedException e) {
+                    LOG.warn("Scheduler has been interrupted", e);
+                    throw new RuntimeException(e);
                 } finally {
                     taskLock.unlock();
                 }
@@ -75,40 +81,43 @@ public class SchedulerImpl implements Scheduler {
         });
     }
 
-    private CompletableFuture<Void> schedule( final ScheduledTask task) {
+    private void executeScheduledTask(final ScheduledTask task) {
         Assert.requireNonNull(task, "task");
-        return schedule(task.getTask(), task.getTrigger(), task.getScheduledStartDate(), task.getCompletableFuture());
-    }
-
-    private CompletableFuture<Void> schedule(final Runnable task, final Trigger trigger, final LocalDateTime scheduledStartTime, final CompletableFuture<Void> completableFuture) {
-        Assert.requireNonNull(task, "task");
-        Assert.requireNonNull(trigger, "trigger");
-        Assert.requireNonNull(trigger, "completableFuture");
         executor.execute(() -> {
             final LocalDateTime startTime = LocalDateTime.now();
-            task.run();
+            task.getTask().run();
             final LocalDateTime endTime = LocalDateTime.now();
-            final LocalDateTime nextTime = trigger.nextExecutionTime(new ScheduledTaskResultImpl(scheduledStartTime, startTime, endTime))
-                    .orElse(null);
-            if(nextTime == null) {
-                completableFuture.complete(null);
-            } else {
-                final ScheduledTask scheduledTask = new ScheduledTask(task, trigger, nextTime, completableFuture);
-                taskLock.lock();
-                try {
-                    tasks.add(scheduledTask);
-                    taskCondition.signal();
-                } finally {
-                    taskLock.unlock();
-                }
-            }
+            final ScheduledTaskResultImpl lastTime = new ScheduledTaskResultImpl(task.getScheduledStartDate(), startTime, endTime);
+
+            schedule(task.getTask(), task.getTrigger(), lastTime, task.getCompletableFuture());
         });
-        return completableFuture;
+    }
+
+    public void schedule(final Runnable task, final Trigger trigger, final ScheduledTaskResultImpl lastTime, final CompletableFuture<Void> completableFuture) {
+        final LocalDateTime nextTime = trigger.nextExecutionTime(lastTime).orElse(null);
+        if (nextTime == null) {
+            completableFuture.complete(null);
+        } else {
+            final ScheduledTask scheduledTask = new ScheduledTask(task, trigger, nextTime, completableFuture);
+            taskLock.lock();
+            try {
+                tasks.add(scheduledTask);
+                taskCondition.signal();
+            } finally {
+                taskLock.unlock();
+            }
+        }
     }
 
     @Override
     public CompletableFuture<Void> schedule(final Runnable task, final Trigger trigger) {
-        return schedule(task, trigger, LocalDateTime.now(), new CompletableFuture<>());
+        final CompletableFuture<Void> completableFuture = new CompletableFuture<>();
+        final LocalDateTime now = LocalDateTime.now();
+        final ScheduledTaskResultImpl lastTime = new ScheduledTaskResultImpl(now, now, now);
+
+        schedule(task, trigger, lastTime, completableFuture);
+
+        return completableFuture;
     }
 
     @Override

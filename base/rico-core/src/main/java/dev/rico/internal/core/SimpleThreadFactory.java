@@ -16,12 +16,12 @@
  */
 package dev.rico.internal.core;
 
-import dev.rico.core.concurrent.ExtendedThreadFactory;
 import dev.rico.internal.core.context.ContextManagerImpl;
 import org.apiguardian.api.API;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -32,8 +32,7 @@ import static dev.rico.internal.core.RicoConstants.THREAD_NAME_PREFIX;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
-@SuppressWarnings("deprecation")
-public class SimpleThreadFactory implements ExtendedThreadFactory {
+public class SimpleThreadFactory implements ThreadFactory {
 
     private final AtomicInteger threadNumber = new AtomicInteger(0);
 
@@ -41,48 +40,48 @@ public class SimpleThreadFactory implements ExtendedThreadFactory {
 
     private final ThreadGroup group;
 
-    private Thread.UncaughtExceptionHandler uncaughtExceptionHandler;
+    private final boolean createDaemonThreads;
 
-    public SimpleThreadFactory(final Thread.UncaughtExceptionHandler uncaughtExceptionHandler) {
-        this.uncaughtExceptionHandler = Assert.requireNonNull(uncaughtExceptionHandler, "uncaughtExceptionHandler");
-        this.group = new ThreadGroup(THREAD_GROUP_NAME);
-    }
+    private final Thread.UncaughtExceptionHandler uncaughtExceptionHandler;
 
     public SimpleThreadFactory() {
-        this(new SimpleUncaughtExceptionHandler());
+        this(false);
+    }
+
+    public SimpleThreadFactory(final boolean createDaemonThreads) {
+        this(createDaemonThreads, new SimpleUncaughtExceptionHandler());
+    }
+
+    public SimpleThreadFactory(Thread.UncaughtExceptionHandler uncaughtExceptionHandler) {
+        this(false, uncaughtExceptionHandler);
+    }
+
+    public SimpleThreadFactory(final boolean createDaemonThreads, final Thread.UncaughtExceptionHandler uncaughtExceptionHandler) {
+        this.createDaemonThreads = createDaemonThreads;
+        this.uncaughtExceptionHandler = Assert.requireNonNull(uncaughtExceptionHandler, "uncaughtExceptionHandler");
+        this.group = new ThreadGroup(THREAD_GROUP_NAME);
     }
 
     @Override
     public Thread newThread(final Runnable task) {
         Assert.requireNonNull(task, "task");
-        return AccessController.doPrivileged(new PrivilegedAction<>() {
-            @Override
-            public Thread run() {
-                final String name = THREAD_NAME_PREFIX + threadNumber.getAndIncrement();
-                final Thread backgroundThread = new Thread(group, () -> {
-                    ContextManagerImpl.getInstance().setThreadLocalAttribute(THREAD_CONTEXT, name);
-                    task.run();
-                });
-                backgroundThread.setName(name);
-                backgroundThread.setDaemon(false);
-                uncaughtExceptionHandlerLock.lock();
-                try {
-                    backgroundThread.setUncaughtExceptionHandler(uncaughtExceptionHandler);
-                } finally {
-                    uncaughtExceptionHandlerLock.unlock();
-                }
-                return backgroundThread;
-            }
-        });
+        return AccessController.doPrivileged((PrivilegedAction<Thread>) () -> createThread(task));
     }
 
-    public void setUncaughtExceptionHandler(final Thread.UncaughtExceptionHandler uncaughtExceptionHandler) {
-        Assert.requireNonNull(uncaughtExceptionHandler, "uncaughtExceptionHandler");
+    private Thread createThread(Runnable task) {
+        final String name = THREAD_NAME_PREFIX + threadNumber.getAndIncrement();
+        final Thread backgroundThread = new Thread(group, () -> {
+            ContextManagerImpl.getInstance().setThreadLocalAttribute(THREAD_CONTEXT, name);
+            task.run();
+        });
+        backgroundThread.setName(name);
+        backgroundThread.setDaemon(createDaemonThreads);
         uncaughtExceptionHandlerLock.lock();
         try {
-            this.uncaughtExceptionHandler = uncaughtExceptionHandler;
+            backgroundThread.setUncaughtExceptionHandler(uncaughtExceptionHandler);
         } finally {
             uncaughtExceptionHandlerLock.unlock();
         }
+        return backgroundThread;
     }
 }

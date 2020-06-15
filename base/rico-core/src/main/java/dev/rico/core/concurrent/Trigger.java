@@ -16,23 +16,41 @@
  */
 package dev.rico.core.concurrent;
 
+import dev.rico.internal.core.Assert;
+
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static java.time.temporal.ChronoUnit.MILLIS;
-import static java.time.temporal.ChronoUnit.SECONDS;
-
 public interface Trigger {
 
-    Trigger NEVER = t -> Optional.ofNullable(null);
+    Trigger NEVER = t -> Optional.empty();
 
     Trigger NOW = t -> Optional.of(LocalDateTime.now());
 
-    Trigger IN_100_MS = t -> Optional.of(LocalDateTime.now().plus(100, MILLIS));
+    /**
+     * Trigger to activate once after the given duration.
+     *
+     * @param duration the duration
+     * @return the trigger
+     */
+    static Trigger in(final Duration duration) {
+        Assert.requireNonNull(duration, "duration");
+        return t -> Optional.of(LocalDateTime.now().plus(duration));
+    }
 
-    Trigger IN_500_MS = t -> Optional.of(LocalDateTime.now().plus(500, MILLIS));
-
-    Trigger IN_1_S = t -> Optional.of(LocalDateTime.now().plus(1, SECONDS));
+    /**
+     * Trigger to active repeatedly after a fixed duration.
+     *
+     * @param duration the duration
+     * @return the trigger
+     */
+    static Trigger every(final Duration duration) {
+        Assert.requireNonNull(duration, "duration");
+        return t -> Optional.ofNullable(t)
+                .map(ScheduledTaskResult::lastScheduledStartTime)
+                .map(last -> last.plus(duration));
+    }
 
     Optional<LocalDateTime> nextExecutionTime(ScheduledTaskResult scheduledTaskResult);
 }

@@ -47,6 +47,7 @@ module dev.rico.core {
             dev.rico.security.client,
             dev.rico.security.server;
     exports dev.rico.internal.core.lang to dev.rico.remoting.server;
+    exports dev.rico.internal.core.concurrent to dev.rico.client;
 
     requires org.slf4j;
     requires static org.apiguardian.api;

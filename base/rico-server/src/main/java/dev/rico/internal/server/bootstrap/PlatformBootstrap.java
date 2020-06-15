@@ -16,7 +16,6 @@
  */
 package dev.rico.internal.server.bootstrap;
 
-import dev.rico.core.concurrent.ExtendedThreadFactory;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.SimpleThreadFactory;
 import dev.rico.internal.core.ansi.PlatformLogo;
@@ -40,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.Set;
+import java.util.concurrent.ThreadFactory;
 
 import static dev.rico.internal.core.RicoConstants.APPLICATION_NAME_DEFAULT;
 import static dev.rico.internal.core.RicoConstants.APPLICATION_NAME_PROPERTY;
@@ -74,7 +74,7 @@ public class PlatformBootstrap {
 
                 MBeanRegistry.getInstance().setMbeanSupport(configuration.getBooleanProperty(MBEAN_REGISTRATION));
 
-                final ExtendedThreadFactory threadFactory = new SimpleThreadFactory();
+                final ThreadFactory threadFactory = new SimpleThreadFactory();
                 final ManagedBeanFactory beanFactory = getBeanFactory(servletContext);
                 final DefaultClasspathScanner classpathScanner = new DefaultClasspathScanner(configuration.getListProperty(ROOT_PACKAGE_FOR_CLASSPATH_SCAN));
                 serverCoreComponents = new ServerCoreComponentsImpl(servletContext, configuration, threadFactory, classpathScanner, beanFactory);

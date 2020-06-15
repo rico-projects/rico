@@ -21,6 +21,7 @@ import dev.rico.client.ClientConfiguration;
 import dev.rico.client.concurrent.BackgroundExecutor;
 import dev.rico.core.concurrent.Scheduler;
 import dev.rico.internal.client.AbstractServiceProvider;
+import dev.rico.internal.core.concurrent.SchedulerImpl;
 
 public class SchedulerProvider extends AbstractServiceProvider<Scheduler> {
 
