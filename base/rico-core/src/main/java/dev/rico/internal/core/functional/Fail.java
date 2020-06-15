@@ -16,6 +16,8 @@
  */
 package dev.rico.internal.core.functional;
 
+import dev.rico.core.functional.CheckedFunction;
+import dev.rico.core.functional.Result;
 import dev.rico.core.functional.ResultWithInput;
 import dev.rico.internal.core.Assert;
 
@@ -59,5 +61,12 @@ public class Fail<T, R> implements ResultWithInput<T, R> {
     @Override
     public R getResult() {
         throw new IllegalStateException("No result since call failed!");
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <U> Result<U> map(final CheckedFunction<R, U> mapper) {
+        Assert.requireNonNull(mapper, "mapper");
+        return (Result<U>) this;
     }
 }

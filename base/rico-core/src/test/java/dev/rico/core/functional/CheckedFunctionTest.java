@@ -15,7 +15,7 @@ public class CheckedFunctionTest {
         // when
         final Result<String> result = Optional.of("Hello")
                 .map(Result.of(s -> s + " World"))
-                .orElse(Result.sucess("WRONG"));
+                .orElse(Result.success("WRONG"));
 
         // then
         Assert.assertNotNull(result);
@@ -30,7 +30,7 @@ public class CheckedFunctionTest {
         // when
         final Result<String> result = Optional.of("Hello")
                 .map(Result.<String, String>of(s -> throwException()))
-                .orElse(Result.sucess("WRONG"));
+                .orElse(Result.success("WRONG"));
 
         // then
         Assert.assertNotNull(result);

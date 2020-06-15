@@ -9,7 +9,7 @@ public class ResultTest {
     @Test
     public void testSucess() {
         // when
-        final Result<String> result = Result.sucess("Hello");
+        final Result<String> result = Result.success("Hello");
 
         // then
         Assert.assertTrue(result.isSuccessful());

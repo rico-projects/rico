@@ -16,8 +16,9 @@
  */
 package dev.rico.core.functional;
 
+import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.functional.Fail;
-import dev.rico.internal.core.functional.Sucess;
+import dev.rico.internal.core.functional.Success;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -59,13 +60,22 @@ public interface Result<R> {
     Exception getException();
 
     /**
+     * Map the result to something else.
+     *
+     * @param mapper the mapper
+     * @param <U> the return type of the mapper
+     * @return a new result
+     */
+    <U> Result<U> map(CheckedFunction<R, U> mapper);
+
+    /**
      * Returns a successful result with the given value
      * @param value the value of the result
      * @param <B> the type of the result
      * @return the successful result
      */
-    static <B> Result<B> sucess(final B value) {
-        return new Sucess<>(value);
+    static <B> Result<B> success(final B value) {
+        return new Success<>(value);
     }
 
     /**
@@ -86,10 +96,11 @@ public interface Result<R> {
      * @return a {@link Function} that returns the {@link Result} of the given {@link CheckedFunction}
      */
     static <A, B> Function<A, Result<B>> of(final CheckedFunction<A, B> function) {
+        Assert.requireNonNull(function, "function");
         return (a) -> {
             try {
                 final B result = function.apply(a);
-                return new Sucess<>(result);
+                return new Success<>(result);
             } catch (Exception e) {
                 return new Fail<>(e);
             }
@@ -103,10 +114,11 @@ public interface Result<R> {
      * @return a {@link Supplier} that returns the {@link Result} of the given {@link CheckedSupplier}
      */
     static <B> Supplier<Result<B>> of(final CheckedSupplier<B> supplier) {
+        Assert.requireNonNull(supplier, "supplier");
         return () -> {
             try {
                 final B result = supplier.get();
-                return new Sucess<>(result);
+                return new Success<>(result);
             } catch (Exception e) {
                 return new Fail<>(e);
             }
@@ -121,10 +133,11 @@ public interface Result<R> {
      * @return a {@link Function} that returns the {@link Result} of the given {@link CheckedFunction}
      */
     static <A, B> Function<A, ResultWithInput<A, B>> withInput(final CheckedFunction<A, B> function) {
+        Assert.requireNonNull(function, "function");
         return (a) -> {
             try {
                 final B result = function.apply(a);
-                return new Sucess<>(a, result);
+                return new Success<>(a, result);
             } catch (Exception e) {
                 return new Fail<>(a, e);
             }
@@ -139,11 +152,12 @@ public interface Result<R> {
      * @param <A> type of the input parameter
      * @return a {@link Function} that returns the {@link Result} of the given {@link CheckedConsumer}
      */
-    static <A, Void> Function<A, Result<Void>> ofConsumer(final CheckedConsumer<A> consumer) {
+    static <A> Function<A, Result<Void>> ofConsumer(final CheckedConsumer<A> consumer) {
+        Assert.requireNonNull(consumer, "consumer");
         return (a) -> {
             try {
                 consumer.accept(a);
-                return new Sucess<>(null);
+                return new Success<>(null);
             } catch (Exception e) {
                 return new Fail<>(e);
             }
