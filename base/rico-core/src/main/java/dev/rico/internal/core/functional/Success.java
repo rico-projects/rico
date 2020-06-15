@@ -16,26 +16,29 @@
  */
 package dev.rico.internal.core.functional;
 
+import dev.rico.core.functional.CheckedFunction;
+import dev.rico.core.functional.Result;
 import dev.rico.core.functional.ResultWithInput;
+import dev.rico.internal.core.Assert;
 
 /**
  * Implementation of a {@link dev.rico.core.functional.Result} that is based
- * on a sucessfully executed function
+ * on a successfully executed function
  * @param <T> type of the input
  * @param <R> type of the output
  */
-public class Sucess<T, R> implements ResultWithInput<T, R> {
+public class Success<T, R> implements ResultWithInput<T, R> {
 
     private final T input;
 
     private final R result;
 
-    public Sucess(final T input, final R result) {
+    public Success(final T input, final R result) {
         this.input = input;
         this.result = result;
     }
 
-    public Sucess(final R result) {
+    public Success(final R result) {
         this.input = null;
         this.result = result;
     }
@@ -58,6 +61,17 @@ public class Sucess<T, R> implements ResultWithInput<T, R> {
     @Override
     public R getResult() {
         return result;
+    }
+
+    @Override
+    public <U> Result<U> map(final CheckedFunction<R, U> mapper) {
+        Assert.requireNonNull(mapper, "mapper");
+        try {
+            return new Success<>(input, mapper.apply(result));
+        }
+        catch (Exception e) {
+            return new Fail<>(input, e);
+        }
     }
 }
 

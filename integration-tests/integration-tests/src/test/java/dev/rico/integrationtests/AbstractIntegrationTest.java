@@ -68,7 +68,7 @@ public class AbstractIntegrationTest implements ITest {
         try {
             final URL dockerComposeURL = AbstractIntegrationTest.class.getClassLoader().getResource("docker-compose.yml");
             final Path dockerComposeFile = Paths.get(dockerComposeURL.toURI());
-            final Executor backgroundExecutor = Executors.newCachedThreadPool(new SimpleThreadFactory());
+            final Executor backgroundExecutor = Executors.newCachedThreadPool(new SimpleThreadFactory(true));
             dockerCompose = new DockerCompose(backgroundExecutor, dockerComposeFile);
         } catch (Exception e) {
             throw new RuntimeException("Can not create Docker environment!", e);

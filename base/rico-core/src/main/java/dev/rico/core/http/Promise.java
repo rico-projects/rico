@@ -14,14 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.core.context;
+package dev.rico.core.http;
 
-import java.io.Serializable;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
-public interface Context extends Serializable {
+public interface Promise<V, T extends Throwable> {
 
-    String getType();
+    Promise<V, T> onDone(Consumer<V> task);
 
-    String getValue();
+    Promise<V, T> onError(Consumer<T> errorHandler);
 
+    CompletableFuture<V> execute();
 }

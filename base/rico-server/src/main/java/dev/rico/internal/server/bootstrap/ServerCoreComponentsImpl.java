@@ -17,7 +17,6 @@
 package dev.rico.internal.server.bootstrap;
 
 import dev.rico.core.Configuration;
-import dev.rico.core.concurrent.ExtendedThreadFactory;
 import dev.rico.internal.core.Assert;
 import dev.rico.server.spi.components.ManagedBeanFactory;
 import dev.rico.server.spi.components.ClasspathScanner;
@@ -27,6 +26,7 @@ import org.apiguardian.api.API;
 import javax.servlet.ServletContext;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ThreadFactory;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
@@ -35,7 +35,7 @@ public class ServerCoreComponentsImpl implements ServerCoreComponents {
 
     private final Map<Class<?>, Object> instances = new HashMap<>();
 
-    protected ServerCoreComponentsImpl(final ServletContext servletContext, final Configuration configuration, final ExtendedThreadFactory threadFactory, final ClasspathScanner classpathScanner, final ManagedBeanFactory managedBeanFactory) {
+    protected ServerCoreComponentsImpl(final ServletContext servletContext, final Configuration configuration, final ThreadFactory threadFactory, final ClasspathScanner classpathScanner, final ManagedBeanFactory managedBeanFactory) {
         Assert.requireNonNull(servletContext, "servletContext");
         Assert.requireNonNull(configuration, "configuration");
         Assert.requireNonNull(threadFactory, "threadFactory");
@@ -44,7 +44,7 @@ public class ServerCoreComponentsImpl implements ServerCoreComponents {
 
         provideInstance(ServletContext.class, servletContext);
         provideInstance(Configuration.class, configuration);
-        provideInstance(ExtendedThreadFactory.class, threadFactory);
+        provideInstance(ThreadFactory.class, threadFactory);
         provideInstance(ClasspathScanner.class, classpathScanner);
         provideInstance(ManagedBeanFactory.class, managedBeanFactory);
     }

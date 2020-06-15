@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.internal.client.concurrent;
+package dev.rico.internal.core.concurrent;
 
 import dev.rico.internal.core.Assert;
 import dev.rico.core.concurrent.Trigger;
