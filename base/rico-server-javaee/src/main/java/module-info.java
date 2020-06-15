@@ -25,4 +25,5 @@ module dev.rico.server.javaee {
     requires jakarta.enterprise.cdi.api;
     requires jakarta.interceptor.api;
     requires jakarta.enterprise.concurrent.api;
+    requires java.annotation;
 }

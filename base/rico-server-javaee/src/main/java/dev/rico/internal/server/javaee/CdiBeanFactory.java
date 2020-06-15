@@ -17,24 +17,23 @@
 package dev.rico.internal.server.javaee;
 
 import dev.rico.core.concurrent.Scheduler;
+import dev.rico.core.context.ContextManager;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.concurrent.SchedulerImpl;
 import dev.rico.internal.core.context.ContextManagerImpl;
 import dev.rico.internal.server.bootstrap.PlatformBootstrap;
 import dev.rico.internal.server.client.ClientSessionProvider;
 import dev.rico.internal.server.servlet.ServerTimingFilter;
-import dev.rico.core.context.ContextManager;
 import dev.rico.server.client.ClientSession;
 import dev.rico.server.javaee.ClientScoped;
 import dev.rico.server.timing.ServerTiming;
-import org.apache.deltaspike.core.api.resourceloader.InjectableResource;
 import org.apiguardian.api.API;
 
+import javax.annotation.Resource;
 import javax.enterprise.concurrent.ManagedExecutorService;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
@@ -47,8 +46,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 @API(since = "0.x", status = INTERNAL)
 public class CdiBeanFactory {
 
-    @Inject
-    @Resource
+    @Resource(lookup = "java:comp/DefaultManagedExecutorService")
     private ManagedExecutorService executorService;
 
     @Produces
