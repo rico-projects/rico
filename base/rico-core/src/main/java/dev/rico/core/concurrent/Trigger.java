@@ -24,19 +24,22 @@ import java.util.Optional;
 
 public interface Trigger {
 
-    Trigger NEVER = t -> Optional.empty();
-
-    Trigger NOW = t -> Optional.of(LocalDateTime.now());
-
     /**
      * Trigger to activate once after the given duration.
      *
-     * @param duration the duration
+     * @param delay the delay
      * @return the trigger
      */
-    static Trigger in(final Duration duration) {
-        Assert.requireNonNull(duration, "duration");
-        return t -> Optional.of(LocalDateTime.now().plus(duration));
+    static Trigger in(final Duration delay) {
+        Assert.requireNonNull(delay, "delay");
+        final Optional<LocalDateTime> first = Optional.of(LocalDateTime.now().plus(delay));
+
+        return t -> {
+            if (t == null) {
+                return first;
+            }
+            return Optional.empty();
+        };
     }
 
     /**
@@ -46,11 +49,41 @@ public interface Trigger {
      * @return the trigger
      */
     static Trigger every(final Duration duration) {
-        Assert.requireNonNull(duration, "duration");
-        return t -> Optional.ofNullable(t)
-                .map(ScheduledTaskResult::lastScheduledStartTime)
-                .map(last -> last.plus(duration));
+        return afterAndEvery(duration, duration);
     }
 
+    /**
+     * Trigger to active now and repeatedly after a fixed duration.
+     *
+     * @param duration the duration
+     * @return the trigger
+     */
+    static Trigger nowAndEvery(final Duration duration) {
+        return afterAndEvery(Duration.ZERO, duration);
+    }
+
+    /**
+     * Trigger to active after an initial delay and repeatedly after a fixed duration.
+     *
+     * @param delay the delay
+     * @param duration the duration
+     * @return the trigger
+     */
+    static Trigger afterAndEvery(final Duration delay, final Duration duration) {
+        Assert.requireNonNull(delay, "delay");
+        Assert.requireNonNull(duration, "duration");
+        final Optional<LocalDateTime> first = Optional.of(LocalDateTime.now().plus(delay));
+        return t -> Optional.ofNullable(t)
+                    .map(ScheduledTaskResult::lastScheduledStartTime)
+                    .map(last -> last.plus(duration))
+                    .or(() -> first);
+    }
+
+    /**
+     * Determines when to execute the task the next time.
+     *
+     * @param scheduledTaskResult the times of the last execution. If the task has not yet been executed {@code null} is passed.
+     * @return
+     */
     Optional<LocalDateTime> nextExecutionTime(ScheduledTaskResult scheduledTaskResult);
 }

@@ -89,34 +89,33 @@ public class SchedulerImpl implements Scheduler {
             final LocalDateTime endTime = LocalDateTime.now();
             final ScheduledTaskResultImpl lastTime = new ScheduledTaskResultImpl(task.getScheduledStartDate(), startTime, endTime);
 
-            schedule(task.getTask(), task.getTrigger(), lastTime, task.getCompletableFuture());
+            schedule(task, lastTime);
         });
     }
 
-    public void schedule(final Runnable task, final Trigger trigger, final ScheduledTaskResultImpl lastTime, final CompletableFuture<Void> completableFuture) {
-        final LocalDateTime nextTime = trigger.nextExecutionTime(lastTime).orElse(null);
-        if (nextTime == null) {
-            completableFuture.complete(null);
-        } else {
-            final ScheduledTask scheduledTask = new ScheduledTask(task, trigger, nextTime, completableFuture);
-            taskLock.lock();
-            try {
-                tasks.add(scheduledTask);
-                taskCondition.signal();
-            } finally {
-                taskLock.unlock();
-            }
+    private void schedule(final ScheduledTask task, final ScheduledTaskResultImpl lastTime) {
+        task.getTrigger().nextExecutionTime(lastTime)
+                .ifPresentOrElse(
+                        nextTime -> addToQueue(task.next(nextTime)),
+                        () -> task.getCompletableFuture().complete(null)
+                );
+    }
+
+    private void addToQueue(ScheduledTask task) {
+        taskLock.lock();
+        try {
+            tasks.add(task);
+            taskCondition.signal();
+        } finally {
+            taskLock.unlock();
         }
     }
 
     @Override
     public CompletableFuture<Void> schedule(final Runnable task, final Trigger trigger) {
         final CompletableFuture<Void> completableFuture = new CompletableFuture<>();
-        final LocalDateTime now = LocalDateTime.now();
-        final ScheduledTaskResultImpl lastTime = new ScheduledTaskResultImpl(now, now, now);
-
-        schedule(task, trigger, lastTime, completableFuture);
-
+        final ScheduledTask scheduledTask = new ScheduledTask(task, trigger, completableFuture);
+        schedule(scheduledTask, null);
         return completableFuture;
     }
 

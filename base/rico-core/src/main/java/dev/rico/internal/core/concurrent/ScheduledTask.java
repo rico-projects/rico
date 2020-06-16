@@ -32,6 +32,13 @@ public class ScheduledTask {
 
     private final CompletableFuture<Void> completableFuture;
 
+    public ScheduledTask(final Runnable task, final Trigger trigger, final CompletableFuture<Void> completableFuture) {
+        this.task = Assert.requireNonNull(task, "task");
+        this.trigger = Assert.requireNonNull(trigger, "trigger");
+        this.scheduledStartDate = LocalDateTime.MIN;
+        this.completableFuture = Assert.requireNonNull(completableFuture, "completableFuture");
+    }
+
     public ScheduledTask(final Runnable task, final Trigger trigger, final LocalDateTime scheduledStartDate, final CompletableFuture<Void> completableFuture) {
         this.task = Assert.requireNonNull(task, "task");
         this.trigger = Assert.requireNonNull(trigger, "trigger");
@@ -53,5 +60,10 @@ public class ScheduledTask {
 
     public LocalDateTime getScheduledStartDate() {
         return scheduledStartDate;
+    }
+
+    public ScheduledTask next(LocalDateTime nextTime) {
+        Assert.requireNonNull(nextTime, "nextTime");
+        return new ScheduledTask(task, trigger, nextTime, completableFuture);
     }
 }
