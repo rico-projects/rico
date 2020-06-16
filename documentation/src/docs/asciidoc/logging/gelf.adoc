@@ -1,0 +1,10 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+=== Centralized logging and the GELF format
+
+TODO
+
+////
+todo:   Why should you use centralized logging
+        What is the GELF format
+////

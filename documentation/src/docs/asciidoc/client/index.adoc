@@ -1,6 +1,6 @@
 ifndef::imagesdir[:imagesdir: images]
 
-== Client API
+== Basic Client API
 
 Rico provides some general functionality, that can be used in any JavaFX or Swing based application:
 

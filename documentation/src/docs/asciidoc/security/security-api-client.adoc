@@ -1,0 +1,6 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+=== Security API on the client
+
+TODO
+

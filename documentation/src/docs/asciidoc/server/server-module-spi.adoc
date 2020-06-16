@@ -1,0 +1,9 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+=== Server Module SPI
+
+TODO
+
+////
+todo:   How to create new server modules
+////

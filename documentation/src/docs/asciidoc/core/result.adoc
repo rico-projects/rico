@@ -1,0 +1,11 @@
+ifndef::imagesdir[:imagesdir: images]
+
+=== Result API
+
+TODO
+
+////
+todo:   dev.rico.core.functional.Result
+        Why should you use the API?
+        Examples
+////

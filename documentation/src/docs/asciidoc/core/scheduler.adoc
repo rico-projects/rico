@@ -1,0 +1,13 @@
+ifndef::imagesdir[:imagesdir: images]
+
+=== Scheduler API
+
+TODO
+
+////
+todo:   dev.rico.core.concurrent.Scheduler & dev.rico.core.concurrent.Trigger
+        Why should you use the API?
+        Example
+        Using on client
+        Using on server (spring + jakarta)
+////

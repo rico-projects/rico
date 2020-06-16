@@ -1,0 +1,12 @@
+ifndef::imagesdir[:imagesdir: images]
+
+== Basic Server API
+
+TODO
+
+include::client-scope.adoc[]
+
+include::server-timing.adoc[]
+
+include::server-module-spi.adoc[]
+

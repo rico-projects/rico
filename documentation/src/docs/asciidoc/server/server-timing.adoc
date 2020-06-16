@@ -1,0 +1,9 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+=== Server Timing
+
+TODO
+
+////
+todo:   see https://dev.karakun.com/java/rico/2019/01/15/rico-server-timing.html
+////

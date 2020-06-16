@@ -1,0 +1,11 @@
+ifndef::imagesdir[:imagesdir: images]
+
+== Core API
+
+TODO
+
+include::scheduler.adoc[]
+
+include::context.adoc[]
+
+include::result.adoc[]

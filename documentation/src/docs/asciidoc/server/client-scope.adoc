@@ -1,0 +1,9 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+=== Client Scope
+
+TODO
+
+////
+todo:   What is the client scope and how can it be used?
+////
