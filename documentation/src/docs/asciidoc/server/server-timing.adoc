@@ -2,7 +2,7 @@ ifndef::imagesdir[:imagesdir: ../images]
 
 === Server Timing
 
-Server Timing is a new W3C features that allows you to add some metrics about the request handling to the response.
+Server Timing is a new W3C feature that allows you to add some metrics about the request handling to the response.
 The following image shows how such information would be rendered in the developer console of chrome:
 
 .Server timing view in Google Chrome
@@ -10,8 +10,8 @@ image:server-timing.png[]
 
 The feature is very usefully when you develop a client that uses HTTP calls to communicate with the server.
 In this case the client sends a http request to the server and receives a http response after some time.
-The functionality that the server executes to create the response based on the request is a black box for the client.
-Here “server timing” can help since you can display some timing information about the server functionality in the client.
+While the server execution is a black box for the client, the "server timing" information can be structured into multiple parts like database time and total response handling, talking to third party services and others.
+This can help you to identify time consuming components on the server side in a production environment.
 
 image:timing-request.png[]
 
@@ -19,10 +19,8 @@ image:timing-request.png[]
 
 Rico provides a managed component that can easily be injected in any Spring or JavaEE bean.
 This component is defined by the `dev.rico.server.timing.ServerTiming` interface and lives in the request scope.
-By injection the component you can easily create metrics in your server that will automatically added to the http response.
-Here the w3c specification for server timing is used.
-A `ServerTiming` instance can be used to create metrics.
-A metric is defined by the `dev.rico.server.timing.Metric` interface and can be used to automatically add timing information to a http response.
+By injecting the component you can easily create metrics in your server that will be added automatically to the http response.
+The metric name is defined through the `dev.rico.server.timing.Metric` interface.
 The following code snippet shows the basic usage of the API:
 
 [source,java]
@@ -34,11 +32,10 @@ final Metric dbMetric = timing.start("DB-Operation");
 dbMetric.stop();
 ----
 
-The given sample creates a metric with the given name “DB-Operation” and will automatically record the duration until the `stop()` method of the metric is called.
-If this happens during a http call you can see the duration of the “DB-Operation” directly in the developer console of your chrome browser.
+The given sample creates a metric with the given name “DB-Operation” and will record the duration until the `stop()` method is called.
+You can see the duration of the “DB-Operation” directly in the developer console of your chrome browser.
 
-Let’s have a look how you can use this feature is a simple REST endpoint in JakartaEE.
-The following code shows how timing metrics will be created for a REST endpoint:
+Let’s have a look how you can use this feature with a simple REST endpoint in JakartaEE:
 
 [source,java]
 ----
@@ -64,7 +61,7 @@ public class MyEndpoint {
 }
 ----
 
-Before we discuss this sample let’s have a look at the same endpoint in Spring:
+The Rico usage in the Spring version is identical:
 
 [source,java]
 ----
@@ -90,19 +87,14 @@ public class MyEndpoint {
 }
 ----
 
-As you can see the use of the Rico API is 100% the same in JakartaEE and Spring.
-This is one of the big benefits of Rico that offers all it’s services and components as managed beans for JavaEE and Spring.
-In the example an endpoint is defined that does 2 calls against a database.
-For both of this calls a `dev.rico.server.timing.Metric` instance is created to mesure the duration of the calls.
-Since the “server timing” specification supports a description next to a name for a timing entry, Rico allows to create metrics with a name and an optional description.
-In the given sample both metrics are defined with a description.
-Once a client calls the endpoint the htpp response will automatically contain the timing information and you can see the duration for the “deleteAllUsers” and the duration for the “deleteAllItems” step directly in your browser.
+In the example an endpoint `/api/delete` is doing 2 calls against a database.
+For both calls a `dev.rico.server.timing.Metric` instance is created to mesure the duration of the calls.
+In accordance with the “server timing” specification Rico supports a description next to a name for a timing entry.
+Once a client calls the endpoint the htpp response will automatically contain the timing information for “deleteAllUsers” and “deleteAllItems”.
 
 ==== Additional JakartaEE integration
 
-The given example is just the beginning and with the next Rico release metrics to create “server timing” records can easily be defined by an annotation.
-This feature will first be available for JakartaEE.
-Instead of injecting a `dev.rico.server.timing.ServerTiming` instance and create metrics by hand you can add the `dev.rico.server.javaee.timing.Timing` annotation to each method of a managed bean that duration you want to record.
+Instead of injecting a `dev.rico.server.timing.ServerTiming` instance and creating metrics by hand you can add the `dev.rico.server.javaee.timing.Timing` annotation to each method of a managed bean to record the method call duration.
 The following code shows how you can easily record the duration of an HTTP endpoint by doing so:
 
 [source,java]
@@ -119,7 +111,7 @@ public class MyEndpoint {
 }
 ----
 
-Like the basic API the `Timing` annotation supports of a name and a description for a metric.
+Like the basic API the `Timing` annotation supports a name and an optional description for the metric.
 
 
 
