@@ -209,3 +209,8 @@ As already described for Prometheus we can start Grafana in a Docker container, 
 Information about running Grafana in Docker can be found https://grafana.com/docs/grafana/latest/installation/docker/[here].
 If you want to automate the configuration and provisioning of Grafana https://grafana.com/docs/grafana/latest/administration/provisioning/[this link] will be helpfull.
 Next to this we provide a https://docs.docker.com/compose/[docker-compose] based sample in https://github.com/rico-projects/rico-samples/tree/master/metrics-sample[the Rico samples repository].
+
+////
+todo:   How to create dashboards in grafana
+        How are the dashboards of the sample stored / exported?
+////

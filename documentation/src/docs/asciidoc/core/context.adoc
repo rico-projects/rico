@@ -1,0 +1,14 @@
+ifndef::imagesdir[:imagesdir: images]
+
+=== Context API
+
+TODO
+
+////
+todo:   dev.rico.core.context.ContextManager
+        Why should you use the context API?
+        Example with logging
+        Using context on client
+        Using context on server (spring + jakarta)
+        Automatic context values that are provided by rico
+////

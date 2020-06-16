@@ -1,0 +1,9 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+=== Centralized security
+
+TODO
+
+////
+todo:   Why does a centralized security tooling / concept (like Keycloak) makes sense
+////

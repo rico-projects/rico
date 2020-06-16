@@ -1,6 +1,6 @@
 ifndef::imagesdir[:imagesdir: images]
 
-== TaskChain API
+=== TaskChain API
 
 The TaskChain API provides an easy way to create a chain of individual tasks.
 Between tasks the chain can switch between the UI thread and background threads.

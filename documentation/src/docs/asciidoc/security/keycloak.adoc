@@ -1,0 +1,10 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+=== Keycloak
+
+TODO
+
+////
+todo:   How to setup Keycloak (docker sample)
+        How to configure Keycloak (in UI)
+////

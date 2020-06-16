@@ -1,0 +1,11 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+=== General usage and benefits of the Rico logging concept
+
+TODO
+
+////
+todo:   Context info automatically used in logging
+        Idea of centralized logging
+        support for Log4J2 & logback
+////
