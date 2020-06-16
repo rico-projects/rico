@@ -20,8 +20,9 @@ In Spring the configuration of the application must be annotated with the `dev.r
 
 [source,java]
 ----
-@RicoApplication // <1>
-@EnableMetrics // <2>
+@SpringBootApplication // <1>
+@EnableRico // <2>
+@EnableMetrics // <3>
 public class ServerApplication {
 
     public static void main(final String[] args) {
@@ -30,8 +31,9 @@ public class ServerApplication {
 }
 
 ----
-<1> Default Rico Spring Boot annotation
-<2> Enables Metrics support for Spring
+<1> Default Spring Boot annotation
+<2> Enable Rico support for Spring
+<3> Enables Rico Metrics support for Spring
 
 ==== Managed beans of the Metrics API
 
