@@ -2,7 +2,67 @@ ifndef::imagesdir[:imagesdir: images]
 
 === Scheduler API
 
-TODO
+The Scheduler API is a concurrent API that lets you schedule periodic or delayed tasks.
+The central point of the API is the interface `dev.rico.core.concurrent.Scheduler`.
+Depending on your environment Rico provides different ways to create a Scheduler instance.
+
+The Scheduler interface only provides one method: `schedule(Runnable task, Trigger trigger)`.
+This method is used to schedule a task (the given `java.lang.Runnable`) for later and possibly periodic execution.
+When the task will be executed must be specified by the trigger defined by the interface `dev.rico.core.concurrent.Trigger`.
+While you can implement this interface yourself, the nterface `dev.rico.core.concurrent.Trigger` provides static methods to create triggers.
+
+==== Defining a trigger that delays the execution of a task
+
+To delay the execution of a task the static method `in(final Duration delay)` of the interface `dev.rico.core.concurrent.Trigger` can be used.
+
+image:scheduler-delay.svg[]
+
+The following code shows an example of the usage:
+
+[source,java]
+----
+
+final Scheduler scheduler = ... // <1>
+
+final Duration tenSeconds = Duration.of(10, ChronoUnit.SECONDS); // <2>
+final Trigger trigger = Trigger.in(tenSeconds); // <3>
+
+scheduler.schedule(() -> System.out.println("ALARM"), trigger); // <4>
+----
+<1> depends on your environment
+<2> defines a duration of 10 seconds using the java.time API
+<3> creates our trigger using the duration as the delay
+<4> schedules the task. Because of our trigger the task will be executed 10 seconds later and "ALARM" will be writte to the console.
+
+==== Defining a trigger that executes a task periodically
+
+To execute a task periodically the static method `every(final Duration delay)` of the interface `dev.rico.core.concurrent.Trigger` can be used.
+After the task execution is finished the task will be scheduled again for future execution based on the given delay.
+This will repeat until the application stops.
+
+image:scheduler-every.svg[]
+
+
+The following code shows an example of the usage:
+
+[source,java]
+----
+
+final Scheduler scheduler = ... // <1>
+
+final Duration tenSeconds = Duration.of(10, ChronoUnit.SECONDS); // <2>
+final Trigger trigger = Trigger.every(tenSeconds); // <3>
+
+scheduler.schedule(() -> System.out.println("PING"), trigger); // <4>
+----
+<1> depends on your environment
+<2> defines a duration 10 seconds using the java.time API
+<3> creates our trigger
+<4> schedules the task. Because of our trigger the task will be executed with a dealy of 10 seconds every 10 seconds and "PING" will be written to the console until the application stops.
+
+`nowAndEvery(final Duration delay)` can be used to ignore the initial delay.
+
+image:scheduler-now-and-every.svg[]
 
 ////
 todo:   dev.rico.core.concurrent.Scheduler & dev.rico.core.concurrent.Trigger
