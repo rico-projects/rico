@@ -32,7 +32,8 @@ scheduler.schedule(() -> System.out.println("ALARM"), trigger); // <4>
 <1> depends on your environment
 <2> defines a duration of 10 seconds using the java.time API
 <3> creates our trigger using the duration as the delay
-<4> schedules the task. Because of our trigger the task will be executed 10 seconds later and "ALARM" will be writte to the console.
+<4> schedules the task.
+Because of our trigger the task will be executed 10 seconds later and "ALARM" will be writte to the console.
 
 ==== Defining a trigger that executes a task periodically
 
@@ -58,16 +59,24 @@ scheduler.schedule(() -> System.out.println("PING"), trigger); // <4>
 <1> depends on your environment
 <2> defines a duration 10 seconds using the java.time API
 <3> creates our trigger
-<4> schedules the task. Because of our trigger the task will be executed with a dealy of 10 seconds every 10 seconds and "PING" will be written to the console until the application stops.
+<4> schedules the task.
+Because of our trigger the task will be executed with a dealy of 10 seconds every 10 seconds and "PING" will be written to the console until the application stops.
 
 `nowAndEvery(final Duration delay)` can be used to ignore the initial delay.
 
 image:scheduler-now-and-every.svg[]
 
-////
-todo:   dev.rico.core.concurrent.Scheduler & dev.rico.core.concurrent.Trigger
-        Why should you use the API?
-        Example
-        Using on client
-        Using on server (spring + jakarta)
-////
+==== Using the API on the client
+
+In the Rico client API a `dev.rico.core.concurrent.Scheduler` instance can be received by using by the following call:
+
+[source,java]
+----
+
+final Scheduler scheduler = Client.getService(Scheduler.class);
+----
+
+==== Using the API on the server
+
+On JakartaEE and Spring you can inject a `dev.rico.core.concurrent.Scheduler` instance in any managed bean.
+The instance is always defined in the singleton / application scope.
