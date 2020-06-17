@@ -16,13 +16,20 @@
  */
 package dev.rico.internal.server.client;
 
-import dev.rico.internal.core.RicoConstants;
+import dev.rico.core.functional.Subscription;
 import dev.rico.internal.core.Assert;
+import dev.rico.internal.core.RicoConstants;
+import dev.rico.internal.core.context.ContextManagerImpl;
 import org.apiguardian.api.API;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.*;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -36,6 +43,9 @@ public class ClientSessionFilter implements Filter {
     private static final Logger LOG = LoggerFactory.getLogger(ClientSessionFilter.class);
 
     private static final String INITIALIZED_IN_SESSION = "PD_INITIALIZED_IN_SESSION";
+    public static final String HTTP_SESSION_CONTEXT_NAME = "http.session";
+    public static final String CLIENT_SESSION_CONTEXT_NAME = "http.clientSession";
+
 
     private final ClientSessionManager clientSessionManager;
 
@@ -52,34 +62,47 @@ public class ClientSessionFilter implements Filter {
         final HttpServletResponse servletResponse = (HttpServletResponse) response;
         final HttpSession httpSession = Assert.requireNonNull(servletRequest.getSession(), "request.getSession()");
 
+        final Subscription sessionContext = ContextManagerImpl.getInstance().setThreadLocalAttribute(HTTP_SESSION_CONTEXT_NAME, httpSession.getId());
         try {
             final String clientId = servletRequest.getHeader(RicoConstants.CLIENT_ID_HTTP_HEADER_NAME);
             if (clientId == null || clientId.trim().isEmpty()) {
                 try {
                     final String createdClientId = clientSessionManager.createClientSession(httpSession);
-                    continueRequest(servletRequest, servletResponse, chain, httpSession, createdClientId);
+                    final Subscription clientSessionContext = ContextManagerImpl.getInstance().setThreadLocalAttribute(CLIENT_SESSION_CONTEXT_NAME, createdClientId);
+                    try {
+                        continueRequest(servletRequest, servletResponse, chain, httpSession, createdClientId);
+                    } finally {
+                        clientSessionContext.unsubscribe();
+                    }
                 } catch (final MaxSessionCountReachedException e) {
                     LOG.warn("Maximum size for clients in session {} is reached", servletRequest.getSession().getId());
                     servletResponse.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE, "Maximum size for clients in session is reached");
                 }
             } else {
-                LOG.trace("Trying to find client session {} in http session {}", clientId, httpSession.getId());
-                if (!clientSessionManager.checkValidClientSession(httpSession, clientId)) {
-                    if (httpSession.getAttribute(INITIALIZED_IN_SESSION) == null) {
-                        LOG.warn("Can not find requested client for id {} in session {} (session timeout)", clientId, httpSession.getId());
-                        servletResponse.sendError(HttpServletResponse.SC_REQUEST_TIMEOUT, "Can not find requested client (session timeout)!");
+                final Subscription clientSessionContext = ContextManagerImpl.getInstance().setThreadLocalAttribute(CLIENT_SESSION_CONTEXT_NAME, clientId);
+                try {
+                    LOG.trace("Trying to find client session {} in http session {}", clientId, httpSession.getId());
+                    if (!clientSessionManager.checkValidClientSession(httpSession, clientId)) {
+                        if (httpSession.getAttribute(INITIALIZED_IN_SESSION) == null) {
+                            LOG.warn("Can not find requested client for id {} in session {} (session timeout)", clientId, httpSession.getId());
+                            servletResponse.sendError(HttpServletResponse.SC_REQUEST_TIMEOUT, "Can not find requested client (session timeout)!");
+                        } else {
+                            LOG.warn("Can not find requested client for id {} in session {} (unknown error)", clientId, httpSession.getId());
+                            servletResponse.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Can not find requested client (unknown error)!");
+                        }
                     } else {
-                        LOG.warn("Can not find requested client for id {} in session {} (unknown error)", clientId, httpSession.getId());
-                        servletResponse.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Can not find requested client (unknown error)!");
+                        continueRequest(servletRequest, servletResponse, chain, httpSession, clientId);
                     }
-                } else {
-                    continueRequest(servletRequest, servletResponse, chain, httpSession, clientId);
+                } finally {
+                    clientSessionContext.unsubscribe();
                 }
             }
         } catch (final Exception e) {
             LOG.error("Error while checking requested client in session " + httpSession.getId() + " (unknown error)", e);
             servletResponse.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Can not find requested client (unknown error)!");
             return;
+        } finally {
+            sessionContext.unsubscribe();
         }
     }
 

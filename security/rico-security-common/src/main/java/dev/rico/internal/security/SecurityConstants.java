@@ -43,6 +43,6 @@ public interface SecurityConstants {
 
     String BEARER = "Bearer ";
 
-    String USER_CONTEXT = "user";
+    String USER_CONTEXT = "security.userName";
 
 }

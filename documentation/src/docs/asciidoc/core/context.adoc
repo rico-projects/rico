@@ -12,3 +12,110 @@ todo:   dev.rico.core.context.ContextManager
         Using context on server (spring + jakarta)
         Automatic context values that are provided by rico
 ////
+
+==== Predefined Context values
+
+Rico already defines some context values by default.
+The following table gives an overview of all the context values that are defined by default when using Rico.
+
+.Predefined context values
+[cols="3,^2,^2,^4,10",options="header"]
+|===
+|context name |type |availability |sample |description
+
+|application.name
+|global
+|always
+|myApplication
+|The name of the application if defined in the configuration by the "application.name" property. Otherwise "UNKNOWN"
+
+|rico.version
+|global
+|always
+|1.1.0
+|The used version of Rico
+
+|system.os
+|global
+|always
+|mac
+|Name of the used operation system. "linux", "mac", "win" or "unknown"
+
+|java.version
+|global
+|always
+|11.0.3
+|The version of the used Java runtime
+
+|java.vendor
+|global
+|always
+|AdoptOpenJDK
+|The vendor of the used Java runtime
+
+|system.hostName
+|global
+|always
+|my-macbook.karakun
+|The host name of the system
+
+|system.canonicalHostName
+|global
+|always
+|my-macbook.karakun
+|The canonical host name of the system
+
+|system.hostAddress
+|global
+|always
+|192.168.178.23
+|The host address of the system
+
+|thread
+|thread
+|always
+|background-thread-2
+|Name of the current thread. This is only supported for threads that are created by Rico
+
+|uiToolkit
+|global
+|client
+|JavaFX toolkit
+|The name of the used ui toolkit. This value is only defined when using the rico-client library.
+
+|security.userName
+|global
+|client
+|admin
+|When using rico-security this value defines the name of the logged in user on the client
+
+|security.userName
+|thread
+|server
+|admin
+|When using rico-security this value defines the name of the logged in user for the current request on the server
+
+|remoting.controller
+|thread
+|server
+|WorkflowController
+|Name of the remoting controller when a controller action is executed on the server.
+
+|remoting.action
+|thread
+|server
+|saveUser
+|Name of the remoting controller action that is executed on the server.
+
+|http.session
+|thread
+|server
+|1342424
+|id of the http session on the server
+
+|http.clientSession
+|thread
+|server
+|749516
+|id of the http client session on the server
+|===
