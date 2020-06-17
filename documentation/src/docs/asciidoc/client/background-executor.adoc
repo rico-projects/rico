@@ -1,0 +1,24 @@
+ifndef::imagesdir[:imagesdir: images]
+
+=== Background executor
+
+Next to an executor for the ui toolkit Rico provides a background executor that backs a configured thread pool.
+For most usecases this executor is the only tool that you need to execute background and async tasks in a java client.
+The background executor is defined by the `dev.rico.client.concurrent.BackgroundExecutor` interface.
+The interface extends the basic Java `java.util.concurrent.Executor` interface with some additional helpful methods and functionalities.
+
+The following code snippet shows how the background executor can be received and used:
+
+[source,java]
+----
+BackgroundExecutor backgroundExecutor = Client.getService(BackgroundExecutor.class); // <1>
+
+backgroundExecutor.execute(() -> longRunningTask()); // <2>
+----
+<1> Here we receive a `BackgroundExecutor` instance.
+<2> By using the executor the given runnable will be executed in the background.
+
+Several APIs of Rico like the `Scheduler` or the `TaskChain` are based on the `BackgroundExecutor`.
+
+
+

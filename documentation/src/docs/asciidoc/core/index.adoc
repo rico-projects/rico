@@ -2,7 +2,9 @@ ifndef::imagesdir[:imagesdir: images]
 
 == Core API
 
-TODO
+Ricvo provides several general APIs and functionalities in the `dev.rico.core` module.
+All those functionalities are not client or server specific.
+This chapter gives an overview of the basic APIs and concepts that can be found in the `dev.rico.core` module.
 
 include::scheduler.adoc[]
 
