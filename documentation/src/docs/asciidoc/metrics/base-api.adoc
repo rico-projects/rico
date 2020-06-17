@@ -15,7 +15,7 @@ All these metric types extend the common interface `dev.rico.metrics.Metric` as 
 .Metrics interfaces
 image:metrics-interface.svg[]
 
-As we will see later, you receive an instance of the `dev.rico.metrics.Metrics`
+As we will see later, you obtain an instance of the `dev.rico.metrics.Metrics`
 interface depending on your environment (Java client, Spring, Jakarta...).
 You should always use this instance to create or access metrics.
 
@@ -38,7 +38,7 @@ timer.record(end - start, TimeUnit.MILLISECONDS); // <6>
 <5> the end time
 <6> the execution time of the task is recorded by the timer
 
-The timer metric that is used in the given snippet can be used later to visualize the execution time of the server request in a dashboard or trigger specific alarms for long running tasks.
+The timer metric that is measured in the given snippet can be used later to visualize the execution time of the server request in a dashboard or trigger specific alarms for long-running tasks.
 The following image shows how such result might look like in a monitoring dashboard by showing a graph of all the timer recordings over time:
 
 .sample graph based on metric
@@ -46,12 +46,12 @@ image:diagram-sample.png[]
 
 ==== Metrics
 
-As already mentioned all metrics in Rico implement the `dev.rico.metrics.Metric`
-interface. This provides access to the name and context information of the metric.
-The name of a metric is always unique and can not be changed.
-All factory methods for metrics in the `dev.rico.metrics.Metrics` interface will only create a new metric of no metric with the given name already exists.
+As already mentioned all metrics in Rico implement the `dev.rico.metrics.Metric` interface.
+This provides access to the name and context information of the metric.
+The name of a metric must be unique and cannot be changed.
+All factory methods for metrics in the `dev.rico.metrics.Metrics` interface will only create a new metric if no metric with the given name already exists.
 Otherwise the existing metric will be returned.
-Using the unique name of the metric you can receive all values of the metric for monitoring and maintenance issues later.
+Using the unique name of the metric you can receive all recorded values of the metric for monitoring and maintenance issues later.
 
 Next to the name, a `dev.rico.metrics.Metric` instance provides a context defined by the Rico context API.
 At the moment only the global context of the Rico context is used for metrics.
@@ -92,12 +92,12 @@ try {
 
 Examples where a counter can be used:
 
-- measure how often a specific functionallity is called
+- measure how often a specific functionality is called
 
 ==== Gauge
 
 A gauge defines a number based metric.
-The value of a gauge can be set to any number between `Long.MIN_VALUE` and `Long.MAX_VALUE`.
+The value of a gauge can be set to any number between `Double.MIN_VALUE` and `Double.MAX_VALUE`.
 A gauge is defined by the `dev.rico.metrics.types.Gauge` interface and instances should be created by using the factory methods of the `dev.rico.metrics.Metrics` interface.
 The `dev.rico.metrics.types.Gauge` interface provides a method to set the value of the gauge.
 
@@ -109,7 +109,7 @@ final Metric metrics = .... // <1>
 
 final Gauge gauge = metrics.getOrCreateCounter("user-count"); // <2>
 final long userCount = getUserCount();
-gauge.setValue(userCount); // <2>
+gauge.setValue(userCount); // <3>
 ----
 <1> it depends on your environment how you will get an instance
 <2> creates the gauge metric or returns it if a gauge metric with the given name exists
@@ -118,15 +118,15 @@ gauge.setValue(userCount); // <2>
 Examples where a gauge can be used:
 
 - measure how many users are logged in
-- measure how many threads are running
+- measure how much memory is used
 - measure the CPU usage
 
 ==== Timer
 
 A timer defines a duration based metric.
-The value of a times can be set to any duration.
+The value of a timer can be set to any duration.
 To define a duration `java.util.concurrent.TimeUnit` is used.
-A gauge is defined by the `dev.rico.metrics.types.Timer` interface and instances should be created by using the factory methods of the `dev.rico.metrics.Metrics` interface.
+A timer is defined by the `dev.rico.metrics.types.Timer` interface and instances should be created by using the factory methods of the `dev.rico.metrics.Metrics` interface.
 The `dev.rico.metrics.types.Timer` interface provides several methods to record the duration of a task.
 
 The following sample shows how a timer can be used:
@@ -149,14 +149,14 @@ try {
 <3> records the duration of the task
 
 The `dev.rico.metrics.types.Timer` interface provides some methods that make the recording of a duration much easier.
-The following code snippte does exactly the same as the last one:
+The following code snippet does exactly the same as the last one:
 
 [source,java]
 ----
 final Metric metrics = .... // <1>
 
-final Timer timer = metrics.getOrCreateTimer("server-request-timer");
-timer.record(() -> doServerRequest()); // <2>
+final Timer timer = metrics.getOrCreateTimer("server-request-timer"); // <2>
+timer.record(() -> doServerRequest()); // <3>
 ----
 <1> it depends on your environment how you will get an instance
 <2> creates the gauge metric or returns it if a gauge metric with the given name exists

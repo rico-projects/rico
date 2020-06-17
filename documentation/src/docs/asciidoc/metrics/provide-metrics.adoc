@@ -8,13 +8,13 @@ Based on this a custom monitoring solution can be created.
 
 ==== Using Prometheus
 
-Prometheus is a open source monitoring system and time series database.
-A correctly configured Prometheus instance can fetch the metrics of a running application and store them in timeseries.
+Prometheus is an open source monitoring system and time series database.
+A correctly configured Prometheus instance can fetch the metrics of a running application and store them in time-series.
 
 .Metrics interfaces
 image:connect-prometheus.svg[]
 
-The easiest way to use Prometheus is by docker.
+The easiest way to use Prometheus is through Docker.
 Prometheus already provides ready-to-use docker containers that fit perfect to Rico metrics.
 Only the endpoint of the application or applications must be configured.
 To do so we can create a custom configuration for Prometheus in a `prometheus.yml` YAML file:
@@ -36,7 +36,7 @@ scrape_configs:
 <3> The endpoint on the server.
 Here we use the default `/metrics`
 <4> An array of servers.
-Prometheus will try to fetch metrics records from each server in this array
+Prometheus will try to fetch metrics records from each server in this array.
 
 Next to this we need to create a Docker file that extends the default Docker image from Prometheus and adds our custom configuration:
 
@@ -189,10 +189,10 @@ The following table gives an overview about all metrics that rico measures autom
 |Number of active http sessions
 |===
 
-==== Create reuseable dashboards with Grafana
+==== Create reusable dashboards with Grafana
 
 While Prometheus can be used to visualize a graph of 1 metric or query you normally expect much more functionality for modern application monitoring.
-Since the data storage and query handlung is the main task of Prometheus an additional tool should be used to visualize all the metrics.
+Since the data storage and query handling is the main task of Prometheus an additional tool should be used to visualize all the metrics.
 Here https://grafana.com[Grafana] is a very good choose.
 The open source tool can be used to create dashboards with several graphs based on data that is available in Prometheus.
 

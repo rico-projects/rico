@@ -2,7 +2,7 @@ ifndef::imagesdir[:imagesdir: images]
 
 === UI toolkit support in Rico
 
-Rico provides serveral APIs that automatically handle UI toolkit specific functionalities like the thread handling.
+Rico provides several APIs that automatically handle UI toolkit specific functionalities like thread handling.
 To benefit from such features the UI toolkit must be specified in Rico.
 A UI toolkit is defined by the interface `dev.rico.client.Toolkit` in Rico.
 At the moment Rico provides an implementation of that interface for Swing and JavaFX.
@@ -22,4 +22,4 @@ For the implemented toolkits Rico provides some convenience methods that make th
 FxToolkit.init();
 ----
 
-Normally this code should be directly in the main method of your client application, since several functionalities of the Rico client API won't be useable without a configured UI toolkit.
+Normally this code should be directly in the main method of your client application, since several functionalities of the Rico client API won't be usable without a configured UI toolkit.

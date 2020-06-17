@@ -4,7 +4,7 @@ ifndef::imagesdir[:imagesdir: ../images]
 
 Each commit to the master branch will automatically trigger a Travis build.
 This build will upload the build artifacts as snapshots to https://oss.jfrog.org[the open snapshot repository from JFrog].
-You can find all Rico afrtifacts https://oss.jfrog.org/oss-snapshot-local/dev/rico/[here].
+You can find all Rico artifacts https://oss.jfrog.org/oss-snapshot-local/dev/rico/[here].
 
 If you want to depend on snapshot builds of Rico you need to add the maven repository to your build:
 
