@@ -2,8 +2,52 @@ ifndef::imagesdir[:imagesdir: ../images]
 
 === Client Scope
 
-TODO
+Rico supports an additional custom Scope called ClientScope.
+This scope is implemented for JavaEE and Spring and it’s defined as a scope that is "lower than the session scope".
+This scope is important if you want to create statefull web applications, for example.
+Since all the tabs of a browser share the same session it’s hard to define data that is only related to one tab in the browser.
+In that case the lifecycle of a client scope is bound to a tab in the browser and ends when the tab will be closed.
 
-////
-todo:   What is the client scope and how can it be used?
-////
+image:client-scope.png[]
+
+For both JavaEE and Spring a `dev.rico.server.javaee.ClientScoped` annotation is defined that can be used to give any bean the specific scope:
+
+[source,java]
+----
+@ClientScoped
+public class MyLocalStoreService {
+
+    private List<String> values = new ArrayList();
+
+    public void add(String val) {
+        values.add(val);
+    }
+
+}
+----
+
+Internally the client scope is defined by an unique identifier that is shared between client and server with each request.
+Based on this the scope only "lives" inside a http request roundtrip.
+
+Rico provides a `dev.rico.server.client.ClientSessionListener` interface that behaves similar to the `javax.servlet.http.HttpSessionListener` listener.
+By using the `dev.rico.server.ServerListener` annotation client scope listeners will automatically be found and registered at the server bootstrap.
+The following code shows an example for such listener:
+
+[source,java]
+----
+@ServerListener
+public class MyClientSessionListener implements ClientSessionListener {
+
+    public void sessionCreated(ClientSession clientSession) {
+        String clientSessionId = clientSession.getId();
+        String httpSessionId = clientSession.getHttpSession().getId();
+        System.out.println("Client session '" + clientSessionId  + "' created in http session '" + httpSessionId + "'");
+    }
+    public void sessionDestroyed(ClientSession clientSession) {
+        final String clientSessionId = clientSession.getId();
+        System.out.println("Client session '" + clientSessionId  + "' destroyed");
+    }
+
+}
+----
+
