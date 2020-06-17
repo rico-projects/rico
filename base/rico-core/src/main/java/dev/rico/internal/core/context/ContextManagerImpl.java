@@ -122,9 +122,4 @@ public class ContextManagerImpl implements ContextManager {
     public static ContextManagerImpl getInstance() {
         return INSTANCE;
     }
-
-    public static void main(String[] args) {
-        ContextManagerImpl contextManager = ContextManagerImpl.getInstance();
-        System.out.println(contextManager);
-    }
 }
