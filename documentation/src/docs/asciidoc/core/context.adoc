@@ -29,12 +29,6 @@ The following table gives an overview of all the context values that are defined
 |myApplication
 |The name of the application if defined in the configuration by the "application.name" property. Otherwise "UNKNOWN"
 
-|uiToolkit
-|global
-|client
-|JavaFX toolkit
-|The name of the used ui toolkit. This value is only defined when using the rico-client library.
-
 |rico.version
 |global
 |always
@@ -77,6 +71,18 @@ The following table gives an overview of all the context values that are defined
 |192.168.178.23
 |The host address of the system
 
+|thread
+|thread
+|always
+|background-thread-2
+|Name of the current thread. This is only supported for threads that are created by Rico
+
+|uiToolkit
+|global
+|client
+|JavaFX toolkit
+|The name of the used ui toolkit. This value is only defined when using the rico-client library.
+
 |security.userName
 |global
 |client
@@ -88,12 +94,6 @@ The following table gives an overview of all the context values that are defined
 |server
 |admin
 |When using rico-security this value defines the name of the logged in user for the current request on the server
-
-|thread
-|thread
-|always
-|background-thread-2
-|Name of the current thread. This is only supported for threads that are created by Rico
 
 |remoting.controller
 |thread
