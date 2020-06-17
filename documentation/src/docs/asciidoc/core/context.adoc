@@ -2,16 +2,77 @@ ifndef::imagesdir[:imagesdir: images]
 
 === Context API
 
-TODO
+Rico provides a context manager that can be used to hold attributes in a global and a thread sensitive context.
+An attribute is defined as a key-value pair. These pairs can be stored and read from the global context or the context of the current thread only.
+All attributes describe metadata to help in debugging, maintaining and analysing an application.
 
-////
-todo:   dev.rico.core.context.ContextManager
-        Why should you use the context API?
-        Example with logging
-        Using context on client
-        Using context on server (spring + jakarta)
-        Automatic context values that are provided by rico
-////
+The interface `dev.rico.core.context.ContextManager` defines the context manager in Rico and provides several methods to store and receive context based information.
+Depending on your environment Rico provides different ways to create a `ContextManager` instance.
+
+The following sample shows how values can be stored:
+
+[source,java]
+----
+
+final ContextManager contextManager = ... // <1>
+
+contextManager.setGlobalAttribute("application.type", "microservice"); // <2>
+contextManager.setThreadLocalAttribute("thread.type", "background thread"); // <3>
+----
+<1> depends on your environment.
+<2> here an attributes is stored in the global context.
+"application.type" is the name / key of the attribute and "microservice" is the value
+<3> here an attributes is stored in the context of the current thread.
+
+When storing thread based context information you normally want to keep the information for a specific task only and the information will be invalid afterwards.
+To do so the following pattern is quite helpfull when defining attributes in the thread context:
+
+[source,java]
+----
+
+public final Result callDatabase(final String query) {
+    final ContextManager contextManager = ... // <1>
+    final Subscription queryAttributeSubscription = contextManager.setThreadLocalAttribute("db.query", query); // <2>
+
+    try {
+        return db.call(query); // <3>
+    } finally {
+        queryAttributeSubscription.unsubscribe(); // <4>
+    }
+}
+
+----
+<1> depends on your environment.
+<2> here the attribute "db.query" is stored in the thread context.
+The `Subscription` instance can be used to remove the added attribute from the context.
+<3> While we call our databse we want the context attribute "db.query" will remain set.
+<4> Once the databse call has been executed we remove the attribute from the thread context by calling the `unsubscribe` method.
+This should always be done in a `finally` block since an exception my prevent this otherwise.
+
+==== Benefits of the context manager
+
+The context manager in Rico is integrated in several libraries and features of Rico.
+The remoting library of Rico automatically adds information to the context that can be helpfull.
+The metrics and logging libraries of Rico provide the possibility to enrich metrics and logging with context based attributes through the context manager.
+This allows you easily to assign all logging messages of a server to specific users and requests or to store the metrics of several microservices in the same Prometheus instance and query for a specific instance later.
+More information can be found in the documentation of the metrics and logging API.
+
+image:context-in-log.svg.svg[]
+
+==== Using the API on the client
+
+In the Rico client API a `dev.rico.core.context.ContextManager` instance can be received by using by the following call:
+
+[source,java]
+----
+
+final ContextManager contextManager = Client.getService(ContextManager.class);
+----
+
+==== Using the API on the server
+
+On JakartaEE and Spring you can inject a `dev.rico.core.context.ContextManager` instance in any managed bean.
+The instance is always defined in the singleton / application scope.
 
 ==== Predefined Context values
 
@@ -81,7 +142,7 @@ The following table gives an overview of all the context values that are defined
 |global
 |client
 |JavaFX toolkit
-|The name of the used ui toolkit. This value is only defined when using the rico-client library.
+|The name of the used UI toolkit. This value is only defined when using the rico-client library.
 
 |security.userName
 |global
