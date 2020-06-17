@@ -1,0 +1,20 @@
+ifndef::imagesdir[:imagesdir: images]
+
+=== UI executor in Rico
+
+When using Swing all UI specific operations need to be handled in the EDT (Event dispatch thread) of Swing.
+When using JavaFX all UI specific operations must be handled in the JavaFX platform thread.
+Rico provides an abstraction of such threads by providing the interface `dev.rico.client.concurrent.UiExecutor`.
+The interface extends the basic Java `java.util.concurrent.Executor` interface with some additional helpful methods when working with ui toolkits.
+The following code snippet shows how an instance of the UiExecutor can be received an used:
+
+[source,java]
+----
+UiExecutor uiExecutor = Client.getService(UiExecutor.class); // <1>
+
+uiExecutor.execute(() -> updateUi()); // <2>
+----
+
+<1> Here we receive a `UiExecutor` instance.
+<2> By using the executor the given runnable will be executed in the ui toolkit thread.
+

@@ -6,10 +6,15 @@ Rico provides some general functionality, that can be used in any JavaFX or Swin
 
 image:client-modules.svg[]
 
-Next to the UI toolkit independent library rico-client, a Swing client will need rico-client-swing and a JavaFX client will need rico-client-javafx. 
-The Swing and JavaFX specific libraries may provide additional UI toolkit dependent functionality. 
+Besides the UI toolkit independent library rico-client, a Swing client will need rico-client-swing and a JavaFX client will need rico-client-javafx.
+The Swing and JavaFX specific libraries may provide additional UI toolkit dependent functionality.
 The toolkit specific libraries should not be used together.
 
+include::ui-toolkit.adoc[]
+
+include::ui-executor.adoc[]
+
+include::background-executor.adoc[]
 
 include::task-chain.adoc[]
 
