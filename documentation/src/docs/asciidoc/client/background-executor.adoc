@@ -2,12 +2,12 @@ ifndef::imagesdir[:imagesdir: images]
 
 === Background executor
 
-Next to an executor for the ui toolkit Rico provides a background executor that backs a configured thread pool.
-For most usecases this executor is the only tool that you need to execute background and async tasks in a java client.
-The background executor is defined by the `dev.rico.client.concurrent.BackgroundExecutor` interface.
-The interface extends the basic Java `java.util.concurrent.Executor` interface with some additional helpful methods and functionalities.
+Rico's executor for the UI toolkit provides a background executor backed by a configurable thread pool.
+For most use-cases this executor is the only tool you will need to execute background and async tasks in a java client.
+The background executor is defined by the interface `dev.rico.client.concurrent.BackgroundExecutor`.
+It extends the basic Java `java.util.concurrent.Executor` interface with some additional helpful methods and functionalities.
 
-The following code snippet shows how the background executor can be received and used:
+The following code snippet shows how use the background executor:
 
 [source,java]
 ----
