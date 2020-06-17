@@ -3,7 +3,8 @@ ifndef::imagesdir[:imagesdir: images]
 === Context API
 
 Rico provides a context manager that can be used to hold attributes in a global and a thread sensitive context.
-An attribute is defined as a key-value pair. These pairs can be stored and read from the global context or the context of the current thread only.
+An attribute is defined as a key-value pair.
+These pairs can be stored and read from the global context or the context of the current thread only.
 All attributes describe metadata to help in debugging, maintaining and analysing an application.
 
 The interface `dev.rico.core.context.ContextManager` defines the context manager in Rico and provides several methods to store and receive context based information.
@@ -57,7 +58,7 @@ The metrics and logging libraries of Rico provide the possibility to enrich metr
 This allows you easily to assign all logging messages of a server to specific users and requests or to store the metrics of several microservices in the same Prometheus instance and query for a specific instance later.
 More information can be found in the documentation of the metrics and logging API.
 
-image:context-in-log.svg.svg[]
+image:context-in-log.svg[]
 
 ==== Using the API on the client
 
