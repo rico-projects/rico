@@ -18,9 +18,9 @@ package dev.rico.internal.remoting.server;
 
 public interface RemotingServerConstants {
 
-    String CONTROLLER_CONTEXT = "remotingController";
+    String CONTROLLER_CONTEXT = "remoting.controller";
 
     String UNKNOWN_CONTROLLER_CONTEXT = "UNKNOWN";
 
-    String CONTROLLER_ACTION_CONTEXT = "remotingControllerAction";
+    String CONTROLLER_ACTION_CONTEXT = "remoting.action";
 }
