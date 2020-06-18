@@ -29,21 +29,20 @@ Each subproject provides its own gradle file, which must have the
 same name as the gradle module (based on the entry in `settings.gradle`).
 The gradle file for the `rico-client` subproject must be named `rico-client.gradle`.
 Each of these gradle files defines the dependencies of the subproject. 
-Normally they do not contain any additional information next to the dependencies
-definition, since the general build is defined in the global `build.gradle` file 
-found in the root folder.
+Normally they do not contain any additional information next to the dependencies,
+since the general build is defined in the global `build.gradle` file found in the root folder.
 
 Gradle subprojects in Rico won't be released by default. To add a module to releases of Rico
-the `publishJars` gradle property must be set to `true`. This is done in in the
+the `publishJars` gradle property must be set to `true`. This is done in the
 `gradle.properties` file that is located in all modules that will be included in
 a release. The concrete effect of the `publishJars` property can be found in the `build.gradle`
 file in the project root folder.
 
 === Package structure
 
-Each subproject has its sources split into public and private. This split
-is additionally defined in the Java module config and hides all private APIs. 
-While the public API defines its own base package, the packages containing the private API start with `dev.rico.internal`.
+Each subproject has its sources split into internal and public packages.
+This split is additionally defined in the Java module config and hides all private APIs.
+While the public API defines its own base package, the packages containing the internal API start with `dev.rico.internal`.
 This is done to be compatible with the Java module system.
 You can then find a structure like the following one in each module:
 
@@ -64,6 +63,6 @@ Since one main goal of Rico is to provide client side APIs and features
 next to the server side modules a lot of modules of rico are targeted for
 the client or the server. In general all modules and its dependencies follow
 a common pattern that can be found in the base modules as shown in the following
-diagramm:
+diagram:
 
 image:base-gradle-modules.svg[]

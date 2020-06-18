@@ -3,19 +3,19 @@ ifndef::imagesdir[:imagesdir: images]
 === TaskChain API
 
 The TaskChain API provides an easy way to create a chain of individual tasks.
-Between tasks the chain can switch between the UI thread and background threads.
+The chain provides functionality to switch between the UI thread and background threads.
 
-When creating a client application with UI you normally need to implement long running tasks like a server call.
-If such a task is executed on the UI thread no user interaction or repaint / layout of the application can happen till the task is finished execution.
-This will always end up in a bad behavior, since the application looks like it is frozen and maybe pixel artifacts are rendered on the screen if the application is resized, for example.
-To avoid these problems long running tasks should always be executed on a background thread.
+When creating a client application with UI you normally need to implement long-running tasks like a server call.
+If such a task is executed on the UI thread no user interaction or repaint / layout of the application can happen till the task is not completed.
+This will always end up in a bad behavior, since the application looks like it is frozen and maybe pixel artifacts are rendered on the screen if the application's window is resized or moved.
+To avoid these problems long-running tasks should always be executed on a background thread.
 
 image:ui-thread.svg[]
 
 A background thread in Java can easily be created and used by using the factory methods in `java.util.concurrent.Executors`.
 Much more complex code is needed if we want to react on the result of a background thread in the ui thread.
-This pattern is quite normal in a client.
-Let's asume you want to trigger a server endpoint and display the result of the call in the client.
+This pattern is quite common in a client.
+Let's assume you want to trigger a server endpoint and display the result of the call in the client.
 Maybe you even want to show a loading animation in the client while the server call is executed and show an error if an exception happens.
 The following diagram gives an overview of the needed task:
 
@@ -44,40 +44,64 @@ backgroundExecutors.execute(() -> {
 As you can see this is really a lot of code for a common default workflow that you might need multiple times per application.
 
 The TaskChain API helps you to create better readable and maintainable code for scenarios like the described one.
-The TaskChain provides a fluent API that let you define workflows with multiple switches between background threads and the ui thread.
+The TaskChain provides a fluent API that let you define workflows with multiple switches between background threads and the UI thread.
 Before we have a deeper look at the API let's see how the given example would look like by using the TaskChain API:
 
 [source,java]
 ----
-UiExecutor.createUiTaskChain()
-    .execute(() -> showLoadingAnimation())
-    .background()
-    .supply(() -> callServer())
-    .ui()
-    .consume(v -> updateUi(v))
-    .onException(e -> showErrorDialog(e))
-    .thenFinally(() -> hideLoadingAnimation())
-    .run();
+UiExecutor.createUiTaskChain() // <1>
+    .execute(() -> showLoadingAnimation()) <2>
+    .background() // <3>
+    .supply(() -> callServer()) <4>
+    .map(v -> v.getName()) // <5>
+    .ui() // <6>
+    .consume(v -> updateUi(v)) // <7>
+    .onException(e -> showErrorDialog(e)) // <8>
+    .thenFinally(() -> hideLoadingAnimation()) // <9>
+    .run(); // <10>
 ----
 
-////
-todo: some description of the code
-////
+<1> a "ui task chain" is will execute the tasks in the UI thread. There is also a "background task chain".
+<2> the `execute()` method adds a runnable to the chain.
+<3> by calling `background()` the execution for the coming tasks is switched to a background thread.
+<4> the `supply()` method adds a supplier to the chain. The result of the supplier is available to the next task.
+<5> the `map()` method adds a function to the chain. The result of the function is available to the next task.
+<6> by calling `ui()` the execution for the coming tasks is switched to the UI thread.
+<7> the `consume()` method adds a consumer to the chain.
+<8> the `onException()` method adds an exception handler to the chain.
+<9> the `thenFinally()`method adds a runnable to the chain. The finally task is called in any case.
+<10> the chain is only executed when `run()` is called. This allows to create a chain and run it later or even run it multiple times.
+
+The `run()` method returns a `CompletableFuture` which allows the caller of `run()` to wait for the completion of all tasks in the chain.
+Also the caller can determine if the tasks chain completed successfully or not by inspecting the `CompletableFuture`.
+Finally if the output from a task is not consumed by a consumer in the chain than this value can be obtained from the `CompletableFuture`.
 
 The main entry point of the TaskChain API is the `dev.rico.client.concurrent.TaskChain` interface.
 New instances should always be created by factory methods that are provided by the `dev.rico.client.concurrent.UiExecutor` interface.
 
 [source,java]
 ----
-final TaskChain chain = UiExecutor.createUiTaskChain();
+final TaskChain uiChain = UiExecutor.createUiTaskChain();
+final TaskChain backgroundChain = UiExecutor.createBackgroundTaskChain();
 ----
 
-////
+==== Exception handling in the task chain
 
-todo: some samples with ui() / background()
+Every task in a task chain can potentially throw an exception when it is executed.
+This influences which of remaining tasks are executed:
 
-todo: some samples onException() / thenFinally()
+* If a task throws an exception then all the upcoming tasks defined with `execute()`, `supply()`, `map()`, and `consume()` are skipped.
+Switching between UI and background threads is done in any case.
+the next `onException()` in the chain is invoked.
+If this exception handler terminates normally than the tasks after the exception handler are executed.
+If no exception handler is defined than the CompletableFuture returned by `run()` method will be completed exceptionally.
 
-todo: calling run() at the end to execute the chain
+It is possible to define multiple exception handler in a chain.
+Also it is possible to have more tasks after an exception handler.
 
-////
+If there is no exception thrown by a task, then the exception handler is skipped.
+
+The `thenFinally()` task is special as it is executed in any case.
+Also it is limited in the sense that it cannot consume a result of a previous task.
+Plus it can only be the last task in the chain.
+the main purpose of such a final task is to close resources or end processes which may habe been started by another task in the chain.

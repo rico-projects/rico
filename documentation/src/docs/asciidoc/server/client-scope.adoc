@@ -4,7 +4,7 @@ ifndef::imagesdir[:imagesdir: ../images]
 
 Rico supports an additional custom Scope called `ClientScope`.
 This scope is implemented for JakartaEE and Spring and defined as a scope that is a "sub-scope" of the session scope.
-This scope is important if you want to create statefull web applications.
+This scope is important if you want to create stateful web applications.
 You can for example let the tabs of a browser share the same session scope, but different client scopes. 
 Since they share the same session it’s hard to define data that is only related to one tab in the browser otherwise.
 The lifecycle of a client scope is then bound to a tab in the browser and ends when the tab will be closed. Of course this works only if the client side tells the server side when to create a client session. Rico supports this out of the box through the `rico-js` module and the java client modules.
@@ -27,12 +27,12 @@ public class MyLocalStoreService {
 }
 ----
 
-Internally the client scope is defined by an unique identifier that is shared between client and server with each request.
-Based on this the scope only "lives" inside a http request roundtrip.
+Internally the client scope is defined by a unique identifier that is shared between client and server with each request.
+Based on this the scope only "lives" inside a http request round-trip.
 
 Rico provides a `dev.rico.server.client.ClientSessionListener` interface that behaves similar to the `javax.servlet.http.HttpSessionListener` listener.
 By using the `dev.rico.server.ServerListener` annotation client scope listeners will automatically be found and registered at  server bootstrap.
-The following code shows an example for such listener:
+The following code shows an example for such a listener:
 
 [source,java]
 ----

@@ -11,7 +11,7 @@ Metrics will be automatically active once the `dev.rico.metrics.server.javaee` j
 
 [NOTE]
 ====
-After the migration to Java 11 and Java modules the metrics functionallity was never tested in a JakartaEE based app.
+After the migration to Java 11 and Java modules the metrics functionality was never tested in a JakartaEE based app.
 ====
 
 ==== Integration in Spring
