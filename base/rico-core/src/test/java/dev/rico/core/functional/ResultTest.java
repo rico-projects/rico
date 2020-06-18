@@ -2,6 +2,9 @@ package dev.rico.core.functional;
 
 import org.testng.annotations.Test;
 
+import java.io.IOException;
+import java.util.concurrent.atomic.AtomicReference;
+
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
@@ -132,12 +135,9 @@ public class ResultTest {
     }
 
     @Test
-    public void testResultMap() {
-        // given:
-        final ResultWithInput<?, String> withInput = Result.withInput(v -> "test").apply("bar");
-
+    public void testSuccessfulResultMap() {
         // when:
-        final Result<String> result = withInput.map(s -> s + "-" + s);
+        final Result<String> result = successfulResult().map(s -> s + "-" + s);
 
         // then:
         assertTrue(result.isSuccessful());
@@ -145,16 +145,182 @@ public class ResultTest {
     }
 
     @Test
-    public void testResultMapThrowingException() {
+    public void testFailedResultMap() {
         // given:
         final RuntimeException exception = new RuntimeException();
-        final ResultWithInput<?, String> withInput = Result.withInput(v -> "test").apply("bar");
 
         // when:
-        final Result<String> result = withInput.map(s -> { throw exception; });
+        final Result<String> result = failedResult(exception).map(s -> s + "-" + s);
+
+        // then:
+        assertTrue(result.isFailed());
+        assertEquals(exception, result.getException());
+    }
+
+    @Test
+    public void testSuccessfulResultMapThrowingException() {
+        // given:
+        final RuntimeException exception = new RuntimeException();
+
+        // when:
+        final Result<String> result = successfulResult().map(s -> { throw exception; });
 
         // then:
         assertTrue(result.isFailed());
         assertEquals(result.getException(), exception);
+    }
+
+    @Test
+    public void testFailedResultMapThrowingException() {
+        // given:
+        final RuntimeException exception = new RuntimeException();
+
+        // when:
+        final Result<String> result = failedResult(exception).map(s -> { throw new IOException(); });
+
+        // then:
+        assertTrue(result.isFailed());
+        assertEquals(result.getException(), exception);
+    }
+
+    @Test
+    public void testSuccessfulResultOnSuccessConsumer() {
+        // given:
+        final AtomicReference<String> value = new AtomicReference<>("");
+
+        // when:
+        final Result<Void> result = successfulResult().onSuccess(value::set);
+
+        // then:
+        assertTrue(result.isSuccessful());
+        assertEquals("test", value.get());
+    }
+
+    @Test
+    public void testFailedResultOnSuccessConsumer() {
+        // given:
+        final RuntimeException exception = new RuntimeException();
+        final AtomicReference<String> value = new AtomicReference<>("");
+
+        // when:
+        final Result<Void> result = failedResult(exception).onSuccess(value::set);
+
+        // then:
+        assertTrue(result.isFailed());
+        assertEquals(result.getException(), exception);
+    }
+
+    @Test
+    public void testSuccessfulResultOnSuccessConsumerThrowingException() {
+        // given:
+        final RuntimeException exception = new RuntimeException();
+
+        // when:
+        final Result<Void> result = successfulResult().onSuccess(s -> { throw exception; });
+
+        // then:
+        assertTrue(result.isFailed());
+        assertEquals(result.getException(), exception);
+    }
+
+    @Test
+    public void testFailedResultOnSuccessConsumerThrowingException() {
+        // given:
+        final RuntimeException exception = new RuntimeException();
+
+        // when:
+        final Result<Void> result = failedResult(exception).onSuccess(s -> { throw new IOException(); });
+
+        // then:
+        assertTrue(result.isFailed());
+        assertEquals(result.getException(), exception);
+    }
+
+    @Test
+    public void testSuccessfulResultOnSuccessRunnable() {
+        // given:
+        final AtomicReference<String> value = new AtomicReference<>("");
+
+        // when:
+        final Result<Void> result = successfulResult().onSuccess(() -> value.set("bar"));
+
+        // then:
+        assertTrue(result.isSuccessful());
+        assertEquals("bar", value.get());
+    }
+
+    @Test
+    public void testFailedResultOnSuccessRunnable() {
+        // given:
+        final RuntimeException exception = new RuntimeException();
+        final AtomicReference<String> value = new AtomicReference<>("");
+
+        // when:
+        final Result<Void> result = failedResult(exception).onSuccess(() -> value.set("bar"));
+
+        // then:
+        assertTrue(result.isFailed());
+        assertEquals(result.getException(), exception);
+    }
+
+    @Test
+    public void testSuccessfulResultOnSuccessRunnableThrowingException() {
+        // given:
+        final RuntimeException exception = new RuntimeException();
+
+        // when:
+        final Result<Void> result = successfulResult().onSuccess(() -> { throw exception; });
+
+        // then:
+        assertTrue(result.isFailed());
+        assertEquals(result.getException(), exception);
+    }
+
+    @Test
+    public void testFailedResultOnSuccessRunnableThrowingException() {
+        // given:
+        final RuntimeException exception = new RuntimeException();
+
+        // when:
+        final Result<Void> result = failedResult(exception).onSuccess(() -> { throw new IOException(); });
+
+        // then:
+        assertTrue(result.isFailed());
+        assertEquals(result.getException(), exception);
+    }
+
+    @Test
+    public void testSuccessfulResultOnFailure() {
+        // given:
+        final AtomicReference<Exception> value = new AtomicReference<>(null);
+
+        // when:
+        successfulResult().onFailure(value::set);
+
+        // then:
+        assertNull(value.get());
+    }
+
+    @Test
+    public void testFailedResultOnFailure() {
+        // given:
+        final AtomicReference<Exception> value = new AtomicReference<>(null);
+        final RuntimeException exception = new RuntimeException();
+
+        // when:
+        failedResult(exception).onFailure(value::set);
+
+        // then:
+        assertEquals(value.get(), exception);
+    }
+
+
+    private ResultWithInput<String, String> successfulResult() {
+        return Result.withInput(String::toString).apply("test");
+    }
+
+
+    private ResultWithInput<String, String> failedResult(Exception e) {
+        return Result.<String, String>withInput(s -> {throw e;}).apply("test");
     }
 }

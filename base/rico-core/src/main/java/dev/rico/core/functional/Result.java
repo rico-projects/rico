@@ -20,6 +20,7 @@ import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.functional.Fail;
 import dev.rico.internal.core.functional.Success;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -72,6 +73,29 @@ public interface Result<R> {
      * @return a new result
      */
     <U> Result<U> map(CheckedFunction<R, U> mapper);
+
+    /**
+     * Consumes the result.
+     *
+     * @param consumer the consumer
+     * @return a new result
+     */
+    Result<Void> onSuccess(CheckedConsumer<R> consumer);
+
+    /**
+     * Executes a runnable if the result is successful.
+     *
+     * @param runnable the runnable
+     * @return a new result
+     */
+    Result<Void> onSuccess(CheckedRunnable runnable);
+
+    /**
+     * Executes an exception handler if the result is failed.
+     *
+     * @param consumer the exception handler
+     */
+    void onFailure(Consumer<Exception> consumer);
 
     /**
      * Returns a successful result with the given value

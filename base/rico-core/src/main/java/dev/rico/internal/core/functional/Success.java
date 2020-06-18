@@ -16,14 +16,19 @@
  */
 package dev.rico.internal.core.functional;
 
+import dev.rico.core.functional.CheckedConsumer;
 import dev.rico.core.functional.CheckedFunction;
+import dev.rico.core.functional.CheckedRunnable;
 import dev.rico.core.functional.Result;
 import dev.rico.core.functional.ResultWithInput;
 import dev.rico.internal.core.Assert;
 
+import java.util.function.Consumer;
+
 /**
  * Implementation of a {@link dev.rico.core.functional.Result} that is based
  * on a successfully executed function
+ *
  * @param <T> type of the input
  * @param <R> type of the output
  */
@@ -68,10 +73,32 @@ public class Success<T, R> implements ResultWithInput<T, R> {
         Assert.requireNonNull(mapper, "mapper");
         try {
             return new Success<>(input, mapper.apply(result));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return new Fail<>(input, e);
         }
+    }
+
+    @Override
+    public Result<Void> onSuccess(CheckedConsumer<R> consumer) {
+        Assert.requireNonNull(consumer, "consumer");
+        return map(v -> {
+            consumer.accept(v);
+            return null;
+        });
+    }
+
+    @Override
+    public Result<Void> onSuccess(CheckedRunnable runnable) {
+        Assert.requireNonNull(runnable, "runnable");
+        return map(v -> {
+            runnable.run();
+            return null;
+        });
+    }
+
+    @Override
+    public void onFailure(Consumer<Exception> consumer) {
+        // do nothing
     }
 }
 
