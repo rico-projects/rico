@@ -130,4 +130,31 @@ public class ResultTest {
         assertEquals(result.getException(), exception);
         assertEquals("bar", result.getInput());
     }
+
+    @Test
+    public void testResultMap() {
+        // given:
+        final ResultWithInput<?, String> withInput = Result.withInput(v -> "test").apply("bar");
+
+        // when:
+        final Result<String> result = withInput.map(s -> s + "-" + s);
+
+        // then:
+        assertTrue(result.isSuccessful());
+        assertEquals("test-test", result.getResult());
+    }
+
+    @Test
+    public void testResultMapThrowingException() {
+        // given:
+        final RuntimeException exception = new RuntimeException();
+        final ResultWithInput<?, String> withInput = Result.withInput(v -> "test").apply("bar");
+
+        // when:
+        final Result<String> result = withInput.map(s -> { throw exception; });
+
+        // then:
+        assertTrue(result.isFailed());
+        assertEquals(result.getException(), exception);
+    }
 }
