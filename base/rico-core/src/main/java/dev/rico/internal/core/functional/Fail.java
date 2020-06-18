@@ -16,10 +16,15 @@
  */
 package dev.rico.internal.core.functional;
 
+import dev.rico.core.functional.CheckedConsumer;
 import dev.rico.core.functional.CheckedFunction;
+import dev.rico.core.functional.CheckedRunnable;
 import dev.rico.core.functional.Result;
 import dev.rico.core.functional.ResultWithInput;
 import dev.rico.internal.core.Assert;
+
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * Implementation of a {@link dev.rico.core.functional.Result} that is based
@@ -64,9 +69,50 @@ public class Fail<T, R> implements ResultWithInput<T, R> {
     }
 
     @Override
+    public R orElseGet(Supplier<R> supplier) {
+        Assert.requireNonNull(supplier, "supplier");
+        return supplier.get();
+    }
+
+    @Override
+    public R orElse(R value) {
+        return value;
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public <U> Result<U> map(final CheckedFunction<R, U> mapper) {
         Assert.requireNonNull(mapper, "mapper");
         return (Result<U>) this;
+    }
+
+    @Override
+    public Result<R> recover(CheckedFunction<Exception, R> exceptionHandler) {
+        Assert.requireNonNull(exceptionHandler, "exceptionHandler");
+        try {
+            return new Success<>(exceptionHandler.apply(exception));
+        } catch (Exception e) {
+            return new Fail<>(e);
+        }
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public Result<Void> onSuccess(CheckedConsumer<R> consumer) {
+        Assert.requireNonNull(consumer, "consumer");
+        return (Result<Void>) this;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public Result<Void> onSuccess(CheckedRunnable runnable) {
+        Assert.requireNonNull(runnable, "runnable");
+        return (Result<Void>) this;
+    }
+
+    @Override
+    public void onFailure(Consumer<Exception> consumer) {
+        Assert.requireNonNull(consumer, "consumer");
+        consumer.accept(exception);
     }
 }
