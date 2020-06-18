@@ -131,7 +131,7 @@ public class ResultTest {
         // then:
         assertTrue(result.isFailed());
         assertEquals(result.getException(), exception);
-        assertEquals(result.getInput(), "test");
+        assertEquals(result.getInput(), "bar");
     }
 
     @Test
@@ -243,8 +243,8 @@ public class ResultTest {
         final Result<String> result = successfulResult().recover(s -> { throw exception; });
 
         // then:
-        assertTrue(result.isFailed());
-        assertEquals(result.getException(), exception);
+        assertTrue(result.isSuccessful());
+        assertEquals(result.getResult(), "test");
     }
 
     @Test
@@ -404,24 +404,6 @@ public class ResultTest {
     public void testFailedResultOrElse() {
         // when:
         final String result = failedResult().orElse("bar");
-
-        // then:
-        assertEquals(result, "bar");
-    }
-
-    @Test
-    public void testSuccessfulResultOrElseGet() {
-        // when:
-        final String result = successfulResult("bar").orElseGet(() -> "test");
-
-        // then:
-        assertEquals(result, "bar");
-    }
-
-    @Test
-    public void testFailedResultOrElseGet() {
-        // when:
-        final String result = failedResult().orElseGet(() -> "bar");
 
         // then:
         assertEquals(result, "bar");

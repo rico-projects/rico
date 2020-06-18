@@ -41,7 +41,6 @@ public interface Result<R> {
      * @return the outcome
      * @throws IllegalStateException the exception if the based function was not executed successfully
      * @see #orElse(Object)
-     * @see #orElseGet(Supplier)
      * @see #map(CheckedFunction)
      * @see #onSuccess(CheckedRunnable)
      * @see #onSuccess(CheckedConsumer)
@@ -57,7 +56,6 @@ public interface Result<R> {
      * @return the exception
      * @throws IllegalStateException the exception if the based function was executed successfully
      * @see #orElse(Object)
-     * @see #orElseGet(Supplier)
      * @see #onFailure(Consumer)
      * @see #recover(CheckedFunction)
      */
@@ -91,14 +89,6 @@ public interface Result<R> {
      * @return a new result
      */
     Result<R> recover(CheckedFunction<Exception, R> exceptionHandler);
-
-    /**
-     * Returns the value of this if successful or result of the supplier otherwise.
-     *
-     * @param supplier the supplier
-     * @return a new result
-     */
-    R orElseGet(Supplier<R> supplier);
 
     /**
      * Returns the value of this if successful or the passed in value otherwise.
