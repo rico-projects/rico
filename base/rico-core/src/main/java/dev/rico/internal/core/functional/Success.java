@@ -70,12 +70,6 @@ public class Success<T, R> implements ResultWithInput<T, R> {
     }
 
     @Override
-    public R orElseGet(Supplier<R> supplier) {
-        Assert.requireNonNull(supplier, "supplier");
-        return result;
-    }
-
-    @Override
     public R orElse(R value) {
         return result;
     }

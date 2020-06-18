@@ -69,12 +69,6 @@ public class Fail<T, R> implements ResultWithInput<T, R> {
     }
 
     @Override
-    public R orElseGet(Supplier<R> supplier) {
-        Assert.requireNonNull(supplier, "supplier");
-        return supplier.get();
-    }
-
-    @Override
     public R orElse(R value) {
         return value;
     }

@@ -2,10 +2,82 @@ ifndef::imagesdir[:imagesdir: images]
 
 === Result API
 
-TODO
+With the Result API Rico offers the functionality to define results of computations that may either result in an exception, or return a successfully computed value.
+When using for example the stream API of Java one critical topic that is often ignored is the exception handling.
+The following code shows a bad example of a stream handling that will end in an error:
 
-////
-todo:   dev.rico.core.functional.Result
-        Why should you use the API?
-        Examples
-////
+[source,java]
+----
+
+List<Result> results = Stream.of("1", "TWO", "3", "4")
+                        .map(Integer:valueOf)
+                        .collect(Collectors.toList());
+----
+
+This code will throw an exception at runtime once the second input value (`TWO`) will be mapped by the given `Function` (`Integer:valueOf`).
+All values that will be provided by the stream after the second value will never be mapped.
+If we now assume that the mapping function will send a mail instead of just parsing a number we will end in big trouble.
+Once the exception has been thrown we have zero knowledge about the state of our system.
+We do not know how many elements were mapped successfully and for how many elements the mapping never happened.
+If the stream will be handled in parallel things might even become worse.
+
+Here the Result API of Rico comes into play.
+The API provides functionality to handle successful and failed results of calculations like a mapping.
+The `dev.rico.core.functional.Result` provides several factory methods that can be used to create a result.
+The following code snippet gives an example how the Result API can be used:
+
+[source,java]
+----
+
+List<Result> results = Stream.of("1", "TWO", "3", "4")
+                        .map(Result.of(v -> Integer.valueOf(v)))
+                        .collect(Collectors.toList());
+----
+
+In the given example the mapper wil be executed for all elements of the stream.
+Each mapping will end in a `dev.rico.core.functional.Result` instance that is either successful or failed.
+For the input "TWO" the mapping will result in a failed `dev.rico.core.functional.Result`.
+
+If a result is successful or failed can be checked by calling `isSuccessful()` or `isFailed()`.
+If a result is successful calling the `getResult()` method will return the wrapped return value of the original calculation.
+For a failed result the `getResult()` method will always throw an `IllegalStateException`.
+Next to this `getException()` can be called to receive the exception thrown by the original calculation.
+For a successful result this will always throw an `IllegalStateException`.
+
+The following snippet shows a possible use-case of the API:
+
+[source,java]
+----
+List<Result> results = Stream.of("1", "TWO", "3", "4")
+                        .map(Result.of(v -> Integer.valueOf(v)))
+                        .collect(Collectors.toList());
+
+results.stream().filter(r -> r.isFailed())
+                .forEach(r -> System.out.println("Error when parsing Integer"));
+----
+
+For a better result handling several of the factory methods of the `dev.rico.core.functional.Result` interface return a  `dev.rico.core.functional.ResultWithInput`.
+This interface extends the `dev.rico.core.functional.Result` and adds the possibility to access the input value of the origin calculation.
+With the additional functionality our sample will look like this:
+
+[source,java]
+----
+List<ResultWithInput> results = Stream.of("1", "TWO", "3", "4")
+                        .map(Result.withInput(v -> Integer.valueOf(v)))
+                        .collect(Collectors.toList());
+
+results.stream().filter(r -> r.isFailed())
+                .forEach(r -> System.out.println("Error when parsing " + r.getInput()));
+----
+
+Instead of extracting the content of the result you can register callbacks which are executed in case of success or failure.
+
+* `Result<U> map(CheckedFunction<R, U>)`
+* `Result<R> recover(CheckedFunction<Exception, R>`
+* `Result<R> recover(CheckedBiFunction<V, Exception, R>`
+* `Result<Void> onSuccess(CheckedConsumer<R>)`
+* `Result<Void> onSuccess(CheckedRunnable)`
+* `void onFailure(Consumer<Exception>)`
+* `void onFailure(BiConsumer<V, Exception>)`
+
+There is one more convenience method `orElse(R)` which allows to get a default value in case of a failed result.

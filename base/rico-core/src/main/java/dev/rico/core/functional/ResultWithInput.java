@@ -16,6 +16,8 @@
  */
 package dev.rico.core.functional;
 
+import java.util.function.BiConsumer;
+
 /**
  * Extension for the {@link Result} interface that provides access to the input
  * of the function on that the result is based.
@@ -31,4 +33,20 @@ public interface ResultWithInput<V, R> extends Result<R> {
      * @return the input of the based function
      */
     V getInput();
+
+    /**
+     * Executes an exception handler if the result is failed.
+     *
+     * @param consumer the exception handler
+     */
+    void onFailure(BiConsumer<V, Exception> consumer);
+
+
+    /**
+     * Allows to recover from an exception.
+     *
+     * @param exceptionHandler the exception handler
+     * @return a new result
+     */
+    Result<R> recover(CheckedBiFunction<V, Exception, R> exceptionHandler);
 }
