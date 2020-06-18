@@ -61,7 +61,7 @@ UiExecutor.createUiTaskChain() // <1>
     .run(); // <10>
 ----
 
-<1> a UiTaskChain is will execute the tasks in the UI thread. There is also a BackgroundTaskChain.
+<1> a "ui task chain" is will execute the tasks in the UI thread. There is also a "background task chain".
 <2> the `execute()` method adds a runnable to the chain.
 <3> by calling `background()` the execution for the coming tasks is switched to a background thread.
 <4> the `supply()` method adds a supplier to the chain. The result of the supplier is available to the next task.
@@ -72,9 +72,9 @@ UiExecutor.createUiTaskChain() // <1>
 <9> the `thenFinally()`method adds a runnable to the chain. The finally task is called in any case.
 <10> the chain is only executed when `run()` is called. This allows to create a chain and run it later or even run it multiple times.
 
-The `run()` method returns a CompletableFuture which allows the caller of `run()` to wait for the completion of all tasks in the chain.
-Also the caller can determine if the tasks chain completed successfully or not by inspecting the CompletableFuture.
-Finally if the output from a task is not consumed by a consumer in the chain than this value can be obtained from the CompletableFuture.
+The `run()` method returns a `CompletableFuture` which allows the caller of `run()` to wait for the completion of all tasks in the chain.
+Also the caller can determine if the tasks chain completed successfully or not by inspecting the `CompletableFuture`.
+Finally if the output from a task is not consumed by a consumer in the chain than this value can be obtained from the `CompletableFuture`.
 
 The main entry point of the TaskChain API is the `dev.rico.client.concurrent.TaskChain` interface.
 New instances should always be created by factory methods that are provided by the `dev.rico.client.concurrent.UiExecutor` interface.
@@ -82,23 +82,24 @@ New instances should always be created by factory methods that are provided by t
 [source,java]
 ----
 final TaskChain uiChain = UiExecutor.createUiTaskChain();
-final TaskChain bgChain = UiExecutor.createBackgroundTaskChain();
+final TaskChain backgroundChain = UiExecutor.createBackgroundTaskChain();
 ----
 
 ==== Exception handling in the task chain
-Every task in a task chain can potentially throw an exception when it is executed.
-This influences which of remaining tasks are executed.
 
-If a task throws an exception then all the upcoming tasks defined with `execute()`, `supply()`, `map()`, and `consume()` are skipped.
+Every task in a task chain can potentially throw an exception when it is executed.
+This influences which of remaining tasks are executed:
+
+* If a task throws an exception then all the upcoming tasks defined with `execute()`, `supply()`, `map()`, and `consume()` are skipped.
 Switching between UI and background threads is done in any case.
 the next `onException()` in the chain is invoked.
 If this exception handler terminates normally than the tasks after the exception handler are executed.
 If no exception handler is defined than the CompletableFuture returned by `run()` method will be completed exceptionally.
 
 It is possible to define multiple exception handler in a chain.
-also it is possible to have more tasks after an exception handler.
+Also it is possible to have more tasks after an exception handler.
 
-If there is not exception thrown by a task, then the exception handler is skipped.
+If there is no exception thrown by a task, then the exception handler is skipped.
 
 The `thenFinally()` task is special as it is executed in any case.
 Also it is limited in the sense that it cannot consume a result of a previous task.
