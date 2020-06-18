@@ -33,37 +33,42 @@ import java.util.function.Supplier;
 public interface Result<R> {
 
     /**
-     * Returns the outcome /result of the based functional call or throws an {@link IllegalStateException} if the
-     * function was aborted by an exception. Such behavior can easily be checked by calling {@link Result#isSuccessful()}
+     * Returns the return value of the based functional call or throws an {@link IllegalStateException} if the
+     * function was aborted by an exception.
+     * <p>
+     * Best practice is to test the state by calling {@link #isSuccessful()}.
      *
      * @return the outcome
      * @throws IllegalStateException the exception if the based function was not executed successfully
+     * @see #map(CheckedFunction)
+     * @see #onSuccess(CheckedRunnable)
+     * @see #onSuccess(CheckedConsumer)
      */
     R getResult() throws IllegalStateException;
 
     /**
-     * Returns true if the based function was executed successfully, otherwise false.
+     * Returns the exception of the based functional call or throws an {@link IllegalStateException} if the
+     * function was executed successfully.
+     * <p>
+     * Best practice is to test the state by calling {@link #isFailed()} ()}.
      *
-     * @return true if the based function was executed successfully, otherwise false.
+     * @return the exception
+     * @throws IllegalStateException the exception if the based function was executed successfully
+     * @see #onFailure(Consumer)
+     */
+    Exception getException();
+
+    /**
+     * @return {@code true} if the based function was executed successfully, otherwise {@code false}.
      */
     boolean isSuccessful();
 
     /**
-     * Returns false if the based function was executed successfully, otherwise true.
-     *
-     * @return false if the based function was executed successfully, otherwise true.
+     * @return {@code false} if the based function was executed successfully, otherwise {@code true}.
      */
     default boolean isFailed() {
         return !isSuccessful();
     }
-
-    /**
-     * Returns the exception of the based functional call or {@code null} if the
-     * function was executed successfully. Such behavior can easily be checked by calling {@link Result#isSuccessful()}
-     *
-     * @return the exception or {@code null}
-     */
-    Exception getException();
 
     /**
      * Map the result to something else.
@@ -148,14 +153,24 @@ public interface Result<R> {
      */
     static <B> Supplier<Result<B>> of(final CheckedSupplier<B> supplier) {
         Assert.requireNonNull(supplier, "supplier");
-        return () -> {
-            try {
-                final B result = supplier.get();
-                return new Success<>(result);
-            } catch (Exception e) {
-                return new Fail<>(e);
-            }
-        };
+        return () -> of(a -> supplier.get()).apply(null);
+    }
+
+    /**
+     * Wraps a given {@link CheckedConsumer} in a {@link Function} that returns the {@link Result} of the
+     * given {@link CheckedConsumer}. Since an {@link CheckedConsumer} has no return value the {@link Result} is
+     * defined as {@code Result<Void>} and will contain a {@code null} value as result value.
+     *
+     * @param consumer the consumer
+     * @param <A>      type of the input parameter
+     * @return a {@link Function} that returns the {@link Result} of the given {@link CheckedConsumer}
+     */
+    static <A> Function<A, Result<Void>> ofConsumer(final CheckedConsumer<A> consumer) {
+        Assert.requireNonNull(consumer, "consumer");
+        return of(a -> {
+            consumer.accept(a);
+            return null;
+        });
     }
 
     /**
@@ -179,23 +194,17 @@ public interface Result<R> {
     }
 
     /**
-     * Wraps a given {@link CheckedConsumer} in a {@link Function} that returns the {@link Result} of the
-     * given {@link CheckedConsumer}. Since an {@link CheckedConsumer} has no return value the {@link Result} is
-     * defined as {@code Result<Void>} and will contain a {@code null} value as result value.
+     * Wraps a given {@link CheckedFunction} in a {@link Function} that returns the {@link Result} of the given {@link CheckedFunction}
      *
      * @param consumer the consumer
      * @param <A>      type of the input parameter
-     * @return a {@link Function} that returns the {@link Result} of the given {@link CheckedConsumer}
+     * @return a {@link Function} that returns the {@link Result} of the given {@link CheckedFunction}
      */
-    static <A> Function<A, Result<Void>> ofConsumer(final CheckedConsumer<A> consumer) {
+    static <A> Function<A, ResultWithInput<A, Void>> withInput(final CheckedConsumer<A> consumer) {
         Assert.requireNonNull(consumer, "consumer");
-        return (a) -> {
-            try {
-                consumer.accept(a);
-                return new Success<>(null);
-            } catch (Exception e) {
-                return new Fail<>(e);
-            }
-        };
+        return withInput(a -> {
+            consumer.accept(a);
+            return null;
+        });
     }
 }

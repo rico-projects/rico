@@ -110,7 +110,7 @@ public class ResultTest {
     }
 
     @Test
-    public void testResultWithInput() {
+    public void testResultWithInputFunction() {
         // when:
         final ResultWithInput<?, String> result = Result.withInput(v -> "test").apply("bar");
 
@@ -121,12 +121,40 @@ public class ResultTest {
     }
 
     @Test
-    public void testResultWithInputThrowingException() {
+    public void testResultWithInputFunctionThrowingException() {
         // given:
         final RuntimeException exception = new RuntimeException();
 
         // when:
-        final ResultWithInput<?, ?> result = Result.withInput(v -> { throw exception; }).apply("bar");
+        final ResultWithInput<String, String> result = Result.withInput((CheckedFunction<String, String>) v -> { throw exception; }).apply("bar");
+
+        // then:
+        assertTrue(result.isFailed());
+        assertEquals(result.getException(), exception);
+        assertEquals("bar", result.getInput());
+    }
+
+    @Test
+    public void testResultWithInputConsumer() {
+        // given:
+        final AtomicReference<String> value = new AtomicReference<>("");
+
+        // when:
+        final ResultWithInput<?, Void> result = Result.withInput(value::set).apply("test");
+
+        // then:
+        assertTrue(result.isSuccessful());
+        assertEquals("test", value.get());
+        assertEquals("test", result.getInput());
+    }
+
+    @Test
+    public void testResultWithInputConsumerThrowingException() {
+        // given:
+        final RuntimeException exception = new RuntimeException();
+
+        // when:
+        final ResultWithInput<String, Void> result = Result.withInput((CheckedConsumer<String>) v -> { throw exception; }).apply("bar");
 
         // then:
         assertTrue(result.isFailed());
