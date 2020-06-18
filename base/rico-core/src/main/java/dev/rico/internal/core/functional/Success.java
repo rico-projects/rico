@@ -24,6 +24,7 @@ import dev.rico.core.functional.ResultWithInput;
 import dev.rico.internal.core.Assert;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * Implementation of a {@link dev.rico.core.functional.Result} that is based
@@ -69,6 +70,17 @@ public class Success<T, R> implements ResultWithInput<T, R> {
     }
 
     @Override
+    public R orElseGet(Supplier<R> supplier) {
+        Assert.requireNonNull(supplier, "supplier");
+        return result;
+    }
+
+    @Override
+    public R orElse(R value) {
+        return result;
+    }
+
+    @Override
     public <U> Result<U> map(final CheckedFunction<R, U> mapper) {
         Assert.requireNonNull(mapper, "mapper");
         try {
@@ -76,6 +88,12 @@ public class Success<T, R> implements ResultWithInput<T, R> {
         } catch (Exception e) {
             return new Fail<>(input, e);
         }
+    }
+
+    @Override
+    public Result<R> recover(CheckedFunction<Exception, R> exceptionHandler) {
+        Assert.requireNonNull(exceptionHandler, "exceptionHandler");
+        return this;
     }
 
     @Override
