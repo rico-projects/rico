@@ -16,6 +16,7 @@
  */
 package dev.rico.internal.core.functional;
 
+import dev.rico.core.functional.CheckedBiFunction;
 import dev.rico.core.functional.CheckedConsumer;
 import dev.rico.core.functional.CheckedFunction;
 import dev.rico.core.functional.CheckedRunnable;
@@ -23,8 +24,8 @@ import dev.rico.core.functional.Result;
 import dev.rico.core.functional.ResultWithInput;
 import dev.rico.internal.core.Assert;
 
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 /**
  * Implementation of a {@link dev.rico.core.functional.Result} that is based
@@ -91,6 +92,16 @@ public class Fail<T, R> implements ResultWithInput<T, R> {
     }
 
     @Override
+    public ResultWithInput<T, R> recover(CheckedBiFunction<T, Exception, R> exceptionHandler) {
+        Assert.requireNonNull(exceptionHandler, "exceptionHandler");
+        try {
+            return new Success<>(input, exceptionHandler.apply(input, exception));
+        } catch (Exception e) {
+            return new Fail<>(input, e);
+        }
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public Result<Void> onSuccess(CheckedConsumer<R> consumer) {
         Assert.requireNonNull(consumer, "consumer");
@@ -108,5 +119,11 @@ public class Fail<T, R> implements ResultWithInput<T, R> {
     public void onFailure(Consumer<Exception> consumer) {
         Assert.requireNonNull(consumer, "consumer");
         consumer.accept(exception);
+    }
+
+    @Override
+    public void onFailure(BiConsumer<T, Exception> consumer) {
+        Assert.requireNonNull(consumer, "consumer");
+        consumer.accept(input, exception);
     }
 }

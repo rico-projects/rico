@@ -48,5 +48,5 @@ public interface ResultWithInput<V, R> extends Result<R> {
      * @param exceptionHandler the exception handler
      * @return a new result
      */
-    Result<R> recover(CheckedBiFunction<V, Exception, R> exceptionHandler);
+    ResultWithInput<V, R> recover(CheckedBiFunction<V, Exception, R> exceptionHandler);
 }
