@@ -34,11 +34,13 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.concurrent.ThreadFactory;
+import java.util.stream.Collectors;
 
 import static dev.rico.internal.core.RicoConstants.APPLICATION_NAME_DEFAULT;
 import static dev.rico.internal.core.RicoConstants.APPLICATION_NAME_PROPERTY;
@@ -80,37 +82,30 @@ public class PlatformBootstrap {
 
                 final Set<Class<?>> moduleClasses = classpathScanner.getTypesAnnotatedWith(ModuleDefinition.class);
 
-                final Map<String, ServerModule> modules = new HashMap<>();
-                final Map<String, ModuleDefinition> moduleDefinitions = new HashMap<>();
+                final Map<ModuleDefinition, ServerModule> modules = new HashMap<>();
+
                 for (final Class<?> moduleClass : moduleClasses) {
                     if (!ServerModule.class.isAssignableFrom(moduleClass)) {
-                        throw new RuntimeException("Class " + moduleClass + " is annoated with " + ModuleDefinition.class.getSimpleName() + " but do not implement " + ServerModule.class.getSimpleName());
+                        throw new RuntimeException("Class " + moduleClass + " is annotated with " + ModuleDefinition.class.getSimpleName() + " but do not implement " + ServerModule.class.getSimpleName());
                     }
                     final ModuleDefinition moduleDefinition = moduleClass.getAnnotation(ModuleDefinition.class);
                     final ServerModule instance = (ServerModule) moduleClass.getConstructor().newInstance();
-                    modules.put(moduleDefinition.name(), instance);
-                    moduleDefinitions.put(moduleDefinition.name(), moduleDefinition);
-                }
 
-                LOG.info("Found {} Rico modules", modules.size());
-                if (LOG.isTraceEnabled()) {
-                    for (final String moduleName : modules.keySet()) {
-                        LOG.trace("Found Rico module {}", moduleName);
+                    if (instance.shouldBoot(serverCoreComponents.getConfiguration())) {
+                        LOG.trace("Found Rico module {}", moduleDefinition.name());
+                        modules.put(moduleDefinition, instance);
+                    } else {
+                        LOG.trace("Skipping Rico module {}", moduleDefinition.name());
                     }
                 }
 
-                for (final Map.Entry<String, ServerModule> moduleEntry : modules.entrySet()) {
-                    LOG.debug("Will initialize Rico module {}", moduleEntry.getKey());
+                LOG.info("Found {} active Rico modules", modules.size());
+
+                for (final Map.Entry<ModuleDefinition, ServerModule> moduleEntry : modules.entrySet()) {
                     final ServerModule module = moduleEntry.getValue();
-                    if (module.shouldBoot(serverCoreComponents.getConfiguration())) {
-                        final String[] neededModules = moduleDefinitions.get(moduleEntry.getKey()).moduleDependencies();
-                        for (final String neededModule : neededModules) {
-                            if (!modules.containsKey(neededModule)) {
-                                throw new ModuleInitializationException("Module " + moduleEntry.getKey() + " depends on missing module " + neededModule);
-                            }
-                        }
-                        module.initialize(serverCoreComponents);
-                    }
+                    checkForNeededModules(modules, moduleEntry.getKey());
+                    LOG.debug("Will initialize Rico module {}", moduleEntry.getKey());
+                    module.initialize(serverCoreComponents);
                 }
                 LOG.info("Rico booted");
             } catch (Exception e) {
@@ -119,6 +114,24 @@ public class PlatformBootstrap {
         } else {
             LOG.info("Rico is deactivated");
         }
+    }
+
+    private void checkForNeededModules(final Map<ModuleDefinition, ServerModule> modules, final ModuleDefinition definition) throws ModuleInitializationException {
+        final Set<String> neededModules = Set.of(definition.moduleDependencies());
+        final Set<String> foundModules = modules.keySet().stream()
+                .filter(dependency -> neededModules.contains(dependency.name()))
+                .filter(dependency -> definition.order() > dependency.order())
+                .map(ModuleDefinition::name)
+                .collect(Collectors.toSet());
+
+        final Set<String> missingModules = new HashSet<>(neededModules);
+        missingModules.removeAll(foundModules);
+
+        if (!missingModules.isEmpty()) {
+            throw new ModuleInitializationException("Module " + definition.name() + " depends on missing module(s) " + String.join(", ", missingModules));
+        }
+
+        // TODO: currently the exception does not state what exactly was the problem with a module. This could be improved.
     }
 
 

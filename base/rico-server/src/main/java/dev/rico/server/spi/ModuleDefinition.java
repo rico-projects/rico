@@ -54,7 +54,12 @@ public @interface ModuleDefinition {
     String name();
 
     /**
-     * Defines the order number of the module. All modules will be started sorted by its order number.
+     * Defines the order number of the module.
+     *
+     * All modules will be started sorted by its order number.
+     * The module with the smallest number is started first.
+     * Modules with the same number are started in an undefined order.
+     *
      * @return the order number of the module
      */
     int order() default 100;
