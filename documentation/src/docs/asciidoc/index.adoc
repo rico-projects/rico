@@ -2,7 +2,7 @@ ifndef::imagesdir[:imagesdir: images]
 
 = Rico
 
-TODO
+image:rico-logo.png[]
 
 include::general-introduction.adoc[]
 
@@ -23,3 +23,5 @@ include::remoting/index.adoc[]
 include::build-doc/index.adoc[]
 
 include::documentation-best-practices.adoc[]
+
+image:rico-os.svg[]
