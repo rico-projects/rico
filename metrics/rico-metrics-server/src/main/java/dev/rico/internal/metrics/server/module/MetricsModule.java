@@ -61,7 +61,7 @@ public class MetricsModule extends AbstractBaseModule {
     @Override
     public void initialize(final ServerCoreComponents coreComponents) {
         final Configuration configuration = coreComponents.getConfiguration();
-        final ServletContext servletContext = coreComponents.getInstance(ServletContext.class);
+        final ServletContext servletContext = coreComponents.getServletContext();
 
         final PrometheusMeterRegistry prometheusRegistry = new PrometheusMeterRegistry(PrometheusConfig.DEFAULT);
 

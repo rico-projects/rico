@@ -65,10 +65,10 @@ public class ClientSessionModule extends AbstractBaseModule {
     public void initialize(final ServerCoreComponents coreComponents) {
         Assert.requireNonNull(coreComponents, "coreComponents");
 
-        final ServletContext servletContext = coreComponents.getInstance(ServletContext.class);
+        final ServletContext servletContext = coreComponents.getServletContext();
         final Configuration configuration = coreComponents.getConfiguration();
-        final ClasspathScanner classpathScanner = coreComponents.getInstance(ClasspathScanner.class);
-        final ManagedBeanFactory beanFactory = coreComponents.getInstance(ManagedBeanFactory.class);
+        final ClasspathScanner classpathScanner = coreComponents.getClasspathScanner();
+        final ManagedBeanFactory beanFactory = coreComponents.getManagedBeanFactory();
 
         final ClientSessionLifecycleHandlerImpl lifecycleHandler = new ClientSessionLifecycleHandlerImpl();
         coreComponents.provideInstance(ClientSessionLifecycleHandler.class, lifecycleHandler);

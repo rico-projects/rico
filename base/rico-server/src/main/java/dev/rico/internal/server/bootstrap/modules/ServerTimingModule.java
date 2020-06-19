@@ -50,7 +50,7 @@ public class ServerTimingModule extends AbstractBaseModule {
     @Override
     public void initialize(final ServerCoreComponents coreComponents) {
         Assert.requireNonNull(coreComponents, "coreComponents");
-        final ServletContext servletContext = coreComponents.getInstance(ServletContext.class);
+        final ServletContext servletContext = coreComponents.getServletContext();
 
         final Filter filter = new ServerTimingFilter(true);
         final FilterRegistration.Dynamic createdFilter = servletContext.addFilter(FILTER_NAME, filter);

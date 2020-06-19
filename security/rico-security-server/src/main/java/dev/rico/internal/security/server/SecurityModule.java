@@ -37,10 +37,10 @@ public class SecurityModule extends AbstractBaseModule {
         Assert.requireNonNull(coreComponents, "coreComponents");
         final KeycloakConfiguration configuration = new KeycloakConfiguration(coreComponents.getConfiguration());
         final KeycloakSecurityBootstrap bootstrap = KeycloakSecurityBootstrap.getInstance();
-        bootstrap.init(coreComponents.getInstance(ServletContext.class), coreComponents.getConfiguration());
+        bootstrap.init(coreComponents.getServletContext(), coreComponents.getConfiguration());
 
         if(configuration.isLoginEndpointActive()) {
-            final ServletContext servletContext = coreComponents.getInstance(ServletContext.class);
+            final ServletContext servletContext = coreComponents.getServletContext();
             servletContext.addServlet("security-login", new KeycloakTokenServlet(configuration)).addMapping(configuration.getLoginEndpoint());
             servletContext.addServlet("security-logout", new KeycloakLogoutServlet(configuration)).addMapping(configuration.getLogoutEndpoint());
         }

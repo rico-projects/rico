@@ -53,7 +53,7 @@ public class CorsModule extends AbstractBaseModule {
     @Override
     public void initialize(final ServerCoreComponents coreComponents) {
         Assert.requireNonNull(coreComponents, "coreComponents");
-        final ServletContext servletContext = coreComponents.getInstance(ServletContext.class);
+        final ServletContext servletContext = coreComponents.getServletContext();
         final Configuration configuration = coreComponents.getConfiguration();
         final List<String> endpointList = configuration.getListProperty(CORS_ENDPOINTS_URL_MAPPINGS, CORS_ENDPOINTS_URL_MAPPINGS_DEFAULT_VALUE);
 

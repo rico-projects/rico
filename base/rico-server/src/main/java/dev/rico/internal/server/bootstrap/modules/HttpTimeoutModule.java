@@ -45,7 +45,7 @@ public class HttpTimeoutModule extends AbstractBaseModule {
     @Override
     public void initialize(final ServerCoreComponents coreComponents) {
         Assert.requireNonNull(coreComponents, "coreComponents");
-        final ServletContext servletContext = coreComponents.getInstance(ServletContext.class);
+        final ServletContext servletContext = coreComponents.getServletContext();
         final Configuration configuration = coreComponents.getConfiguration();
 
         final HttpSessionTimeoutListener sessionCleaner = new HttpSessionTimeoutListener(configuration);

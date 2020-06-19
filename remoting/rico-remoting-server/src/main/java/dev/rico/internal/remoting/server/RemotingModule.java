@@ -68,9 +68,9 @@ public class RemotingModule extends AbstractBaseModule {
     public void initialize(ServerCoreComponents coreComponents) throws ModuleInitializationException {
         LOG.info("Starting Rico remoting");
         try {
-            final ServletContext servletContext = coreComponents.getInstance(ServletContext.class);
-            final ClasspathScanner classpathScanner = coreComponents.getInstance(ClasspathScanner.class);
-            final ManagedBeanFactory beanFactory = coreComponents.getInstance(ManagedBeanFactory.class);
+            final ServletContext servletContext = coreComponents.getServletContext();
+            final ClasspathScanner classpathScanner = coreComponents.getClasspathScanner();
+            final ManagedBeanFactory beanFactory = coreComponents.getManagedBeanFactory();
             final RemotingConfiguration configuration = new RemotingConfiguration(coreComponents.getConfiguration());
             final ClientSessionProvider sessionProvider = coreComponents.getInstance(ClientSessionProvider.class);
             final RemotingContextFactory remotingContextFactory = new DefaultRemotingContextFactory(configuration, sessionProvider, beanFactory, classpathScanner);
