@@ -16,75 +16,61 @@
  */
 package dev.rico.internal.remoting.server;
 
-import dev.rico.core.Configuration;
+import dev.rico.internal.remoting.server.config.RemotingConfiguration;
 import dev.rico.internal.remoting.server.context.DefaultRemotingContextFactory;
 import dev.rico.internal.remoting.server.context.RemotingCommunicationHandler;
 import dev.rico.internal.remoting.server.context.RemotingContextFactory;
-import dev.rico.internal.remoting.server.context.ServerRemotingContextProvider;
-import dev.rico.server.spi.components.ManagedBeanFactory;
-import dev.rico.internal.server.bootstrap.modules.ClientSessionModule;
-import dev.rico.internal.server.client.ClientSessionLifecycleHandler;
-import dev.rico.internal.server.client.ClientSessionProvider;
-import dev.rico.internal.remoting.server.config.RemotingConfiguration;
 import dev.rico.internal.remoting.server.context.ServerRemotingContext;
+import dev.rico.internal.remoting.server.context.ServerRemotingContextProvider;
 import dev.rico.internal.remoting.server.controller.ControllerValidationException;
 import dev.rico.internal.remoting.server.event.AbstractEventBus;
-import dev.rico.internal.remoting.server.servlet.RemotingServlet;
 import dev.rico.internal.remoting.server.servlet.InterruptServlet;
+import dev.rico.internal.remoting.server.servlet.RemotingServlet;
+import dev.rico.internal.server.bootstrap.AbstractBaseModule;
+import dev.rico.internal.server.client.ClientSessionLifecycleHandler;
+import dev.rico.internal.server.client.ClientSessionProvider;
 import dev.rico.remoting.server.event.RemotingEventBus;
 import dev.rico.remoting.server.event.spi.EventBusProvider;
 import dev.rico.server.client.ClientSession;
-import dev.rico.server.spi.components.ClasspathScanner;
 import dev.rico.server.spi.ModuleDefinition;
 import dev.rico.server.spi.ModuleInitializationException;
 import dev.rico.server.spi.ServerCoreComponents;
-import dev.rico.server.spi.ServerModule;
+import dev.rico.server.spi.components.ClasspathScanner;
+import dev.rico.server.spi.components.ManagedBeanFactory;
 import org.apiguardian.api.API;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
-import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
 import java.util.ServiceLoader;
 
-import static dev.rico.internal.remoting.server.servlet.ServletConstants.REMOTING_SERVLET_NAME;
+import static dev.rico.internal.remoting.server.RemotingModule.REMOTING_MODULE;
 import static dev.rico.internal.remoting.server.servlet.ServletConstants.INTERRUPT_SERVLET_NAME;
+import static dev.rico.internal.remoting.server.servlet.ServletConstants.REMOTING_SERVLET_NAME;
+import static dev.rico.internal.server.bootstrap.modules.ClientSessionModule.CLIENT_SESSION_MODULE;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
-@ModuleDefinition(order = 101)
+@ModuleDefinition(name = REMOTING_MODULE, moduleDependencies = CLIENT_SESSION_MODULE, order = 101)
 @API(since = "0.x", status = INTERNAL)
-public class RemotingModule implements ServerModule {
+public class RemotingModule extends AbstractBaseModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(RemotingModule.class);
 
     public static final String REMOTING_MODULE = "RemotingModule";
 
-
     @Override
-    public List<String> getModuleDependencies() {
-        return Collections.singletonList(ClientSessionModule.CLIENT_SESSION_MODULE);
-    }
-
-    @Override
-    public String getName() {
-        return REMOTING_MODULE;
-    }
-
-    @Override
-    public boolean shouldBoot(Configuration configuration) {
-        final RemotingConfiguration remotingConfiguration = new RemotingConfiguration(configuration);
-        return remotingConfiguration.isRemotingActive();
+    protected String getActivePropertyName() {
+        return RemotingConfiguration.ACTIVE;
     }
 
     @Override
     public void initialize(ServerCoreComponents coreComponents) throws ModuleInitializationException {
         LOG.info("Starting Rico remoting");
-        try{
-            final ServletContext servletContext = coreComponents.getInstance(ServletContext.class);
-            final ClasspathScanner classpathScanner = coreComponents.getInstance(ClasspathScanner.class);
-            final ManagedBeanFactory beanFactory = coreComponents.getInstance(ManagedBeanFactory.class);
+        try {
+            final ServletContext servletContext = coreComponents.getServletContext();
+            final ClasspathScanner classpathScanner = coreComponents.getClasspathScanner();
+            final ManagedBeanFactory beanFactory = coreComponents.getManagedBeanFactory();
             final RemotingConfiguration configuration = new RemotingConfiguration(coreComponents.getConfiguration());
             final ClientSessionProvider sessionProvider = coreComponents.getInstance(ClientSessionProvider.class);
             final RemotingContextFactory remotingContextFactory = new DefaultRemotingContextFactory(configuration, sessionProvider, beanFactory, classpathScanner);
@@ -122,23 +108,23 @@ public class RemotingModule implements ServerModule {
             while (iterator.hasNext()) {
                 EventBusProvider provider = iterator.next();
                 if (configuration.getEventbusType().equals(provider.getType())) {
-                    if(providerFound) {
+                    if (providerFound) {
                         throw new IllegalStateException("More than 1 event bus provider found");
                     }
                     LOG.debug("Using event bus of type {} with provider class {}", provider.getType(), provider.getClass());
                     providerFound = true;
                     RemotingEventBus eventBus = provider.create(configuration);
-                    if(eventBus instanceof AbstractEventBus) {
+                    if (eventBus instanceof AbstractEventBus) {
                         ((AbstractEventBus) eventBus).init(contextProvider, lifecycleHandler);
                     }
                     coreComponents.provideInstance(RemotingEventBus.class, eventBus);
                     flag = true;
                 }
             }
-            if(!flag){
+            if (!flag) {
                 throw new ModuleInitializationException("Configured event bus is not on the classpath.");
             }
-        }catch (ControllerValidationException cve){
+        } catch (ControllerValidationException cve) {
             throw new ModuleInitializationException("Can not start Remote Presentation Model support based on bad controller definition", cve);
         }
     }

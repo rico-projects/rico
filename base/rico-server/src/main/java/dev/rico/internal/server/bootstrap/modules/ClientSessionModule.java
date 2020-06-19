@@ -16,7 +16,9 @@
  */
 package dev.rico.internal.server.bootstrap.modules;
 
+import dev.rico.core.Configuration;
 import dev.rico.internal.core.Assert;
+import dev.rico.internal.server.bootstrap.AbstractBaseModule;
 import dev.rico.internal.server.client.ClientSessionFilter;
 import dev.rico.internal.server.client.ClientSessionLifecycleHandler;
 import dev.rico.internal.server.client.ClientSessionLifecycleHandlerImpl;
@@ -24,13 +26,9 @@ import dev.rico.internal.server.client.ClientSessionManager;
 import dev.rico.internal.server.client.ClientSessionMutextHolder;
 import dev.rico.internal.server.client.ClientSessionProvider;
 import dev.rico.internal.server.client.HttpSessionCleanerListener;
-import dev.rico.core.Configuration;
 import dev.rico.server.ServerListener;
-import dev.rico.server.client.ClientSession;
 import dev.rico.server.client.ClientSessionListener;
-import dev.rico.internal.server.bootstrap.AbstractBaseModule;
 import dev.rico.server.spi.ModuleDefinition;
-import dev.rico.server.spi.ModuleInitializationException;
 import dev.rico.server.spi.ServerCoreComponents;
 import dev.rico.server.spi.components.ClasspathScanner;
 import dev.rico.server.spi.components.ManagedBeanFactory;
@@ -45,10 +43,11 @@ import java.util.Set;
 
 import static dev.rico.internal.server.bootstrap.BasicConfigurationProvider.ID_FILTER_URL_MAPPINGS;
 import static dev.rico.internal.server.bootstrap.BasicConfigurationProvider.ID_FILTER_URL_MAPPINGS_DEFAULT_VALUE;
+import static dev.rico.internal.server.bootstrap.modules.ClientSessionModule.CLIENT_SESSION_MODULE;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
-@ModuleDefinition
+@ModuleDefinition(name = CLIENT_SESSION_MODULE)
 public class ClientSessionModule extends AbstractBaseModule {
 
     public static final String CLIENT_SESSION_MODULE = "ClientSessionModule";
@@ -63,33 +62,22 @@ public class ClientSessionModule extends AbstractBaseModule {
     }
 
     @Override
-    public String getName() {
-        return CLIENT_SESSION_MODULE;
-    }
-
-    @Override
-    public void initialize(final ServerCoreComponents coreComponents) throws ModuleInitializationException {
+    public void initialize(final ServerCoreComponents coreComponents) {
         Assert.requireNonNull(coreComponents, "coreComponents");
 
-        final ServletContext servletContext = coreComponents.getInstance(ServletContext.class);
+        final ServletContext servletContext = coreComponents.getServletContext();
         final Configuration configuration = coreComponents.getConfiguration();
-        final ClasspathScanner classpathScanner = coreComponents.getInstance(ClasspathScanner.class);
-        final ManagedBeanFactory beanFactory = coreComponents.getInstance(ManagedBeanFactory.class);
+        final ClasspathScanner classpathScanner = coreComponents.getClasspathScanner();
+        final ManagedBeanFactory beanFactory = coreComponents.getManagedBeanFactory();
 
         final ClientSessionLifecycleHandlerImpl lifecycleHandler = new ClientSessionLifecycleHandlerImpl();
         coreComponents.provideInstance(ClientSessionLifecycleHandler.class, lifecycleHandler);
-                coreComponents.provideInstance(ClientSessionProvider.class, new ClientSessionProvider() {
-            @Override
-            public ClientSession getCurrentClientSession() {
-                return lifecycleHandler.getCurrentClientSession();
-            }
-        });
-
+        coreComponents.provideInstance(ClientSessionProvider.class, lifecycleHandler::getCurrentClientSession);
 
         final ClientSessionManager clientSessionManager = new ClientSessionManager(configuration, lifecycleHandler);
 
         final List<String> endpointList = configuration.getListProperty(ID_FILTER_URL_MAPPINGS, ID_FILTER_URL_MAPPINGS_DEFAULT_VALUE);
-        final String[] endpoints = endpointList.toArray(new String[endpointList.size()]);
+        final String[] endpoints = endpointList.toArray(new String[0]);
         final ClientSessionFilter filter = new ClientSessionFilter(clientSessionManager);
         final FilterRegistration.Dynamic createdFilter = servletContext.addFilter(CLIENT_ID_FILTER_NAME, filter);
         createdFilter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, endpoints);
@@ -102,14 +90,14 @@ public class ClientSessionModule extends AbstractBaseModule {
             if (ClientSessionListener.class.isAssignableFrom(listenerClass)) {
                 final ClientSessionListener listener = (ClientSessionListener) beanFactory.createDependentInstance(listenerClass);
 
-                lifecycleHandler.addSessionDestroyedListener(s -> listener.sessionDestroyed(s));
-                lifecycleHandler.addSessionCreatedListener(s -> listener.sessionCreated(s));
+                lifecycleHandler.addSessionDestroyedListener(listener::sessionDestroyed);
+                lifecycleHandler.addSessionCreatedListener(listener::sessionCreated);
             }
         }
 
         final ClientSessionMutextHolder mutextHolder = new ClientSessionMutextHolder();
-        lifecycleHandler.addSessionDestroyedListener(s -> mutextHolder.sessionDestroyed(s));
-        lifecycleHandler.addSessionCreatedListener(s -> mutextHolder.sessionCreated(s));
+        lifecycleHandler.addSessionDestroyedListener(mutextHolder::sessionDestroyed);
+        lifecycleHandler.addSessionCreatedListener(mutextHolder::sessionCreated);
 
     }
 }

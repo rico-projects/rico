@@ -17,7 +17,6 @@
 package dev.rico.internal.server.bootstrap;
 
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.core.SimpleThreadFactory;
 import dev.rico.internal.core.ansi.PlatformLogo;
 import dev.rico.internal.core.context.ContextManagerImpl;
 import dev.rico.internal.server.config.ServerConfiguration;
@@ -33,13 +32,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.ServiceLoader;
 import java.util.Set;
-import java.util.concurrent.ThreadFactory;
+import java.util.stream.Collectors;
 
 import static dev.rico.internal.core.RicoConstants.APPLICATION_NAME_DEFAULT;
 import static dev.rico.internal.core.RicoConstants.APPLICATION_NAME_PROPERTY;
@@ -74,42 +76,49 @@ public class PlatformBootstrap {
 
                 MBeanRegistry.getInstance().setMbeanSupport(configuration.getBooleanProperty(MBEAN_REGISTRATION));
 
-                final ThreadFactory threadFactory = new SimpleThreadFactory();
                 final ManagedBeanFactory beanFactory = getBeanFactory(servletContext);
                 final DefaultClasspathScanner classpathScanner = new DefaultClasspathScanner(configuration.getListProperty(ROOT_PACKAGE_FOR_CLASSPATH_SCAN));
-                serverCoreComponents = new ServerCoreComponentsImpl(servletContext, configuration, threadFactory, classpathScanner, beanFactory);
+                serverCoreComponents = new ServerCoreComponentsImpl(servletContext, configuration, classpathScanner, beanFactory);
 
                 final Set<Class<?>> moduleClasses = classpathScanner.getTypesAnnotatedWith(ModuleDefinition.class);
 
-                final Map<String, ServerModule> modules = new HashMap<>();
+                final Map<ModuleDefinition, ServerModule> modules = new HashMap<>();
+
                 for (final Class<?> moduleClass : moduleClasses) {
                     if (!ServerModule.class.isAssignableFrom(moduleClass)) {
-                        throw new RuntimeException("Class " + moduleClass + " is annoated with " + ModuleDefinition.class.getSimpleName() + " but do not implement " + ServerModule.class.getSimpleName());
+                        throw new ModuleInitializationException("Class " + moduleClass + " is annotated with " + ModuleDefinition.class.getSimpleName() + " but do not implement " + ServerModule.class.getSimpleName());
                     }
                     final ModuleDefinition moduleDefinition = moduleClass.getAnnotation(ModuleDefinition.class);
+                    final String moduleName = moduleDefinition.name();
+
+                    final boolean foundDuplicate = modules.keySet().stream()
+                            .map(ModuleDefinition::name)
+                            .anyMatch(m -> Objects.equals(m, moduleName));
+
+                    if (foundDuplicate) {
+                        throw new ModuleInitializationException("Module " + moduleName + " is defined multiple times");
+                    }
+
                     final ServerModule instance = (ServerModule) moduleClass.getConstructor().newInstance();
-                    modules.put(instance.getName(), instance);
-                }
-
-                LOG.info("Found {} Rico modules", modules.size());
-                if (LOG.isTraceEnabled()) {
-                    for (final String moduleName : modules.keySet()) {
+                    if (instance.shouldBoot(serverCoreComponents.getConfiguration())) {
                         LOG.trace("Found Rico module {}", moduleName);
+                        modules.put(moduleDefinition, instance);
+                    } else {
+                        LOG.trace("Skipping Rico module {}", moduleName);
                     }
                 }
 
-                for (final Map.Entry<String, ServerModule> moduleEntry : modules.entrySet()) {
-                    LOG.debug("Will initialize Rico module {}", moduleEntry.getKey());
+                LOG.info("Found {} active Rico modules", modules.size());
+
+                final List<Map.Entry<ModuleDefinition, ServerModule>> sortedEntries = modules.entrySet().stream()
+                        .sorted(Comparator.comparing(e -> e.getKey().order()))
+                        .collect(Collectors.toList());
+
+                for (final Map.Entry<ModuleDefinition, ServerModule> moduleEntry : sortedEntries) {
                     final ServerModule module = moduleEntry.getValue();
-                    if (module.shouldBoot(serverCoreComponents.getConfiguration())) {
-                        final List<String> neededModules = module.getModuleDependencies();
-                        for (final String neededModule : neededModules) {
-                            if (!modules.containsKey(neededModule)) {
-                                throw new ModuleInitializationException("Module " + moduleEntry.getKey() + " depends on missing module " + neededModule);
-                            }
-                        }
-                        module.initialize(serverCoreComponents);
-                    }
+                    checkForNeededModules(modules, moduleEntry.getKey());
+                    LOG.debug("Will initialize Rico module {}", moduleEntry.getKey());
+                    module.initialize(serverCoreComponents);
                 }
                 LOG.info("Rico booted");
             } catch (Exception e) {
@@ -118,6 +127,30 @@ public class PlatformBootstrap {
         } else {
             LOG.info("Rico is deactivated");
         }
+    }
+
+    private void checkForNeededModules(final Map<ModuleDefinition, ServerModule> modules, final ModuleDefinition definition) throws ModuleInitializationException {
+        final String[] neededModuleNames = definition.moduleDependencies();
+
+        if (neededModuleNames.length == 0) {
+            return;
+        }
+
+        final Set<String> neededModules = Set.of(neededModuleNames);
+        final Set<String> foundModules = modules.keySet().stream()
+                .filter(dependency -> neededModules.contains(dependency.name()))
+                .filter(dependency -> definition.order() > dependency.order())
+                .map(ModuleDefinition::name)
+                .collect(Collectors.toSet());
+
+        final Set<String> missingModules = new HashSet<>(neededModules);
+        missingModules.removeAll(foundModules);
+
+        if (!missingModules.isEmpty()) {
+            throw new ModuleInitializationException("Module " + definition.name() + " depends on missing module(s) " + String.join(", ", missingModules));
+        }
+
+        // TODO: currently the exception does not state what exactly was the problem with a module. This could be improved.
     }
 
 

@@ -17,19 +17,19 @@
 package dev.rico.internal.server.bootstrap.modules;
 
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.server.servlet.HttpSessionMutexHolder;
 import dev.rico.internal.server.bootstrap.AbstractBaseModule;
+import dev.rico.internal.server.servlet.HttpSessionMutexHolder;
 import dev.rico.server.spi.ModuleDefinition;
-import dev.rico.server.spi.ModuleInitializationException;
 import dev.rico.server.spi.ServerCoreComponents;
 import org.apiguardian.api.API;
 
 import javax.servlet.ServletContext;
 
+import static dev.rico.internal.server.bootstrap.modules.HttpMutexModule.HTTP_MUTEX_MODULE;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
-@ModuleDefinition
+@ModuleDefinition(name = HTTP_MUTEX_MODULE)
 public class HttpMutexModule extends AbstractBaseModule {
 
     public static final String HTTP_MUTEX_MODULE = "HttpMutexModule";
@@ -42,14 +42,9 @@ public class HttpMutexModule extends AbstractBaseModule {
     }
 
     @Override
-    public String getName() {
-        return HTTP_MUTEX_MODULE;
-    }
-
-    @Override
-    public void initialize(final ServerCoreComponents coreComponents) throws ModuleInitializationException {
+    public void initialize(final ServerCoreComponents coreComponents) {
         Assert.requireNonNull(coreComponents, "coreComponents");
-        final ServletContext servletContext = coreComponents.getInstance(ServletContext.class);
+        final ServletContext servletContext = coreComponents.getServletContext();
         Assert.requireNonNull(servletContext, "servletContext");
 
         final HttpSessionMutexHolder mutexHolder = new HttpSessionMutexHolder();

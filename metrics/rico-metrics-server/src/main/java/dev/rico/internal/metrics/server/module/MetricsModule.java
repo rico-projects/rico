@@ -35,8 +35,6 @@ import io.micrometer.core.instrument.binder.system.ProcessorMetrics;
 import io.micrometer.prometheus.PrometheusConfig;
 import io.micrometer.prometheus.PrometheusMeterRegistry;
 import org.apiguardian.api.API;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.ServletContext;
@@ -52,10 +50,8 @@ import static dev.rico.internal.server.servlet.ServletConstants.ALL_URL_MAPPING;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "1.0.0", status = INTERNAL)
-@ModuleDefinition
+@ModuleDefinition(name = MODULE_NAME)
 public class MetricsModule extends AbstractBaseModule {
-
-    private static final Logger LOG = LoggerFactory.getLogger(MetricsModule.class);
 
     @Override
     protected String getActivePropertyName() {
@@ -63,14 +59,9 @@ public class MetricsModule extends AbstractBaseModule {
     }
 
     @Override
-    public String getName() {
-        return MODULE_NAME;
-    }
-
-    @Override
     public void initialize(final ServerCoreComponents coreComponents) {
         final Configuration configuration = coreComponents.getConfiguration();
-        final ServletContext servletContext = coreComponents.getInstance(ServletContext.class);
+        final ServletContext servletContext = coreComponents.getServletContext();
 
         final PrometheusMeterRegistry prometheusRegistry = new PrometheusMeterRegistry(PrometheusConfig.DEFAULT);
 

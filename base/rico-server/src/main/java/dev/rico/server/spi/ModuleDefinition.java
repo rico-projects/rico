@@ -18,7 +18,10 @@ package dev.rico.server.spi;
 
 import org.apiguardian.api.API;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
@@ -26,21 +29,36 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 /**
  * Annotation to define a module. Each module that should be started at the server start.
  *
- * @see ServerModule
- *
  * @author Hendrik Ebbers
+ * @see ServerModule
  */
 @Documented
-@Inherited
 @Retention(RUNTIME)
 @Target(ElementType.TYPE)
 @API(since = "0.x", status = EXPERIMENTAL)
 public @interface ModuleDefinition {
 
     /**
-     * Defines the order number of the module. All modules will be started sorted by its order number.
+     * @return the unique name of the module
+     */
+    String name();
+
+    /**
+     * Some modules depend on other modules. This method returns a collection of the names of all modules that are needed to start this module.
+     * The name of a module is defined in the {@link ModuleDefinition} annotation.
+     *
+     * @return a set of the names of all modules that are needed to start this module
+     */
+    String[] moduleDependencies() default {};
+
+    /**
+     * Defines the order number of the module.
+     * <p>
+     * All modules will be started sorted by their order number.
+     * The module with the smallest number is started first.
+     * Modules with the same number are started in an undefined order.
+     *
      * @return the order number of the module
      */
     int order() default 100;
-
 }

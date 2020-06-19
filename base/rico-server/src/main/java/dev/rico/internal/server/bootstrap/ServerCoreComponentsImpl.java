@@ -18,15 +18,14 @@ package dev.rico.internal.server.bootstrap;
 
 import dev.rico.core.Configuration;
 import dev.rico.internal.core.Assert;
-import dev.rico.server.spi.components.ManagedBeanFactory;
-import dev.rico.server.spi.components.ClasspathScanner;
 import dev.rico.server.spi.ServerCoreComponents;
+import dev.rico.server.spi.components.ClasspathScanner;
+import dev.rico.server.spi.components.ManagedBeanFactory;
 import org.apiguardian.api.API;
 
 import javax.servlet.ServletContext;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ThreadFactory;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
@@ -35,38 +34,29 @@ public class ServerCoreComponentsImpl implements ServerCoreComponents {
 
     private final Map<Class<?>, Object> instances = new HashMap<>();
 
-    protected ServerCoreComponentsImpl(final ServletContext servletContext, final Configuration configuration, final ThreadFactory threadFactory, final ClasspathScanner classpathScanner, final ManagedBeanFactory managedBeanFactory) {
+    protected ServerCoreComponentsImpl(final ServletContext servletContext, final Configuration configuration, final ClasspathScanner classpathScanner, final ManagedBeanFactory managedBeanFactory) {
         Assert.requireNonNull(servletContext, "servletContext");
         Assert.requireNonNull(configuration, "configuration");
-        Assert.requireNonNull(threadFactory, "threadFactory");
         Assert.requireNonNull(classpathScanner, "classpathScanner");
         Assert.requireNonNull(managedBeanFactory, "managedBeanFactory");
 
         provideInstance(ServletContext.class, servletContext);
         provideInstance(Configuration.class, configuration);
-        provideInstance(ThreadFactory.class, threadFactory);
         provideInstance(ClasspathScanner.class, classpathScanner);
         provideInstance(ManagedBeanFactory.class, managedBeanFactory);
-    }
-
-    public ServletContext getServletContext() {
-        return getInstance(ServletContext.class);
-    }
-
-    public Configuration getConfiguration() {
-        return getInstance(Configuration.class);
     }
 
     public <T> void provideInstance(final Class<T> cls, final T instance) {
         Assert.requireNonNull(cls, "cls");
         Assert.requireNonNull(instance, "instance");
 
-        if(getInstance(cls) != null) {
+        if (getInstance(cls) != null) {
             throw new IllegalStateException("Instance for class " + cls + " already provided");
         }
         instances.put(cls, instance);
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T getInstance(final Class<T> cls) {
         Assert.requireNonNull(cls, "cls");
         return (T) instances.get(cls);
