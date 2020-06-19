@@ -20,7 +20,6 @@ import org.apiguardian.api.API;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
@@ -34,7 +33,6 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
  * @see ServerModule
  */
 @Documented
-@Inherited
 @Retention(RUNTIME)
 @Target(ElementType.TYPE)
 @API(since = "0.x", status = EXPERIMENTAL)
