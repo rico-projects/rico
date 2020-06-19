@@ -33,12 +33,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.concurrent.ThreadFactory;
 import java.util.stream.Collectors;
 
@@ -82,7 +84,7 @@ public class PlatformBootstrap {
 
                 final Set<Class<?>> moduleClasses = classpathScanner.getTypesAnnotatedWith(ModuleDefinition.class);
 
-                final Map<ModuleDefinition, ServerModule> modules = new HashMap<>();
+                final Map<ModuleDefinition, ServerModule> modules = new TreeMap<>(Comparator.comparing(ModuleDefinition::order));
 
                 for (final Class<?> moduleClass : moduleClasses) {
                     if (!ServerModule.class.isAssignableFrom(moduleClass)) {
