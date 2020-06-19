@@ -33,13 +33,14 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.ServiceLoader;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import static dev.rico.internal.core.RicoConstants.APPLICATION_NAME_DEFAULT;
@@ -81,7 +82,7 @@ public class PlatformBootstrap {
 
                 final Set<Class<?>> moduleClasses = classpathScanner.getTypesAnnotatedWith(ModuleDefinition.class);
 
-                final Map<ModuleDefinition, ServerModule> modules = new TreeMap<>(Comparator.comparing(ModuleDefinition::order));
+                final Map<ModuleDefinition, ServerModule> modules = new HashMap<>();
 
                 for (final Class<?> moduleClass : moduleClasses) {
                     if (!ServerModule.class.isAssignableFrom(moduleClass)) {
@@ -109,7 +110,11 @@ public class PlatformBootstrap {
 
                 LOG.info("Found {} active Rico modules", modules.size());
 
-                for (final Map.Entry<ModuleDefinition, ServerModule> moduleEntry : modules.entrySet()) {
+                final List<Map.Entry<ModuleDefinition, ServerModule>> sortedEntries = modules.entrySet().stream()
+                        .sorted(Comparator.comparing(e -> e.getKey().order()))
+                        .collect(Collectors.toList());
+
+                for (final Map.Entry<ModuleDefinition, ServerModule> moduleEntry : sortedEntries) {
                     final ServerModule module = moduleEntry.getValue();
                     checkForNeededModules(modules, moduleEntry.getKey());
                     LOG.debug("Will initialize Rico module {}", moduleEntry.getKey());
