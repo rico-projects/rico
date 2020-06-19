@@ -3,7 +3,7 @@ ifndef::imagesdir[:imagesdir: ../images]
 === Provide metrics for monitoring
 
 An application that uses Rico metrics will provide a `/metrics` endpoint by default.
-This endpopint provides all metrics information in a format that can be read by https://prometheus.io[prometheus].
+This endpoint provides all metrics information in a format that can be read by https://prometheus.io[prometheus].
 Based on this a custom monitoring solution can be created.
 
 ==== Using Prometheus
@@ -189,7 +189,7 @@ The following table gives an overview about all metrics that rico measures autom
 |Number of active http sessions
 |===
 
-==== Create reusable dashboards with Grafana
+==== Create insightful Dashboards with Grafana
 
 While Prometheus can be used to visualize a graph of 1 metric or query you normally expect much more functionality for modern application monitoring.
 Since the data storage and query handling is the main task of Prometheus an additional tool should be used to visualize all the metrics.
@@ -207,10 +207,17 @@ image:grafana.png[]
 
 As already described for Prometheus we can start Grafana in a Docker container, too.
 Information about running Grafana in Docker can be found https://grafana.com/docs/grafana/latest/installation/docker/[here].
-If you want to automate the configuration and provisioning of Grafana https://grafana.com/docs/grafana/latest/administration/provisioning/[this link] will be helpfull.
+If you want to automate the configuration and provisioning of Grafana https://grafana.com/docs/grafana/latest/administration/provisioning/[this link] will be helpful.
 Next to this we provide a https://docs.docker.com/compose/[docker-compose] based sample in https://github.com/rico-projects/rico-samples/tree/master/metrics-sample[the Rico samples repository].
 
-////
-todo:   How to create dashboards in grafana
-        How are the dashboards of the sample stored / exported?
-////
+Grafana is a large tool with many features and functionalities.
+Here is a collection of links to get started:
+
+* https://grafana.com/docs/grafana/latest/getting-started/what-is-grafana/[What is Grafana]
+* https://grafana.com/docs/grafana/latest/panels/panels-overview/[Grafana Panels]
+* https://grafana.com/docs/grafana/latest/features/dashboard/dashboards/[Grafana Dashboards]
+* https://grafana.com/tutorials/[Grafana Tutorials]
+
+If you want to include a custome dashboard in the docker-compose sample have a look at
+https://grafana.com/docs/grafana/latest/reference/export_import/[export and import]
+to create a XML represenation of the dashboard
