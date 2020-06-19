@@ -9,6 +9,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 
 public class ResultTest {
@@ -27,15 +28,17 @@ public class ResultTest {
 
     @Test(expectedExceptions = IllegalStateException.class)
     public void testFail() {
+        // given
+        final RuntimeException exception = new RuntimeException();
+
         // when
-        final Result<String> result = Result.fail(new RuntimeException("ERROR"));
+        final Result<String> result = Result.fail(exception);
 
         // then
         assertFalse(result.isSuccessful());
         assertTrue(result.isFailed());
         assertNotNull(result.getException());
-        assertEquals(result.getException().getClass(), RuntimeException.class);
-        assertEquals(result.getException().getMessage(), "ERROR");
+        assertSame(result.getException(), exception);
 
         result.getResult(); // should throw an exception
     }
@@ -43,8 +46,7 @@ public class ResultTest {
     @Test
     public void testResultOfConsumer() {
         // when:
-        final Result<Void> result = Result.ofConsumer(v -> {
-        }).apply(null);
+        final Result<Void> result = Result.ofConsumer(v -> {}).apply(null);
 
         // then:
         assertTrue(result.isSuccessful());
@@ -60,7 +62,7 @@ public class ResultTest {
 
         // then:
         assertTrue(result.isFailed());
-        assertEquals(result.getException(), exception);
+        assertSame(result.getException(), exception);
     }
 
     @Test
@@ -83,7 +85,7 @@ public class ResultTest {
 
         // then:
         assertTrue(result.isFailed());
-        assertEquals(result.getException(), exception);
+        assertSame(result.getException(), exception);
     }
 
     @Test
@@ -106,7 +108,7 @@ public class ResultTest {
 
         // then:
         assertTrue(result.isFailed());
-        assertEquals(result.getException(), exception);
+        assertSame(result.getException(), exception);
     }
 
     @Test
@@ -130,7 +132,7 @@ public class ResultTest {
 
         // then:
         assertTrue(result.isFailed());
-        assertEquals(result.getException(), exception);
+        assertSame(result.getException(), exception);
         assertEquals(result.getInput(), "bar");
     }
 
@@ -158,7 +160,7 @@ public class ResultTest {
 
         // then:
         assertTrue(result.isFailed());
-        assertEquals(result.getException(), exception);
+        assertSame(result.getException(), exception);
         assertEquals(result.getInput(), "bar");
     }
 
@@ -182,7 +184,7 @@ public class ResultTest {
 
         // then:
         assertTrue(result.isFailed());
-        assertEquals(result.getException(), exception);
+        assertSame(result.getException(), exception);
     }
 
     @Test
@@ -195,7 +197,7 @@ public class ResultTest {
 
         // then:
         assertTrue(result.isFailed());
-        assertEquals(result.getException(), exception);
+        assertSame(result.getException(), exception);
     }
 
     @Test
@@ -208,7 +210,7 @@ public class ResultTest {
 
         // then:
         assertTrue(result.isFailed());
-        assertEquals(result.getException(), exception);
+        assertSame(result.getException(), exception);
     }
 
     @Test
@@ -257,7 +259,7 @@ public class ResultTest {
 
         // then:
         assertTrue(result.isFailed());
-        assertEquals(result.getException(), exception);
+        assertSame(result.getException(), exception);
     }
 
     @Test
@@ -284,7 +286,7 @@ public class ResultTest {
 
         // then:
         assertTrue(result.isFailed());
-        assertEquals(result.getException(), exception);
+        assertSame(result.getException(), exception);
     }
 
     @Test
@@ -297,7 +299,7 @@ public class ResultTest {
 
         // then:
         assertTrue(result.isFailed());
-        assertEquals(result.getException(), exception);
+        assertSame(result.getException(), exception);
     }
 
     @Test
@@ -310,7 +312,7 @@ public class ResultTest {
 
         // then:
         assertTrue(result.isFailed());
-        assertEquals(result.getException(), exception);
+        assertSame(result.getException(), exception);
     }
 
     @Test
@@ -337,7 +339,7 @@ public class ResultTest {
 
         // then:
         assertTrue(result.isFailed());
-        assertEquals(result.getException(), exception);
+        assertSame(result.getException(), exception);
     }
 
     @Test
@@ -350,7 +352,7 @@ public class ResultTest {
 
         // then:
         assertTrue(result.isFailed());
-        assertEquals(result.getException(), exception);
+        assertSame(result.getException(), exception);
     }
 
     @Test
@@ -363,7 +365,7 @@ public class ResultTest {
 
         // then:
         assertTrue(result.isFailed());
-        assertEquals(result.getException(), exception);
+        assertSame(result.getException(), exception);
     }
 
     @Test
@@ -388,7 +390,7 @@ public class ResultTest {
         failedResult(exception).onFailure(value::set);
 
         // then:
-        assertEquals(value.get(), exception);
+        assertSame(value.get(), exception);
     }
 
     @Test
@@ -407,6 +409,94 @@ public class ResultTest {
 
         // then:
         assertEquals(result, "bar");
+    }
+
+    @Test
+    public void testSuccessfulResultOnFailureWithInput() {
+        // given:
+        final AtomicReference<String> input = new AtomicReference<>(null);
+        final AtomicReference<Exception> value = new AtomicReference<>(null);
+
+        // when:
+        successfulResult().onFailure((i, e) -> { input.set(i); value.set(e); });
+
+        // then:
+        assertNull(value.get());
+        assertNull(input.get());
+    }
+
+    @Test
+    public void testFailedResultOnFailureWithInput() {
+        // given:
+        final AtomicReference<String> input = new AtomicReference<>(null);
+        final AtomicReference<Exception> value = new AtomicReference<>(null);
+        final RuntimeException exception = new RuntimeException();
+
+        // when:
+        failedResult(exception).onFailure((i, e) -> { input.set(i); value.set(e); });
+
+        // then:
+        assertSame(value.get(), exception);
+        assertEquals(input.get(), "test");
+    }
+
+    @Test
+    public void testSuccessfulResultRecoverWithInput() {
+        // given:
+        final AtomicReference<String> input = new AtomicReference<>(null);
+
+        // when:
+        final Result<String> result = successfulResult("test").recover((i, e) -> { input.set(i); return "bar"; });
+
+        // then:
+        assertTrue(result.isSuccessful());
+        assertEquals(result.getResult(), "test");
+        assertNull(input.get());
+    }
+
+    @Test
+    public void testFailedResultRecoverWithInput() {
+        // given:
+        final AtomicReference<String> input = new AtomicReference<>(null);
+        final RuntimeException exception = new RuntimeException();
+
+        // when:
+        final Result<String> result = failedResult(exception).recover((i, e) -> { input.set(i); return "bar"; });
+
+        // then:
+        assertTrue(result.isSuccessful());
+        assertEquals(result.getResult(), "bar");
+        assertEquals(input.get(), "test");
+    }
+
+    @Test
+    public void testSuccessfulResultRecoverWithInputThrowingException() {
+        // given:
+        final AtomicReference<String> input = new AtomicReference<>(null);
+        final RuntimeException exception = new RuntimeException();
+
+        // when:
+        final Result<String> result = successfulResult().recover((i, e) -> { input.set(i); throw exception; });
+
+        // then:
+        assertTrue(result.isSuccessful());
+        assertEquals(result.getResult(), "test");
+        assertNull(input.get());
+    }
+
+    @Test
+    public void testFailedResultRecoverWithInputThrowingException() {
+        // given:
+        final AtomicReference<String> input = new AtomicReference<>(null);
+        final RuntimeException exception = new RuntimeException();
+
+        // when:
+        final Result<String> result = failedResult().recover((i, e) -> { input.set(i); throw exception; });
+
+        // then:
+        assertTrue(result.isFailed());
+        assertSame(result.getException(), exception);
+        assertEquals(input.get(), "test");
     }
 
     private ResultWithInput<String, String> successfulResult() {
