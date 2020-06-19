@@ -130,7 +130,13 @@ public class PlatformBootstrap {
     }
 
     private void checkForNeededModules(final Map<ModuleDefinition, ServerModule> modules, final ModuleDefinition definition) throws ModuleInitializationException {
-        final Set<String> neededModules = Set.of(definition.moduleDependencies());
+        final String[] neededModuleNames = definition.moduleDependencies();
+
+        if (neededModuleNames.length == 0) {
+            return;
+        }
+
+        final Set<String> neededModules = Set.of(neededModuleNames);
         final Set<String> foundModules = modules.keySet().stream()
                 .filter(dependency -> neededModules.contains(dependency.name()))
                 .filter(dependency -> definition.order() > dependency.order())
