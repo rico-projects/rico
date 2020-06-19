@@ -30,9 +30,8 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 /**
  * Annotation to define a module. Each module that should be started at the server start.
  *
- * @see ServerModule
- *
  * @author Hendrik Ebbers
+ * @see ServerModule
  */
 @Documented
 @Inherited
@@ -42,21 +41,22 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 public @interface ModuleDefinition {
 
     /**
-     * Some modules depend on other modules. This method returns a collection of the names of all modules that are needed to start this module. The name of a module is defined in the {@link ModuleDefinition} annotation.
-     * @return a set of the names of all modules that are needed to start this module
-     */
-    String[] moduleDependencies() default {};
-
-    /**
-     * Returns the unique name of the module.
      * @return the unique name of the module
      */
     String name();
 
     /**
-     * Defines the order number of the module.
+     * Some modules depend on other modules. This method returns a collection of the names of all modules that are needed to start this module.
+     * The name of a module is defined in the {@link ModuleDefinition} annotation.
      *
-     * All modules will be started sorted by its order number.
+     * @return a set of the names of all modules that are needed to start this module
+     */
+    String[] moduleDependencies() default {};
+
+    /**
+     * Defines the order number of the module.
+     * <p>
+     * All modules will be started sorted by their order number.
      * The module with the smallest number is started first.
      * Modules with the same number are started in an undefined order.
      *

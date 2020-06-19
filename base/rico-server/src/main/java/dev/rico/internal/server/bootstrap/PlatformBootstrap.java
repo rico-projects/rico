@@ -34,10 +34,10 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.TreeMap;
@@ -91,13 +91,22 @@ public class PlatformBootstrap {
                         throw new RuntimeException("Class " + moduleClass + " is annotated with " + ModuleDefinition.class.getSimpleName() + " but do not implement " + ServerModule.class.getSimpleName());
                     }
                     final ModuleDefinition moduleDefinition = moduleClass.getAnnotation(ModuleDefinition.class);
-                    final ServerModule instance = (ServerModule) moduleClass.getConstructor().newInstance();
+                    final String moduleName = moduleDefinition.name();
 
+                    final boolean foundDuplicate = modules.keySet().stream()
+                            .map(ModuleDefinition::name)
+                            .anyMatch(m -> Objects.equals(m, moduleName));
+
+                    if (foundDuplicate) {
+                        throw new ModuleInitializationException("Module " + moduleName + " is defined multiple times");
+                    }
+
+                    final ServerModule instance = (ServerModule) moduleClass.getConstructor().newInstance();
                     if (instance.shouldBoot(serverCoreComponents.getConfiguration())) {
-                        LOG.trace("Found Rico module {}", moduleDefinition.name());
+                        LOG.trace("Found Rico module {}", moduleName);
                         modules.put(moduleDefinition, instance);
                     } else {
-                        LOG.trace("Skipping Rico module {}", moduleDefinition.name());
+                        LOG.trace("Skipping Rico module {}", moduleName);
                     }
                 }
 
