@@ -17,7 +17,11 @@
 package dev.rico.server.spi;
 
 import dev.rico.core.Configuration;
+import dev.rico.server.spi.components.ClasspathScanner;
+import dev.rico.server.spi.components.ManagedBeanFactory;
 import org.apiguardian.api.API;
+
+import javax.servlet.ServletContext;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
@@ -30,11 +34,32 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 public interface ServerCoreComponents {
 
     /**
-     * Returns the configuration of Rico
-     *
-     * @return the configuration
+     * @return the bean factory
      */
-    Configuration getConfiguration();
+    default ManagedBeanFactory getManagedBeanFactory() {
+        return getInstance(ManagedBeanFactory.class);
+    }
+
+    /**
+     * @return the classpath scanner
+     */
+    default ClasspathScanner getClasspathScanner() {
+        return getInstance(ClasspathScanner.class);
+    }
+
+    /**
+     * @return the servlet context
+     */
+    default ServletContext getServletContext() {
+        return getInstance(ServletContext.class);
+    }
+
+    /**
+     * @return the configuration of Rico
+     */
+    default Configuration getConfiguration() {
+        return getInstance(Configuration.class);
+    }
 
     /**
      * The {@link ServerCoreComponents} can hold implementations for a given service and share this between several modules (see {@link ServerModule}). This method must be used to add such an instance of a service to the core components.
