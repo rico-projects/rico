@@ -86,7 +86,7 @@ public class PlatformBootstrap {
 
                 for (final Class<?> moduleClass : moduleClasses) {
                     if (!ServerModule.class.isAssignableFrom(moduleClass)) {
-                        throw new IllegalStateException("Class " + moduleClass + " is annotated with " + ModuleDefinition.class.getSimpleName() + " but do not implement " + ServerModule.class.getSimpleName());
+                        throw new ModuleInitializationException("Class " + moduleClass + " is annotated with " + ModuleDefinition.class.getSimpleName() + " but do not implement " + ServerModule.class.getSimpleName());
                     }
                     final ModuleDefinition moduleDefinition = moduleClass.getAnnotation(ModuleDefinition.class);
                     final String moduleName = moduleDefinition.name();
