@@ -18,7 +18,11 @@ package dev.rico.server.spi;
 
 import org.apiguardian.api.API;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
@@ -38,9 +42,20 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 public @interface ModuleDefinition {
 
     /**
+     * Some modules depend on other modules. This method returns a collection of the names of all modules that are needed to start this module. The name of a module is defined in the {@link ModuleDefinition} annotation.
+     * @return a set of the names of all modules that are needed to start this module
+     */
+    String[] moduleDependencies() default {};
+
+    /**
+     * Returns the unique name of the module.
+     * @return the unique name of the module
+     */
+    String name();
+
+    /**
      * Defines the order number of the module. All modules will be started sorted by its order number.
      * @return the order number of the module
      */
     int order() default 100;
-
 }

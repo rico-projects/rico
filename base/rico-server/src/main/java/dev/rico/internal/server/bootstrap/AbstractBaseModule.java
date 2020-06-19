@@ -21,9 +21,6 @@ import dev.rico.internal.core.Assert;
 import dev.rico.server.spi.ServerModule;
 import org.apiguardian.api.API;
 
-import java.util.Collections;
-import java.util.List;
-
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 /**
@@ -33,11 +30,6 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
  */
 @API(since = "0.x", status = EXPERIMENTAL)
 public abstract class AbstractBaseModule implements ServerModule {
-
-    @Override
-    public List<String> getModuleDependencies() {
-        return Collections.emptyList();
-    }
 
     @Override
     public boolean shouldBoot(final Configuration configuration) {

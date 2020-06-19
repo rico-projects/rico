@@ -17,11 +17,9 @@
 package dev.rico.internal.server.bootstrap.modules;
 
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.server.servlet.ServerTimingFilter;
-import dev.rico.core.Configuration;
 import dev.rico.internal.server.bootstrap.AbstractBaseModule;
+import dev.rico.internal.server.servlet.ServerTimingFilter;
 import dev.rico.server.spi.ModuleDefinition;
-import dev.rico.server.spi.ModuleInitializationException;
 import dev.rico.server.spi.ServerCoreComponents;
 import org.apiguardian.api.API;
 
@@ -31,10 +29,11 @@ import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
 import java.util.EnumSet;
 
+import static dev.rico.internal.server.bootstrap.modules.ServerTimingModule.MODULE_NAME;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "1.0.0-RC5", status = INTERNAL)
-@ModuleDefinition(order = 10)
+@ModuleDefinition(name = MODULE_NAME, order = 10)
 public class ServerTimingModule extends AbstractBaseModule {
 
     public static final String MODULE_NAME = "serverTimingModule";
@@ -49,15 +48,9 @@ public class ServerTimingModule extends AbstractBaseModule {
     }
 
     @Override
-    public String getName() {
-        return MODULE_NAME;
-    }
-
-    @Override
-    public void initialize(final ServerCoreComponents coreComponents) throws ModuleInitializationException {
+    public void initialize(final ServerCoreComponents coreComponents) {
         Assert.requireNonNull(coreComponents, "coreComponents");
         final ServletContext servletContext = coreComponents.getInstance(ServletContext.class);
-        final Configuration configuration = coreComponents.getConfiguration();
 
         final Filter filter = new ServerTimingFilter(true);
         final FilterRegistration.Dynamic createdFilter = servletContext.addFilter(FILTER_NAME, filter);

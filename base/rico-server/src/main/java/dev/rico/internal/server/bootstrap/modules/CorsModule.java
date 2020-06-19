@@ -18,10 +18,9 @@ package dev.rico.internal.server.bootstrap.modules;
 
 import dev.rico.core.Configuration;
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.server.servlet.CrossSiteOriginFilter;
 import dev.rico.internal.server.bootstrap.AbstractBaseModule;
+import dev.rico.internal.server.servlet.CrossSiteOriginFilter;
 import dev.rico.server.spi.ModuleDefinition;
-import dev.rico.server.spi.ModuleInitializationException;
 import dev.rico.server.spi.ServerCoreComponents;
 import org.apiguardian.api.API;
 
@@ -33,10 +32,11 @@ import java.util.List;
 
 import static dev.rico.internal.server.bootstrap.BasicConfigurationProvider.CORS_ENDPOINTS_URL_MAPPINGS;
 import static dev.rico.internal.server.bootstrap.BasicConfigurationProvider.CORS_ENDPOINTS_URL_MAPPINGS_DEFAULT_VALUE;
+import static dev.rico.internal.server.bootstrap.modules.CorsModule.CORS_MODULE;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
-@ModuleDefinition
+@ModuleDefinition(name = CORS_MODULE)
 public class CorsModule extends AbstractBaseModule {
 
     public static final String CORS_MODULE = "CorsModule";
@@ -51,18 +51,13 @@ public class CorsModule extends AbstractBaseModule {
     }
 
     @Override
-    public String getName() {
-        return CORS_MODULE;
-    }
-
-    @Override
-    public void initialize(final ServerCoreComponents coreComponents) throws ModuleInitializationException {
+    public void initialize(final ServerCoreComponents coreComponents) {
         Assert.requireNonNull(coreComponents, "coreComponents");
         final ServletContext servletContext = coreComponents.getInstance(ServletContext.class);
         final Configuration configuration = coreComponents.getConfiguration();
         final List<String> endpointList = configuration.getListProperty(CORS_ENDPOINTS_URL_MAPPINGS, CORS_ENDPOINTS_URL_MAPPINGS_DEFAULT_VALUE);
 
-        final String[] endpoints = endpointList.toArray(new String[endpointList.size()]);
+        final String[] endpoints = endpointList.toArray(new String[0]);
         final CrossSiteOriginFilter filter = new CrossSiteOriginFilter(configuration);
         final FilterRegistration.Dynamic createdFilter = servletContext.addFilter(CORS_FILTER, filter);
         createdFilter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, endpoints);

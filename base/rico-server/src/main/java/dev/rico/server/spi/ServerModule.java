@@ -34,18 +34,6 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 public interface ServerModule {
 
     /**
-     * Some modules depend on other modules. This method returns a collection of the names of all modules that are needed to start this module. The name of a module is defined in the {@link ModuleDefinition} annotation.
-     * @return a set of the names of all modules that are needed to start this module
-     */
-    List<String> getModuleDependencies();
-
-    /**
-     * Returns the unique name of the module.
-     * @return the unique name of the module
-     */
-    String getName();
-
-    /**
      * Returns true if the module will be booted at Rico bootstrap, otherwise false.
      * @param configuration the configuration
      * @return true if the module will be booted

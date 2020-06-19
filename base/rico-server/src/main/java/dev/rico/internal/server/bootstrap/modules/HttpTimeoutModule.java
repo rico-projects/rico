@@ -16,21 +16,21 @@
  */
 package dev.rico.internal.server.bootstrap.modules;
 
-import dev.rico.internal.core.Assert;
-import dev.rico.internal.server.servlet.HttpSessionTimeoutListener;
-import dev.rico.internal.server.bootstrap.AbstractBaseModule;
-import dev.rico.server.spi.ModuleDefinition;
-import dev.rico.server.spi.ModuleInitializationException;
 import dev.rico.core.Configuration;
+import dev.rico.internal.core.Assert;
+import dev.rico.internal.server.bootstrap.AbstractBaseModule;
+import dev.rico.internal.server.servlet.HttpSessionTimeoutListener;
+import dev.rico.server.spi.ModuleDefinition;
 import dev.rico.server.spi.ServerCoreComponents;
 import org.apiguardian.api.API;
 
 import javax.servlet.ServletContext;
 
+import static dev.rico.internal.server.bootstrap.modules.HttpTimeoutModule.HTTP_TIMEOUT_MODULE;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
-@ModuleDefinition
+@ModuleDefinition(name = HTTP_TIMEOUT_MODULE)
 public class HttpTimeoutModule extends AbstractBaseModule {
 
     public static final String HTTP_TIMEOUT_MODULE = "HttpTimeoutModule";
@@ -43,12 +43,7 @@ public class HttpTimeoutModule extends AbstractBaseModule {
     }
 
     @Override
-    public String getName() {
-        return HTTP_TIMEOUT_MODULE;
-    }
-
-    @Override
-    public void initialize(final ServerCoreComponents coreComponents) throws ModuleInitializationException {
+    public void initialize(final ServerCoreComponents coreComponents) {
         Assert.requireNonNull(coreComponents, "coreComponents");
         final ServletContext servletContext = coreComponents.getInstance(ServletContext.class);
         final Configuration configuration = coreComponents.getConfiguration();

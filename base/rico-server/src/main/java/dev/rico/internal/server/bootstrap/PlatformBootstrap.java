@@ -35,7 +35,6 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.ServletContext;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.Set;
@@ -82,13 +81,15 @@ public class PlatformBootstrap {
                 final Set<Class<?>> moduleClasses = classpathScanner.getTypesAnnotatedWith(ModuleDefinition.class);
 
                 final Map<String, ServerModule> modules = new HashMap<>();
+                final Map<String, ModuleDefinition> moduleDefinitions = new HashMap<>();
                 for (final Class<?> moduleClass : moduleClasses) {
                     if (!ServerModule.class.isAssignableFrom(moduleClass)) {
                         throw new RuntimeException("Class " + moduleClass + " is annoated with " + ModuleDefinition.class.getSimpleName() + " but do not implement " + ServerModule.class.getSimpleName());
                     }
                     final ModuleDefinition moduleDefinition = moduleClass.getAnnotation(ModuleDefinition.class);
                     final ServerModule instance = (ServerModule) moduleClass.getConstructor().newInstance();
-                    modules.put(instance.getName(), instance);
+                    modules.put(moduleDefinition.name(), instance);
+                    moduleDefinitions.put(moduleDefinition.name(), moduleDefinition);
                 }
 
                 LOG.info("Found {} Rico modules", modules.size());
@@ -102,7 +103,7 @@ public class PlatformBootstrap {
                     LOG.debug("Will initialize Rico module {}", moduleEntry.getKey());
                     final ServerModule module = moduleEntry.getValue();
                     if (module.shouldBoot(serverCoreComponents.getConfiguration())) {
-                        final List<String> neededModules = module.getModuleDependencies();
+                        final String[] neededModules = moduleDefinitions.get(moduleEntry.getKey()).moduleDependencies();
                         for (final String neededModule : neededModules) {
                             if (!modules.containsKey(neededModule)) {
                                 throw new ModuleInitializationException("Module " + moduleEntry.getKey() + " depends on missing module " + neededModule);
