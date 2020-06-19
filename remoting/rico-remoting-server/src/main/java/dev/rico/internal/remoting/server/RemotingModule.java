@@ -16,7 +16,6 @@
  */
 package dev.rico.internal.remoting.server;
 
-import dev.rico.core.Configuration;
 import dev.rico.internal.remoting.server.config.RemotingConfiguration;
 import dev.rico.internal.remoting.server.context.DefaultRemotingContextFactory;
 import dev.rico.internal.remoting.server.context.RemotingCommunicationHandler;
@@ -27,6 +26,7 @@ import dev.rico.internal.remoting.server.controller.ControllerValidationExceptio
 import dev.rico.internal.remoting.server.event.AbstractEventBus;
 import dev.rico.internal.remoting.server.servlet.InterruptServlet;
 import dev.rico.internal.remoting.server.servlet.RemotingServlet;
+import dev.rico.internal.server.bootstrap.AbstractBaseModule;
 import dev.rico.internal.server.client.ClientSessionLifecycleHandler;
 import dev.rico.internal.server.client.ClientSessionProvider;
 import dev.rico.remoting.server.event.RemotingEventBus;
@@ -35,7 +35,6 @@ import dev.rico.server.client.ClientSession;
 import dev.rico.server.spi.ModuleDefinition;
 import dev.rico.server.spi.ModuleInitializationException;
 import dev.rico.server.spi.ServerCoreComponents;
-import dev.rico.server.spi.ServerModule;
 import dev.rico.server.spi.components.ClasspathScanner;
 import dev.rico.server.spi.components.ManagedBeanFactory;
 import org.apiguardian.api.API;
@@ -54,16 +53,15 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 @ModuleDefinition(name = REMOTING_MODULE, moduleDependencies = CLIENT_SESSION_MODULE, order = 101)
 @API(since = "0.x", status = INTERNAL)
-public class RemotingModule implements ServerModule {
+public class RemotingModule extends AbstractBaseModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(RemotingModule.class);
 
     public static final String REMOTING_MODULE = "RemotingModule";
 
     @Override
-    public boolean shouldBoot(Configuration configuration) {
-        final RemotingConfiguration remotingConfiguration = new RemotingConfiguration(configuration);
-        return remotingConfiguration.isRemotingActive();
+    protected String getActivePropertyName() {
+        return RemotingConfiguration.ACTIVE;
     }
 
     @Override

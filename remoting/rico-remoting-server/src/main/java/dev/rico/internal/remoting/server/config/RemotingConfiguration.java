@@ -18,9 +18,9 @@ package dev.rico.internal.remoting.server.config;
 
 import dev.rico.core.Configuration;
 import dev.rico.internal.core.Assert;
+import dev.rico.internal.remoting.server.event.DefaultEventBusProvider;
 import dev.rico.internal.server.config.ConfigurationFileLoader;
 import dev.rico.internal.server.config.ServerConfiguration;
-import dev.rico.internal.remoting.server.event.DefaultEventBusProvider;
 import org.apiguardian.api.API;
 
 import java.io.Serializable;
@@ -45,8 +45,6 @@ public class RemotingConfiguration implements Serializable {
     public static final String MAX_POLL_TIME = "maxPollTime";
 
     public static final String EVENTBUS_TYPE = "eventbusType";
-
-    public static final boolean ACTIVE_DEFAULT_VALUE = true;
 
     public static final String SERVLET_MAPPING_DEFAULT_VALUE = "/remoting";
 
@@ -90,10 +88,6 @@ public class RemotingConfiguration implements Serializable {
 
     public Configuration getConfiguration() {
         return configuration;
-    }
-
-    public boolean isRemotingActive() {
-        return configuration.getBooleanProperty(ACTIVE, ACTIVE_DEFAULT_VALUE);
     }
 }
 
