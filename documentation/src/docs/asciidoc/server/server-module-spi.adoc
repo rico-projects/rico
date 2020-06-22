@@ -2,8 +2,123 @@ ifndef::imagesdir[:imagesdir: ../images]
 
 === Server Module SPI
 
-TODO
+Server modules are way to provide functionality from Rico to client applications.
+When a module is started it can register services, servlets, filters and much more.
 
-////
-todo:   How to create new server modules
-////
+==== Defining your own Module
+
+Defining a module is very simple.
+All that is required is a class which implements `ServerModule` and is annotated with `@ModuleDefinition`.
+
+For most modules we recommend to subclass `AbstractBaseModule` instead of directly implementing the `ServerModule` interface.
+The `AbstractBaseModule` offers the functionality to disable a module with an entry in the configuration.
+
+The `@ModuleDefinition` is required to configure the module.
+
+* `name()` gives the module a unique name
+* `order()` determines the order in which the modules are started.
+Modules with smaller values are started before modules with larger values.
+Default value is 100.
+* `moduleDependencies()`
+The name of modules on which this module depends.
+Dependant modules must have a smaller order than the current module.
+Default is no dependencies.
+
+[NOTE]
+====
+The name of the module does not need to be globally unique.
+It is sufficient if the module name is unique amongst the booted modules.
+This allows to have multiple modules which have the same name and then have the runtime config decide which to boot.
+====
+
+==== Initialization of the modules
+
+Rico uses a classpath scanner to find all classes with an `@ModuleDefinition` annotation.
+It will then create an instance for all modules which should be booted (e.g. `shouldBoot(Configuration)` returns true).
+Finally Rico will call `initialize(ServerCoreComponents)` of the modules in the order given by the `@ModuleDefinition` annotation.
+
+The `ServerCoreComponents` offer different methods to help you in initializing the module:
+
+* `getConfiguration()` returns the Rico configuration.
+* `getServletContext()` return the servlet context.
+The servlet context can be used to register filter and endpoints.
+* `getClasspathScanner()` returns an instance of `ClasspathScanner` which allows searching for classes annotated with an annotation.
+* `getManagedBeanFactory()` returns an instance of `ManagedBeanFactory` which allows creating beans.
+* `provideInstance()` registers an instance of a class or interface with the application.
+Other modules, beans, and services can later retrieve this instance either by injection or by calling `getInstance()`.
+* `getInstance()` allows to retrieve an already registered instance.
+This is where the order of modules is important.
+It allows to ensure that required instances have already been provided.
+
+Here is an example of a module definition:
+
+[source,java]
+----
+@ModuleDefinition(name = SAMPLE_MODULE, moduleDependencies = OTHER_MODULE, order = 200)
+public class SampleModule extends AbstractBaseModule {
+
+    public static final String SAMPLE_MODULE = "SampleModule";
+
+    @Override
+    protected String getActivePropertyName() {
+        return SAMPLE_MODULE;
+    }
+
+    @Override
+    public void initialize(ServerCoreComponents coreComponents) throws ModuleInitializationException {
+        // ServiceFromOtherModule is provided by OTHER_MODULE
+        // the 'moduleDependencies' in the annotation ensures that OTHER_MODULE is initialized before this.
+        final ServiceFromOtherModule s = coreComponents.getInstance(ServiceFromOtherModule.class);
+
+        // provide our own service for others to use
+        coreComponents.provideInstance(SampleModuleService.class, new SampleModuleService(s));
+
+        // register filter, listener and servlet
+        final ServletContext servletContext = coreComponents.getServletContext();
+
+        servletContext.addFilter("filterName", new SampleFilter())
+            .addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
+
+        servletContext.addListener(new SampleListener());
+
+        servletContext.addServlet(SAMPLE_MODULE, new SampleServlet())
+            .addMapping("/sample");
+    }
+}
+----
+
+==== Making Services available for Dependency Injection
+
+In order to make a service defined in a module injectable into the business logic one must provide bean factory methods for both Jakarta EE and Spring.
+Here is an example:
+
+[source,java]
+----
+@Configuration
+public class RemotingSpringBeanFactory {
+
+    @Bean(name = "sampleService")
+    protected SampleService createSampleService() {
+        final SampleService service = PlatformBootstrap.getServerCoreComponents().getInstance(SampleService.class);
+        Assert.requireNonNull(service, "service");
+
+        return service;
+    }
+}
+----
+
+[source,java]
+----
+@ApplicationScoped
+public class RemotingCdiBeanFactory {
+
+    @Produces
+    protected SampleService createSampleService() {
+        final SampleService service = PlatformBootstrap.getServerCoreComponents().getInstance(SampleService.class);
+        Assert.requireNonNull(service, "service");
+
+        return service;
+    }
+}
+----
+
