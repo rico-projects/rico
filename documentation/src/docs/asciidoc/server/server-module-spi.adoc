@@ -54,6 +54,8 @@ Here is an example of a module definition:
 
 [source,java]
 ----
+// define a module of name SampleModule, which depends on OTHER_MODULE, and will load after all
+// modules with an order less than 200.
 @ModuleDefinition(name = SAMPLE_MODULE, moduleDependencies = OTHER_MODULE, order = 200)
 public class SampleModule extends AbstractBaseModule {
 
