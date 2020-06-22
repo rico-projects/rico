@@ -44,22 +44,21 @@ public class ResultTest {
     }
 
     @Test
-    public void testResultOfConsumer() {
+    public void testResultOfRunnable() {
         // when:
-        final ResultWithInput<String, Void> result = Result.of(null, v -> {});
+        final Result<Void> result = Result.of(() -> { });
 
         // then:
         assertTrue(result.isSuccessful());
     }
 
     @Test
-    public void testResultOfConsumerThrowingException() {
+    public void testResultOfRunnableThrowingException() {
         // given:
         final RuntimeException exception = new RuntimeException();
-        final CheckedConsumer<String> consumer = v -> { throw exception; };
 
         // when:
-        final ResultWithInput<String, Void> result = Result.of(null, consumer);
+        final Result<Void> result = Result.of((CheckedRunnable) () -> { throw exception; });
 
         // then:
         assertTrue(result.isFailed());
@@ -103,10 +102,31 @@ public class ResultTest {
     public void testResultOfFunctionThrowingException() {
         // given:
         final RuntimeException exception = new RuntimeException();
-        final CheckedFunction<String, String> function = v -> { throw exception; };
 
         // when:
-        final ResultWithInput<String, String> result = Result.of(null, function);
+        final ResultWithInput<String, String> result = Result.of(null, (CheckedFunction<String, String>) v -> { throw exception; });
+
+        // then:
+        assertTrue(result.isFailed());
+        assertSame(result.getException(), exception);
+    }
+
+    @Test
+    public void testResultOfConsumer() {
+        // when:
+        final ResultWithInput<String, Void> result = Result.of(null, v -> {});
+
+        // then:
+        assertTrue(result.isSuccessful());
+    }
+
+    @Test
+    public void testResultOfConsumerThrowingException() {
+        // given:
+        final RuntimeException exception = new RuntimeException();
+
+        // when:
+        final ResultWithInput<String, Void> result = Result.of(null, (CheckedConsumer<String>) v -> { throw exception; });
 
         // then:
         assertTrue(result.isFailed());

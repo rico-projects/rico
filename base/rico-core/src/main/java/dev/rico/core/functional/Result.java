@@ -21,8 +21,6 @@ import dev.rico.internal.core.functional.Fail;
 import dev.rico.internal.core.functional.Success;
 
 import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * Wrapper for a result of a functional call (like {@link CheckedFunction}). The result can hold the outcome of a function
@@ -144,11 +142,25 @@ public interface Result<R> {
     }
 
     /**
-     * Wraps a given {@link CheckedSupplier} in a {@link Supplier} that returns the {@link Result} of the given {@link CheckedSupplier}
+     * Wraps the outcome of a given {@link CheckedRunnable} in a {@link Result}.
+     *
+     * @param runnable the runnable
+     * @return the outcome of the call to the {@code runnable}
+     */
+    static Result<Void> of(final CheckedRunnable runnable) {
+        Assert.requireNonNull(runnable, "runnable");
+        return of(null, a -> {
+            runnable.run();
+            return null;
+        });
+    }
+
+    /**
+     * Wraps the result of a given {@link CheckedSupplier} in a {@link Result}.
      *
      * @param supplier the supplier
      * @param <B>      type of the result
-     * @return a {@link Supplier} that returns the {@link Result} of the given {@link CheckedSupplier}
+     * @return the result of the call to the {@code supplier}
      */
     static <B> Result<B> of(final CheckedSupplier<B> supplier) {
         Assert.requireNonNull(supplier, "supplier");
@@ -157,12 +169,13 @@ public interface Result<R> {
     }
 
     /**
-     * Wraps a given {@link CheckedFunction} in a {@link Function} that returns the {@link Result} of the given {@link CheckedFunction}
+     * Wraps the result of a given {@link CheckedFunction} in a {@link ResultWithInput}.
      *
+     * @param input    the input to pass to the function
      * @param function the function
      * @param <A>      type of the input parameter
      * @param <B>      type of the result
-     * @return a {@link Function} that returns the {@link Result} of the given {@link CheckedFunction}
+     * @return the result of the call to the {@code function} with {@code input} as the parameter
      */
     static <A, B> ResultWithInput<A, B> of(A input, final CheckedFunction<A, B> function) {
         Assert.requireNonNull(function, "function");
@@ -175,11 +188,12 @@ public interface Result<R> {
     }
 
     /**
-     * Wraps a given {@link CheckedFunction} in a {@link Function} that returns the {@link Result} of the given {@link CheckedFunction}
+     * Wraps the outcome of a given {@link CheckedConsumer} in a {@link ResultWithInput}.
      *
+     * @param input    the input to pass to the consumer
      * @param consumer the consumer
      * @param <A>      type of the input parameter
-     * @return a {@link Function} that returns the {@link Result} of the given {@link CheckedFunction}
+     * @return the outcome of the call to the {@code consumer} with {@code input} as the parameter
      */
     static <A> ResultWithInput<A, Void> of(A input, final CheckedConsumer<A> consumer) {
         Assert.requireNonNull(consumer, "consumer");
