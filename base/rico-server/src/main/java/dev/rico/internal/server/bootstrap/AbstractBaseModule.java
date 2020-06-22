@@ -39,7 +39,7 @@ public abstract class AbstractBaseModule implements ServerModule {
     /**
      * Returns the name of the property that will be used to check if the module is active or not.
      * <p>
-     * By default the module will be active. The property can be defined inRico configuration
+     * By default the module will be active. The property can be defined in Rico configuration
      * (see {@link Configuration}) as <code>false</code> to disable booting of the module
      *
      * @return the name of the property
