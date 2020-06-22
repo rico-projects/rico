@@ -34,6 +34,12 @@ public final class StreamUtils {
         return asStream(ServiceLoader.load(serviceInterface).iterator());
     }
 
+    public static <T> Stream<T> reloadServiceAsStream(Class<T> serviceInterface) {
+        final ServiceLoader<T> loader = ServiceLoader.load(serviceInterface);
+        loader.reload();
+        return asStream(loader.iterator());
+    }
+
     public static <T> Stream<T> asStream(Iterator<T> iterator) {
         return asStream((() -> iterator));
     }

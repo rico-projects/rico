@@ -16,16 +16,17 @@
  */
 package dev.rico.internal.remoting.server.distributed;
 
+import dev.rico.internal.core.lang.StreamUtils;
 import dev.rico.internal.remoting.server.config.RemotingConfiguration;
 import dev.rico.remoting.server.distributed.HazelcastProvider;
-import dev.rico.remoting.server.event.spi.EventBusProvider;
 import dev.rico.remoting.server.event.RemotingEventBus;
+import dev.rico.remoting.server.event.spi.EventBusProvider;
 import org.apiguardian.api.API;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Iterator;
-import java.util.ServiceLoader;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
@@ -44,24 +45,20 @@ public class DistributedEventBusProvider implements EventBusProvider {
     public RemotingEventBus create(final RemotingConfiguration configuration) {
         LOG.debug("creating distributed event bus");
 
-        HazelcastProvider hazelcastProvider = null;
-        final Iterator<HazelcastProvider> iterator = ServiceLoader.load(HazelcastProvider.class).iterator();
+        final List<HazelcastProvider> providers = StreamUtils.loadServiceAsStream(HazelcastProvider.class)
+                .collect(Collectors.toList());
 
-        //TODO: configurable
-        if(iterator.hasNext()) {
-            hazelcastProvider = iterator.next();
+        if (providers.isEmpty()) {
+            providers.add(new DefaultHazelcastProvider());
         }
-        if(iterator.hasNext()) {
+        if (providers.size() > 1) {
             throw new IllegalStateException("More than one service implementation for found for " + HazelcastProvider.class);
         }
 
-        if(hazelcastProvider == null) {
-            hazelcastProvider = new DefaultHazelcastProvider();
-        }
+        final HazelcastProvider provider = providers.get(0);
 
-        LOG.debug("Using Hazelcast provider {}", hazelcastProvider.getClass());
+        LOG.debug("Using Hazelcast provider {}", provider.getClass());
 
-        return new DistributedEventBus(hazelcastProvider.getHazelcastInstance(new DefaultHazelcastConfig(configuration.getConfiguration())));
+        return new DistributedEventBus(provider.getHazelcastInstance(new DefaultHazelcastConfig(configuration.getConfiguration())));
     }
-
 }

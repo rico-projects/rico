@@ -16,19 +16,17 @@
  */
 package dev.rico.internal.client.http;
 
+import com.google.gson.Gson;
 import dev.rico.client.Client;
-import dev.rico.internal.client.AbstractServiceProvider;
 import dev.rico.client.ClientConfiguration;
 import dev.rico.core.http.HttpClient;
 import dev.rico.core.http.HttpURLConnectionFactory;
 import dev.rico.core.http.spi.RequestHandlerProvider;
 import dev.rico.core.http.spi.ResponseHandlerProvider;
-import com.google.gson.Gson;
+import dev.rico.internal.client.AbstractServiceProvider;
 import dev.rico.internal.core.Assert;
+import dev.rico.internal.core.lang.StreamUtils;
 import org.apiguardian.api.API;
-
-import java.util.Iterator;
-import java.util.ServiceLoader;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
@@ -45,17 +43,14 @@ public class HttpClientProvider extends AbstractServiceProvider<HttpClient> {
         final HttpURLConnectionFactory connectionFactory = configuration.getHttpURLConnectionFactory();
         final HttpClientImpl client = new HttpClientImpl(Client.getService(Gson.class), connectionFactory, configuration);
 
-        final ServiceLoader<RequestHandlerProvider> requestLoader = ServiceLoader.load(RequestHandlerProvider.class);
-        final Iterator<RequestHandlerProvider> requestIterator = requestLoader.iterator();
-        while (requestIterator.hasNext()) {
-            client.addRequestHandler(requestIterator.next().getHandler(configuration));
-        }
+        StreamUtils.loadServiceAsStream(RequestHandlerProvider.class)
+                .map(provider -> provider.getHandler(configuration))
+                .forEach(client::addRequestHandler);
 
-        final ServiceLoader<ResponseHandlerProvider> responseLoader = ServiceLoader.load(ResponseHandlerProvider.class);
-        final Iterator<ResponseHandlerProvider> responseIterator = responseLoader.iterator();
-        while (responseIterator.hasNext()) {
-            client.addResponseHandler(responseIterator.next().getHandler(configuration));
-        }
+        StreamUtils.loadServiceAsStream(ResponseHandlerProvider.class)
+                .map(provider -> provider.getHandler(configuration))
+                .forEach(client::addResponseHandler);
+
         return client;
     }
 }

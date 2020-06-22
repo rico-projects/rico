@@ -16,11 +16,12 @@
  */
 package dev.rico.internal.logging;
 
+import dev.rico.core.functional.Subscription;
+import dev.rico.internal.core.Assert;
+import dev.rico.internal.core.lang.StreamUtils;
 import dev.rico.internal.logging.spi.LogMessage;
 import dev.rico.internal.logging.spi.LoggerBridge;
 import dev.rico.internal.logging.spi.LoggerBridgeFactory;
-import dev.rico.internal.core.Assert;
-import dev.rico.core.functional.Subscription;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,10 +29,8 @@ import org.slf4j.event.Level;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
-import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -80,13 +79,10 @@ public class RicoLoggerFactory implements ILoggerFactory {
         Assert.requireNonNull(configuration, "configuration");
         bridges.clear();
 
-        final Iterator<LoggerBridgeFactory> iterator = ServiceLoader.load(LoggerBridgeFactory.class).iterator();
-        while (iterator.hasNext()) {
-            final LoggerBridge bridge = iterator.next().create(configuration);
-            if(bridge != null) {
-                bridges.add(bridge);
-            }
-        }
+        StreamUtils.loadServiceAsStream(LoggerBridgeFactory.class)
+                .map(factory -> factory.create(configuration))
+                .filter(Objects::nonNull)
+                .forEach(bridges::add);
 
         markers.clear();
 
