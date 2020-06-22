@@ -10,7 +10,7 @@ The following code shows a bad example of a stream handling that will end in an 
 ----
 
 List<Result> results = Stream.of("1", "TWO", "3", "4")
-                        .map(Integer:valueOf)
+                        .map(Integer::valueOf)
                         .collect(Collectors.toList());
 ----
 
@@ -30,7 +30,7 @@ The following code snippet gives an example how the Result API can be used:
 ----
 
 List<Result> results = Stream.of("1", "TWO", "3", "4")
-                        .map(Result.of(v -> Integer.valueOf(v)))
+                        .map(Result.of(Integer::valueOf))
                         .collect(Collectors.toList());
 ----
 
@@ -48,8 +48,8 @@ The following snippet shows a possible use-case of the API:
 
 [source,java]
 ----
-List<Result> results = Stream.of("1", "TWO", "3", "4")
-                        .map(Result.of(v -> Integer.valueOf(v)))
+List<Result<Integer>> results = Stream.of("1", "TWO", "3", "4")
+                        .map(Result.of(Integer::valueOf))
                         .collect(Collectors.toList());
 
 results.stream().filter(r -> r.isFailed())
@@ -62,8 +62,8 @@ With the additional functionality our sample will look like this:
 
 [source,java]
 ----
-List<ResultWithInput> results = Stream.of("1", "TWO", "3", "4")
-                        .map(Result.withInput(v -> Integer.valueOf(v)))
+List<ResultWithInput<String, Integer>> results = Stream.of("1", "TWO", "3", "4")
+                        .map(Result.of(Integer::valueOf))
                         .collect(Collectors.toList());
 
 results.stream().filter(r -> r.isFailed())
