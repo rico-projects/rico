@@ -103,16 +103,15 @@ public class PlatformBootstrap {
             final ModuleDefinition moduleDefinition = moduleClass.getAnnotation(ModuleDefinition.class);
             final String moduleName = moduleDefinition.name();
 
-            final boolean foundDuplicate = modules.keySet().stream()
-                    .map(ModuleDefinition::name)
-                    .anyMatch(m -> Objects.equals(m, moduleName));
-
-            if (foundDuplicate) {
-                throw new ModuleInitializationException("Module " + moduleName + " is defined multiple times");
-            }
-
             final ServerModule instance = (ServerModule) moduleClass.getConstructor().newInstance();
             if (instance.shouldBoot(serverCoreComponents.getConfiguration())) {
+                final boolean foundDuplicate = modules.keySet().stream()
+                        .map(ModuleDefinition::name)
+                        .anyMatch(m -> Objects.equals(m, moduleName));
+                if (foundDuplicate) {
+                    throw new ModuleInitializationException("Module " + moduleName + " is defined multiple times");
+                }
+
                 LOG.trace("Found Rico module {}", moduleName);
                 modules.put(moduleDefinition, instance);
             } else {
