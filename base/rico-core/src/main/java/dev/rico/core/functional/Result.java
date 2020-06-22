@@ -21,6 +21,7 @@ import dev.rico.internal.core.functional.Fail;
 import dev.rico.internal.core.functional.Success;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * Wrapper for a result of a functional call (like {@link CheckedFunction}). The result can hold the outcome of a function
@@ -179,12 +180,27 @@ public interface Result<R> {
      */
     static <A, B> ResultWithInput<A, B> of(A input, final CheckedFunction<A, B> function) {
         Assert.requireNonNull(function, "function");
-        try {
-            final B result = function.apply(input);
-            return new Success<>(input, result);
-        } catch (Exception e) {
-            return new Fail<>(input, e);
-        }
+        return of(function).apply(input);
+    }
+
+    /**
+     * Wraps a given {@link CheckedFunction} in a {@link Function} that returns the {@link Result} of the given {@link CheckedFunction}
+     *
+     * @param function the function
+     * @param <A>      type of the input parameter
+     * @param <B>      type of the result
+     * @return a {@link Function} that returns the {@link Result} of the given {@link CheckedFunction}
+     */
+    static <A, B> Function<A, ResultWithInput<A, B>> of(final CheckedFunction<A, B> function) {
+        Assert.requireNonNull(function, "function");
+        return a -> {
+            try {
+                final B result = function.apply(a);
+                return new Success<>(a, result);
+            } catch (Exception e) {
+                return new Fail<>(a, e);
+            }
+        };
     }
 
     /**
@@ -195,10 +211,22 @@ public interface Result<R> {
      * @param <A>      type of the input parameter
      * @return the outcome of the call to the {@code consumer} with {@code input} as the parameter
      */
-    static <A> ResultWithInput<A, Void> of(A input, final CheckedConsumer<A> consumer) {
+    static <A> ResultWithInput<A, Void> ofConsumer(A input, final CheckedConsumer<A> consumer) {
         Assert.requireNonNull(consumer, "consumer");
-        return of(input, a -> {
-            consumer.accept(a);
+        return ofConsumer(consumer).apply(input);
+    }
+
+    /**
+     * Wraps a given {@link CheckedFunction} in a {@link Function} that returns the {@link Result} of the given {@link CheckedFunction}
+     *
+     * @param consumer the consumer
+     * @param <A>      type of the input parameter
+     * @return a {@link Function} that returns the {@link Result} of the given {@link CheckedFunction}
+     */
+    static <A> Function<A, ResultWithInput<A, Void>> ofConsumer(final CheckedConsumer<A> consumer) {
+        Assert.requireNonNull(consumer, "consumer");
+        return of(i -> {
+            consumer.accept(i);
             return null;
         });
     }

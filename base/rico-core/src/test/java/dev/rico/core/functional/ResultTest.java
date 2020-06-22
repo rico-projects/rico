@@ -91,11 +91,12 @@ public class ResultTest {
     @Test
     public void testResultOfFunction() {
         // when:
-        final ResultWithInput<String, String> result = Result.of(null, v -> "test");
+        final ResultWithInput<String, String> result = Result.of("bar", v -> "test");
 
         // then:
         assertTrue(result.isSuccessful());
         assertEquals(result.getResult(), "test");
+        assertEquals(result.getInput(), "bar");
     }
 
     @Test
@@ -104,20 +105,51 @@ public class ResultTest {
         final RuntimeException exception = new RuntimeException();
 
         // when:
-        final ResultWithInput<String, String> result = Result.of(null, (CheckedFunction<String, String>) v -> { throw exception; });
+        final ResultWithInput<String, String> result = Result.of("bar", v -> { throw exception; });
 
         // then:
         assertTrue(result.isFailed());
         assertSame(result.getException(), exception);
+        assertEquals(result.getInput(), "bar");
+    }
+
+    @Test
+    public void testResultOfFunctionalFunction() {
+        // given:
+        final CheckedFunction<String, String> function = (String v) -> "test";
+
+        // when:
+        final ResultWithInput<String, String> result = Result.of(function).apply("bar");
+
+        // then:
+        assertTrue(result.isSuccessful());
+        assertEquals(result.getResult(), "test");
+        assertEquals(result.getInput(), "bar");
+    }
+
+    @Test
+    public void testResultOfFunctionalFunctionThrowingException() {
+        // given:
+        final RuntimeException exception = new RuntimeException();
+        final CheckedFunction<String, String> function = (String v) -> { throw exception; };
+
+        // when:
+        final ResultWithInput<String, String> result = Result.of(function).apply("bar");
+
+        // then:
+        assertTrue(result.isFailed());
+        assertSame(result.getException(), exception);
+        assertEquals(result.getInput(), "bar");
     }
 
     @Test
     public void testResultOfConsumer() {
         // when:
-        final ResultWithInput<String, Void> result = Result.of(null, v -> {});
+        final ResultWithInput<String, Void> result = Result.ofConsumer("bar", v -> {});
 
         // then:
         assertTrue(result.isSuccessful());
+        assertEquals(result.getInput(), "bar");
     }
 
     @Test
@@ -126,11 +158,40 @@ public class ResultTest {
         final RuntimeException exception = new RuntimeException();
 
         // when:
-        final ResultWithInput<String, Void> result = Result.of(null, (CheckedConsumer<String>) v -> { throw exception; });
+        final ResultWithInput<String, Void> result = Result.ofConsumer("bar", v -> { throw exception; });
 
         // then:
         assertTrue(result.isFailed());
         assertSame(result.getException(), exception);
+        assertEquals(result.getInput(), "bar");
+    }
+
+    @Test
+    public void testResultOfFunctionalConsumer() {
+        // given:
+        final CheckedConsumer<String> consumer = v -> { };
+
+        // when:
+        final ResultWithInput<String, Void> result = Result.ofConsumer(consumer).apply("bar");
+
+        // then:
+        assertTrue(result.isSuccessful());
+        assertEquals(result.getInput(), "bar");
+    }
+
+    @Test
+    public void testResultOfFunctionalConsumerThrowingException() {
+        // given:
+        final RuntimeException exception = new RuntimeException();
+        final CheckedConsumer<String> consumer = v -> { throw exception; };
+
+        // when:
+        final ResultWithInput<String, Void> result = Result.ofConsumer(consumer).apply("bar");
+
+        // then:
+        assertTrue(result.isFailed());
+        assertSame(result.getException(), exception);
+        assertEquals(result.getInput(), "bar");
     }
 
     @Test
@@ -481,6 +542,6 @@ public class ResultTest {
     }
 
     private ResultWithInput<String, String> failedResult(Exception e) {
-        return Result.<String, String>of("test", s -> { throw e; });
+        return Result.of("test", s -> { throw e; });
     }
 }
