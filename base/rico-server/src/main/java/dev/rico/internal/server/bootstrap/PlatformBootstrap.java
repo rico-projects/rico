@@ -32,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -93,7 +94,7 @@ public class PlatformBootstrap {
     }
 
     /* visible for testing */
-    void initModules(final Set<Class<?>> moduleClasses, final ServerCoreComponents serverCoreComponents) throws Exception {
+    void initModules(final Collection<Class<?>> moduleClasses, final ServerCoreComponents serverCoreComponents) throws Exception {
         final Map<ModuleDefinition, ServerModule> modules = new HashMap<>();
 
         for (final Class<?> moduleClass : moduleClasses) {

@@ -10,10 +10,11 @@ import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static java.util.Collections.emptySet;
+import static java.util.Collections.emptyList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -40,7 +41,7 @@ public class PlatformBootstrapTest {
     @Test
     public void testInitEmptyModule() throws Exception {
         // when
-        platform.initModules(emptySet(), coreComponents);
+        platform.initModules(emptyList(), coreComponents);
 
         // then
         assertThat(coreComponents.getInstance(Modules.class), is(empty()));
@@ -49,7 +50,7 @@ public class PlatformBootstrapTest {
     @Test
     public void testInitSingleModule() throws Exception {
         // when
-        platform.initModules(Set.of(TestModule.class), coreComponents);
+        platform.initModules(List.of(TestModule.class), coreComponents);
 
         // then
         assertThat(coreComponents.getInstance(Modules.class), contains(TestModule.class));
@@ -58,7 +59,16 @@ public class PlatformBootstrapTest {
     @Test
     public void testInitTwoModule() throws Exception {
         // when
-        platform.initModules(Set.of(TestModule.class, SecondModule.class), coreComponents);
+        platform.initModules(List.of(TestModule.class, SecondModule.class), coreComponents);
+
+        // then
+        assertThat(coreComponents.getInstance(Modules.class), containsInAnyOrder(TestModule.class, SecondModule.class));
+    }
+
+    @Test
+    public void testInitTwoModuleReversed() throws Exception {
+        // when
+        platform.initModules(List.of(SecondModule.class, TestModule.class), coreComponents);
 
         // then
         assertThat(coreComponents.getInstance(Modules.class), containsInAnyOrder(TestModule.class, SecondModule.class));
@@ -67,7 +77,7 @@ public class PlatformBootstrapTest {
     @Test
     public void testInitTwoDependentModule() throws Exception {
         // when
-        platform.initModules(Set.of(TestModule.class, ModuleWithCorrectOrderForDependencies.class), coreComponents);
+        platform.initModules(List.of(TestModule.class, ModuleWithCorrectOrderForDependencies.class), coreComponents);
 
         // then
         assertThat(coreComponents.getInstance(Modules.class), contains(TestModule.class, ModuleWithCorrectOrderForDependencies.class));
@@ -76,7 +86,7 @@ public class PlatformBootstrapTest {
     @Test
     public void testInitTwoDependentModuleReversed() throws Exception {
         // when
-        platform.initModules(Set.of(ModuleWithCorrectOrderForDependencies.class, TestModule.class), coreComponents);
+        platform.initModules(List.of(ModuleWithCorrectOrderForDependencies.class, TestModule.class), coreComponents);
 
         // then
         assertThat(coreComponents.getInstance(Modules.class), contains(TestModule.class, ModuleWithCorrectOrderForDependencies.class));
@@ -100,7 +110,16 @@ public class PlatformBootstrapTest {
     @Test
     public void testInitSecondModuleWithSameNameButNotActive() throws Exception {
         // when
-        platform.initModules(Set.of(TestModule.class, InactiveModuleWithDuplicatedName.class), coreComponents);
+        platform.initModules(List.of(TestModule.class, InactiveModuleWithDuplicatedName.class), coreComponents);
+
+        // then
+        assertThat(coreComponents.getInstance(Modules.class), contains(TestModule.class));
+    }
+
+    @Test
+    public void testInitSecondModuleWithSameNameButNotActiveReversed() throws Exception {
+        // when
+        platform.initModules(List.of(InactiveModuleWithDuplicatedName.class, TestModule.class), coreComponents);
 
         // then
         assertThat(coreComponents.getInstance(Modules.class), contains(TestModule.class));
