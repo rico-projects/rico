@@ -46,7 +46,7 @@ module dev.rico.core {
             dev.rico.remoting.client,
             dev.rico.security.client,
             dev.rico.security.server;
-    exports dev.rico.internal.core.lang to dev.rico.remoting.server;
+    exports dev.rico.internal.core.lang to dev.rico.remoting.server, dev.rico.client;
     exports dev.rico.internal.core.concurrent to dev.rico.client, dev.rico.server.spring, dev.rico.server.javaee;
 
     requires org.slf4j;

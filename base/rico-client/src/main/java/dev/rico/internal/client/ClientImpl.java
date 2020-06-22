@@ -20,18 +20,21 @@ import dev.rico.client.ClientConfiguration;
 import dev.rico.client.Toolkit;
 import dev.rico.client.concurrent.UiExecutor;
 import dev.rico.client.spi.ServiceProvider;
+import dev.rico.core.functional.Result;
+import dev.rico.core.functional.ResultWithInput;
 import dev.rico.internal.client.config.ConfigurationFileLoader;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.ansi.PlatformLogo;
 import dev.rico.internal.core.context.ContextManagerImpl;
+import dev.rico.internal.core.lang.StreamUtils;
 
 import java.util.Collections;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 import static dev.rico.internal.client.ClientConstants.UI_CONTEXT;
 import static dev.rico.internal.core.RicoConstants.APPLICATION_NAME_DEFAULT;
@@ -42,7 +45,7 @@ public class ClientImpl {
 
     private static ClientImpl INSTANCE;
 
-    private final Map<Class<?>, ServiceProvider> providers = new ConcurrentHashMap<>();
+    private final Map<Class<?>, ServiceProvider<?>> providers = new ConcurrentHashMap<>();
 
     private final Map<Class<?>, Object> services = new ConcurrentHashMap<>();
 
@@ -59,20 +62,29 @@ public class ClientImpl {
 
         ContextManagerImpl.getInstance().setGlobalAttribute(APPLICATION_NAME_CONTEXT, clientConfiguration.getProperty(APPLICATION_NAME_PROPERTY, APPLICATION_NAME_DEFAULT));
 
-        final ServiceLoader<ServiceProvider> loader = ServiceLoader.load(ServiceProvider.class);
-        final Iterator<ServiceProvider> iterator = loader.iterator();
-        while (iterator.hasNext()) {
-            final ServiceProvider provider = iterator.next();
-            if (provider.isActive(clientConfiguration)) {
-                final Class serviceClass = provider.getServiceType();
-                Assert.requireNonNull(serviceClass, "serviceClass");
-                if (providers.containsKey(serviceClass)) {
-                    throw new RuntimeException("Can not register more than 1 implementation for service type " + serviceClass);
-                }
-                providers.put(serviceClass, provider);
-            }
+        final List<String> failed = StreamUtils.loadServiceAsStream(ServiceProvider.class)
+                .filter(provider -> provider.isActive(clientConfiguration))
+                .map(Result.ofConsumer(this::registerProvider))
+                .filter(ResultWithInput::isFailed)
+                .map(ResultWithInput::getInput)
+                .map(ServiceProvider::getServiceType)
+                .map(Class::getName)
+                .collect(Collectors.toList());
+
+        if (!failed.isEmpty()) {
+            throw new IllegalStateException("Can not register more than 1 implementation for service type(s) " + String.join(", ", failed));
         }
+
         initImpl(new HeadlessToolkit());
+    }
+
+    private void registerProvider(ServiceProvider<?> provider) {
+        final Class<?> serviceClass = provider.getServiceType();
+        Assert.requireNonNull(serviceClass, "serviceClass");
+        if (providers.containsKey(serviceClass)) {
+            throw new IllegalStateException("Already registered: " + serviceClass);
+        }
+        providers.put(serviceClass, provider);
     }
 
     public static UiExecutor getUiExecutor() {
@@ -102,6 +114,7 @@ public class ClientImpl {
         return providers.containsKey(serviceClass);
     }
 
+    @SuppressWarnings("unchecked")
     private synchronized <S> S getServiceImpl(final Class<S> serviceClass) {
         Assert.requireNonNull(serviceClass, "serviceClass");
         if (!isToolkitSet.get()) {
@@ -111,7 +124,7 @@ public class ClientImpl {
             final S service = (S) services.get(serviceClass);
             return service;
         }
-        final ServiceProvider<S> serviceProvider = providers.get(serviceClass);
+        final ServiceProvider<S> serviceProvider = (ServiceProvider<S>) providers.get(serviceClass);
         if (serviceProvider == null) {
             throw new IllegalStateException("Can ot find service provider for '" + serviceClass + "'");
         }
