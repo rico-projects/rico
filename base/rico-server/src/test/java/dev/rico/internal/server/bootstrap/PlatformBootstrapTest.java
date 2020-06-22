@@ -2,6 +2,7 @@ package dev.rico.internal.server.bootstrap;
 
 import dev.rico.core.Configuration;
 import dev.rico.server.spi.ModuleDefinition;
+import dev.rico.server.spi.ModuleInitializationException;
 import dev.rico.server.spi.ServerCoreComponents;
 import dev.rico.server.spi.ServerModule;
 import org.testng.annotations.BeforeMethod;
@@ -15,6 +16,7 @@ import java.util.Set;
 import static java.util.Collections.emptySet;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
 
@@ -23,41 +25,89 @@ import static org.hamcrest.Matchers.is;
  */
 public class PlatformBootstrapTest {
 
+    private static final String MODULE_1 = "Module1";
+    private static final String MODULE_2 = "Module2";
+
     private MockServerCoreComponents coreComponents;
+    private PlatformBootstrap platform;
 
     @BeforeMethod
     public void setUp() {
+        platform = new PlatformBootstrap();
         coreComponents = new MockServerCoreComponents();
     }
 
     @Test
     public void testInitEmptyModule() throws Exception {
-        // given
-        final PlatformBootstrap platform = new PlatformBootstrap();
-
         // when
-        platform.initModules(emptySet(), null);
+        platform.initModules(emptySet(), coreComponents);
 
         // then
         assertThat(coreComponents.getInstance(Modules.class), is(empty()));
     }
 
-
     @Test
     public void testInitSingleModule() throws Exception {
-        // given
-        final PlatformBootstrap platform = new PlatformBootstrap();
-
         // when
-        platform.initModules(Set.of(Module1.class), coreComponents);
+        platform.initModules(Set.of(TestModule.class), coreComponents);
 
         // then
-        assertThat(coreComponents.getInstance(Modules.class), contains(Module1.class));
+        assertThat(coreComponents.getInstance(Modules.class), contains(TestModule.class));
     }
 
-    @ModuleDefinition(name = "Module1")
-    public static class Module1 implements ServerModule {
+    @Test
+    public void testInitTwoModule() throws Exception {
+        // when
+        platform.initModules(Set.of(TestModule.class, SecondModule.class), coreComponents);
 
+        // then
+        assertThat(coreComponents.getInstance(Modules.class), containsInAnyOrder(TestModule.class, SecondModule.class));
+    }
+
+    @Test
+    public void testInitTwoDependentModule() throws Exception {
+        // when
+        platform.initModules(Set.of(TestModule.class, ModuleWithCorrectOrderForDependencies.class), coreComponents);
+
+        // then
+        assertThat(coreComponents.getInstance(Modules.class), contains(TestModule.class, ModuleWithCorrectOrderForDependencies.class));
+    }
+
+    @Test
+    public void testInitTwoDependentModuleReversed() throws Exception {
+        // when
+        platform.initModules(Set.of(ModuleWithCorrectOrderForDependencies.class, TestModule.class), coreComponents);
+
+        // then
+        assertThat(coreComponents.getInstance(Modules.class), contains(TestModule.class, ModuleWithCorrectOrderForDependencies.class));
+    }
+
+    @Test(expectedExceptions = ModuleInitializationException.class)
+    public void testInitTwoDependentModuleWithIncorrectOrder() throws Exception {
+        platform.initModules(Set.of(TestModule.class, ModuleWithIncorrectOrderForDependencies.class), coreComponents);
+    }
+
+    @Test(expectedExceptions = ModuleInitializationException.class)
+    public void testInitTwoModulesWithSameName() throws Exception {
+        platform.initModules(Set.of(TestModule.class, ModuleWithDuplicatedName.class), coreComponents);
+    }
+
+    @Test(expectedExceptions = ModuleInitializationException.class)
+    public void testNotAModule() throws Exception {
+        platform.initModules(Set.of(NotAModule.class), coreComponents);
+    }
+
+    @Test
+    public void testInitSecondModuleWithSameNameButNotActive() throws Exception {
+        // when
+        platform.initModules(Set.of(TestModule.class, InactiveModuleWithDuplicatedName.class), coreComponents);
+
+        // then
+        assertThat(coreComponents.getInstance(Modules.class), contains(TestModule.class));
+    }
+
+    @ModuleDefinition(name = MODULE_1)
+    public static class TestModule implements ServerModule {
         @Override
         public boolean shouldBoot(Configuration configuration) {
             return true;
@@ -67,6 +117,34 @@ public class PlatformBootstrapTest {
         public void initialize(ServerCoreComponents coreComponents) {
             coreComponents.getInstance(Modules.class).add(getClass());
         }
+    }
+
+    @ModuleDefinition(name = MODULE_2)
+    public static class SecondModule extends TestModule {
+    }
+
+    @ModuleDefinition(name = MODULE_2, moduleDependencies = MODULE_1, order = 101)
+    public static class ModuleWithCorrectOrderForDependencies extends TestModule {
+    }
+
+    @ModuleDefinition(name = MODULE_2, moduleDependencies = MODULE_1, order = 99)
+    public static class ModuleWithIncorrectOrderForDependencies extends TestModule {
+    }
+
+    @ModuleDefinition(name = MODULE_1)
+    public static class ModuleWithDuplicatedName extends TestModule {
+    }
+
+    @ModuleDefinition(name = MODULE_1)
+    public static class InactiveModuleWithDuplicatedName extends TestModule {
+        @Override
+        public boolean shouldBoot(Configuration configuration) {
+            return false;
+        }
+    }
+
+    @ModuleDefinition(name = MODULE_2)
+    public static class NotAModule {
     }
 
     private static class MockServerCoreComponents implements ServerCoreComponents {
