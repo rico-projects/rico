@@ -32,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -81,51 +82,55 @@ public class PlatformBootstrap {
                 serverCoreComponents = new ServerCoreComponentsImpl(servletContext, configuration, classpathScanner, beanFactory);
 
                 final Set<Class<?>> moduleClasses = classpathScanner.getTypesAnnotatedWith(ModuleDefinition.class);
+                initModules(moduleClasses, serverCoreComponents);
 
-                final Map<ModuleDefinition, ServerModule> modules = new HashMap<>();
-
-                for (final Class<?> moduleClass : moduleClasses) {
-                    if (!ServerModule.class.isAssignableFrom(moduleClass)) {
-                        throw new ModuleInitializationException("Class " + moduleClass + " is annotated with " + ModuleDefinition.class.getSimpleName() + " but do not implement " + ServerModule.class.getSimpleName());
-                    }
-                    final ModuleDefinition moduleDefinition = moduleClass.getAnnotation(ModuleDefinition.class);
-                    final String moduleName = moduleDefinition.name();
-
-                    final boolean foundDuplicate = modules.keySet().stream()
-                            .map(ModuleDefinition::name)
-                            .anyMatch(m -> Objects.equals(m, moduleName));
-
-                    if (foundDuplicate) {
-                        throw new ModuleInitializationException("Module " + moduleName + " is defined multiple times");
-                    }
-
-                    final ServerModule instance = (ServerModule) moduleClass.getConstructor().newInstance();
-                    if (instance.shouldBoot(serverCoreComponents.getConfiguration())) {
-                        LOG.trace("Found Rico module {}", moduleName);
-                        modules.put(moduleDefinition, instance);
-                    } else {
-                        LOG.trace("Skipping Rico module {}", moduleName);
-                    }
-                }
-
-                LOG.info("Found {} active Rico modules", modules.size());
-
-                final List<Map.Entry<ModuleDefinition, ServerModule>> sortedEntries = modules.entrySet().stream()
-                        .sorted(Comparator.comparing(e -> e.getKey().order()))
-                        .collect(Collectors.toList());
-
-                for (final Map.Entry<ModuleDefinition, ServerModule> moduleEntry : sortedEntries) {
-                    final ServerModule module = moduleEntry.getValue();
-                    checkForNeededModules(modules, moduleEntry.getKey());
-                    LOG.debug("Will initialize Rico module {}", moduleEntry.getKey());
-                    module.initialize(serverCoreComponents);
-                }
                 LOG.info("Rico booted");
             } catch (Exception e) {
                 throw new RuntimeException("Can not boot Rico", e);
             }
         } else {
             LOG.info("Rico is deactivated");
+        }
+    }
+
+    /* visible for testing */
+    void initModules(final Collection<Class<?>> moduleClasses, final ServerCoreComponents serverCoreComponents) throws Exception {
+        final Map<ModuleDefinition, ServerModule> modules = new HashMap<>();
+
+        for (final Class<?> moduleClass : moduleClasses) {
+            if (!ServerModule.class.isAssignableFrom(moduleClass)) {
+                throw new ModuleInitializationException("Class " + moduleClass + " is annotated with " + ModuleDefinition.class.getSimpleName() + " but do not implement " + ServerModule.class.getSimpleName());
+            }
+            final ModuleDefinition moduleDefinition = moduleClass.getAnnotation(ModuleDefinition.class);
+            final String moduleName = moduleDefinition.name();
+
+            final ServerModule instance = (ServerModule) moduleClass.getConstructor().newInstance();
+            if (instance.shouldBoot(serverCoreComponents.getConfiguration())) {
+                final boolean foundDuplicate = modules.keySet().stream()
+                        .map(ModuleDefinition::name)
+                        .anyMatch(m -> Objects.equals(m, moduleName));
+                if (foundDuplicate) {
+                    throw new ModuleInitializationException("Module " + moduleName + " is defined multiple times");
+                }
+
+                LOG.trace("Found Rico module {}", moduleName);
+                modules.put(moduleDefinition, instance);
+            } else {
+                LOG.trace("Skipping Rico module {}", moduleName);
+            }
+        }
+
+        LOG.info("Found {} active Rico modules", modules.size());
+
+        final List<Map.Entry<ModuleDefinition, ServerModule>> sortedEntries = modules.entrySet().stream()
+                .sorted(Comparator.comparing(e -> e.getKey().order()))
+                .collect(Collectors.toList());
+
+        for (final Map.Entry<ModuleDefinition, ServerModule> moduleEntry : sortedEntries) {
+            final ServerModule module = moduleEntry.getValue();
+            checkForNeededModules(modules, moduleEntry.getKey());
+            LOG.debug("Will initialize Rico module {}", moduleEntry.getKey());
+            module.initialize(serverCoreComponents);
         }
     }
 
