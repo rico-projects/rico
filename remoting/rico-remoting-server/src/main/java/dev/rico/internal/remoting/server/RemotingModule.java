@@ -16,6 +16,7 @@
  */
 package dev.rico.internal.remoting.server;
 
+import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.lang.StreamUtils;
 import dev.rico.internal.remoting.server.config.RemotingConfiguration;
 import dev.rico.internal.remoting.server.context.DefaultRemotingContextFactory;
@@ -134,7 +135,7 @@ public class RemotingModule extends AbstractBaseModule {
         private final RemotingCommunicationHandler communicationHandler;
 
         public DefaultRemotingContextProvider(RemotingCommunicationHandler communicationHandler) {
-            this.communicationHandler = communicationHandler;
+            this.communicationHandler = Assert.requireNonNull(communicationHandler, "communicationHandler");
         }
 
         @Override
