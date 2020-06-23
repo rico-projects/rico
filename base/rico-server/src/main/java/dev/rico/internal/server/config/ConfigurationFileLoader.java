@@ -17,6 +17,7 @@
 package dev.rico.internal.server.config;
 
 import dev.rico.internal.core.Assert;
+import dev.rico.internal.core.lang.StreamUtils;
 import dev.rico.server.spi.ConfigurationProvider;
 import org.apiguardian.api.API;
 import org.slf4j.Logger;
@@ -27,7 +28,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.ServiceLoader;
+import java.util.function.BiConsumer;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
@@ -59,8 +60,8 @@ public class ConfigurationFileLoader {
     }
 
     /**
-     * Tries to load a {@link ServerConfiguration} based on a file. if no config file
-     * can be found a default config will be returned.
+     * Tries to load a {@link ServerConfiguration} based on a file.
+     * If no config file can be found a default config will be returned.
      *
      * @return a configuration
      */
@@ -68,42 +69,18 @@ public class ConfigurationFileLoader {
         final ServerConfiguration configuration = createConfiguration();
         Assert.requireNonNull(configuration, "configuration");
 
-        final ServiceLoader<ConfigurationProvider> serviceLoader = ServiceLoader.load(ConfigurationProvider.class);
-        for(final ConfigurationProvider provider : serviceLoader) {
-            final Map<String, String> additionalStringProperties = provider.getStringProperties();
-            for(final Map.Entry<String, String> property : additionalStringProperties.entrySet()) {
-                if(!configuration.containsProperty(property.getKey())) {
-                    configuration.setProperty(property.getKey(), property.getValue());
-                }
-            }
-            final Map<String, List<String>> additionalListProperties = provider.getListProperties();
-            for(final Map.Entry<String, List<String>> property : additionalListProperties.entrySet()) {
-                if(!configuration.containsProperty(property.getKey())) {
-                    configuration.setListProperty(property.getKey(), property.getValue());
-                }
-            }
-            final Map<String, Boolean> additionalBooleanProperties = provider.getBooleanProperties();
-            for(final Map.Entry<String, Boolean> property : additionalBooleanProperties.entrySet()) {
-                if(!configuration.containsProperty(property.getKey())) {
-                    configuration.setBooleanProperty(property.getKey(), property.getValue());
-                }
-            }
-            final Map<String, Integer> additionalIntegerProperties = provider.getIntegerProperties();
-            for(final Map.Entry<String, Integer> property : additionalIntegerProperties.entrySet()) {
-                if(!configuration.containsProperty(property.getKey())) {
-                    configuration.setIntProperty(property.getKey(), property.getValue());
-                }
-            }
-            final Map<String, Long> additionalLongProperties = provider.getLongProperties();
-            for(final Map.Entry<String, Long> property : additionalLongProperties.entrySet()) {
-                if(!configuration.containsProperty(property.getKey())) {
-                    configuration.setLongProperty(property.getKey(), property.getValue());
-                }
-            }
-        }
+        StreamUtils.loadServiceAsStream(ConfigurationProvider.class)
+                .forEach(provider -> {
+                    setAdditionalProperties(configuration, provider.getStringProperties(), configuration::setProperty);
+                    setAdditionalProperties(configuration, provider.getListProperties(), configuration::setListProperty);
+                    setAdditionalProperties(configuration, provider.getBooleanProperties(), configuration::setBooleanProperty);
+                    setAdditionalProperties(configuration, provider.getIntegerProperties(), configuration::setIntProperty);
+                    setAdditionalProperties(configuration, provider.getLongProperties(), configuration::setLongProperty);
+                });
+
         LOG.debug("Configuration created with {} properties", configuration.getPropertyKeys().size());
-        if(LOG.isTraceEnabled()) {
-            for(final String key : configuration.getPropertyKeys()) {
+        if (LOG.isTraceEnabled()) {
+            for (final String key : configuration.getPropertyKeys()) {
                 LOG.debug("Configured with '{}'='{}'", key, configuration.getProperty(key, null));
             }
         }
@@ -111,31 +88,32 @@ public class ConfigurationFileLoader {
         return configuration;
     }
 
+    private static <B> void setAdditionalProperties(ServerConfiguration configuration, Map<String, B> properties, BiConsumer<String, B> setProperty) {
+        for (final Map.Entry<String, B> property : properties.entrySet()) {
+            try {
+                if (!configuration.containsProperty(property.getKey())) {
+                    setProperty.accept(property.getKey(), property.getValue());
+                }
+            } catch (NullPointerException e) {
+                LOG.warn("Value for {} is {}}", property.getKey(), property.getValue());
+            }
+        }
+    }
+
     private static ServerConfiguration createConfiguration() {
         try {
             final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
-            try (final InputStream inputStream = classLoader.getResourceAsStream(DEFAULT_LOCATION)) {
-                if (inputStream != null) {
-                    return readConfig(inputStream);
+            for (final String location : List.of(DEFAULT_LOCATION, JAR_LOCATION, WAR_LOCATION)) {
+                try (final InputStream inputStream = classLoader.getResourceAsStream(location)) {
+                    if (inputStream != null) {
+                        return readConfig(inputStream);
+                    }
                 }
             }
 
-
-            try (final InputStream inputStream = classLoader.getResourceAsStream(JAR_LOCATION)) {
-                if (inputStream != null) {
-                    return readConfig(inputStream);
-                }
-            }
-
-            try (final InputStream inputStream = classLoader.getResourceAsStream(WAR_LOCATION)) {
-                if (inputStream == null) {
-                    LOG.info("Can not read configuration. Maybe no {} file is defined. Will use a default configuration!", DEFAULT_LOCATION);
-                    return new ServerConfiguration();
-                } else {
-                    return readConfig(inputStream);
-                }
-            }
+            LOG.info("Can not read configuration. Maybe no {} file is defined. Will use a default configuration!", DEFAULT_LOCATION);
+            return new ServerConfiguration();
         } catch (final IOException e) {
             throw new RuntimeException("Can not create configuration!", e);
         }
