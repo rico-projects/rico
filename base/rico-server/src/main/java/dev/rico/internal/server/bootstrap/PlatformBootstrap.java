@@ -19,6 +19,7 @@ package dev.rico.internal.server.bootstrap;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.ansi.PlatformLogo;
 import dev.rico.internal.core.context.ContextManagerImpl;
+import dev.rico.internal.core.lang.StreamUtils;
 import dev.rico.internal.server.config.ServerConfiguration;
 import dev.rico.internal.server.mbean.MBeanRegistry;
 import dev.rico.internal.server.scanner.DefaultClasspathScanner;
@@ -36,11 +37,9 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -160,19 +159,20 @@ public class PlatformBootstrap {
 
 
     private ManagedBeanFactory getBeanFactory(final ServletContext servletContext) {
-        final ServiceLoader<ManagedBeanFactory> serviceLoader = ServiceLoader.load(ManagedBeanFactory.class);
-        final Iterator<ManagedBeanFactory> serviceIterator = serviceLoader.iterator();
-        if (serviceIterator.hasNext()) {
-            final ManagedBeanFactory factory = serviceIterator.next();
-            if (serviceIterator.hasNext()) {
-                throw new IllegalStateException("More than 1 " + ManagedBeanFactory.class + " found!");
-            }
-            LOG.debug("Container Manager of type {} is used", factory.getClass().getSimpleName());
-            factory.init(servletContext);
-            return factory;
-        } else {
+        final List<ManagedBeanFactory> factories = StreamUtils.loadServiceAsStream(ManagedBeanFactory.class)
+                .collect(Collectors.toList());
+
+        if (factories.isEmpty()) {
             throw new IllegalStateException("No " + ManagedBeanFactory.class + " found!");
         }
+        if (factories.size() > 1) {
+            throw new IllegalStateException("More than 1 " + ManagedBeanFactory.class + " found!");
+        }
+
+        final ManagedBeanFactory factory = factories.get(0);
+        LOG.debug("Container Manager of type {} is used", factory.getClass().getSimpleName());
+        factory.init(servletContext);
+        return factory;
     }
 
     public static ServerCoreComponents getServerCoreComponents() {
