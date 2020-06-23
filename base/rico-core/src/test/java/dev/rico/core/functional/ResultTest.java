@@ -44,21 +44,21 @@ public class ResultTest {
     }
 
     @Test
-    public void testResultOfConsumer() {
+    public void testResultOfRunnable() {
         // when:
-        final Result<Void> result = Result.ofConsumer(v -> {}).apply(null);
+        final Result<Void> result = Result.of(() -> { });
 
         // then:
         assertTrue(result.isSuccessful());
     }
 
     @Test
-    public void testResultOfConsumerThrowingException() {
+    public void testResultOfRunnableThrowingException() {
         // given:
         final RuntimeException exception = new RuntimeException();
 
         // when:
-        final Result<Void> result = Result.ofConsumer(v -> { throw exception; }).apply(null);
+        final Result<Void> result = Result.of((CheckedRunnable) () -> { throw exception; });
 
         // then:
         assertTrue(result.isFailed());
@@ -68,7 +68,7 @@ public class ResultTest {
     @Test
     public void testResultOfSupplier() {
         // when:
-        final Result<String> result = Result.of(() -> "test").get();
+        final Result<String> result = Result.of(() -> "test");
 
         // then:
         assertTrue(result.isSuccessful());
@@ -81,7 +81,7 @@ public class ResultTest {
         final RuntimeException exception = new RuntimeException();
 
         // when:
-        final Result<String> result = Result.<String>of(() -> { throw exception; }).get();
+        final Result<String> result = Result.of(() -> { throw exception; });
 
         // then:
         assertTrue(result.isFailed());
@@ -91,11 +91,12 @@ public class ResultTest {
     @Test
     public void testResultOfFunction() {
         // when:
-        final Result<String> result = Result.of(v -> "test").apply(null);
+        final ResultWithInput<String, String> result = Result.of("bar", v -> "test");
 
         // then:
         assertTrue(result.isSuccessful());
         assertEquals(result.getResult(), "test");
+        assertEquals(result.getInput(), "bar");
     }
 
     @Test
@@ -104,17 +105,21 @@ public class ResultTest {
         final RuntimeException exception = new RuntimeException();
 
         // when:
-        final Result<String> result = Result.of((CheckedFunction<String, String>) v -> { throw exception; }).apply(null);
+        final ResultWithInput<String, String> result = Result.of("bar", v -> { throw exception; });
 
         // then:
         assertTrue(result.isFailed());
         assertSame(result.getException(), exception);
+        assertEquals(result.getInput(), "bar");
     }
 
     @Test
-    public void testResultWithInputFunction() {
+    public void testResultOfFunctionalFunction() {
+        // given:
+        final CheckedFunction<String, String> function = (String v) -> "test";
+
         // when:
-        final ResultWithInput<String, String> result = Result.<String, String>withInput(v -> "test").apply("bar");
+        final ResultWithInput<String, String> result = Result.of(function).apply("bar");
 
         // then:
         assertTrue(result.isSuccessful());
@@ -123,12 +128,13 @@ public class ResultTest {
     }
 
     @Test
-    public void testResultWithInputFunctionThrowingException() {
+    public void testResultOfFunctionalFunctionThrowingException() {
         // given:
         final RuntimeException exception = new RuntimeException();
+        final CheckedFunction<String, String> function = (String v) -> { throw exception; };
 
         // when:
-        final ResultWithInput<String, String> result = Result.withInput((CheckedFunction<String, String>) v -> { throw exception; }).apply("bar");
+        final ResultWithInput<String, String> result = Result.of(function).apply("bar");
 
         // then:
         assertTrue(result.isFailed());
@@ -137,26 +143,50 @@ public class ResultTest {
     }
 
     @Test
-    public void testResultWithInputConsumer() {
-        // given:
-        final AtomicReference<String> value = new AtomicReference<>("");
-
+    public void testResultOfConsumer() {
         // when:
-        final ResultWithInput<String, Void> result = Result.withInput(value::set).apply("test");
+        final ResultWithInput<String, Void> result = Result.ofConsumer("bar", v -> {});
 
         // then:
         assertTrue(result.isSuccessful());
-        assertEquals(value.get(), "test");
-        assertEquals(result.getInput(), "test");
+        assertEquals(result.getInput(), "bar");
     }
 
     @Test
-    public void testResultWithInputConsumerThrowingException() {
+    public void testResultOfConsumerThrowingException() {
         // given:
         final RuntimeException exception = new RuntimeException();
 
         // when:
-        final ResultWithInput<String, Void> result = Result.withInput((CheckedConsumer<String>) v -> { throw exception; }).apply("bar");
+        final ResultWithInput<String, Void> result = Result.ofConsumer("bar", v -> { throw exception; });
+
+        // then:
+        assertTrue(result.isFailed());
+        assertSame(result.getException(), exception);
+        assertEquals(result.getInput(), "bar");
+    }
+
+    @Test
+    public void testResultOfFunctionalConsumer() {
+        // given:
+        final CheckedConsumer<String> consumer = v -> { };
+
+        // when:
+        final ResultWithInput<String, Void> result = Result.ofConsumer(consumer).apply("bar");
+
+        // then:
+        assertTrue(result.isSuccessful());
+        assertEquals(result.getInput(), "bar");
+    }
+
+    @Test
+    public void testResultOfFunctionalConsumerThrowingException() {
+        // given:
+        final RuntimeException exception = new RuntimeException();
+        final CheckedConsumer<String> consumer = v -> { throw exception; };
+
+        // when:
+        final ResultWithInput<String, Void> result = Result.ofConsumer(consumer).apply("bar");
 
         // then:
         assertTrue(result.isFailed());
@@ -504,7 +534,7 @@ public class ResultTest {
     }
 
     private ResultWithInput<String, String> successfulResult(String value) {
-        return Result.withInput(String::toString).apply(value);
+        return Result.of(value, String::toString);
     }
 
     private ResultWithInput<String, String> failedResult() {
@@ -512,6 +542,6 @@ public class ResultTest {
     }
 
     private ResultWithInput<String, String> failedResult(Exception e) {
-        return Result.<String, String>withInput(s -> { throw e; }).apply("test");
+        return Result.of("test", s -> { throw e; });
     }
 }

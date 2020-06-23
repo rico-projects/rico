@@ -22,7 +22,6 @@ import dev.rico.internal.core.functional.Success;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * Wrapper for a result of a functional call (like {@link CheckedFunction}). The result can hold the outcome of a function
@@ -144,55 +143,47 @@ public interface Result<R> {
     }
 
     /**
-     * Wraps a given {@link CheckedFunction} in a {@link Function} that returns the {@link Result} of the given {@link CheckedFunction}
+     * Wraps the outcome of a given {@link CheckedRunnable} in a {@link Result}.
      *
-     * @param function the function
-     * @param <A>      type of the input parameter
-     * @param <B>      type of the result
-     * @return a {@link Function} that returns the {@link Result} of the given {@link CheckedFunction}
+     * @param runnable the runnable
+     * @return the outcome of the call to the {@code runnable}
      */
-    static <A, B> Function<A, Result<B>> of(final CheckedFunction<A, B> function) {
-        Assert.requireNonNull(function, "function");
-        return (a) -> {
-            try {
-                final B result = function.apply(a);
-                return new Success<>(result);
-            } catch (Exception e) {
-                return new Fail<>(e);
-            }
-        };
-    }
-
-    /**
-     * Wraps a given {@link CheckedSupplier} in a {@link Supplier} that returns the {@link Result} of the given {@link CheckedSupplier}
-     *
-     * @param supplier the supplier
-     * @param <B>      type of the result
-     * @return a {@link Supplier} that returns the {@link Result} of the given {@link CheckedSupplier}
-     */
-    static <B> Supplier<Result<B>> of(final CheckedSupplier<B> supplier) {
-        Assert.requireNonNull(supplier, "supplier");
-        return () -> of(a -> supplier.get()).apply(null);
-    }
-
-    /**
-     * Wraps a given {@link CheckedConsumer} in a {@link Function} that returns the {@link Result} of the
-     * given {@link CheckedConsumer}. Since an {@link CheckedConsumer} has no return value the {@link Result} is
-     * defined as {@code Result<Void>} and will contain a {@code null} value as result value.
-     *
-     * @param consumer the consumer
-     * @param <A>      type of the input parameter
-     * @return a {@link Function} that returns the {@link Result} of the given {@link CheckedConsumer}
-     */
-    static <A> Function<A, Result<Void>> ofConsumer(final CheckedConsumer<A> consumer) {
-        Assert.requireNonNull(consumer, "consumer");
-        return of(a -> {
-            consumer.accept(a);
+    static Result<Void> of(final CheckedRunnable runnable) {
+        Assert.requireNonNull(runnable, "runnable");
+        return of(null, a -> {
+            runnable.run();
             return null;
         });
     }
 
     /**
+     * Wraps the result of a given {@link CheckedSupplier} in a {@link Result}.
+     *
+     * @param supplier the supplier
+     * @param <B>      type of the result
+     * @return the result of the call to the {@code supplier}
+     */
+    static <B> Result<B> of(final CheckedSupplier<B> supplier) {
+        Assert.requireNonNull(supplier, "supplier");
+        final CheckedFunction<Void, B> func = a -> supplier.get();
+        return of(null, func);
+    }
+
+    /**
+     * Wraps the result of a given {@link CheckedFunction} in a {@link ResultWithInput}.
+     *
+     * @param input    the input to pass to the function
+     * @param function the function
+     * @param <A>      type of the input parameter
+     * @param <B>      type of the result
+     * @return the result of the call to the {@code function} with {@code input} as the parameter
+     */
+    static <A, B> ResultWithInput<A, B> of(A input, final CheckedFunction<A, B> function) {
+        Assert.requireNonNull(function, "function");
+        return of(function).apply(input);
+    }
+
+    /**
      * Wraps a given {@link CheckedFunction} in a {@link Function} that returns the {@link Result} of the given {@link CheckedFunction}
      *
      * @param function the function
@@ -200,9 +191,9 @@ public interface Result<R> {
      * @param <B>      type of the result
      * @return a {@link Function} that returns the {@link Result} of the given {@link CheckedFunction}
      */
-    static <A, B> Function<A, ResultWithInput<A, B>> withInput(final CheckedFunction<A, B> function) {
+    static <A, B> Function<A, ResultWithInput<A, B>> of(final CheckedFunction<A, B> function) {
         Assert.requireNonNull(function, "function");
-        return (a) -> {
+        return a -> {
             try {
                 final B result = function.apply(a);
                 return new Success<>(a, result);
@@ -213,16 +204,29 @@ public interface Result<R> {
     }
 
     /**
+     * Wraps the outcome of a given {@link CheckedConsumer} in a {@link ResultWithInput}.
+     *
+     * @param input    the input to pass to the consumer
+     * @param consumer the consumer
+     * @param <A>      type of the input parameter
+     * @return the outcome of the call to the {@code consumer} with {@code input} as the parameter
+     */
+    static <A> ResultWithInput<A, Void> ofConsumer(A input, final CheckedConsumer<A> consumer) {
+        Assert.requireNonNull(consumer, "consumer");
+        return ofConsumer(consumer).apply(input);
+    }
+
+    /**
      * Wraps a given {@link CheckedFunction} in a {@link Function} that returns the {@link Result} of the given {@link CheckedFunction}
      *
      * @param consumer the consumer
      * @param <A>      type of the input parameter
      * @return a {@link Function} that returns the {@link Result} of the given {@link CheckedFunction}
      */
-    static <A> Function<A, ResultWithInput<A, Void>> withInput(final CheckedConsumer<A> consumer) {
+    static <A> Function<A, ResultWithInput<A, Void>> ofConsumer(final CheckedConsumer<A> consumer) {
         Assert.requireNonNull(consumer, "consumer");
-        return withInput(a -> {
-            consumer.accept(a);
+        return of(i -> {
+            consumer.accept(i);
             return null;
         });
     }
