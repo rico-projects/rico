@@ -18,3 +18,18 @@ Please make sure to check these notes whenever you create an issue for Rico:
 Patches are welcome as [pull requests on GitHub][2] 
 
 [2]: https://github.com/rico-project/Rico/pulls
+
+## Local Development Setup
+
+The entire Rico build and tests can be run with the following command:
+
+```bash
+./gradlew clean verify
+```
+
+If you are using an IDE and want to be able to run tests within it you need to configure the following JVM argument:
+```bash
+-Djdk.attach.allowAttachSelf
+```
+For IntelliJ this can be done in the Run/Debug Configuration templates.
+<img src="readme/intellij_run_config.png?raw=true" alt="IntelliJ Run/Debug Configuration"/>
