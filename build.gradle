@@ -80,7 +80,10 @@ subprojects { proj ->
             //options.compilerArgs << '-Xlint:unchecked'
         }
 
-        test.useTestNG()
+        test {
+            useTestNG()
+            jvmArgs("-Djdk.attach.allowAttachSelf")
+        }
 
         javadoc {
             options.addStringOption('encoding', 'UTF-8')
