@@ -2,10 +2,28 @@ ifndef::imagesdir[:imagesdir: ../images]
 
 === General usage and benefits of the Rico logging concept
 
-TODO
+Rico logging integrates the Rico context into multiple logging backends.
+This is done by providing wrapping appender which extend MDC with the Rico context.
 
-////
-todo:   Context info automatically used in logging
-        Idea of centralized logging
-        support for Log4J2 & logback
-////
+The extended MDC can be used by any subsequent appender.
+This allows making full use of the available open source libraries and their extensions.
+
+Currently appender for https://logging.apache.org/log4j/2.x/[Log4j2] and https://logback.qos.ch/[Logback] are available in Rico.
+There is no appender for "java util logging" and "Apache commons logging" as they do not support MDC or a similar feature.
+
+=== Logging to a centralized location
+
+Rico highly encourages logging to a centralized logging facility.
+Well known examples of such facilities are https://www.elastic.co/logstash[Logstash],
+https://www.elastic.co/what-is/elk-stack[ELK] and https://www.graylog.org/[Greylog].
+
+Sending logs to these facilities can be done in different ways.
+One way is to create a traditional log file hand have a separate process listen to changes in the log file.
+On every change the newly added lines are sent from the application host to the logging facility.
+
+Alternatively the application can send the log statements directly using a standardized log format.
+https://docs.graylog.org/en/3.2/pages/gelf.html[GELF] is currently the most widely supported format for such an approach.
+GELF is a json based message format which allows sending not a plain string but a semi-structured message.
+This has the advantage to include additional meta-data such as field types and names.
+
+By including the Rico context into MDC, Rico supports the analysis and grouping of log messages from different application host.

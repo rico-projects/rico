@@ -2,10 +2,74 @@ ifndef::imagesdir[:imagesdir: ../images]
 
 === Using Logback as logging implementation
 
-TODO
+Rico offers a wrapping appender for Logback.
+The wrapping appender extends the MDC of every log message and enhances it with the Rico context.
+This enhanced log message is then passed on the wrapped appenders.
 
-////
-todo:   How to configure Logback to support GELF
-        How to configure project to use Logback
-        How to configure Logback to add context to log messages
-////
+=== Sending GELF messages using Logback
+
+For sending GELF messages to a centralized logging facility we recommend either https://github.com/mp911de/logstash-gelf/[logstas-gelf]
+or https://github.com/osiegmar/logback-gelf[logback-gelf].
+
+Logstash-gelf is coverd in the chapter about Log4j2. Therefore we will show an example using logback-gelf here.
+
+A sample configuration looks as follows:
+
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="REMOTE" class="de.siegmar.logbackgelf.GelfUdpAppender"> <!--1-->
+        <graylogHost>localhost</graylogHost>
+        <graylogPort>12201</graylogPort>
+        <maxChunkSize>508</maxChunkSize>
+        <useCompression>true</useCompression>
+        <messageIdSupplier class="de.siegmar.logbackgelf.MessageIdSupplier"/>
+        <encoder class="de.siegmar.logbackgelf.GelfEncoder">
+            <originHost>localhost</originHost>
+            <includeRawMessage>false</includeRawMessage>
+            <includeMarker>true</includeMarker>
+            <includeMdcData>true</includeMdcData>
+            <includeCallerData>false</includeCallerData>
+            <includeRootCauseData>false</includeRootCauseData>
+            <includeLevelName>false</includeLevelName>
+            <shortPatternLayout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>%m%nopex</pattern>
+            </shortPatternLayout>
+            <fullPatternLayout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>%m%n</pattern>
+            </fullPatternLayout>
+            <numbersAsString>false</numbersAsString>
+            <staticField>os_arch:${os.arch}</staticField>
+            <staticField>os_name:${os.name}</staticField>
+            <staticField>os_version:${os.version}</staticField>
+        </encoder>
+    </appender>
+
+    <appender name="LOCALE" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- deny all events with a level below INFO, that is TRACE and DEBUG -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="RICO" class="dev.rico.logback.appender.ContextWrappingAppender"> <!--2-->
+        <appender-ref ref="REMOTE" /> <!--3-->
+        <appender-ref ref="LOCALE" /> <!--4-->
+    </appender>
+
+    <root level="debug">
+        <appender-ref ref="RICO" /> <!--5-->
+    </root>
+
+</configuration>
+----
+
+<1> Configures the logback-gelf appender
+<2> Configures the Rico `ContextWrappingAppender` and gives it the name `Rico`
+<3> Adds the `REMOTE` appender to the list of appenders which will receive messages from the Rico appender
+<4> Adds the `LOCALE` appender to the list of appenders which will receive messages from the Rico appender
+<5> Registers the `RICO` appender as the main appender for any log message.
