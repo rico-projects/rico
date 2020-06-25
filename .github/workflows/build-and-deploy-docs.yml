@@ -1,0 +1,34 @@
+name: Build and Deploy Documentation
+# This workflow is triggered on pushes to the repository.
+on:
+ push:
+   branches:
+     - master
+     - docs-deploy
+
+jobs:
+  build-and-deploy:
+    # Job name is Greeting
+    name: Build & Deploy to GH Pages
+    # This job runs on Linux
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: '11' # The JDK version to make available on the path.
+          java-package: jdk # (jre, jdk, or jdk+fx) - defaults to jdk
+          architecture: x64 # (x64 or x86) - defaults to x64
+      - name: Build documentation
+        uses: eskatos/gradle-command-action@v1
+        with:
+          arguments: :documentation:build
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages # The branch the action should deploy to.
+          FOLDER: documentation/build/docs/asciidoc # The folder the action should deploy.
+
