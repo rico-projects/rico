@@ -11,7 +11,7 @@ This enhanced log message is then passed on the wrapped appenders.
 For sending GELF messages to a centralized logging facility we recommend either https://github.com/mp911de/logstash-gelf/[logstas-gelf]
 or https://github.com/osiegmar/logback-gelf[logback-gelf].
 
-Logstash-gelf is coverd in the chapter about Log4j2. Therefore we will show an example using logback-gelf here.
+Logstash-gelf is covered in the chapter about <<log4j2.adoc#Sending_GELF_messages_using_Log4j2,Log4j2>>. Therefore we will show an example using logback-gelf here.
 
 A sample configuration looks as follows:
 
@@ -68,8 +68,8 @@ A sample configuration looks as follows:
 </configuration>
 ----
 
-<1> Configures the logback-gelf appender
-<2> Configures the Rico `ContextWrappingAppender` and gives it the name `Rico`
-<3> Adds the `REMOTE` appender to the list of appenders which will receive messages from the Rico appender
-<4> Adds the `LOCALE` appender to the list of appenders which will receive messages from the Rico appender
-<5> Registers the `RICO` appender as the main appender for any log message.
+<1> configures the logback-gelf appender
+<2> configures the Rico `ContextWrappingAppender` and gives it the name `Rico`
+<3> adds the `REMOTE` appender to the list of appenders which will receive messages from the Rico appender
+<4> adds the `LOCALE` appender to the list of appenders which will receive messages from the Rico appender
+<5> registers the `RICO` appender as the main appender for any log message.

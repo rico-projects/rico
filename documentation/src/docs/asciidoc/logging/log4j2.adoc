@@ -8,9 +8,10 @@ This enhanced log message is then passed on the wrapped appenders.
 
 === Sending GELF messages using Log4j2
 
-For sending GELF messages to a centralized logging facility we recommend https://github.com/mp911de/logstash-gelf/[logstas-gelf].
+For sending GELF messages to a centralized logging facility we recommend https://github.com/mp911de/logstash-gelf/[logstash-gelf].
 The name suggests that this is related or tied to logstash.
-This is not the case the appender communicates with the centralized logging facility over either TCP/SSL or UDP and is agnostic of the facility vendor.
+This is not the case.
+As the appender communicates with the centralized logging facility over either TCP/SSL or UDP, it is agnostic of the facility vendor.
 You can find an extensive https://logging.paluch.biz/[documentation with all the configurable details and features online].
 
 A sample configuration looks as follows:
@@ -42,7 +43,7 @@ A sample configuration looks as follows:
 ----
 
 <1> the `packages` attribute tells Log4j2 in which packages to search for appenders.
-<2> This line configures the Rico `ContextWrappingAppender` and gives it the name `Rico`
-<3> Adds the `Remote` appender to the list of appenders which will receive messages from the Rico appender
-<4> Adds the `Local` appender to the list of appenders which will receive messages from the Rico appender
-<5> Registers the `Rico` appender as the main appender for any log message.
+<2> configures the Rico `ContextWrappingAppender` and gives it the name `Rico`
+<3> adds the `Remote` appender to the list of appenders which will receive messages from the Rico appender
+<4> adds the `Local` appender to the list of appenders which will receive messages from the Rico appender
+<5> registers the `Rico` appender as the main appender for any log message.

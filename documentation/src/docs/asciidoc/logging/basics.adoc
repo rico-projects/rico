@@ -3,7 +3,7 @@ ifndef::imagesdir[:imagesdir: ../images]
 === General usage and benefits of the Rico logging concept
 
 Rico logging integrates the Rico context into multiple logging backends.
-This is done by providing wrapping appender which extend MDC with the Rico context.
+This is done by providing wrapping appenders which extend MDC (Mapped Diagnostics Context) with the Rico context.
 
 The extended MDC can be used by any subsequent appender.
 This allows making full use of the available open source libraries and their extensions.
@@ -14,11 +14,11 @@ There is no appender for "java util logging" and "Apache commons logging" as the
 === Logging to a centralized location
 
 Rico highly encourages logging to a centralized logging facility.
-Well known examples of such facilities are https://www.elastic.co/logstash[Logstash],
-https://www.elastic.co/what-is/elk-stack[ELK] and https://www.graylog.org/[Greylog].
+Well known examples of such facilities are
+https://www.elastic.co/what-is/elk-stack[ELK (Elasticsearch, Logstash, Kibana)] and https://www.graylog.org/[Greylog].
 
 Sending logs to these facilities can be done in different ways.
-One way is to create a traditional log file hand have a separate process listen to changes in the log file.
+One way is to create a traditional log file and have a separate process listen to changes in the log file.
 On every change the newly added lines are sent from the application host to the logging facility.
 
 Alternatively the application can send the log statements directly using a standardized log format.
