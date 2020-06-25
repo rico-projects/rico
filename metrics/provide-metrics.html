@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.10">
+<title>Provide metrics for monitoring</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="./asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel2">
+<li><a href="#_provide_metrics_for_monitoring">1. Provide metrics for monitoring</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect2">
+<h3 id="_provide_metrics_for_monitoring"><a class="anchor" href="#_provide_metrics_for_monitoring"></a>1. Provide metrics for monitoring</h3>
+<div class="paragraph">
+<p>An application that uses Rico metrics will provide a <code>/metrics</code> endpoint by default.
+This endpoint provides all metrics information in a format that can be read by <a href="https://prometheus.io">prometheus</a>.
+Based on this a custom monitoring solution can be created.</p>
+</div>
+<div class="sect3">
+<h4 id="_using_prometheus"><a class="anchor" href="#_using_prometheus"></a>1.1. Using Prometheus</h4>
+<div class="paragraph">
+<p>Prometheus is an open source monitoring system and time series database.
+A correctly configured Prometheus instance can fetch the metrics of a running application and store them in time-series.</p>
+</div>
+<div class="paragraph">
+<div class="title">Metrics interfaces</div>
+<p><span class="image"><img src="../images/connect-prometheus.svg" alt="connect prometheus"></span></p>
+</div>
+<div class="paragraph">
+<p>The easiest way to use Prometheus is through Docker.
+Prometheus already provides ready-to-use docker containers that fit perfect to Rico metrics.
+Only the endpoint of the application or applications must be configured.
+To do so we can create a custom configuration for Prometheus in a <code>prometheus.yml</code> YAML file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yml"><span class="key">global</span>:
+  <span class="key">scrape_interval</span>:     <span class="string"><span class="content">10s </span></span><i class="conum" data-value="1"></i><b>(1)</b>
+
+<span class="key">scrape_configs</span>:
+  - <span class="string"><span class="content">job_name: 'rico-metrics' </span></span><i class="conum" data-value="2"></i><b>(2)</b>
+
+    <span class="key">metrics_path</span>: <span class="string"><span class="content">'/metrics' </span></span><i class="conum" data-value="3"></i><b>(3)</b>
+    <span class="key">static_configs</span>:
+      - <span class="string"><span class="content">targets: ['app-server:8080'] </span></span><i class="conum" data-value="4"></i><b>(4)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>This defines the interval in that Prometheus will fetch metrics records from the server</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Name of the internal job that will fetch the data</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The endpoint on the server.
+Here we use the default <code>/metrics</code></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>An array of servers.
+Prometheus will try to fetch metrics records from each server in this array.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Next to this we need to create a Docker file that extends the default Docker image from Prometheus and adds our custom configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="docker">FROM prom/prometheus:v2.18.1
+MAINTAINER Hendrik Ebbers, karakun.com
+ADD prometheus.yml /etc/prometheus/</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Prometheus provides a simple web frontend that can be used to visualize metrics.
+Any metric that has been created in a Java application by using the Rico metrics API can be displayed.
+Next to the custom metrics of an application Rico already provides some general metrics.</p>
+</div>
+<div class="paragraph">
+<div class="title">Prometheus frontend</div>
+<p><span class="image"><img src="../images/prometheus-pic.png" alt="prometheus pic"></span></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_predefined_metrics"><a class="anchor" href="#_predefined_metrics"></a>1.2. Predefined metrics</h4>
+<div class="paragraph">
+<p>The following table gives an overview about all metrics that rico measures automatically:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Predefined metrics</caption>
+<colgroup>
+<col style="width: 17.647%;">
+<col style="width: 11.7647%;">
+<col style="width: 11.7647%;">
+<col style="width: 58.8236%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">metrics name</th>
+<th class="tableblock halign-center valign-top">type</th>
+<th class="tableblock halign-center valign-top">unit</th>
+<th class="tableblock halign-left valign-top">description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.classes.loaded</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">classes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The number of classes that are currently loaded in the Java virtual machine</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.classes.unloaded</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Counter</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">classes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The total number of classes unloaded since the Java virtual machine has started execution</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.buffer.count</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">buffers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An estimate of the number of buffers in the pool</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.buffer.memory.used</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">bytes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An estimate of the memory that the Java virtual machine is using for this buffer pool</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.buffer.total.capacity</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">bytes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An estimate of the total capacity of the buffers in this pool</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.memory.used</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">bytes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The amount of used memory (available for several memory pools, defined by tag/context "id")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.memory.committed</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">bytes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The amount of memory in bytes that is committed for the Java virtual machine to use (available for several memory pools, defined by tag/context "id")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.memory.max</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">bytes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The maximum amount of memory in bytes that can be used for memory management (available for several memory pools, defined by tag/context "id")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.gc.max.data.size</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">bytes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Max size of old generation memory pool</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.gc.live.data.size</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">bytes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Size of old generation memory pool after a full GC</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.gc.memory.promoted</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Counter</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">bytes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Count of positive increases in the size of the old generation memory pool before GC to after GC</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.gc.memory.allocated</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Counter</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">bytes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Incremented for an increase in the size of the young generation memory pool after one GC to before the next</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.gc.concurrent.phase.time</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Timer</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">milliseconds</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time spent in concurrent phase</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.gc.pause</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Timer</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">milliseconds</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time spent in GC pause</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">system.cpu.count</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The number of processors available to the Java virtual machine</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">system.load.average.1m</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The sum of the number of runnable entities queued to available processors and the number of runnable entities running on the available processors averaged over a period of time</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">system.cpu.usage</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The "recent cpu usage" for the whole system</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">process.cpu.usage</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The "recent cpu usage" for the Java Virtual Machine process</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.threads.peak</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">threads</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The peak live thread count since the Java virtual machine started or peak was reset</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.threads.daemon</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">threads</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The current number of live daemon threads</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.threads.live</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">threads</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The current number of live threads including both daemon and non-daemon threads</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.threads.states</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">threads</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The current number of threads having a specific state. The state is defined by tag/context "state"</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">request</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Timer</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">milliseconds</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time for a HTTP request. The endpoint is defined by tag/context "uri"</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">requestCounter</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Counter</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Counter for all HTTP requests. The endpoint is defined by tag/context "uri"</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">httpSessions</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of active http sessions</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_create_insightful_dashboards_with_grafana"><a class="anchor" href="#_create_insightful_dashboards_with_grafana"></a>1.3. Create insightful Dashboards with Grafana</h4>
+<div class="paragraph">
+<p>While Prometheus can be used to visualize a graph of 1 metric or query you normally expect much more functionality for modern application monitoring.
+Since the data storage and query handling is the main task of Prometheus an additional tool should be used to visualize all the metrics.
+Here <a href="https://grafana.com">Grafana</a> is a very good choose.
+The open source tool can be used to create dashboards with several graphs based on data that is available in Prometheus.</p>
+</div>
+<div class="paragraph">
+<div class="title">Grafana and Prometheus</div>
+<p><span class="image"><img src="../images/prometheus-grafana.svg" alt="prometheus grafana"></span></p>
+</div>
+<div class="paragraph">
+<p>The following picture shows a sample dashboard that was created with grafana.
+Next to this a live demo can be found <a href="https://play.grafana.org/">here</a>.</p>
+</div>
+<div class="paragraph">
+<div class="title">Grafana dashboard</div>
+<p><span class="image"><img src="../images/grafana.png" alt="grafana"></span></p>
+</div>
+<div class="paragraph">
+<p>As already described for Prometheus we can start Grafana in a Docker container, too.
+Information about running Grafana in Docker can be found <a href="https://grafana.com/docs/grafana/latest/installation/docker/">here</a>.
+If you want to automate the configuration and provisioning of Grafana <a href="https://grafana.com/docs/grafana/latest/administration/provisioning/">this link</a> will be helpful.
+Next to this we provide a <a href="https://docs.docker.com/compose/">docker-compose</a> based sample in <a href="https://github.com/rico-projects/rico-samples/tree/master/metrics-sample">the Rico samples repository</a>.</p>
+</div>
+<div class="paragraph">
+<p>Grafana is a large tool with many features and functionalities.
+Here is a collection of links to get started:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://grafana.com/docs/grafana/latest/getting-started/what-is-grafana/">What is Grafana</a></p>
+</li>
+<li>
+<p><a href="https://grafana.com/docs/grafana/latest/panels/panels-overview/">Grafana Panels</a></p>
+</li>
+<li>
+<p><a href="https://grafana.com/docs/grafana/latest/features/dashboard/dashboards/">Grafana Dashboards</a></p>
+</li>
+<li>
+<p><a href="https://grafana.com/tutorials/">Grafana Tutorials</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If you want to include a custome dashboard in the docker-compose sample have a look at
+<a href="https://grafana.com/docs/grafana/latest/reference/export_import/">export and import</a>
+to create a XML represenation of the dashboard</p>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 1.0.0-SNAPSHOT<br>
+Last updated 2020-06-25 13:26:58 UTC
+</div>
+</div>
+<link rel="stylesheet" href="./coderay-asciidoctor.css">
+</body>
+</html>

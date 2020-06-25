@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.10">
+<title>Background executor</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="./asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel2">
+<li><a href="#_background_executor">1. Background executor</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect2">
+<h3 id="_background_executor"><a class="anchor" href="#_background_executor"></a>1. Background executor</h3>
+<div class="paragraph">
+<p>Rico&#8217;s executor for the UI toolkit provides a background executor backed by a configurable thread pool.
+For most use-cases this executor is the only tool you will need to execute background and async tasks in a java client.
+The background executor is defined by the interface <code>dev.rico.client.concurrent.BackgroundExecutor</code>.
+It extends the basic Java <code>java.util.concurrent.Executor</code> interface with some additional helpful methods and functionalities.</p>
+</div>
+<div class="paragraph">
+<p>The following code snippet shows how use the background executor:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">BackgroundExecutor backgroundExecutor = Client.getService(BackgroundExecutor.class); <i class="conum" data-value="1"></i><b>(1)</b>
+
+backgroundExecutor.execute(() -&gt; longRunningTask()); <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Here we receive a <code>BackgroundExecutor</code> instance.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>By using the executor the given runnable will be executed in the background.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Several APIs of Rico like the <code>Scheduler</code> or the <code>TaskChain</code> are based on the <code>BackgroundExecutor</code>.</p>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 1.0.0-SNAPSHOT<br>
+Last updated 2020-06-25 13:26:58 UTC
+</div>
+</div>
+<link rel="stylesheet" href="./coderay-asciidoctor.css">
+</body>
+</html>

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.10">
+<title>Basic Server API</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="./asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_basic_server_api">1. Basic Server API</a>
+<ul class="sectlevel2">
+<li><a href="#_client_scope">1.1. Client Scope</a></li>
+<li><a href="#_server_timing">1.2. Server Timing</a></li>
+<li><a href="#_server_module_spi">1.3. Server Module SPI</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_basic_server_api"><a class="anchor" href="#_basic_server_api"></a>1. Basic Server API</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>TODO</p>
+</div>
+<div class="sect2">
+<h3 id="_client_scope"><a class="anchor" href="#_client_scope"></a>1.1. Client Scope</h3>
+<div class="paragraph">
+<p>Rico supports an additional custom Scope called <code>ClientScope</code>.
+This scope is implemented for JakartaEE and Spring and defined as a scope that is a "sub-scope" of the session scope.
+This scope is important if you want to create stateful web applications.
+You can for example let the tabs of a browser share the same session scope, but different client scopes.
+Since they share the same session it’s hard to define data that is only related to one tab in the browser otherwise.
+The lifecycle of a client scope is then bound to a tab in the browser and ends when the tab will be closed. Of course this works only if the client side tells the server side when to create a client session. Rico supports this out of the box through the <code>rico-js</code> module and the java client modules.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="images/client-scope.png" alt="client scope"></span></p>
+</div>
+<div class="paragraph">
+<p>For both JakartaEE and Spring a <code>dev.rico.server.javaee.ClientScoped</code> annotation is defined that can be used to give any bean the specific scope:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ClientScoped</span>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">MyLocalStoreService</span> {
+
+    <span class="directive">private</span> <span class="predefined-type">List</span>&lt;<span class="predefined-type">String</span>&gt; values = <span class="keyword">new</span> <span class="predefined-type">ArrayList</span>();
+
+    <span class="directive">public</span> <span class="type">void</span> add(<span class="predefined-type">String</span> val) {
+        values.add(val);
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Internally the client scope is defined by a unique identifier that is shared between client and server with each request.
+Based on this the scope only "lives" inside a http request round-trip.</p>
+</div>
+<div class="paragraph">
+<p>Rico provides a <code>dev.rico.server.client.ClientSessionListener</code> interface that behaves similar to the <code>javax.servlet.http.HttpSessionListener</code> listener.
+By using the <code>dev.rico.server.ServerListener</code> annotation client scope listeners will automatically be found and registered at  server bootstrap.
+The following code shows an example for such a listener:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ServerListener</span>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">MyClientSessionListener</span> <span class="directive">implements</span> ClientSessionListener {
+
+    <span class="directive">public</span> <span class="type">void</span> sessionCreated(ClientSession clientSession) {
+        <span class="predefined-type">String</span> clientSessionId = clientSession.getId();
+        <span class="predefined-type">String</span> httpSessionId = clientSession.getHttpSession().getId();
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">Client session '</span><span class="delimiter">&quot;</span></span> + clientSessionId  + <span class="string"><span class="delimiter">&quot;</span><span class="content">' created in http session '</span><span class="delimiter">&quot;</span></span> + httpSessionId + <span class="string"><span class="delimiter">&quot;</span><span class="content">'</span><span class="delimiter">&quot;</span></span>);
+    }
+    <span class="directive">public</span> <span class="type">void</span> sessionDestroyed(ClientSession clientSession) {
+        <span class="directive">final</span> <span class="predefined-type">String</span> clientSessionId = clientSession.getId();
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">Client session '</span><span class="delimiter">&quot;</span></span> + clientSessionId  + <span class="string"><span class="delimiter">&quot;</span><span class="content">' destroyed</span><span class="delimiter">&quot;</span></span>);
+    }
+
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_server_timing"><a class="anchor" href="#_server_timing"></a>1.2. Server Timing</h3>
+<div class="paragraph">
+<p>Server Timing is a new W3C feature that allows you to add some metrics about the request handling to the response.
+The following image shows how such information would be rendered in the developer console of chrome:</p>
+</div>
+<div class="paragraph">
+<div class="title">Server timing view in Google Chrome</div>
+<p><span class="image"><img src="images/server-timing.png" alt="server timing"></span></p>
+</div>
+<div class="paragraph">
+<p>The feature is very usefully when you develop a client that uses HTTP calls to communicate with the server.
+In this case the client sends a http request to the server and receives a http response after some time.
+While the server execution is a black box for the client, the "server timing" information can be structured into multiple parts like database time and total response handling, talking to third party services and others.
+This can help you to identify time-consuming components on the server side in a production environment.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="images/timing-request.png" alt="timing request"></span></p>
+</div>
+<div class="sect3">
+<h4 id="_server_timing_api"><a class="anchor" href="#_server_timing_api"></a>1.2.1. Server Timing API</h4>
+<div class="paragraph">
+<p>Rico provides a managed component that can easily be injected in any Spring or JavaEE bean.
+This component is defined by the <code>dev.rico.server.timing.ServerTiming</code> interface and lives in the request scope.
+By injecting the component you can easily create metrics in your server that will be added automatically to the http response.
+The metric name is defined through the <code>dev.rico.server.timing.ServerTiming</code> interface.
+The following code snippet shows the basic usage of the API:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> ServerTiming timing = ... <span class="comment">// will be injected</span>
+
+final Metric dbMetric = timing.start(<span class="string"><span class="delimiter">&quot;</span><span class="content">DB-Operation</span><span class="delimiter">&quot;</span></span>);
+<span class="comment">//Do some work on the database</span>
+dbMetric.stop();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The given sample creates a metric with the given name “DB-Operation” and will record the duration until the <code>stop()</code> method is called.
+You can see the duration of the “DB-Operation” directly in the developer console of your chrome browser.</p>
+</div>
+<div class="paragraph">
+<p>Let’s have a look how you can use this feature with a simple REST endpoint in JakartaEE:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Path</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">/api/delete</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">MyEndpoint</span> {
+
+    <span class="annotation">@Inject</span>
+    <span class="directive">private</span> ServerTiming timing;
+
+    <span class="annotation">@Inject</span>
+    <span class="directive">private</span> Database dabase;
+
+    <span class="annotation">@GET</span>
+    <span class="directive">public</span> <span class="type">void</span> clearAllData() {
+        <span class="directive">final</span> Metric metric1 = timing.start(<span class="string"><span class="delimiter">&quot;</span><span class="content">delete-users</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Deletes all users in the DB</span><span class="delimiter">&quot;</span></span>);
+        database.deleteAllUsers();
+        metric1.stop();
+
+        <span class="directive">final</span> Metric metric2 = timing.start(<span class="string"><span class="delimiter">&quot;</span><span class="content">delete-items</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Deletes all items in the DB</span><span class="delimiter">&quot;</span></span>);
+        database.deleteAllItems();
+        metric2.stop();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The Rico usage in the Spring version is identical:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@RestController</span>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">MyEndpoint</span> {
+
+  <span class="annotation">@Autowired</span>
+  <span class="directive">private</span> ServerTiming timing;
+
+  <span class="annotation">@Autowired</span>
+  <span class="directive">private</span> Database dabase;
+
+  <span class="annotation">@RequestMapping</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">/api/delete</span><span class="delimiter">&quot;</span></span>)
+  <span class="directive">public</span> <span class="type">void</span> clearAllData() {
+        <span class="directive">final</span> Metric metric1 = timing.start(<span class="string"><span class="delimiter">&quot;</span><span class="content">delete-users</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Deletes all users in the DB</span><span class="delimiter">&quot;</span></span>);
+        database.deleteAllUsers();
+        metric1.stop();
+
+        <span class="directive">final</span> Metric metric2 = timing.start(<span class="string"><span class="delimiter">&quot;</span><span class="content">delete-items</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Deletes all items in the DB</span><span class="delimiter">&quot;</span></span>);
+        database.deleteAllItems();
+        metric2.stop();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the example an endpoint <code>/api/delete</code> is doing 2 calls against a database.
+For both calls a <code>dev.rico.server.timing.Metric</code> instance is created to measure the duration of the calls.
+In accordance with the “server timing” specification Rico supports a description next to a name for a timing entry.
+Once a client calls the endpoint, the http response will automatically contain the timing information for “deleteAllUsers” and “deleteAllItems”.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_additional_jakartaee_integration"><a class="anchor" href="#_additional_jakartaee_integration"></a>1.2.2. Additional JakartaEE integration</h4>
+<div class="paragraph">
+<p>Instead of injecting a <code>dev.rico.server.timing.ServerTiming</code> instance and creating metrics by hand you can add the <code>dev.rico.server.javaee.timing.Timing</code> annotation to each method of a managed bean to record the method call duration.
+The following code shows how you can easily record the duration of an HTTP endpoint by doing so:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Path</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">/api/delete</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">MyEndpoint</span> {
+
+    <span class="annotation">@GET</span>
+    <span class="annotation">@Timing</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">item-count-metric</span><span class="delimiter">&quot;</span></span>)
+    <span class="directive">public</span> <span class="type">int</span> getItemCount() {
+        <span class="directive">final</span> <span class="type">int</span> count = ... <span class="comment">// do some calculations;</span>
+        return count;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Like the basic API the <code>Timing</code> annotation supports a name and an optional description for the metric.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_server_module_spi"><a class="anchor" href="#_server_module_spi"></a>1.3. Server Module SPI</h3>
+<div class="paragraph">
+<p>Server modules are way to provide functionality from Rico to client applications.
+When a module is started it can register services, servlets, filters and much more.</p>
+</div>
+<div class="sect3">
+<h4 id="_defining_your_own_module"><a class="anchor" href="#_defining_your_own_module"></a>1.3.1. Defining your own Module</h4>
+<div class="paragraph">
+<p>Defining a module is very simple.
+All that is required is a class which implements <code>ServerModule</code> and is annotated with <code>@ModuleDefinition</code>.</p>
+</div>
+<div class="paragraph">
+<p>For most modules we recommend to subclass <code>AbstractBaseModule</code> instead of directly implementing the <code>ServerModule</code> interface.
+The <code>AbstractBaseModule</code> offers the functionality to disable a module with an entry in the configuration.</p>
+</div>
+<div class="paragraph">
+<p>The <code>@ModuleDefinition</code> is required to configure the module.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>name()</code> gives the module a unique name</p>
+</li>
+<li>
+<p><code>order()</code> determines the order in which the modules are started.
+Modules with smaller values are started before modules with larger values.
+Default value is 100.</p>
+</li>
+<li>
+<p><code>moduleDependencies()</code>
+The name of modules on which this module depends.
+Dependant modules must have a smaller order than the current module.
+Default is no dependencies.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The name of the module does not need to be globally unique.
+It is sufficient if the module name is unique amongst the booted modules.
+This allows to have multiple modules which have the same name and then have the runtime config decide which to boot.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_initialization_of_the_modules"><a class="anchor" href="#_initialization_of_the_modules"></a>1.3.2. Initialization of the modules</h4>
+<div class="paragraph">
+<p>Rico uses a classpath scanner to find all classes with an <code>@ModuleDefinition</code> annotation.
+It will then create an instance for all modules which should be booted (e.g. <code>shouldBoot(Configuration)</code> returns true).
+Finally Rico will call <code>initialize(ServerCoreComponents)</code> of the modules in the order given by the <code>@ModuleDefinition</code> annotation.</p>
+</div>
+<div class="paragraph">
+<p>The <code>ServerCoreComponents</code> offer different methods to help you in initializing the module:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>getConfiguration()</code> returns the Rico configuration.</p>
+</li>
+<li>
+<p><code>getServletContext()</code> return the servlet context.
+The servlet context can be used to register filter and endpoints.</p>
+</li>
+<li>
+<p><code>getClasspathScanner()</code> returns an instance of <code>ClasspathScanner</code> which allows searching for classes annotated with an annotation.</p>
+</li>
+<li>
+<p><code>getManagedBeanFactory()</code> returns an instance of <code>ManagedBeanFactory</code> which allows creating beans.</p>
+</li>
+<li>
+<p><code>provideInstance()</code> registers an instance of a class or interface with the application.
+Other modules, beans, and services can later retrieve this instance either by injection or by calling <code>getInstance()</code>.</p>
+</li>
+<li>
+<p><code>getInstance()</code> allows to retrieve an already registered instance.
+This is where the order of modules is important.
+It allows to ensure that required instances have already been provided.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Here is an example of a module definition:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="comment">// define a module of name SampleModule, which depends on OTHER_MODULE, and will load after all</span>
+<span class="comment">// modules with an order less than 200.</span>
+<span class="annotation">@ModuleDefinition</span>(name = SAMPLE_MODULE, moduleDependencies = OTHER_MODULE, order = <span class="integer">200</span>)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">SampleModule</span> <span class="directive">extends</span> AbstractBaseModule {
+
+    <span class="directive">public</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">String</span> SAMPLE_MODULE = <span class="string"><span class="delimiter">&quot;</span><span class="content">SampleModule</span><span class="delimiter">&quot;</span></span>;
+
+    <span class="annotation">@Override</span>
+    <span class="directive">protected</span> <span class="predefined-type">String</span> getActivePropertyName() {
+        <span class="keyword">return</span> SAMPLE_MODULE;
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="type">void</span> initialize(ServerCoreComponents coreComponents) <span class="directive">throws</span> ModuleInitializationException {
+        <span class="comment">// ServiceFromOtherModule is provided by OTHER_MODULE</span>
+        <span class="comment">// the 'moduleDependencies' in the annotation ensures that OTHER_MODULE is initialized before this.</span>
+        <span class="directive">final</span> ServiceFromOtherModule s = coreComponents.getInstance(ServiceFromOtherModule.class);
+
+        <span class="comment">// provide our own service for others to use</span>
+        coreComponents.provideInstance(SampleModuleService.class, <span class="keyword">new</span> SampleModuleService(s));
+
+        <span class="comment">// register filter, listener and servlet</span>
+        <span class="directive">final</span> ServletContext servletContext = coreComponents.getServletContext();
+
+        servletContext.addFilter(<span class="string"><span class="delimiter">&quot;</span><span class="content">filterName</span><span class="delimiter">&quot;</span></span>, <span class="keyword">new</span> SampleFilter())
+            .addMappingForUrlPatterns(<span class="predefined-type">EnumSet</span>.allOf(DispatcherType.class), <span class="predefined-constant">true</span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">/*</span><span class="delimiter">&quot;</span></span>);
+
+        servletContext.addListener(<span class="keyword">new</span> SampleListener());
+
+        servletContext.addServlet(SAMPLE_MODULE, <span class="keyword">new</span> SampleServlet())
+            .addMapping(<span class="string"><span class="delimiter">&quot;</span><span class="content">/sample</span><span class="delimiter">&quot;</span></span>);
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_making_services_available_for_dependency_injection"><a class="anchor" href="#_making_services_available_for_dependency_injection"></a>1.3.3. Making Services available for Dependency Injection</h4>
+<div class="paragraph">
+<p>In order to make a service defined in a module injectable into the business logic one must provide bean factory methods for both Jakarta EE and Spring.
+Here is an example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Configuration</span>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">RemotingSpringBeanFactory</span> {
+
+    <span class="annotation">@Bean</span>(name = <span class="string"><span class="delimiter">&quot;</span><span class="content">sampleService</span><span class="delimiter">&quot;</span></span>)
+    <span class="directive">protected</span> SampleService createSampleService() {
+        <span class="directive">final</span> SampleService service = PlatformBootstrap.getServerCoreComponents().getInstance(SampleService.class);
+        Assert.requireNonNull(service, <span class="string"><span class="delimiter">&quot;</span><span class="content">service</span><span class="delimiter">&quot;</span></span>);
+
+        <span class="keyword">return</span> service;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ApplicationScoped</span>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">RemotingCdiBeanFactory</span> {
+
+    <span class="annotation">@Produces</span>
+    <span class="directive">protected</span> SampleService createSampleService() {
+        <span class="directive">final</span> SampleService service = PlatformBootstrap.getServerCoreComponents().getInstance(SampleService.class);
+        Assert.requireNonNull(service, <span class="string"><span class="delimiter">&quot;</span><span class="content">service</span><span class="delimiter">&quot;</span></span>);
+
+        <span class="keyword">return</span> service;
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 1.0.0-SNAPSHOT<br>
+Last updated 2020-06-25 13:26:58 UTC
+</div>
+</div>
+<link rel="stylesheet" href="./coderay-asciidoctor.css">
+</body>
+</html>

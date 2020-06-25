@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.10">
+<title>Core API</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="./asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_core_api">1. Core API</a>
+<ul class="sectlevel2">
+<li><a href="#_scheduler_api">1.1. Scheduler API</a></li>
+<li><a href="#_context_api">1.2. Context API</a></li>
+<li><a href="#_result_api">1.3. Result API</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_core_api"><a class="anchor" href="#_core_api"></a>1. Core API</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Rico provides several general APIs and functionalities in the <code>dev.rico.core</code> module.
+All those functionalities are not client or server specific.
+This chapter gives an overview of the basic APIs and concepts that can be found in the <code>dev.rico.core</code> module.</p>
+</div>
+<div class="sect2">
+<h3 id="_scheduler_api"><a class="anchor" href="#_scheduler_api"></a>1.1. Scheduler API</h3>
+<div class="paragraph">
+<p>The Scheduler API is a concurrent API that lets you schedule periodic or delayed tasks.
+The central point of the API is the interface <code>dev.rico.core.concurrent.Scheduler</code>.
+Depending on your environment Rico provides different ways to obtain a Scheduler instance.</p>
+</div>
+<div class="paragraph">
+<p>The Scheduler interface only provides one method: <code>schedule(Runnable task, Trigger trigger)</code>.
+This method is used to schedule a task (the given <code>java.lang.Runnable</code>) for later and possibly periodic execution.
+When the task will be executed must be specified by the trigger defined by the interface <code>dev.rico.core.concurrent.Trigger</code>.
+While you can implement this interface yourself, the interface <code>dev.rico.core.concurrent.Trigger</code> provides static methods to create triggers.</p>
+</div>
+<div class="sect3">
+<h4 id="_defining_a_trigger_that_delays_the_execution_of_a_task"><a class="anchor" href="#_defining_a_trigger_that_delays_the_execution_of_a_task"></a>1.1.1. Defining a trigger that delays the execution of a task</h4>
+<div class="paragraph">
+<p>To delay the execution of a task the static method <code>in(final Duration delay)</code> of the interface <code>dev.rico.core.concurrent.Trigger</code> can be used.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="images/scheduler-delay.svg" alt="scheduler delay"></span></p>
+</div>
+<div class="paragraph">
+<p>The following code shows an example of the usage:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> Scheduler scheduler = ... <i class="conum" data-value="1"></i><b>(1)</b>
+
+final <span class="predefined-type">Duration</span> tenSeconds = <span class="predefined-type">Duration</span>.of(<span class="integer">10</span>, ChronoUnit.SECONDS); <i class="conum" data-value="2"></i><b>(2)</b>
+<span class="directive">final</span> Trigger trigger = Trigger.in(tenSeconds); <i class="conum" data-value="3"></i><b>(3)</b>
+
+scheduler.schedule(() -&gt; <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">ALARM</span><span class="delimiter">&quot;</span></span>), trigger); <i class="conum" data-value="4"></i><b>(4)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>depends on your environment</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>defines a duration of 10 seconds using the java.time API</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>creates our trigger using the duration as the delay</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>schedules the task.
+Because of our trigger the task will be executed 10 seconds later and "ALARM" will be written to the console.</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_defining_a_trigger_that_executes_a_task_periodically"><a class="anchor" href="#_defining_a_trigger_that_executes_a_task_periodically"></a>1.1.2. Defining a trigger that executes a task periodically</h4>
+<div class="paragraph">
+<p>To execute a task periodically the static method <code>every(final Duration duration)</code> of the interface <code>dev.rico.core.concurrent.Trigger</code> can be used.
+After the task execution is finished the task will be scheduled again for future execution based on the given delay.
+This will repeat until the application stops.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="images/scheduler-every.svg" alt="scheduler every"></span></p>
+</div>
+<div class="paragraph">
+<p>The following code shows an example of the usage:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> Scheduler scheduler = ... <i class="conum" data-value="1"></i><b>(1)</b>
+
+final <span class="predefined-type">Duration</span> tenSeconds = <span class="predefined-type">Duration</span>.of(<span class="integer">10</span>, ChronoUnit.SECONDS); <i class="conum" data-value="2"></i><b>(2)</b>
+<span class="directive">final</span> Trigger trigger = Trigger.every(tenSeconds); <i class="conum" data-value="3"></i><b>(3)</b>
+
+scheduler.schedule(() -&gt; <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">PING</span><span class="delimiter">&quot;</span></span>), trigger); <i class="conum" data-value="4"></i><b>(4)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>depends on your environment</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>defines a duration 10 seconds using the java.time API</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>creates our trigger</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>schedules the task.
+Because of our trigger the task will be executed with a delay of 10 seconds every 10 seconds and "PING" will be written to the console until the application stops.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><code>nowAndEvery(final Duration duration)</code> can be used to ignore the initial delay.
+<code>afterAndEvery(final Duration delay, final Duration duration)</code> can be used to specify a custom initial delay.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="images/scheduler-now-and-every.svg" alt="scheduler now and every"></span></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_using_the_api_on_the_client"><a class="anchor" href="#_using_the_api_on_the_client"></a>1.1.3. Using the API on the client</h4>
+<div class="paragraph">
+<p>In the Rico client API a <code>dev.rico.core.concurrent.Scheduler</code> instance can be received by using by the following call:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> Scheduler scheduler = Client.getService(Scheduler.class);</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_using_the_api_on_the_server"><a class="anchor" href="#_using_the_api_on_the_server"></a>1.1.4. Using the API on the server</h4>
+<div class="paragraph">
+<p>On JakartaEE and Spring you can inject a <code>dev.rico.core.concurrent.Scheduler</code> instance in any managed bean.
+The instance is always defined in the singleton / application scope.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_context_api"><a class="anchor" href="#_context_api"></a>1.2. Context API</h3>
+<div class="paragraph">
+<p>Rico provides a context manager that can be used to hold attributes in a global and a per-thread context.
+An attribute is defined as a key-value pair.
+Both key and values are strings.
+These pairs can be stored and read from the global context or the context of the current thread only.
+All attributes describe metadata to help in debugging, maintaining and analysing an application.</p>
+</div>
+<div class="paragraph">
+<p>The interface <code>dev.rico.core.context.ContextManager</code> defines the context manager in Rico and provides several methods to store and receive context based information.
+Depending on your environment Rico provides different ways to obtain a <code>ContextManager</code> instance.</p>
+</div>
+<div class="paragraph">
+<p>The following sample shows how values can be stored:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> ContextManager contextManager = ... <i class="conum" data-value="1"></i><b>(1)</b>
+
+contextManager.setGlobalAttribute(<span class="string"><span class="delimiter">&quot;</span><span class="content">application.type</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">microservice</span><span class="delimiter">&quot;</span></span>); <i class="conum" data-value="2"></i><b>(2)</b>
+contextManager.setThreadLocalAttribute(<span class="string"><span class="delimiter">&quot;</span><span class="content">thread.type</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">background thread</span><span class="delimiter">&quot;</span></span>); <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>depends on your environment.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>here an attribute is stored in the global context.
+"application.type" is the name / key of the attribute and "microservice" is the value</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>here an attribute is stored in the context of the current thread.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>When storing thread based context information you normally want to keep the information for a specific task only and the information will be invalid afterwards.
+To do so the following pattern is quite helpful when defining attributes in the thread context:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="directive">final</span> <span class="predefined-type">Result</span> callDatabase(<span class="directive">final</span> <span class="predefined-type">String</span> query) {
+    <span class="directive">final</span> ContextManager contextManager = ... <i class="conum" data-value="1"></i><b>(1)</b>
+    final Subscription queryAttributeSubscription = contextManager.setThreadLocalAttribute(<span class="string"><span class="delimiter">&quot;</span><span class="content">db.query</span><span class="delimiter">&quot;</span></span>, query); <i class="conum" data-value="2"></i><b>(2)</b>
+
+    <span class="keyword">try</span> {
+        <span class="keyword">return</span> db.call(query); <i class="conum" data-value="3"></i><b>(3)</b>
+    } <span class="keyword">finally</span> {
+        queryAttributeSubscription.unsubscribe(); <i class="conum" data-value="4"></i><b>(4)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>depends on your environment.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>here the attribute "db.query" is stored in the thread context.
+The <code>Subscription</code> instance can be used to remove the added attribute from the context.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>While we call our database the context attribute "db.query" will remain set.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Once the database call has been executed we remove the attribute from the thread context by calling the <code>unsubscribe()</code> method.
+This should always be done in a <code>finally</code> block since an exception my prevent this otherwise.</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_benefits_of_the_context_manager"><a class="anchor" href="#_benefits_of_the_context_manager"></a>1.2.1. Benefits of the context manager</h4>
+<div class="paragraph">
+<p>The context manager in Rico is integrated in several libraries and features of Rico.
+The remoting library of Rico automatically adds information to the context that can be helpful.
+The metrics and logging libraries of Rico provide the possibility to enrich metrics and logging with context based attributes through the context manager.
+This allows you to easily assign all logging messages of a server to specific users and requests or to store the metrics of several microservices in the same Prometheus instance and query for a specific instance later.
+More information can be found in the documentation of the metrics and logging API.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="images/context-in-log.svg" alt="context in log"></span></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_using_the_api_on_the_client_2"><a class="anchor" href="#_using_the_api_on_the_client_2"></a>1.2.2. Using the API on the client</h4>
+<div class="paragraph">
+<p>In the Rico client API a <code>dev.rico.core.context.ContextManager</code> instance can be obtained by using by the following call:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> ContextManager contextManager = Client.getService(ContextManager.class);</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_using_the_api_on_the_server_2"><a class="anchor" href="#_using_the_api_on_the_server_2"></a>1.2.3. Using the API on the server</h4>
+<div class="paragraph">
+<p>On JakartaEE and Spring you can inject a <code>dev.rico.core.context.ContextManager</code> instance in any managed bean.
+The instance is always defined in the singleton / application scope.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_predefined_context_values"><a class="anchor" href="#_predefined_context_values"></a>1.2.4. Predefined Context values</h4>
+<div class="paragraph">
+<p>Rico already defines some context values by default.
+The following table gives an overview of all the context values that are defined by default when using Rico.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Predefined context values</caption>
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 9.5238%;">
+<col style="width: 9.5238%;">
+<col style="width: 19.0476%;">
+<col style="width: 47.6191%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">context name</th>
+<th class="tableblock halign-center valign-top">type</th>
+<th class="tableblock halign-center valign-top">availability</th>
+<th class="tableblock halign-center valign-top">sample</th>
+<th class="tableblock halign-left valign-top">description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">application.name</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">global</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">always</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">myApplication</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the application if defined in the configuration by the "application.name" property. Otherwise "UNKNOWN"</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">rico.version</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">global</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">always</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">1.1.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The used version of Rico</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">system.os</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">global</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">always</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">mac</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the used operation system. "linux", "mac", "win" or "unknown"</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.version</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">global</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">always</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">11.0.3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The version of the used Java runtime</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.vendor</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">global</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">always</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">AdoptOpenJDK</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The vendor of the used Java runtime</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">system.hostName</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">global</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">always</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">my-macbook.karakun</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The host name of the system</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">system.canonicalHostName</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">global</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">always</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">my-macbook.karakun</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The canonical host name of the system</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">system.hostAddress</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">global</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">always</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">192.168.178.23</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The host address of the system</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">thread</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">thread</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">always</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">background-thread-2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the current thread. This is only supported for threads that are created by Rico</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">uiToolkit</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">global</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">client</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">JavaFX toolkit</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the used UI toolkit. This value is only defined when using the rico-client library.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">security.userName</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">global</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">client</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">admin</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When using rico-security this value defines the name of the logged in user on the client</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">security.userName</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">thread</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">server</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">admin</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When using rico-security this value defines the name of the logged in user for the current request on the server</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">remoting.controller</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">thread</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">server</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">WorkflowController</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the remoting controller when a controller action is executed on the server.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">remoting.action</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">thread</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">server</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">saveUser</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the remoting controller action that is executed on the server.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">http.session</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">thread</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">server</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">1342424</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">id of the http session on the server</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">http.clientSession</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">thread</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">server</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">749516</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">id of the http client session on the server</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_result_api"><a class="anchor" href="#_result_api"></a>1.3. Result API</h3>
+<div class="paragraph">
+<p>With the Result API Rico offers the functionality to define results of computations that may either result in an exception, or return a successfully computed value.
+When using for example the stream API of Java one critical topic that is often ignored is the exception handling.
+The following code shows a bad example of a stream handling that will end in an error:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="predefined-type">List</span>&lt;<span class="predefined-type">Result</span>&gt; results = Stream.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">TWO</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">3</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">4</span><span class="delimiter">&quot;</span></span>)
+                        .map(<span class="predefined-type">Integer</span>::valueOf)
+                        .collect(Collectors.toList());</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This code will throw an exception at runtime once the second input value (<code>TWO</code>) will be mapped by the given <code>Function</code> (<code>Integer:valueOf</code>).
+All values that will be provided by the stream after the second value will never be mapped.
+If we now assume that the mapping function will send a mail instead of just parsing a number we will end in big trouble.
+Once the exception has been thrown we have zero knowledge about the state of our system.
+We do not know how many elements were mapped successfully and for how many elements the mapping never happened.
+If the stream will be handled in parallel things might even become worse.</p>
+</div>
+<div class="paragraph">
+<p>Here the Result API of Rico comes into play.
+The API provides functionality to handle successful and failed results of calculations like a mapping.
+The <code>dev.rico.core.functional.Result</code> provides several factory methods that can be used to create a result.
+The following code snippet gives an example how the Result API can be used:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="predefined-type">List</span>&lt;<span class="predefined-type">Result</span>&gt; results = Stream.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">TWO</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">3</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">4</span><span class="delimiter">&quot;</span></span>)
+                        .map(<span class="predefined-type">Result</span>.of(<span class="predefined-type">Integer</span>::valueOf))
+                        .collect(Collectors.toList());</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the given example the mapper wil be executed for all elements of the stream.
+Each mapping will end in a <code>dev.rico.core.functional.Result</code> instance that is either successful or failed.
+For the input "TWO" the mapping will result in a failed <code>dev.rico.core.functional.Result</code>.</p>
+</div>
+<div class="paragraph">
+<p>If a result is successful or failed can be checked by calling <code>isSuccessful()</code> or <code>isFailed()</code>.
+If a result is successful calling the <code>getResult()</code> method will return the wrapped return value of the original calculation.
+For a failed result the <code>getResult()</code> method will always throw an <code>IllegalStateException</code>.
+Next to this <code>getException()</code> can be called to receive the exception thrown by the original calculation.
+For a successful result this will always throw an <code>IllegalStateException</code>.</p>
+</div>
+<div class="paragraph">
+<p>The following snippet shows a possible use-case of the API:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="predefined-type">List</span>&lt;<span class="predefined-type">Result</span>&lt;<span class="predefined-type">Integer</span>&gt;&gt; results = Stream.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">TWO</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">3</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">4</span><span class="delimiter">&quot;</span></span>)
+                        .map(<span class="predefined-type">Result</span>.of(<span class="predefined-type">Integer</span>::valueOf))
+                        .collect(Collectors.toList());
+
+results.stream().filter(r -&gt; r.isFailed())
+                .forEach(r -&gt; <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">Error when parsing Integer</span><span class="delimiter">&quot;</span></span>));</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For a better result handling several of the factory methods of the <code>dev.rico.core.functional.Result</code> interface return a  <code>dev.rico.core.functional.ResultWithInput</code>.
+This interface extends the <code>dev.rico.core.functional.Result</code> and adds the possibility to access the input value of the origin calculation.
+With the additional functionality our sample will look like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="predefined-type">List</span>&lt;ResultWithInput&lt;<span class="predefined-type">String</span>, <span class="predefined-type">Integer</span>&gt;&gt; results = Stream.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">TWO</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">3</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">4</span><span class="delimiter">&quot;</span></span>)
+                        .map(<span class="predefined-type">Result</span>.of(<span class="predefined-type">Integer</span>::valueOf))
+                        .collect(Collectors.toList());
+
+results.stream().filter(r -&gt; r.isFailed())
+                .forEach(r -&gt; <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">Error when parsing </span><span class="delimiter">&quot;</span></span> + r.getInput()));</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Instead of extracting the content of the result you can register callbacks which are executed in case of success or failure.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>Result&lt;U&gt; map(CheckedFunction&lt;R, U&gt;)</code></p>
+</li>
+<li>
+<p><code>Result&lt;R&gt; recover(CheckedFunction&lt;Exception, R&gt;</code></p>
+</li>
+<li>
+<p><code>Result&lt;R&gt; recover(CheckedBiFunction&lt;V, Exception, R&gt;</code></p>
+</li>
+<li>
+<p><code>Result&lt;Void&gt; onSuccess(CheckedConsumer&lt;R&gt;)</code></p>
+</li>
+<li>
+<p><code>Result&lt;Void&gt; onSuccess(CheckedRunnable)</code></p>
+</li>
+<li>
+<p><code>void onFailure(Consumer&lt;Exception&gt;)</code></p>
+</li>
+<li>
+<p><code>void onFailure(BiConsumer&lt;V, Exception&gt;)</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>There is one more convenience method <code>orElse&#174;</code> which allows to get a default value in case of a failed result.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 1.0.0-SNAPSHOT<br>
+Last updated 2020-06-25 13:26:58 UTC
+</div>
+</div>
+<link rel="stylesheet" href="./coderay-asciidoctor.css">
+</body>
+</html>

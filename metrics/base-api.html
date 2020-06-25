@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.10">
+<title>The Metrics API</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="./asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel2">
+<li><a href="#_the_metrics_api">1. The Metrics API</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect2">
+<h3 id="_the_metrics_api"><a class="anchor" href="#_the_metrics_api"></a>1. The Metrics API</h3>
+<div class="paragraph">
+<p>The <code>rico-metrics</code> module (<code>dev.rico.metrics</code> jigsaw module) provides the basic interfaces of the metrics api.
+The <code>dev.rico.metrics.Metrics</code> interface provides factory methods to create or access metrics.
+Currently 3 different metric types are supported:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>dev.rico.metrics.types.Counter</code></p>
+</li>
+<li>
+<p><code>dev.rico.metrics.types.Gauge</code></p>
+</li>
+<li>
+<p><code>dev.rico.metrics.types.Timer</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>All these metric types extend the common interface <code>dev.rico.metrics.Metric</code> as you can see in the following graph:</p>
+</div>
+<div class="paragraph">
+<div class="title">Metrics interfaces</div>
+<p><span class="image"><img src="../images/metrics-interface.svg" alt="metrics interface"></span></p>
+</div>
+<div class="paragraph">
+<p>As we will see later, you obtain an instance of the <code>dev.rico.metrics.Metrics</code>
+interface depending on your environment (Java client, Spring, Jakarta&#8230;&#8203;).
+You should always use this instance to create or access metrics.</p>
+</div>
+<div class="paragraph">
+<p>The following example shows how a timer is created and used:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> Metric metrics = .... <i class="conum" data-value="1"></i><b>(1)</b>
+
+final <span class="predefined-type">Timer</span> timer = metrics.getOrCreateTimer(<span class="string"><span class="delimiter">&quot;</span><span class="content">server-request-timer</span><span class="delimiter">&quot;</span></span>); <i class="conum" data-value="2"></i><b>(2)</b>
+<span class="directive">final</span> <span class="type">long</span> start = <span class="predefined-type">System</span>.currentTimeMillis(); <i class="conum" data-value="3"></i><b>(3)</b>
+doServerRequest(); <i class="conum" data-value="4"></i><b>(4)</b>
+<span class="directive">final</span> <span class="type">long</span> end = <span class="predefined-type">System</span>.currentTimeMillis(); <i class="conum" data-value="5"></i><b>(5)</b>
+timer.record(end - start, <span class="predefined-type">TimeUnit</span>.MILLISECONDS); <i class="conum" data-value="6"></i><b>(6)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>it depends on your environment how you will get an instance</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>creates the timer metric or returns it if a timer metric with the given name exists</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>the start time</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>here a task is executed.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>the end time</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>the execution time of the task is recorded by the timer</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The timer metric that is measured in the given snippet can be used later to visualize the execution time of the server request in a dashboard or trigger specific alarms for long-running tasks.
+The following image shows how such result might look like in a monitoring dashboard by showing a graph of all the timer recordings over time:</p>
+</div>
+<div class="paragraph">
+<div class="title">sample graph based on metric</div>
+<p><span class="image"><img src="../images/diagram-sample.png" alt="diagram sample"></span></p>
+</div>
+<div class="sect3">
+<h4 id="_metrics"><a class="anchor" href="#_metrics"></a>1.1. Metrics</h4>
+<div class="paragraph">
+<p>As already mentioned all metrics in Rico implement the <code>dev.rico.metrics.Metric</code> interface.
+This provides access to the name and context information of the metric.
+The name of a metric must be unique and cannot be changed.
+All factory methods for metrics in the <code>dev.rico.metrics.Metrics</code> interface will only create a new metric if no metric with the given name already exists.
+Otherwise the existing metric will be returned.
+Using the unique name of the metric you can receive all recorded values of the metric for monitoring and maintenance issues later.</p>
+</div>
+<div class="paragraph">
+<p>Next to the name, a <code>dev.rico.metrics.Metric</code> instance provides a context defined by the Rico context API.
+At the moment only the global context of the Rico context is used for metrics.
+The thread context is never added to the context of a metric.
+Custom values can be added to the context of a metric by passing them to the specific factory methods of the <code>dev.rico.metrics.Metrics</code> interface.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>You might ask yourself why the thread specific context values are not automatically added to the context of a metric.
+This is an issue that should be discussed in future and might change based on discussions.
+The context of a metric is defined once the metric is created.
+A metric can be used any time later to record values in a totally different thread.
+If we would add the thread based context values of Rico at creation time of the metric, we would track only the activity of that thread. If the thread is reused (one thread may later serve a different request), we might end up with confusing information when using the metric for monitoring later.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_counter"><a class="anchor" href="#_counter"></a>1.2. Counter</h4>
+<div class="paragraph">
+<p>A counter defines a number based metric that can only be incremented (up to <code>Long.MAX_VALUE</code>).
+A counter is defined by the <code>dev.rico.metrics.types.Counter</code> interface and instances should be created by using the factory methods of the <code>dev.rico.metrics.Metrics</code> interface.
+The <code>dev.rico.metrics.types.Counter</code> interface provides a method to increment the counter by a given number and a convenience method to increment the counter by 1.</p>
+</div>
+<div class="paragraph">
+<p>The following sample shows how a counter can be used:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> Metric metrics = .... <i class="conum" data-value="1"></i><b>(1)</b>
+
+final Counter counter = metrics.getOrCreateCounter(<span class="string"><span class="delimiter">&quot;</span><span class="content">server-request-call-counter</span><span class="delimiter">&quot;</span></span>); <i class="conum" data-value="2"></i><b>(2)</b>
+<span class="keyword">try</span> {
+    doServerRequest();
+} <span class="keyword">finally</span> {
+    counter.increment(); <i class="conum" data-value="3"></i><b>(3)</b>
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>it depends on your environment how you will get an instance</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>creates the counter metric or returns it if a counter metric with the given name exists</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>here the counter is incremented.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Examples where a counter can be used:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>measure how often a specific functionality is called</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_gauge"><a class="anchor" href="#_gauge"></a>1.3. Gauge</h4>
+<div class="paragraph">
+<p>A gauge defines a number based metric.
+The value of a gauge can be set to any number between <code>Double.MIN_VALUE</code> and <code>Double.MAX_VALUE</code>.
+A gauge is defined by the <code>dev.rico.metrics.types.Gauge</code> interface and instances should be created by using the factory methods of the <code>dev.rico.metrics.Metrics</code> interface.
+The <code>dev.rico.metrics.types.Gauge</code> interface provides a method to set the value of the gauge.</p>
+</div>
+<div class="paragraph">
+<p>The following sample shows how a gauge can be used:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> Metric metrics = .... <i class="conum" data-value="1"></i><b>(1)</b>
+
+final Gauge gauge = metrics.getOrCreateCounter(<span class="string"><span class="delimiter">&quot;</span><span class="content">user-count</span><span class="delimiter">&quot;</span></span>); <i class="conum" data-value="2"></i><b>(2)</b>
+<span class="directive">final</span> <span class="type">long</span> userCount = getUserCount();
+gauge.setValue(userCount); <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>it depends on your environment how you will get an instance</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>creates the gauge metric or returns it if a gauge metric with the given name exists</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>set the value of the gauge</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Examples where a gauge can be used:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>measure how many users are logged in</p>
+</li>
+<li>
+<p>measure how much memory is used</p>
+</li>
+<li>
+<p>measure the CPU usage</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_timer"><a class="anchor" href="#_timer"></a>1.4. Timer</h4>
+<div class="paragraph">
+<p>A timer defines a duration based metric.
+The value of a timer can be set to any duration.
+To define a duration <code>java.util.concurrent.TimeUnit</code> is used.
+A timer is defined by the <code>dev.rico.metrics.types.Timer</code> interface and instances should be created by using the factory methods of the <code>dev.rico.metrics.Metrics</code> interface.
+The <code>dev.rico.metrics.types.Timer</code> interface provides several methods to record the duration of a task.</p>
+</div>
+<div class="paragraph">
+<p>The following sample shows how a timer can be used:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> Metric metrics = .... <i class="conum" data-value="1"></i><b>(1)</b>
+
+final <span class="predefined-type">Timer</span> timer = metrics.getOrCreateTimer(<span class="string"><span class="delimiter">&quot;</span><span class="content">server-request-timer</span><span class="delimiter">&quot;</span></span>); <i class="conum" data-value="2"></i><b>(2)</b>
+<span class="directive">final</span> <span class="type">long</span> start = <span class="predefined-type">System</span>.currentTimeMillis();
+<span class="keyword">try</span> {
+    doServerRequest();
+} <span class="keyword">finally</span> {
+    <span class="directive">final</span> <span class="type">long</span> end = <span class="predefined-type">System</span>.currentTimeMillis();
+    timer.record(end - start, <span class="predefined-type">TimeUnit</span>.MILLISECONDS); <i class="conum" data-value="3"></i><b>(3)</b>
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>it depends on your environment how you will get an instance</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>creates the gauge metric or returns it if a gauge metric with the given name exists</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>records the duration of the task</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The <code>dev.rico.metrics.types.Timer</code> interface provides some methods that make the recording of a duration much easier.
+The following code snippet does exactly the same as the last one:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> Metric metrics = .... <i class="conum" data-value="1"></i><b>(1)</b>
+
+final <span class="predefined-type">Timer</span> timer = metrics.getOrCreateTimer(<span class="string"><span class="delimiter">&quot;</span><span class="content">server-request-timer</span><span class="delimiter">&quot;</span></span>); <i class="conum" data-value="2"></i><b>(2)</b>
+timer.record(() -&gt; doServerRequest()); <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>it depends on your environment how you will get an instance</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>creates the gauge metric or returns it if a gauge metric with the given name exists</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>records the duration of the task</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Examples where a timer can be used:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>measure the duration of a request</p>
+</li>
+<li>
+<p>measure the duration of a DB call</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 1.0.0-SNAPSHOT<br>
+Last updated 2020-06-25 13:26:58 UTC
+</div>
+</div>
+<link rel="stylesheet" href="./coderay-asciidoctor.css">
+</body>
+</html>

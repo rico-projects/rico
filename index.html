@@ -1,0 +1,2420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.10">
+<title>Rico</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="./asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<h1>Rico</h1>
+<div class="details">
+<span id="revnumber">version 1.0.0-SNAPSHOT</span>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_general_information">1. General information</a></li>
+<li><a href="#_core_api">2. Core API</a>
+<ul class="sectlevel2">
+<li><a href="#_scheduler_api">2.1. Scheduler API</a></li>
+<li><a href="#_context_api">2.2. Context API</a></li>
+<li><a href="#_result_api">2.3. Result API</a></li>
+</ul>
+</li>
+<li><a href="#_basic_client_api">3. Basic Client API</a>
+<ul class="sectlevel2">
+<li><a href="#_ui_toolkit_support_in_rico">3.1. UI toolkit support in Rico</a></li>
+<li><a href="#_ui_executor_in_rico">3.2. UI executor in Rico</a></li>
+<li><a href="#_background_executor">3.3. Background executor</a></li>
+<li><a href="#_taskchain_api">3.4. TaskChain API</a></li>
+</ul>
+</li>
+<li><a href="#_basic_server_api">4. Basic Server API</a>
+<ul class="sectlevel2">
+<li><a href="#_client_scope">4.1. Client Scope</a></li>
+<li><a href="#_server_timing">4.2. Server Timing</a></li>
+<li><a href="#_server_module_spi">4.3. Server Module SPI</a></li>
+</ul>
+</li>
+<li><a href="#_metrics">5. Metrics</a>
+<ul class="sectlevel2">
+<li><a href="#_the_metrics_api">5.1. The Metrics API</a></li>
+<li><a href="#_server_integration_and_usage">5.2. Server integration and usage</a></li>
+<li><a href="#_provide_metrics_for_monitoring">5.3. Provide metrics for monitoring</a></li>
+</ul>
+</li>
+<li><a href="#_logging">6. Logging</a>
+<ul class="sectlevel2">
+<li><a href="#_general_usage_and_benefits_of_the_rico_logging_concept">6.1. General usage and benefits of the Rico logging concept</a></li>
+<li><a href="#_centralized_logging_and_the_gelf_format">6.2. Centralized logging and the GELF format</a></li>
+<li><a href="#_using_log4j2_as_logging_implementation">6.3. Using Log4J2 as logging implementation</a></li>
+<li><a href="#_using_logback_as_logging_implementation">6.4. Using Logback as logging implementation</a></li>
+<li><a href="#_using_graylog">6.5. Using Graylog</a></li>
+<li><a href="#_using_the_elk_stack">6.6. Using the ELK Stack</a></li>
+</ul>
+</li>
+<li><a href="#_security">7. Security</a>
+<ul class="sectlevel2">
+<li><a href="#_centralized_security">7.1. Centralized security</a></li>
+<li><a href="#_keycloak">7.2. Keycloak</a></li>
+<li><a href="#_security_api_on_the_server">7.3. Security API on the server</a></li>
+<li><a href="#_security_api_on_the_client">7.4. Security API on the client</a></li>
+</ul>
+</li>
+<li><a href="#_remoting">8. Remoting</a>
+<ul class="sectlevel2">
+<li><a href="#_architecture_overview">8.1. Architecture overview</a></li>
+<li><a href="#_the_remote_presentation_model">8.2. The Remote Presentation Model</a></li>
+</ul>
+</li>
+<li><a href="#_building_rico">9. Building Rico</a>
+<ul class="sectlevel2">
+<li><a href="#_travis_setup">9.1. Travis setup</a></li>
+</ul>
+</li>
+<li><a href="#_snapshot_releases">10. Snapshot releases</a></li>
+<li><a href="#_project_structure">11. Project structure</a>
+<ul class="sectlevel2">
+<li><a href="#_gradle_build">11.1. Gradle build</a></li>
+<li><a href="#_package_structure">11.2. Package structure</a></li>
+<li><a href="#_java_module_definition">11.3. Java Module definition</a></li>
+<li><a href="#_project_graph">11.4. Project Graph</a></li>
+</ul>
+</li>
+<li><a href="#_best_practices_for_documentation">12. Best practices for documentation</a>
+<ul class="sectlevel2">
+<li><a href="#_documentation_structure">12.1. Documentation structure</a></li>
+<li><a href="#_writing_asciidoc_based_documents">12.2. Writing AsciiDoc based documents</a></li>
+<li><a href="#_creating_the_documentation">12.3. Creating the documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><span class="image"><img src="images/rico-logo.png" alt="rico logo"></span></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_general_information"><a class="anchor" href="#_general_information"></a>1. General information</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>TODO</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_core_api"><a class="anchor" href="#_core_api"></a>2. Core API</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Rico provides several general APIs and functionalities in the <code>dev.rico.core</code> module.
+All those functionalities are not client or server specific.
+This chapter gives an overview of the basic APIs and concepts that can be found in the <code>dev.rico.core</code> module.</p>
+</div>
+<div class="sect2">
+<h3 id="_scheduler_api"><a class="anchor" href="#_scheduler_api"></a>2.1. Scheduler API</h3>
+<div class="paragraph">
+<p>The Scheduler API is a concurrent API that lets you schedule periodic or delayed tasks.
+The central point of the API is the interface <code>dev.rico.core.concurrent.Scheduler</code>.
+Depending on your environment Rico provides different ways to obtain a Scheduler instance.</p>
+</div>
+<div class="paragraph">
+<p>The Scheduler interface only provides one method: <code>schedule(Runnable task, Trigger trigger)</code>.
+This method is used to schedule a task (the given <code>java.lang.Runnable</code>) for later and possibly periodic execution.
+When the task will be executed must be specified by the trigger defined by the interface <code>dev.rico.core.concurrent.Trigger</code>.
+While you can implement this interface yourself, the interface <code>dev.rico.core.concurrent.Trigger</code> provides static methods to create triggers.</p>
+</div>
+<div class="sect3">
+<h4 id="_defining_a_trigger_that_delays_the_execution_of_a_task"><a class="anchor" href="#_defining_a_trigger_that_delays_the_execution_of_a_task"></a>2.1.1. Defining a trigger that delays the execution of a task</h4>
+<div class="paragraph">
+<p>To delay the execution of a task the static method <code>in(final Duration delay)</code> of the interface <code>dev.rico.core.concurrent.Trigger</code> can be used.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="images/scheduler-delay.svg" alt="scheduler delay"></span></p>
+</div>
+<div class="paragraph">
+<p>The following code shows an example of the usage:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> Scheduler scheduler = ... <i class="conum" data-value="1"></i><b>(1)</b>
+
+final <span class="predefined-type">Duration</span> tenSeconds = <span class="predefined-type">Duration</span>.of(<span class="integer">10</span>, ChronoUnit.SECONDS); <i class="conum" data-value="2"></i><b>(2)</b>
+<span class="directive">final</span> Trigger trigger = Trigger.in(tenSeconds); <i class="conum" data-value="3"></i><b>(3)</b>
+
+scheduler.schedule(() -&gt; <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">ALARM</span><span class="delimiter">&quot;</span></span>), trigger); <i class="conum" data-value="4"></i><b>(4)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>depends on your environment</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>defines a duration of 10 seconds using the java.time API</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>creates our trigger using the duration as the delay</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>schedules the task.
+Because of our trigger the task will be executed 10 seconds later and "ALARM" will be written to the console.</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_defining_a_trigger_that_executes_a_task_periodically"><a class="anchor" href="#_defining_a_trigger_that_executes_a_task_periodically"></a>2.1.2. Defining a trigger that executes a task periodically</h4>
+<div class="paragraph">
+<p>To execute a task periodically the static method <code>every(final Duration duration)</code> of the interface <code>dev.rico.core.concurrent.Trigger</code> can be used.
+After the task execution is finished the task will be scheduled again for future execution based on the given delay.
+This will repeat until the application stops.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="images/scheduler-every.svg" alt="scheduler every"></span></p>
+</div>
+<div class="paragraph">
+<p>The following code shows an example of the usage:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> Scheduler scheduler = ... <i class="conum" data-value="1"></i><b>(1)</b>
+
+final <span class="predefined-type">Duration</span> tenSeconds = <span class="predefined-type">Duration</span>.of(<span class="integer">10</span>, ChronoUnit.SECONDS); <i class="conum" data-value="2"></i><b>(2)</b>
+<span class="directive">final</span> Trigger trigger = Trigger.every(tenSeconds); <i class="conum" data-value="3"></i><b>(3)</b>
+
+scheduler.schedule(() -&gt; <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">PING</span><span class="delimiter">&quot;</span></span>), trigger); <i class="conum" data-value="4"></i><b>(4)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>depends on your environment</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>defines a duration 10 seconds using the java.time API</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>creates our trigger</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>schedules the task.
+Because of our trigger the task will be executed with a delay of 10 seconds every 10 seconds and "PING" will be written to the console until the application stops.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><code>nowAndEvery(final Duration duration)</code> can be used to ignore the initial delay.
+<code>afterAndEvery(final Duration delay, final Duration duration)</code> can be used to specify a custom initial delay.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="images/scheduler-now-and-every.svg" alt="scheduler now and every"></span></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_using_the_api_on_the_client"><a class="anchor" href="#_using_the_api_on_the_client"></a>2.1.3. Using the API on the client</h4>
+<div class="paragraph">
+<p>In the Rico client API a <code>dev.rico.core.concurrent.Scheduler</code> instance can be received by using by the following call:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> Scheduler scheduler = Client.getService(Scheduler.class);</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_using_the_api_on_the_server"><a class="anchor" href="#_using_the_api_on_the_server"></a>2.1.4. Using the API on the server</h4>
+<div class="paragraph">
+<p>On JakartaEE and Spring you can inject a <code>dev.rico.core.concurrent.Scheduler</code> instance in any managed bean.
+The instance is always defined in the singleton / application scope.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_context_api"><a class="anchor" href="#_context_api"></a>2.2. Context API</h3>
+<div class="paragraph">
+<p>Rico provides a context manager that can be used to hold attributes in a global and a per-thread context.
+An attribute is defined as a key-value pair.
+Both key and values are strings.
+These pairs can be stored and read from the global context or the context of the current thread only.
+All attributes describe metadata to help in debugging, maintaining and analysing an application.</p>
+</div>
+<div class="paragraph">
+<p>The interface <code>dev.rico.core.context.ContextManager</code> defines the context manager in Rico and provides several methods to store and receive context based information.
+Depending on your environment Rico provides different ways to obtain a <code>ContextManager</code> instance.</p>
+</div>
+<div class="paragraph">
+<p>The following sample shows how values can be stored:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> ContextManager contextManager = ... <i class="conum" data-value="1"></i><b>(1)</b>
+
+contextManager.setGlobalAttribute(<span class="string"><span class="delimiter">&quot;</span><span class="content">application.type</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">microservice</span><span class="delimiter">&quot;</span></span>); <i class="conum" data-value="2"></i><b>(2)</b>
+contextManager.setThreadLocalAttribute(<span class="string"><span class="delimiter">&quot;</span><span class="content">thread.type</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">background thread</span><span class="delimiter">&quot;</span></span>); <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>depends on your environment.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>here an attribute is stored in the global context.
+"application.type" is the name / key of the attribute and "microservice" is the value</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>here an attribute is stored in the context of the current thread.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>When storing thread based context information you normally want to keep the information for a specific task only and the information will be invalid afterwards.
+To do so the following pattern is quite helpful when defining attributes in the thread context:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="directive">final</span> <span class="predefined-type">Result</span> callDatabase(<span class="directive">final</span> <span class="predefined-type">String</span> query) {
+    <span class="directive">final</span> ContextManager contextManager = ... <i class="conum" data-value="1"></i><b>(1)</b>
+    final Subscription queryAttributeSubscription = contextManager.setThreadLocalAttribute(<span class="string"><span class="delimiter">&quot;</span><span class="content">db.query</span><span class="delimiter">&quot;</span></span>, query); <i class="conum" data-value="2"></i><b>(2)</b>
+
+    <span class="keyword">try</span> {
+        <span class="keyword">return</span> db.call(query); <i class="conum" data-value="3"></i><b>(3)</b>
+    } <span class="keyword">finally</span> {
+        queryAttributeSubscription.unsubscribe(); <i class="conum" data-value="4"></i><b>(4)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>depends on your environment.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>here the attribute "db.query" is stored in the thread context.
+The <code>Subscription</code> instance can be used to remove the added attribute from the context.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>While we call our database the context attribute "db.query" will remain set.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Once the database call has been executed we remove the attribute from the thread context by calling the <code>unsubscribe()</code> method.
+This should always be done in a <code>finally</code> block since an exception my prevent this otherwise.</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_benefits_of_the_context_manager"><a class="anchor" href="#_benefits_of_the_context_manager"></a>2.2.1. Benefits of the context manager</h4>
+<div class="paragraph">
+<p>The context manager in Rico is integrated in several libraries and features of Rico.
+The remoting library of Rico automatically adds information to the context that can be helpful.
+The metrics and logging libraries of Rico provide the possibility to enrich metrics and logging with context based attributes through the context manager.
+This allows you to easily assign all logging messages of a server to specific users and requests or to store the metrics of several microservices in the same Prometheus instance and query for a specific instance later.
+More information can be found in the documentation of the metrics and logging API.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="images/context-in-log.svg" alt="context in log"></span></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_using_the_api_on_the_client_2"><a class="anchor" href="#_using_the_api_on_the_client_2"></a>2.2.2. Using the API on the client</h4>
+<div class="paragraph">
+<p>In the Rico client API a <code>dev.rico.core.context.ContextManager</code> instance can be obtained by using by the following call:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> ContextManager contextManager = Client.getService(ContextManager.class);</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_using_the_api_on_the_server_2"><a class="anchor" href="#_using_the_api_on_the_server_2"></a>2.2.3. Using the API on the server</h4>
+<div class="paragraph">
+<p>On JakartaEE and Spring you can inject a <code>dev.rico.core.context.ContextManager</code> instance in any managed bean.
+The instance is always defined in the singleton / application scope.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_predefined_context_values"><a class="anchor" href="#_predefined_context_values"></a>2.2.4. Predefined Context values</h4>
+<div class="paragraph">
+<p>Rico already defines some context values by default.
+The following table gives an overview of all the context values that are defined by default when using Rico.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Predefined context values</caption>
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 9.5238%;">
+<col style="width: 9.5238%;">
+<col style="width: 19.0476%;">
+<col style="width: 47.6191%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">context name</th>
+<th class="tableblock halign-center valign-top">type</th>
+<th class="tableblock halign-center valign-top">availability</th>
+<th class="tableblock halign-center valign-top">sample</th>
+<th class="tableblock halign-left valign-top">description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">application.name</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">global</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">always</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">myApplication</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the application if defined in the configuration by the "application.name" property. Otherwise "UNKNOWN"</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">rico.version</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">global</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">always</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">1.1.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The used version of Rico</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">system.os</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">global</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">always</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">mac</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the used operation system. "linux", "mac", "win" or "unknown"</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.version</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">global</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">always</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">11.0.3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The version of the used Java runtime</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.vendor</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">global</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">always</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">AdoptOpenJDK</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The vendor of the used Java runtime</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">system.hostName</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">global</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">always</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">my-macbook.karakun</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The host name of the system</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">system.canonicalHostName</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">global</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">always</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">my-macbook.karakun</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The canonical host name of the system</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">system.hostAddress</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">global</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">always</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">192.168.178.23</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The host address of the system</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">thread</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">thread</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">always</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">background-thread-2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the current thread. This is only supported for threads that are created by Rico</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">uiToolkit</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">global</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">client</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">JavaFX toolkit</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the used UI toolkit. This value is only defined when using the rico-client library.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">security.userName</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">global</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">client</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">admin</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When using rico-security this value defines the name of the logged in user on the client</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">security.userName</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">thread</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">server</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">admin</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When using rico-security this value defines the name of the logged in user for the current request on the server</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">remoting.controller</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">thread</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">server</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">WorkflowController</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the remoting controller when a controller action is executed on the server.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">remoting.action</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">thread</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">server</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">saveUser</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the remoting controller action that is executed on the server.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">http.session</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">thread</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">server</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">1342424</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">id of the http session on the server</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">http.clientSession</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">thread</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">server</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">749516</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">id of the http client session on the server</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_result_api"><a class="anchor" href="#_result_api"></a>2.3. Result API</h3>
+<div class="paragraph">
+<p>With the Result API Rico offers the functionality to define results of computations that may either result in an exception, or return a successfully computed value.
+When using for example the stream API of Java one critical topic that is often ignored is the exception handling.
+The following code shows a bad example of a stream handling that will end in an error:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="predefined-type">List</span>&lt;<span class="predefined-type">Result</span>&gt; results = Stream.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">TWO</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">3</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">4</span><span class="delimiter">&quot;</span></span>)
+                        .map(<span class="predefined-type">Integer</span>::valueOf)
+                        .collect(Collectors.toList());</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This code will throw an exception at runtime once the second input value (<code>TWO</code>) will be mapped by the given <code>Function</code> (<code>Integer:valueOf</code>).
+All values that will be provided by the stream after the second value will never be mapped.
+If we now assume that the mapping function will send a mail instead of just parsing a number we will end in big trouble.
+Once the exception has been thrown we have zero knowledge about the state of our system.
+We do not know how many elements were mapped successfully and for how many elements the mapping never happened.
+If the stream will be handled in parallel things might even become worse.</p>
+</div>
+<div class="paragraph">
+<p>Here the Result API of Rico comes into play.
+The API provides functionality to handle successful and failed results of calculations like a mapping.
+The <code>dev.rico.core.functional.Result</code> provides several factory methods that can be used to create a result.
+The following code snippet gives an example how the Result API can be used:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="predefined-type">List</span>&lt;<span class="predefined-type">Result</span>&gt; results = Stream.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">TWO</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">3</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">4</span><span class="delimiter">&quot;</span></span>)
+                        .map(<span class="predefined-type">Result</span>.of(<span class="predefined-type">Integer</span>::valueOf))
+                        .collect(Collectors.toList());</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the given example the mapper wil be executed for all elements of the stream.
+Each mapping will end in a <code>dev.rico.core.functional.Result</code> instance that is either successful or failed.
+For the input "TWO" the mapping will result in a failed <code>dev.rico.core.functional.Result</code>.</p>
+</div>
+<div class="paragraph">
+<p>If a result is successful or failed can be checked by calling <code>isSuccessful()</code> or <code>isFailed()</code>.
+If a result is successful calling the <code>getResult()</code> method will return the wrapped return value of the original calculation.
+For a failed result the <code>getResult()</code> method will always throw an <code>IllegalStateException</code>.
+Next to this <code>getException()</code> can be called to receive the exception thrown by the original calculation.
+For a successful result this will always throw an <code>IllegalStateException</code>.</p>
+</div>
+<div class="paragraph">
+<p>The following snippet shows a possible use-case of the API:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="predefined-type">List</span>&lt;<span class="predefined-type">Result</span>&lt;<span class="predefined-type">Integer</span>&gt;&gt; results = Stream.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">TWO</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">3</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">4</span><span class="delimiter">&quot;</span></span>)
+                        .map(<span class="predefined-type">Result</span>.of(<span class="predefined-type">Integer</span>::valueOf))
+                        .collect(Collectors.toList());
+
+results.stream().filter(r -&gt; r.isFailed())
+                .forEach(r -&gt; <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">Error when parsing Integer</span><span class="delimiter">&quot;</span></span>));</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For a better result handling several of the factory methods of the <code>dev.rico.core.functional.Result</code> interface return a  <code>dev.rico.core.functional.ResultWithInput</code>.
+This interface extends the <code>dev.rico.core.functional.Result</code> and adds the possibility to access the input value of the origin calculation.
+With the additional functionality our sample will look like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="predefined-type">List</span>&lt;ResultWithInput&lt;<span class="predefined-type">String</span>, <span class="predefined-type">Integer</span>&gt;&gt; results = Stream.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">TWO</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">3</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">4</span><span class="delimiter">&quot;</span></span>)
+                        .map(<span class="predefined-type">Result</span>.of(<span class="predefined-type">Integer</span>::valueOf))
+                        .collect(Collectors.toList());
+
+results.stream().filter(r -&gt; r.isFailed())
+                .forEach(r -&gt; <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">Error when parsing </span><span class="delimiter">&quot;</span></span> + r.getInput()));</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Instead of extracting the content of the result you can register callbacks which are executed in case of success or failure.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>Result&lt;U&gt; map(CheckedFunction&lt;R, U&gt;)</code></p>
+</li>
+<li>
+<p><code>Result&lt;R&gt; recover(CheckedFunction&lt;Exception, R&gt;</code></p>
+</li>
+<li>
+<p><code>Result&lt;R&gt; recover(CheckedBiFunction&lt;V, Exception, R&gt;</code></p>
+</li>
+<li>
+<p><code>Result&lt;Void&gt; onSuccess(CheckedConsumer&lt;R&gt;)</code></p>
+</li>
+<li>
+<p><code>Result&lt;Void&gt; onSuccess(CheckedRunnable)</code></p>
+</li>
+<li>
+<p><code>void onFailure(Consumer&lt;Exception&gt;)</code></p>
+</li>
+<li>
+<p><code>void onFailure(BiConsumer&lt;V, Exception&gt;)</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>There is one more convenience method <code>orElse&#174;</code> which allows to get a default value in case of a failed result.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_basic_client_api"><a class="anchor" href="#_basic_client_api"></a>3. Basic Client API</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Rico provides some general functionality, that can be used in any JavaFX or Swing based application:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="images/client-modules.svg" alt="client modules"></span></p>
+</div>
+<div class="paragraph">
+<p>Besides the UI toolkit independent library rico-client, a Swing client will need rico-client-swing and a JavaFX client will need rico-client-javafx.
+The Swing and JavaFX specific libraries may provide additional UI toolkit dependent functionality.
+The toolkit specific libraries should not be used together.</p>
+</div>
+<div class="sect2">
+<h3 id="_ui_toolkit_support_in_rico"><a class="anchor" href="#_ui_toolkit_support_in_rico"></a>3.1. UI toolkit support in Rico</h3>
+<div class="paragraph">
+<p>Rico provides several APIs that automatically handle UI toolkit specific functionalities like thread handling.
+To benefit from such features the UI toolkit must be specified in Rico.
+A UI toolkit is defined by the interface <code>dev.rico.client.Toolkit</code> in Rico.
+At the moment Rico provides an implementation of that interface for Swing and JavaFX.</p>
+</div>
+<div class="paragraph">
+<p>The following code shows how the ui toolkit can be configured in Rico:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> <span class="predefined-type">Toolkit</span> javaFxToolkit = <span class="keyword">new</span> FxToolkit();
+Client.init(javaFxToolkit);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For the implemented toolkits Rico provides some convenience methods that make the usage even more easy:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">FxToolkit.init();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Normally this code should be directly in the main method of your client application, since several functionalities of the Rico client API won&#8217;t be usable without a configured UI toolkit.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ui_executor_in_rico"><a class="anchor" href="#_ui_executor_in_rico"></a>3.2. UI executor in Rico</h3>
+<div class="paragraph">
+<p>When using Swing all UI specific operations need to be handled in the EDT (Event dispatch thread) of Swing.
+When using JavaFX all UI specific operations must be handled in the JavaFX platform thread.
+Rico provides an abstraction of such threads by providing the interface <code>dev.rico.client.concurrent.UiExecutor</code>.
+The interface extends the basic Java <code>java.util.concurrent.Executor</code> interface with some additional helpful methods when working with UI code.
+The following code snippet shows how an instance of the UiExecutor can be obtained and used:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">UiExecutor uiExecutor = Client.getService(UiExecutor.class); <i class="conum" data-value="1"></i><b>(1)</b>
+
+uiExecutor.execute(() -&gt; updateUi()); <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Here we receive a <code>UiExecutor</code> instance.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>By using the executor the given runnable will be executed in the UI toolkit thread.</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_background_executor"><a class="anchor" href="#_background_executor"></a>3.3. Background executor</h3>
+<div class="paragraph">
+<p>Rico&#8217;s executor for the UI toolkit provides a background executor backed by a configurable thread pool.
+For most use-cases this executor is the only tool you will need to execute background and async tasks in a java client.
+The background executor is defined by the interface <code>dev.rico.client.concurrent.BackgroundExecutor</code>.
+It extends the basic Java <code>java.util.concurrent.Executor</code> interface with some additional helpful methods and functionalities.</p>
+</div>
+<div class="paragraph">
+<p>The following code snippet shows how use the background executor:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">BackgroundExecutor backgroundExecutor = Client.getService(BackgroundExecutor.class); <i class="conum" data-value="1"></i><b>(1)</b>
+
+backgroundExecutor.execute(() -&gt; longRunningTask()); <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Here we receive a <code>BackgroundExecutor</code> instance.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>By using the executor the given runnable will be executed in the background.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Several APIs of Rico like the <code>Scheduler</code> or the <code>TaskChain</code> are based on the <code>BackgroundExecutor</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_taskchain_api"><a class="anchor" href="#_taskchain_api"></a>3.4. TaskChain API</h3>
+<div class="paragraph">
+<p>The TaskChain API provides an easy way to create a chain of individual tasks.
+The chain provides functionality to switch between the UI thread and background threads.</p>
+</div>
+<div class="paragraph">
+<p>When creating a client application with UI you normally need to implement long-running tasks like a server call.
+If such a task is executed on the UI thread no user interaction or repaint / layout of the application can happen till the task is not completed.
+This will always end up in a bad behavior, since the application looks like it is frozen and maybe pixel artifacts are rendered on the screen if the application&#8217;s window is resized or moved.
+To avoid these problems long-running tasks should always be executed on a background thread.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="images/ui-thread.svg" alt="ui thread"></span></p>
+</div>
+<div class="paragraph">
+<p>A background thread in Java can easily be created and used by using the factory methods in <code>java.util.concurrent.Executors</code>.
+Much more complex code is needed if we want to react on the result of a background thread in the ui thread.
+This pattern is quite common in a client.
+Let&#8217;s assume you want to trigger a server endpoint and display the result of the call in the client.
+Maybe you even want to show a loading animation in the client while the server call is executed and show an error if an exception happens.
+The following diagram gives an overview of the needed task:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="images/task-chain-base-workflow.svg" alt="task chain base workflow"></span></p>
+</div>
+<div class="paragraph">
+<p>By using only basic API such a use case will result in a lot of code in Swing or JavaFX.
+The following code snippet shows how such a workflow can be created in Swing:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="comment">//We assume that we are already on the ui-Thread</span>
+
+showLoadingAnimation();
+backgroundExecutors.execute(() -&gt; {
+    <span class="keyword">try</span> {
+        <span class="directive">final</span> <span class="predefined-type">String</span> result = callServer();
+        SwingUtilties.invokeAndWait(() -&gt; updateUi(result));
+    } <span class="keyword">catch</span>(<span class="directive">final</span> <span class="exception">Exception</span> e) {
+       SwingUtilties.invokeLater(() -&gt; showErrorDialog(e));
+    } <span class="keyword">finally</span> {
+        SwingUtilties.invokeLater(() -&gt; hideLoadingAnimation(e));
+    }
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As you can see this is really a lot of code for a common default workflow that you might need multiple times per application.</p>
+</div>
+<div class="paragraph">
+<p>The TaskChain API helps you to create better readable and maintainable code for scenarios like the described one.
+The TaskChain provides a fluent API that let you define workflows with multiple switches between background threads and the UI thread.
+Before we have a deeper look at the API let&#8217;s see how the given example would look like by using the TaskChain API:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">UiExecutor.createUiTaskChain() <i class="conum" data-value="1"></i><b>(1)</b>
+    .execute(() -&gt; showLoadingAnimation()) <i class="conum" data-value="2"></i><b>(2)</b>
+    .background() <i class="conum" data-value="3"></i><b>(3)</b>
+    .supply(() -&gt; callServer()) <i class="conum" data-value="4"></i><b>(4)</b>
+    .map(v -&gt; v.getName()) <i class="conum" data-value="5"></i><b>(5)</b>
+    .ui() <i class="conum" data-value="6"></i><b>(6)</b>
+    .consume(v -&gt; updateUi(v)) <i class="conum" data-value="7"></i><b>(7)</b>
+    .onException(e -&gt; showErrorDialog(e)) <i class="conum" data-value="8"></i><b>(8)</b>
+    .thenFinally(() -&gt; hideLoadingAnimation()) <i class="conum" data-value="9"></i><b>(9)</b>
+    .run(); <i class="conum" data-value="10"></i><b>(10)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>a "ui task chain" is will execute the tasks in the UI thread. There is also a "background task chain".</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>the <code>execute()</code> method adds a runnable to the chain.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>by calling <code>background()</code> the execution for the coming tasks is switched to a background thread.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>the <code>supply()</code> method adds a supplier to the chain. The result of the supplier is available to the next task.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>the <code>map()</code> method adds a function to the chain. The result of the function is available to the next task.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>by calling <code>ui()</code> the execution for the coming tasks is switched to the UI thread.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="7"></i><b>7</b></td>
+<td>the <code>consume()</code> method adds a consumer to the chain.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="8"></i><b>8</b></td>
+<td>the <code>onException()</code> method adds an exception handler to the chain.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="9"></i><b>9</b></td>
+<td>the `thenFinally()`method adds a runnable to the chain. The finally task is called in any case.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="10"></i><b>10</b></td>
+<td>the chain is only executed when <code>run()</code> is called. This allows to create a chain and run it later or even run it multiple times.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The <code>run()</code> method returns a <code>CompletableFuture</code> which allows the caller of <code>run()</code> to wait for the completion of all tasks in the chain.
+Also the caller can determine if the tasks chain completed successfully or not by inspecting the <code>CompletableFuture</code>.
+Finally if the output from a task is not consumed by a consumer in the chain than this value can be obtained from the <code>CompletableFuture</code>.</p>
+</div>
+<div class="paragraph">
+<p>The main entry point of the TaskChain API is the <code>dev.rico.client.concurrent.TaskChain</code> interface.
+New instances should always be created by factory methods that are provided by the <code>dev.rico.client.concurrent.UiExecutor</code> interface.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> TaskChain uiChain = UiExecutor.createUiTaskChain();
+<span class="directive">final</span> TaskChain backgroundChain = UiExecutor.createBackgroundTaskChain();</code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_exception_handling_in_the_task_chain"><a class="anchor" href="#_exception_handling_in_the_task_chain"></a>3.4.1. Exception handling in the task chain</h4>
+<div class="paragraph">
+<p>Every task in a task chain can potentially throw an exception when it is executed.
+This influences which of remaining tasks are executed:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If a task throws an exception then all the upcoming tasks defined with <code>execute()</code>, <code>supply()</code>, <code>map()</code>, and <code>consume()</code> are skipped.
+Switching between UI and background threads is done in any case.
+the next <code>onException()</code> in the chain is invoked.
+If this exception handler terminates normally than the tasks after the exception handler are executed.
+If no exception handler is defined than the CompletableFuture returned by <code>run()</code> method will be completed exceptionally.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>It is possible to define multiple exception handler in a chain.
+Also it is possible to have more tasks after an exception handler.</p>
+</div>
+<div class="paragraph">
+<p>If there is no exception thrown by a task, then the exception handler is skipped.</p>
+</div>
+<div class="paragraph">
+<p>The <code>thenFinally()</code> task is special as it is executed in any case.
+Also it is limited in the sense that it cannot consume a result of a previous task.
+Plus it can only be the last task in the chain.
+the main purpose of such a final task is to close resources or end processes which may habe been started by another task in the chain.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_basic_server_api"><a class="anchor" href="#_basic_server_api"></a>4. Basic Server API</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>TODO</p>
+</div>
+<div class="sect2">
+<h3 id="_client_scope"><a class="anchor" href="#_client_scope"></a>4.1. Client Scope</h3>
+<div class="paragraph">
+<p>Rico supports an additional custom Scope called <code>ClientScope</code>.
+This scope is implemented for JakartaEE and Spring and defined as a scope that is a "sub-scope" of the session scope.
+This scope is important if you want to create stateful web applications.
+You can for example let the tabs of a browser share the same session scope, but different client scopes.
+Since they share the same session it’s hard to define data that is only related to one tab in the browser otherwise.
+The lifecycle of a client scope is then bound to a tab in the browser and ends when the tab will be closed. Of course this works only if the client side tells the server side when to create a client session. Rico supports this out of the box through the <code>rico-js</code> module and the java client modules.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="images/client-scope.png" alt="client scope"></span></p>
+</div>
+<div class="paragraph">
+<p>For both JakartaEE and Spring a <code>dev.rico.server.javaee.ClientScoped</code> annotation is defined that can be used to give any bean the specific scope:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ClientScoped</span>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">MyLocalStoreService</span> {
+
+    <span class="directive">private</span> <span class="predefined-type">List</span>&lt;<span class="predefined-type">String</span>&gt; values = <span class="keyword">new</span> <span class="predefined-type">ArrayList</span>();
+
+    <span class="directive">public</span> <span class="type">void</span> add(<span class="predefined-type">String</span> val) {
+        values.add(val);
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Internally the client scope is defined by a unique identifier that is shared between client and server with each request.
+Based on this the scope only "lives" inside a http request round-trip.</p>
+</div>
+<div class="paragraph">
+<p>Rico provides a <code>dev.rico.server.client.ClientSessionListener</code> interface that behaves similar to the <code>javax.servlet.http.HttpSessionListener</code> listener.
+By using the <code>dev.rico.server.ServerListener</code> annotation client scope listeners will automatically be found and registered at  server bootstrap.
+The following code shows an example for such a listener:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ServerListener</span>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">MyClientSessionListener</span> <span class="directive">implements</span> ClientSessionListener {
+
+    <span class="directive">public</span> <span class="type">void</span> sessionCreated(ClientSession clientSession) {
+        <span class="predefined-type">String</span> clientSessionId = clientSession.getId();
+        <span class="predefined-type">String</span> httpSessionId = clientSession.getHttpSession().getId();
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">Client session '</span><span class="delimiter">&quot;</span></span> + clientSessionId  + <span class="string"><span class="delimiter">&quot;</span><span class="content">' created in http session '</span><span class="delimiter">&quot;</span></span> + httpSessionId + <span class="string"><span class="delimiter">&quot;</span><span class="content">'</span><span class="delimiter">&quot;</span></span>);
+    }
+    <span class="directive">public</span> <span class="type">void</span> sessionDestroyed(ClientSession clientSession) {
+        <span class="directive">final</span> <span class="predefined-type">String</span> clientSessionId = clientSession.getId();
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">Client session '</span><span class="delimiter">&quot;</span></span> + clientSessionId  + <span class="string"><span class="delimiter">&quot;</span><span class="content">' destroyed</span><span class="delimiter">&quot;</span></span>);
+    }
+
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_server_timing"><a class="anchor" href="#_server_timing"></a>4.2. Server Timing</h3>
+<div class="paragraph">
+<p>Server Timing is a new W3C feature that allows you to add some metrics about the request handling to the response.
+The following image shows how such information would be rendered in the developer console of chrome:</p>
+</div>
+<div class="paragraph">
+<div class="title">Server timing view in Google Chrome</div>
+<p><span class="image"><img src="images/server-timing.png" alt="server timing"></span></p>
+</div>
+<div class="paragraph">
+<p>The feature is very usefully when you develop a client that uses HTTP calls to communicate with the server.
+In this case the client sends a http request to the server and receives a http response after some time.
+While the server execution is a black box for the client, the "server timing" information can be structured into multiple parts like database time and total response handling, talking to third party services and others.
+This can help you to identify time-consuming components on the server side in a production environment.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="images/timing-request.png" alt="timing request"></span></p>
+</div>
+<div class="sect3">
+<h4 id="_server_timing_api"><a class="anchor" href="#_server_timing_api"></a>4.2.1. Server Timing API</h4>
+<div class="paragraph">
+<p>Rico provides a managed component that can easily be injected in any Spring or JavaEE bean.
+This component is defined by the <code>dev.rico.server.timing.ServerTiming</code> interface and lives in the request scope.
+By injecting the component you can easily create metrics in your server that will be added automatically to the http response.
+The metric name is defined through the <code>dev.rico.server.timing.ServerTiming</code> interface.
+The following code snippet shows the basic usage of the API:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> ServerTiming timing = ... <span class="comment">// will be injected</span>
+
+final Metric dbMetric = timing.start(<span class="string"><span class="delimiter">&quot;</span><span class="content">DB-Operation</span><span class="delimiter">&quot;</span></span>);
+<span class="comment">//Do some work on the database</span>
+dbMetric.stop();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The given sample creates a metric with the given name “DB-Operation” and will record the duration until the <code>stop()</code> method is called.
+You can see the duration of the “DB-Operation” directly in the developer console of your chrome browser.</p>
+</div>
+<div class="paragraph">
+<p>Let’s have a look how you can use this feature with a simple REST endpoint in JakartaEE:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Path</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">/api/delete</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">MyEndpoint</span> {
+
+    <span class="annotation">@Inject</span>
+    <span class="directive">private</span> ServerTiming timing;
+
+    <span class="annotation">@Inject</span>
+    <span class="directive">private</span> Database dabase;
+
+    <span class="annotation">@GET</span>
+    <span class="directive">public</span> <span class="type">void</span> clearAllData() {
+        <span class="directive">final</span> Metric metric1 = timing.start(<span class="string"><span class="delimiter">&quot;</span><span class="content">delete-users</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Deletes all users in the DB</span><span class="delimiter">&quot;</span></span>);
+        database.deleteAllUsers();
+        metric1.stop();
+
+        <span class="directive">final</span> Metric metric2 = timing.start(<span class="string"><span class="delimiter">&quot;</span><span class="content">delete-items</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Deletes all items in the DB</span><span class="delimiter">&quot;</span></span>);
+        database.deleteAllItems();
+        metric2.stop();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The Rico usage in the Spring version is identical:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@RestController</span>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">MyEndpoint</span> {
+
+  <span class="annotation">@Autowired</span>
+  <span class="directive">private</span> ServerTiming timing;
+
+  <span class="annotation">@Autowired</span>
+  <span class="directive">private</span> Database dabase;
+
+  <span class="annotation">@RequestMapping</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">/api/delete</span><span class="delimiter">&quot;</span></span>)
+  <span class="directive">public</span> <span class="type">void</span> clearAllData() {
+        <span class="directive">final</span> Metric metric1 = timing.start(<span class="string"><span class="delimiter">&quot;</span><span class="content">delete-users</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Deletes all users in the DB</span><span class="delimiter">&quot;</span></span>);
+        database.deleteAllUsers();
+        metric1.stop();
+
+        <span class="directive">final</span> Metric metric2 = timing.start(<span class="string"><span class="delimiter">&quot;</span><span class="content">delete-items</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Deletes all items in the DB</span><span class="delimiter">&quot;</span></span>);
+        database.deleteAllItems();
+        metric2.stop();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the example an endpoint <code>/api/delete</code> is doing 2 calls against a database.
+For both calls a <code>dev.rico.server.timing.Metric</code> instance is created to measure the duration of the calls.
+In accordance with the “server timing” specification Rico supports a description next to a name for a timing entry.
+Once a client calls the endpoint, the http response will automatically contain the timing information for “deleteAllUsers” and “deleteAllItems”.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_additional_jakartaee_integration"><a class="anchor" href="#_additional_jakartaee_integration"></a>4.2.2. Additional JakartaEE integration</h4>
+<div class="paragraph">
+<p>Instead of injecting a <code>dev.rico.server.timing.ServerTiming</code> instance and creating metrics by hand you can add the <code>dev.rico.server.javaee.timing.Timing</code> annotation to each method of a managed bean to record the method call duration.
+The following code shows how you can easily record the duration of an HTTP endpoint by doing so:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Path</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">/api/delete</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">MyEndpoint</span> {
+
+    <span class="annotation">@GET</span>
+    <span class="annotation">@Timing</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">item-count-metric</span><span class="delimiter">&quot;</span></span>)
+    <span class="directive">public</span> <span class="type">int</span> getItemCount() {
+        <span class="directive">final</span> <span class="type">int</span> count = ... <span class="comment">// do some calculations;</span>
+        return count;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Like the basic API the <code>Timing</code> annotation supports a name and an optional description for the metric.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_server_module_spi"><a class="anchor" href="#_server_module_spi"></a>4.3. Server Module SPI</h3>
+<div class="paragraph">
+<p>Server modules are way to provide functionality from Rico to client applications.
+When a module is started it can register services, servlets, filters and much more.</p>
+</div>
+<div class="sect3">
+<h4 id="_defining_your_own_module"><a class="anchor" href="#_defining_your_own_module"></a>4.3.1. Defining your own Module</h4>
+<div class="paragraph">
+<p>Defining a module is very simple.
+All that is required is a class which implements <code>ServerModule</code> and is annotated with <code>@ModuleDefinition</code>.</p>
+</div>
+<div class="paragraph">
+<p>For most modules we recommend to subclass <code>AbstractBaseModule</code> instead of directly implementing the <code>ServerModule</code> interface.
+The <code>AbstractBaseModule</code> offers the functionality to disable a module with an entry in the configuration.</p>
+</div>
+<div class="paragraph">
+<p>The <code>@ModuleDefinition</code> is required to configure the module.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>name()</code> gives the module a unique name</p>
+</li>
+<li>
+<p><code>order()</code> determines the order in which the modules are started.
+Modules with smaller values are started before modules with larger values.
+Default value is 100.</p>
+</li>
+<li>
+<p><code>moduleDependencies()</code>
+The name of modules on which this module depends.
+Dependant modules must have a smaller order than the current module.
+Default is no dependencies.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The name of the module does not need to be globally unique.
+It is sufficient if the module name is unique amongst the booted modules.
+This allows to have multiple modules which have the same name and then have the runtime config decide which to boot.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_initialization_of_the_modules"><a class="anchor" href="#_initialization_of_the_modules"></a>4.3.2. Initialization of the modules</h4>
+<div class="paragraph">
+<p>Rico uses a classpath scanner to find all classes with an <code>@ModuleDefinition</code> annotation.
+It will then create an instance for all modules which should be booted (e.g. <code>shouldBoot(Configuration)</code> returns true).
+Finally Rico will call <code>initialize(ServerCoreComponents)</code> of the modules in the order given by the <code>@ModuleDefinition</code> annotation.</p>
+</div>
+<div class="paragraph">
+<p>The <code>ServerCoreComponents</code> offer different methods to help you in initializing the module:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>getConfiguration()</code> returns the Rico configuration.</p>
+</li>
+<li>
+<p><code>getServletContext()</code> return the servlet context.
+The servlet context can be used to register filter and endpoints.</p>
+</li>
+<li>
+<p><code>getClasspathScanner()</code> returns an instance of <code>ClasspathScanner</code> which allows searching for classes annotated with an annotation.</p>
+</li>
+<li>
+<p><code>getManagedBeanFactory()</code> returns an instance of <code>ManagedBeanFactory</code> which allows creating beans.</p>
+</li>
+<li>
+<p><code>provideInstance()</code> registers an instance of a class or interface with the application.
+Other modules, beans, and services can later retrieve this instance either by injection or by calling <code>getInstance()</code>.</p>
+</li>
+<li>
+<p><code>getInstance()</code> allows to retrieve an already registered instance.
+This is where the order of modules is important.
+It allows to ensure that required instances have already been provided.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Here is an example of a module definition:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="comment">// define a module of name SampleModule, which depends on OTHER_MODULE, and will load after all</span>
+<span class="comment">// modules with an order less than 200.</span>
+<span class="annotation">@ModuleDefinition</span>(name = SAMPLE_MODULE, moduleDependencies = OTHER_MODULE, order = <span class="integer">200</span>)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">SampleModule</span> <span class="directive">extends</span> AbstractBaseModule {
+
+    <span class="directive">public</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">String</span> SAMPLE_MODULE = <span class="string"><span class="delimiter">&quot;</span><span class="content">SampleModule</span><span class="delimiter">&quot;</span></span>;
+
+    <span class="annotation">@Override</span>
+    <span class="directive">protected</span> <span class="predefined-type">String</span> getActivePropertyName() {
+        <span class="keyword">return</span> SAMPLE_MODULE;
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="type">void</span> initialize(ServerCoreComponents coreComponents) <span class="directive">throws</span> ModuleInitializationException {
+        <span class="comment">// ServiceFromOtherModule is provided by OTHER_MODULE</span>
+        <span class="comment">// the 'moduleDependencies' in the annotation ensures that OTHER_MODULE is initialized before this.</span>
+        <span class="directive">final</span> ServiceFromOtherModule s = coreComponents.getInstance(ServiceFromOtherModule.class);
+
+        <span class="comment">// provide our own service for others to use</span>
+        coreComponents.provideInstance(SampleModuleService.class, <span class="keyword">new</span> SampleModuleService(s));
+
+        <span class="comment">// register filter, listener and servlet</span>
+        <span class="directive">final</span> ServletContext servletContext = coreComponents.getServletContext();
+
+        servletContext.addFilter(<span class="string"><span class="delimiter">&quot;</span><span class="content">filterName</span><span class="delimiter">&quot;</span></span>, <span class="keyword">new</span> SampleFilter())
+            .addMappingForUrlPatterns(<span class="predefined-type">EnumSet</span>.allOf(DispatcherType.class), <span class="predefined-constant">true</span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">/*</span><span class="delimiter">&quot;</span></span>);
+
+        servletContext.addListener(<span class="keyword">new</span> SampleListener());
+
+        servletContext.addServlet(SAMPLE_MODULE, <span class="keyword">new</span> SampleServlet())
+            .addMapping(<span class="string"><span class="delimiter">&quot;</span><span class="content">/sample</span><span class="delimiter">&quot;</span></span>);
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_making_services_available_for_dependency_injection"><a class="anchor" href="#_making_services_available_for_dependency_injection"></a>4.3.3. Making Services available for Dependency Injection</h4>
+<div class="paragraph">
+<p>In order to make a service defined in a module injectable into the business logic one must provide bean factory methods for both Jakarta EE and Spring.
+Here is an example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Configuration</span>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">RemotingSpringBeanFactory</span> {
+
+    <span class="annotation">@Bean</span>(name = <span class="string"><span class="delimiter">&quot;</span><span class="content">sampleService</span><span class="delimiter">&quot;</span></span>)
+    <span class="directive">protected</span> SampleService createSampleService() {
+        <span class="directive">final</span> SampleService service = PlatformBootstrap.getServerCoreComponents().getInstance(SampleService.class);
+        Assert.requireNonNull(service, <span class="string"><span class="delimiter">&quot;</span><span class="content">service</span><span class="delimiter">&quot;</span></span>);
+
+        <span class="keyword">return</span> service;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ApplicationScoped</span>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">RemotingCdiBeanFactory</span> {
+
+    <span class="annotation">@Produces</span>
+    <span class="directive">protected</span> SampleService createSampleService() {
+        <span class="directive">final</span> SampleService service = PlatformBootstrap.getServerCoreComponents().getInstance(SampleService.class);
+        Assert.requireNonNull(service, <span class="string"><span class="delimiter">&quot;</span><span class="content">service</span><span class="delimiter">&quot;</span></span>);
+
+        <span class="keyword">return</span> service;
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_metrics"><a class="anchor" href="#_metrics"></a>5. Metrics</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The metrics part of Rico provides an API to instrument your code with timer, gauge and counter metrics.
+Next to this Rico metrics includes preconfigured endpoints to collect and visualize such metrics.</p>
+</div>
+<div class="sect2">
+<h3 id="_the_metrics_api"><a class="anchor" href="#_the_metrics_api"></a>5.1. The Metrics API</h3>
+<div class="paragraph">
+<p>The <code>rico-metrics</code> module (<code>dev.rico.metrics</code> jigsaw module) provides the basic interfaces of the metrics api.
+The <code>dev.rico.metrics.Metrics</code> interface provides factory methods to create or access metrics.
+Currently 3 different metric types are supported:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>dev.rico.metrics.types.Counter</code></p>
+</li>
+<li>
+<p><code>dev.rico.metrics.types.Gauge</code></p>
+</li>
+<li>
+<p><code>dev.rico.metrics.types.Timer</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>All these metric types extend the common interface <code>dev.rico.metrics.Metric</code> as you can see in the following graph:</p>
+</div>
+<div class="paragraph">
+<div class="title">Metrics interfaces</div>
+<p><span class="image"><img src="images/metrics-interface.svg" alt="metrics interface"></span></p>
+</div>
+<div class="paragraph">
+<p>As we will see later, you obtain an instance of the <code>dev.rico.metrics.Metrics</code>
+interface depending on your environment (Java client, Spring, Jakarta&#8230;&#8203;).
+You should always use this instance to create or access metrics.</p>
+</div>
+<div class="paragraph">
+<p>The following example shows how a timer is created and used:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> Metric metrics = .... <i class="conum" data-value="1"></i><b>(1)</b>
+
+final <span class="predefined-type">Timer</span> timer = metrics.getOrCreateTimer(<span class="string"><span class="delimiter">&quot;</span><span class="content">server-request-timer</span><span class="delimiter">&quot;</span></span>); <i class="conum" data-value="2"></i><b>(2)</b>
+<span class="directive">final</span> <span class="type">long</span> start = <span class="predefined-type">System</span>.currentTimeMillis(); <i class="conum" data-value="3"></i><b>(3)</b>
+doServerRequest(); <i class="conum" data-value="4"></i><b>(4)</b>
+<span class="directive">final</span> <span class="type">long</span> end = <span class="predefined-type">System</span>.currentTimeMillis(); <i class="conum" data-value="5"></i><b>(5)</b>
+timer.record(end - start, <span class="predefined-type">TimeUnit</span>.MILLISECONDS); <i class="conum" data-value="6"></i><b>(6)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>it depends on your environment how you will get an instance</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>creates the timer metric or returns it if a timer metric with the given name exists</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>the start time</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>here a task is executed.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>the end time</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>the execution time of the task is recorded by the timer</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The timer metric that is measured in the given snippet can be used later to visualize the execution time of the server request in a dashboard or trigger specific alarms for long-running tasks.
+The following image shows how such result might look like in a monitoring dashboard by showing a graph of all the timer recordings over time:</p>
+</div>
+<div class="paragraph">
+<div class="title">sample graph based on metric</div>
+<p><span class="image"><img src="images/diagram-sample.png" alt="diagram sample"></span></p>
+</div>
+<div class="sect3">
+<h4 id="_metrics_2"><a class="anchor" href="#_metrics_2"></a>5.1.1. Metrics</h4>
+<div class="paragraph">
+<p>As already mentioned all metrics in Rico implement the <code>dev.rico.metrics.Metric</code> interface.
+This provides access to the name and context information of the metric.
+The name of a metric must be unique and cannot be changed.
+All factory methods for metrics in the <code>dev.rico.metrics.Metrics</code> interface will only create a new metric if no metric with the given name already exists.
+Otherwise the existing metric will be returned.
+Using the unique name of the metric you can receive all recorded values of the metric for monitoring and maintenance issues later.</p>
+</div>
+<div class="paragraph">
+<p>Next to the name, a <code>dev.rico.metrics.Metric</code> instance provides a context defined by the Rico context API.
+At the moment only the global context of the Rico context is used for metrics.
+The thread context is never added to the context of a metric.
+Custom values can be added to the context of a metric by passing them to the specific factory methods of the <code>dev.rico.metrics.Metrics</code> interface.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>You might ask yourself why the thread specific context values are not automatically added to the context of a metric.
+This is an issue that should be discussed in future and might change based on discussions.
+The context of a metric is defined once the metric is created.
+A metric can be used any time later to record values in a totally different thread.
+If we would add the thread based context values of Rico at creation time of the metric, we would track only the activity of that thread. If the thread is reused (one thread may later serve a different request), we might end up with confusing information when using the metric for monitoring later.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_counter"><a class="anchor" href="#_counter"></a>5.1.2. Counter</h4>
+<div class="paragraph">
+<p>A counter defines a number based metric that can only be incremented (up to <code>Long.MAX_VALUE</code>).
+A counter is defined by the <code>dev.rico.metrics.types.Counter</code> interface and instances should be created by using the factory methods of the <code>dev.rico.metrics.Metrics</code> interface.
+The <code>dev.rico.metrics.types.Counter</code> interface provides a method to increment the counter by a given number and a convenience method to increment the counter by 1.</p>
+</div>
+<div class="paragraph">
+<p>The following sample shows how a counter can be used:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> Metric metrics = .... <i class="conum" data-value="1"></i><b>(1)</b>
+
+final Counter counter = metrics.getOrCreateCounter(<span class="string"><span class="delimiter">&quot;</span><span class="content">server-request-call-counter</span><span class="delimiter">&quot;</span></span>); <i class="conum" data-value="2"></i><b>(2)</b>
+<span class="keyword">try</span> {
+    doServerRequest();
+} <span class="keyword">finally</span> {
+    counter.increment(); <i class="conum" data-value="3"></i><b>(3)</b>
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>it depends on your environment how you will get an instance</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>creates the counter metric or returns it if a counter metric with the given name exists</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>here the counter is incremented.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Examples where a counter can be used:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>measure how often a specific functionality is called</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_gauge"><a class="anchor" href="#_gauge"></a>5.1.3. Gauge</h4>
+<div class="paragraph">
+<p>A gauge defines a number based metric.
+The value of a gauge can be set to any number between <code>Double.MIN_VALUE</code> and <code>Double.MAX_VALUE</code>.
+A gauge is defined by the <code>dev.rico.metrics.types.Gauge</code> interface and instances should be created by using the factory methods of the <code>dev.rico.metrics.Metrics</code> interface.
+The <code>dev.rico.metrics.types.Gauge</code> interface provides a method to set the value of the gauge.</p>
+</div>
+<div class="paragraph">
+<p>The following sample shows how a gauge can be used:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> Metric metrics = .... <i class="conum" data-value="1"></i><b>(1)</b>
+
+final Gauge gauge = metrics.getOrCreateCounter(<span class="string"><span class="delimiter">&quot;</span><span class="content">user-count</span><span class="delimiter">&quot;</span></span>); <i class="conum" data-value="2"></i><b>(2)</b>
+<span class="directive">final</span> <span class="type">long</span> userCount = getUserCount();
+gauge.setValue(userCount); <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>it depends on your environment how you will get an instance</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>creates the gauge metric or returns it if a gauge metric with the given name exists</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>set the value of the gauge</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Examples where a gauge can be used:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>measure how many users are logged in</p>
+</li>
+<li>
+<p>measure how much memory is used</p>
+</li>
+<li>
+<p>measure the CPU usage</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_timer"><a class="anchor" href="#_timer"></a>5.1.4. Timer</h4>
+<div class="paragraph">
+<p>A timer defines a duration based metric.
+The value of a timer can be set to any duration.
+To define a duration <code>java.util.concurrent.TimeUnit</code> is used.
+A timer is defined by the <code>dev.rico.metrics.types.Timer</code> interface and instances should be created by using the factory methods of the <code>dev.rico.metrics.Metrics</code> interface.
+The <code>dev.rico.metrics.types.Timer</code> interface provides several methods to record the duration of a task.</p>
+</div>
+<div class="paragraph">
+<p>The following sample shows how a timer can be used:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> Metric metrics = .... <i class="conum" data-value="1"></i><b>(1)</b>
+
+final <span class="predefined-type">Timer</span> timer = metrics.getOrCreateTimer(<span class="string"><span class="delimiter">&quot;</span><span class="content">server-request-timer</span><span class="delimiter">&quot;</span></span>); <i class="conum" data-value="2"></i><b>(2)</b>
+<span class="directive">final</span> <span class="type">long</span> start = <span class="predefined-type">System</span>.currentTimeMillis();
+<span class="keyword">try</span> {
+    doServerRequest();
+} <span class="keyword">finally</span> {
+    <span class="directive">final</span> <span class="type">long</span> end = <span class="predefined-type">System</span>.currentTimeMillis();
+    timer.record(end - start, <span class="predefined-type">TimeUnit</span>.MILLISECONDS); <i class="conum" data-value="3"></i><b>(3)</b>
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>it depends on your environment how you will get an instance</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>creates the gauge metric or returns it if a gauge metric with the given name exists</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>records the duration of the task</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The <code>dev.rico.metrics.types.Timer</code> interface provides some methods that make the recording of a duration much easier.
+The following code snippet does exactly the same as the last one:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> Metric metrics = .... <i class="conum" data-value="1"></i><b>(1)</b>
+
+final <span class="predefined-type">Timer</span> timer = metrics.getOrCreateTimer(<span class="string"><span class="delimiter">&quot;</span><span class="content">server-request-timer</span><span class="delimiter">&quot;</span></span>); <i class="conum" data-value="2"></i><b>(2)</b>
+timer.record(() -&gt; doServerRequest()); <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>it depends on your environment how you will get an instance</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>creates the gauge metric or returns it if a gauge metric with the given name exists</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>records the duration of the task</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Examples where a timer can be used:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>measure the duration of a request</p>
+</li>
+<li>
+<p>measure the duration of a DB call</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_server_integration_and_usage"><a class="anchor" href="#_server_integration_and_usage"></a>5.2. Server integration and usage</h3>
+<div class="paragraph">
+<p>Rico metrics can be used in Spring Boot and JakartaEE based application.
+While the metrics API is not incompatible with other application frameworks an integration is currently missing.</p>
+</div>
+<div class="sect3">
+<h4 id="_integration_in_jakartaee"><a class="anchor" href="#_integration_in_jakartaee"></a>5.2.1. Integration in JakartaEE</h4>
+<div class="paragraph">
+<p>Metrics will be automatically active once the <code>dev.rico.metrics.server.javaee</code> java module is on the classpath.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>After the migration to Java 11 and Java modules the metrics functionality was never tested in a JakartaEE based app.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_integration_in_spring"><a class="anchor" href="#_integration_in_spring"></a>5.2.2. Integration in Spring</h4>
+<div class="paragraph">
+<p>In Spring the configuration of the application must be annotated with the <code>dev.rico.metrics.server.spring.EnableMetrics</code> annotation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@SpringBootApplication</span> <i class="conum" data-value="1"></i><b>(1)</b>
+<span class="annotation">@EnableRico</span> <i class="conum" data-value="2"></i><b>(2)</b>
+<span class="annotation">@EnableMetrics</span> <i class="conum" data-value="3"></i><b>(3)</b>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">ServerApplication</span> {
+
+    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main(<span class="directive">final</span> <span class="predefined-type">String</span><span class="type">[]</span> args) {
+        SpringApplication.run(ServerApplication.class);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Default Spring Boot annotation</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Enable Rico support for Spring</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Enables Rico Metrics support for Spring</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_managed_beans_of_the_metrics_api"><a class="anchor" href="#_managed_beans_of_the_metrics_api"></a>5.2.3. Managed beans of the Metrics API</h4>
+<div class="paragraph">
+<p>The metrics API of Rico provides a managed bean for the <code>dev.rico.metrics.Metrics</code> interface.
+In both Spring and JakartaEE the bean is provided as a singleton and can be injected in any other managed bean.
+The following sample shows how metrics can be injected and used in a Spring based REST endpoint:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@RestController</span>
+<span class="annotation">@RequestMapping</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">/api/sample</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">SampleEndpoint</span> {
+
+    <span class="directive">private</span> <span class="directive">final</span> Metrics metrics;
+
+    <span class="annotation">@Autowired</span>
+    <span class="directive">public</span> SampleEndpoint(<span class="directive">final</span> Metrics metrics) {
+        <span class="local-variable">this</span>.metrics = metrics;
+    }
+
+    <span class="annotation">@RequestMapping</span>(method = RequestMethod.GET)
+    <span class="directive">public</span> <span class="type">void</span> doMetrics() <span class="directive">throws</span> <span class="exception">Exception</span> {
+        <span class="directive">final</span> Counter counter = metrics.getOrCreateCounter(<span class="string"><span class="delimiter">&quot;</span><span class="content">myCounter</span><span class="delimiter">&quot;</span></span>);
+        counter.increment();
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_metrics_endpoint"><a class="anchor" href="#_metrics_endpoint"></a>5.2.4. Metrics endpoint</h4>
+<div class="paragraph">
+<p>To provide the metrics to an external tool for monitoring an endpoint is needed.
+Rico metrics provide a http endpoint that implements the protocol that is needed for <a href="https://prometheus.io">prometheus</a>.
+The endpoint is provided by default at <code>/metrics</code> but can be configured by the <code>metrics.endpoint</code> property.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_configuration_properties"><a class="anchor" href="#_configuration_properties"></a>5.2.5. Configuration properties</h4>
+<div class="paragraph">
+<p>Rico metrics provide the following configuration properties:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Metrics configuration properties</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">property name</th>
+<th class="tableblock halign-left valign-top">default value</th>
+<th class="tableblock halign-left valign-top">description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">metrics.active</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Defines if the metrics should be active (if the metrics module will be bootstrapped)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">metrics.endpoint</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">/metrics</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Defines the endpoint for prometheus</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_provide_metrics_for_monitoring"><a class="anchor" href="#_provide_metrics_for_monitoring"></a>5.3. Provide metrics for monitoring</h3>
+<div class="paragraph">
+<p>An application that uses Rico metrics will provide a <code>/metrics</code> endpoint by default.
+This endpoint provides all metrics information in a format that can be read by <a href="https://prometheus.io">prometheus</a>.
+Based on this a custom monitoring solution can be created.</p>
+</div>
+<div class="sect3">
+<h4 id="_using_prometheus"><a class="anchor" href="#_using_prometheus"></a>5.3.1. Using Prometheus</h4>
+<div class="paragraph">
+<p>Prometheus is an open source monitoring system and time series database.
+A correctly configured Prometheus instance can fetch the metrics of a running application and store them in time-series.</p>
+</div>
+<div class="paragraph">
+<div class="title">Metrics interfaces</div>
+<p><span class="image"><img src="images/connect-prometheus.svg" alt="connect prometheus"></span></p>
+</div>
+<div class="paragraph">
+<p>The easiest way to use Prometheus is through Docker.
+Prometheus already provides ready-to-use docker containers that fit perfect to Rico metrics.
+Only the endpoint of the application or applications must be configured.
+To do so we can create a custom configuration for Prometheus in a <code>prometheus.yml</code> YAML file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yml"><span class="key">global</span>:
+  <span class="key">scrape_interval</span>:     <span class="string"><span class="content">10s </span></span><i class="conum" data-value="1"></i><b>(1)</b>
+
+<span class="key">scrape_configs</span>:
+  - <span class="string"><span class="content">job_name: 'rico-metrics' </span></span><i class="conum" data-value="2"></i><b>(2)</b>
+
+    <span class="key">metrics_path</span>: <span class="string"><span class="content">'/metrics' </span></span><i class="conum" data-value="3"></i><b>(3)</b>
+    <span class="key">static_configs</span>:
+      - <span class="string"><span class="content">targets: ['app-server:8080'] </span></span><i class="conum" data-value="4"></i><b>(4)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>This defines the interval in that Prometheus will fetch metrics records from the server</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Name of the internal job that will fetch the data</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The endpoint on the server.
+Here we use the default <code>/metrics</code></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>An array of servers.
+Prometheus will try to fetch metrics records from each server in this array.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Next to this we need to create a Docker file that extends the default Docker image from Prometheus and adds our custom configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="docker">FROM prom/prometheus:v2.18.1
+MAINTAINER Hendrik Ebbers, karakun.com
+ADD prometheus.yml /etc/prometheus/</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Prometheus provides a simple web frontend that can be used to visualize metrics.
+Any metric that has been created in a Java application by using the Rico metrics API can be displayed.
+Next to the custom metrics of an application Rico already provides some general metrics.</p>
+</div>
+<div class="paragraph">
+<div class="title">Prometheus frontend</div>
+<p><span class="image"><img src="images/prometheus-pic.png" alt="prometheus pic"></span></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_predefined_metrics"><a class="anchor" href="#_predefined_metrics"></a>5.3.2. Predefined metrics</h4>
+<div class="paragraph">
+<p>The following table gives an overview about all metrics that rico measures automatically:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Predefined metrics</caption>
+<colgroup>
+<col style="width: 17.647%;">
+<col style="width: 11.7647%;">
+<col style="width: 11.7647%;">
+<col style="width: 58.8236%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">metrics name</th>
+<th class="tableblock halign-center valign-top">type</th>
+<th class="tableblock halign-center valign-top">unit</th>
+<th class="tableblock halign-left valign-top">description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.classes.loaded</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">classes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The number of classes that are currently loaded in the Java virtual machine</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.classes.unloaded</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Counter</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">classes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The total number of classes unloaded since the Java virtual machine has started execution</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.buffer.count</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">buffers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An estimate of the number of buffers in the pool</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.buffer.memory.used</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">bytes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An estimate of the memory that the Java virtual machine is using for this buffer pool</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.buffer.total.capacity</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">bytes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An estimate of the total capacity of the buffers in this pool</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.memory.used</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">bytes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The amount of used memory (available for several memory pools, defined by tag/context "id")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.memory.committed</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">bytes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The amount of memory in bytes that is committed for the Java virtual machine to use (available for several memory pools, defined by tag/context "id")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.memory.max</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">bytes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The maximum amount of memory in bytes that can be used for memory management (available for several memory pools, defined by tag/context "id")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.gc.max.data.size</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">bytes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Max size of old generation memory pool</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.gc.live.data.size</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">bytes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Size of old generation memory pool after a full GC</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.gc.memory.promoted</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Counter</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">bytes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Count of positive increases in the size of the old generation memory pool before GC to after GC</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.gc.memory.allocated</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Counter</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">bytes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Incremented for an increase in the size of the young generation memory pool after one GC to before the next</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.gc.concurrent.phase.time</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Timer</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">milliseconds</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time spent in concurrent phase</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.gc.pause</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Timer</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">milliseconds</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time spent in GC pause</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">system.cpu.count</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The number of processors available to the Java virtual machine</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">system.load.average.1m</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The sum of the number of runnable entities queued to available processors and the number of runnable entities running on the available processors averaged over a period of time</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">system.cpu.usage</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The "recent cpu usage" for the whole system</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">process.cpu.usage</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The "recent cpu usage" for the Java Virtual Machine process</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.threads.peak</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">threads</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The peak live thread count since the Java virtual machine started or peak was reset</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.threads.daemon</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">threads</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The current number of live daemon threads</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.threads.live</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">threads</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The current number of live threads including both daemon and non-daemon threads</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.threads.states</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">threads</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The current number of threads having a specific state. The state is defined by tag/context "state"</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">request</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Timer</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">milliseconds</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time for a HTTP request. The endpoint is defined by tag/context "uri"</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">requestCounter</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Counter</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Counter for all HTTP requests. The endpoint is defined by tag/context "uri"</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">httpSessions</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of active http sessions</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_create_insightful_dashboards_with_grafana"><a class="anchor" href="#_create_insightful_dashboards_with_grafana"></a>5.3.3. Create insightful Dashboards with Grafana</h4>
+<div class="paragraph">
+<p>While Prometheus can be used to visualize a graph of 1 metric or query you normally expect much more functionality for modern application monitoring.
+Since the data storage and query handling is the main task of Prometheus an additional tool should be used to visualize all the metrics.
+Here <a href="https://grafana.com">Grafana</a> is a very good choose.
+The open source tool can be used to create dashboards with several graphs based on data that is available in Prometheus.</p>
+</div>
+<div class="paragraph">
+<div class="title">Grafana and Prometheus</div>
+<p><span class="image"><img src="images/prometheus-grafana.svg" alt="prometheus grafana"></span></p>
+</div>
+<div class="paragraph">
+<p>The following picture shows a sample dashboard that was created with grafana.
+Next to this a live demo can be found <a href="https://play.grafana.org/">here</a>.</p>
+</div>
+<div class="paragraph">
+<div class="title">Grafana dashboard</div>
+<p><span class="image"><img src="images/grafana.png" alt="grafana"></span></p>
+</div>
+<div class="paragraph">
+<p>As already described for Prometheus we can start Grafana in a Docker container, too.
+Information about running Grafana in Docker can be found <a href="https://grafana.com/docs/grafana/latest/installation/docker/">here</a>.
+If you want to automate the configuration and provisioning of Grafana <a href="https://grafana.com/docs/grafana/latest/administration/provisioning/">this link</a> will be helpful.
+Next to this we provide a <a href="https://docs.docker.com/compose/">docker-compose</a> based sample in <a href="https://github.com/rico-projects/rico-samples/tree/master/metrics-sample">the Rico samples repository</a>.</p>
+</div>
+<div class="paragraph">
+<p>Grafana is a large tool with many features and functionalities.
+Here is a collection of links to get started:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://grafana.com/docs/grafana/latest/getting-started/what-is-grafana/">What is Grafana</a></p>
+</li>
+<li>
+<p><a href="https://grafana.com/docs/grafana/latest/panels/panels-overview/">Grafana Panels</a></p>
+</li>
+<li>
+<p><a href="https://grafana.com/docs/grafana/latest/features/dashboard/dashboards/">Grafana Dashboards</a></p>
+</li>
+<li>
+<p><a href="https://grafana.com/tutorials/">Grafana Tutorials</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If you want to include a custome dashboard in the docker-compose sample have a look at
+<a href="https://grafana.com/docs/grafana/latest/reference/export_import/">export and import</a>
+to create a XML represenation of the dashboard</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_logging"><a class="anchor" href="#_logging"></a>6. Logging</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>TODO</p>
+</div>
+<div class="sect2">
+<h3 id="_general_usage_and_benefits_of_the_rico_logging_concept"><a class="anchor" href="#_general_usage_and_benefits_of_the_rico_logging_concept"></a>6.1. General usage and benefits of the Rico logging concept</h3>
+<div class="paragraph">
+<p>TODO</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_centralized_logging_and_the_gelf_format"><a class="anchor" href="#_centralized_logging_and_the_gelf_format"></a>6.2. Centralized logging and the GELF format</h3>
+<div class="paragraph">
+<p>TODO</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_log4j2_as_logging_implementation"><a class="anchor" href="#_using_log4j2_as_logging_implementation"></a>6.3. Using Log4J2 as logging implementation</h3>
+<div class="paragraph">
+<p>TODO</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_logback_as_logging_implementation"><a class="anchor" href="#_using_logback_as_logging_implementation"></a>6.4. Using Logback as logging implementation</h3>
+<div class="paragraph">
+<p>TODO</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_graylog"><a class="anchor" href="#_using_graylog"></a>6.5. Using Graylog</h3>
+<div class="paragraph">
+<p>TODO</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_the_elk_stack"><a class="anchor" href="#_using_the_elk_stack"></a>6.6. Using the ELK Stack</h3>
+<div class="paragraph">
+<p>TODO</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_security"><a class="anchor" href="#_security"></a>7. Security</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>TODO</p>
+</div>
+<div class="sect2">
+<h3 id="_centralized_security"><a class="anchor" href="#_centralized_security"></a>7.1. Centralized security</h3>
+<div class="paragraph">
+<p>TODO</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_keycloak"><a class="anchor" href="#_keycloak"></a>7.2. Keycloak</h3>
+<div class="paragraph">
+<p>TODO</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_security_api_on_the_server"><a class="anchor" href="#_security_api_on_the_server"></a>7.3. Security API on the server</h3>
+<div class="paragraph">
+<p>TODO</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_security_api_on_the_client"><a class="anchor" href="#_security_api_on_the_client"></a>7.4. Security API on the client</h3>
+<div class="paragraph">
+<p>TODO</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_remoting"><a class="anchor" href="#_remoting"></a>8. Remoting</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The remoting part of Rico provides an implementation of the remote
+ presentation model pattern.</p>
+</div>
+<div class="sect2">
+<h3 id="_architecture_overview"><a class="anchor" href="#_architecture_overview"></a>8.1. Architecture overview</h3>
+<div class="paragraph">
+<p>When using remoting as part of a client-server-application all models
+will automatically be synchronized between client and server.
+Thus, you don’t need to think about any specific endpoints or requests.</p>
+</div>
+<div class="paragraph">
+<div class="title">Synchronization of the model</div>
+<p><span class="image"><img src="images/remoting-architecture-1.svg" alt="remoting architecture 1"></span></p>
+</div>
+<div class="paragraph">
+<p>Based on this, the remoting API defines server side controllers
+that contain all the controller logic for a specific view.
+The lifecycle of these controllers is automatically synchronized with
+the view lifecycle. With this approach you have a MVC group for each
+client view with a synchronized model and a managed controller.</p>
+</div>
+<div class="paragraph">
+<p>The Rico remoting API provides a server and client framework that
+let you easily write applications based on the described pattern.
+To do so the platform contains support for well known sever frameworks
+like JakartaEE or Spring and several implementations to create clients
+by using for example JavaFX or Angular.</p>
+</div>
+<div class="paragraph">
+<div class="title">Supported frameworks and clients</div>
+<p><span class="image"><img src="images/remoting-supported-framworks.svg" alt="remoting supported framworks"></span></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_remote_presentation_model"><a class="anchor" href="#_the_remote_presentation_model"></a>8.2. The Remote Presentation Model</h3>
+<div class="paragraph">
+<p>Remote Presentation Model (RPM) is a software design pattern for implementing
+user interfaces. Like Model View Controller (MVC) it divides a module into
+three parts:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Model</p>
+</li>
+<li>
+<p>View</p>
+</li>
+<li>
+<p>Controller</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The main difference to MVC is that the Controller part of the RPM pattern
+is separated from the view. In a client server architecture the controller
+part is defined on the server. By doing so several benefits of server
+site programming can be directly used in the controller. In addition the view
+part is mostly extreme lightweight and can easily be replaced. Both controller
+and view know the model and can interact with the model. Since the components
+RPM pattern can be separated on client and server the model must be synchronized
+between client and server.</p>
+</div>
+<div class="paragraph">
+<div class="title">Synchronization of the model</div>
+<p><span class="image"><img src="images/remoting-architecture-1.svg" alt="remoting architecture 1"></span></p>
+</div>
+<div class="paragraph">
+<p>Since view and controller can interact with the model it’s a best practice
+to support the observer pattern for the model. By doing so the view can simply
+bind its components to properties of the model and the server can react on
+changes by simply adding a lister to an observable property.</p>
+</div>
+<div class="paragraph">
+<p>The Rico remoting API provides an implementation of the Remote Presentation
+Model pattern. This documentation provides descriptions and samples of the
+public model, controller and view APIs of the Rico remoting API.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_building_rico"><a class="anchor" href="#_building_rico"></a>9. Building Rico</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The build of Rico is based on Gradle.
+The Gradle plugins we use for the build currently rely on Gradle version <code>6.4-rc-1</code> or higher.
+Since the gradle wrapper is used, you do not need to install Gradle on your system.
+Because of a bug in the <code>javadoc</code> executable of early versions of Java 11 you need Java version <code>11.0.6</code> as a minimum version to build rico.
+By using older Java 11 releases the build step of the JavaDoc creation will fail.
+For executing the integration tests of Rico <code>docker-compose</code> (and <code>docker</code>) is needed.</p>
+</div>
+<div class="paragraph">
+<p>A complete build can be started by</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>./gradlew build</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This will build all modules, create the documentation and will execute the integration tests.</p>
+</div>
+<div class="sect2">
+<h3 id="_travis_setup"><a class="anchor" href="#_travis_setup"></a>9.1. Travis setup</h3>
+<div class="paragraph">
+<p>Rico is automatically build by <a href="https://travis-ci.org">Travis</a>.
+The configuration for Travis can be found in the <code>.travis.yml</code> YAML file in the root of the repository.
+A new travis build will be triggert by each commit to a pull request or the master branch.
+All builds can be found <a href="https://travis-ci.org/github/rico-projects/rico">here</a>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_snapshot_releases"><a class="anchor" href="#_snapshot_releases"></a>10. Snapshot releases</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Each commit to the master branch will automatically trigger a Travis build.
+This build will upload the build artifacts as snapshots to <a href="https://oss.jfrog.org">the open snapshot repository from JFrog</a>.
+You can find all Rico artifacts <a href="https://oss.jfrog.org/oss-snapshot-local/dev/rico/">here</a>.</p>
+</div>
+<div class="paragraph">
+<p>If you want to depend on snapshot builds of Rico you need to add the maven repository to your build:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;distributionManagement&gt;</span>
+    <span class="tag">&lt;snapshotRepository&gt;</span>
+        <span class="tag">&lt;id&gt;</span>snapshots<span class="tag">&lt;/id&gt;</span>
+        <span class="tag">&lt;name&gt;</span>oss-jfrog-artifactory-snapshots<span class="tag">&lt;/name&gt;</span>
+        <span class="tag">&lt;url&gt;</span>https://oss.jfrog.org/artifactory/oss-snapshot-local<span class="tag">&lt;/url&gt;</span>
+    <span class="tag">&lt;/snapshotRepository&gt;</span>
+<span class="tag">&lt;/distributionManagement&gt;</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_project_structure"><a class="anchor" href="#_project_structure"></a>11. Project structure</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Rico is structured in several modules. All these modules are defined as gradle subprojects,
+which will create a jar per module. Next to this each module is defined
+as a Java module.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Rico contains in the incubation folder several modules that are in incubation state.
+Furthermore Rico contains several modules only needed for internal unit and integration tests
+(see folder integration-tests). All these modules may not follow all the rules and
+structure defined here.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_gradle_build"><a class="anchor" href="#_gradle_build"></a>11.1. Gradle build</h3>
+<div class="paragraph">
+<p>In the root folder of the project you can find the <code>build.gradle</code> file that defines
+the build for the rico project and all subprojects. Instead of externalizing build
+tasks in the subprojects we decided to define the build steps for different subprojects
+types (java module or documentation) in this central file.</p>
+</div>
+<div class="sect3">
+<h4 id="_gradle_subprojects"><a class="anchor" href="#_gradle_subprojects"></a>11.1.1. Gradle subprojects</h4>
+<div class="paragraph">
+<p>All gradle subprojects are defined in the <code>settings.gradle</code> located in the root folder of the project.</p>
+</div>
+<div class="paragraph">
+<p>Each subproject provides its own gradle file, which must have the
+same name as the gradle module (based on the entry in <code>settings.gradle</code>).
+The gradle file for the <code>rico-client</code> subproject must be named <code>rico-client.gradle</code>.
+Each of these gradle files defines the dependencies of the subproject.
+Normally they do not contain any additional information next to the dependencies,
+since the general build is defined in the global <code>build.gradle</code> file found in the root folder.</p>
+</div>
+<div class="paragraph">
+<p>Gradle subprojects in Rico won&#8217;t be released by default. To add a module to releases of Rico
+the <code>publishJars</code> gradle property must be set to <code>true</code>. This is done in the
+<code>gradle.properties</code> file that is located in all modules that will be included in
+a release. The concrete effect of the <code>publishJars</code> property can be found in the <code>build.gradle</code>
+file in the project root folder.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_package_structure"><a class="anchor" href="#_package_structure"></a>11.2. Package structure</h3>
+<div class="paragraph">
+<p>Each subproject has its sources split into internal and public packages.
+This split is additionally defined in the Java module config and hides all private APIs.
+While the public API defines its own base package, the packages containing the internal API start with <code>dev.rico.internal</code>.
+This is done to be compatible with the Java module system.
+You can then find a structure like the following one in each module:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>dev.rico.internal.MODULE_BASE_PACKAGE &lt;- private API
+
+dev.rico.MODULE_BASE_PACKAGE &lt;- public API</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_java_module_definition"><a class="anchor" href="#_java_module_definition"></a>11.3. Java Module definition</h3>
+<div class="paragraph">
+<p>Each subproject must be defined as a Java Module and must contain
+a <code>module-info.java</code> file in the <code>scr/main/java</code> folder.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_project_graph"><a class="anchor" href="#_project_graph"></a>11.4. Project Graph</h3>
+<div class="paragraph">
+<p>Since one main goal of Rico is to provide client side APIs and features
+next to the server side modules a lot of modules of rico are targeted for
+the client or the server. In general all modules and its dependencies follow
+a common pattern that can be found in the base modules as shown in the following
+diagram:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="images/base-gradle-modules.svg" alt="base gradle modules"></span></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_best_practices_for_documentation"><a class="anchor" href="#_best_practices_for_documentation"></a>12. Best practices for documentation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter contains some best practices that Rico commiters should have a look
+at when working on the documentation of Rico.</p>
+</div>
+<div class="sect2">
+<h3 id="_documentation_structure"><a class="anchor" href="#_documentation_structure"></a>12.1. Documentation structure</h3>
+<div class="paragraph">
+<p>The documentation of Rico is placed in the <code>documentation</code> subfolder of the project.
+It is defined as a subproject by gradle and the complete documentation is written
+in <a href="https://asciidoctor.org">AsciiDoc</a>.</p>
+</div>
+<div class="paragraph">
+<p>The documentation can be found in the <code>src/docs/asciidoc</code> folder of the <code>documentation</code>
+subproject. The documentation is splitted in several <code>adoc</code> files. Whenever a new
+chapter is started for the documentation a new <code>adoc</code> file should be created.
+All <code>adoc</code> files are referenced in the <code>index.adoc</code> file. By doing so all
+files will be rendered in one huge documenation. Including adoc files in
+the index.adoc looks like shown in the following code snippet:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>include::project-structure.adoc[]
+
+include::sub-doc/subdoc.adoc[]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As you can see in the snippet, documents can be easily stored in subfolders.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_writing_asciidoc_based_documents"><a class="anchor" href="#_writing_asciidoc_based_documents"></a>12.2. Writing AsciiDoc based documents</h3>
+<div class="paragraph">
+<p>A general documentation of the AsciiDoc syntax can be found
+<a href="https://asciidoctor.org/docs/asciidoc-syntax-quick-reference/">here</a>.
+Additionally to the general syntax rules we introduced some best practices for the
+Rico documentation.</p>
+</div>
+<div class="sect3">
+<h4 id="_the_title_of_a_document"><a class="anchor" href="#_the_title_of_a_document"></a>12.2.1. The title of a document</h4>
+<div class="paragraph">
+<p>Each document should start with a headline (Level 1 Section Title). So not
+use a document title since the document will be included in the <code>index.adoc</code>
+that defines the document title.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_adding_images"><a class="anchor" href="#_adding_images"></a>12.2.2. Adding images</h4>
+<div class="paragraph">
+<p>All images are currently placed in the <code>src/docs/asciidoc/images</code> folder.
+An image can be added to a document just by refering the name of the image
+as if it would be in the same folder as the document. The follwoing snippet
+shows an example:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>/image:example-pic.svg[]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You do not need to define the path to the image dir since each adoc file
+contains a <code>ifndef</code> statement at the beginning that defines the location of
+the image folder if it was not defined before (for example if a document is
+included in another document). The <code>ifndef</code> looks like this:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>/ifndef::imagesdir[:imagesdir: images]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Instead of using pixel based images we try to use vector based images wherever
+possible. Therefore, all technical diagramms should be created by using
+<a href="https://www.diagrams.net">diagrams.net</a> (sucessor of draw.io).</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="images/diagrams-net.png" alt="diagrams net"></span></p>
+</div>
+<div class="paragraph">
+<p>As you can see in the <code>images</code> folder we store a <code>xml</code> file and a <code>svg</code> file for each
+diagramm. While the <code>svg</code> is used in the AsciiDoc documents, the <code>xml</code> file can be reopend
+in diagrams.net. Whenever a new diagramm is created, or an old diagramm is changed, the
+<code>xml</code> file must be updated next to the <code>svg</code> file.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_creating_the_documentation"><a class="anchor" href="#_creating_the_documentation"></a>12.3. Creating the documentation</h3>
+<div class="paragraph">
+<p>The documentation will automatically create a HTML based documentation
+when calling the gradle <code>build</code> task. Therefore whenever you <a href="#build-doc/build-rico.adoc">build</a> the Rico
+project the complete documentation will automatically be build. Next to this you can
+execute the <code>asciidoctor</code> Gradle task if you only want to generate the documentation.
+The generated documentation can be found under the <code>build/docs/asciidoc</code> folder of
+the documentation module.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="images/rico-os.svg" alt="rico os"></span></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 1.0.0-SNAPSHOT<br>
+Last updated 2020-06-25 13:26:58 UTC
+</div>
+</div>
+<link rel="stylesheet" href="./coderay-asciidoctor.css">
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.10">
+<title>Building Rico</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="./asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_building_rico">1. Building Rico</a>
+<ul class="sectlevel2">
+<li><a href="#_travis_setup">1.1. Travis setup</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_building_rico"><a class="anchor" href="#_building_rico"></a>1. Building Rico</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The build of Rico is based on Gradle.
+The Gradle plugins we use for the build currently rely on Gradle version <code>6.4-rc-1</code> or higher.
+Since the gradle wrapper is used, you do not need to install Gradle on your system.
+Because of a bug in the <code>javadoc</code> executable of early versions of Java 11 you need Java version <code>11.0.6</code> as a minimum version to build rico.
+By using older Java 11 releases the build step of the JavaDoc creation will fail.
+For executing the integration tests of Rico <code>docker-compose</code> (and <code>docker</code>) is needed.</p>
+</div>
+<div class="paragraph">
+<p>A complete build can be started by</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>./gradlew build</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This will build all modules, create the documentation and will execute the integration tests.</p>
+</div>
+<div class="sect2">
+<h3 id="_travis_setup"><a class="anchor" href="#_travis_setup"></a>1.1. Travis setup</h3>
+<div class="paragraph">
+<p>Rico is automatically build by <a href="https://travis-ci.org">Travis</a>.
+The configuration for Travis can be found in the <code>.travis.yml</code> YAML file in the root of the repository.
+A new travis build will be triggert by each commit to a pull request or the master branch.
+All builds can be found <a href="https://travis-ci.org/github/rico-projects/rico">here</a>.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 1.0.0-SNAPSHOT<br>
+Last updated 2020-06-25 13:26:58 UTC
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.10">
+<title>UI toolkit support in Rico</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="./asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel2">
+<li><a href="#_ui_toolkit_support_in_rico">1. UI toolkit support in Rico</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect2">
+<h3 id="_ui_toolkit_support_in_rico"><a class="anchor" href="#_ui_toolkit_support_in_rico"></a>1. UI toolkit support in Rico</h3>
+<div class="paragraph">
+<p>Rico provides several APIs that automatically handle UI toolkit specific functionalities like thread handling.
+To benefit from such features the UI toolkit must be specified in Rico.
+A UI toolkit is defined by the interface <code>dev.rico.client.Toolkit</code> in Rico.
+At the moment Rico provides an implementation of that interface for Swing and JavaFX.</p>
+</div>
+<div class="paragraph">
+<p>The following code shows how the ui toolkit can be configured in Rico:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> <span class="predefined-type">Toolkit</span> javaFxToolkit = <span class="keyword">new</span> FxToolkit();
+Client.init(javaFxToolkit);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For the implemented toolkits Rico provides some convenience methods that make the usage even more easy:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">FxToolkit.init();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Normally this code should be directly in the main method of your client application, since several functionalities of the Rico client API won&#8217;t be usable without a configured UI toolkit.</p>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 1.0.0-SNAPSHOT<br>
+Last updated 2020-06-25 13:26:58 UTC
+</div>
+</div>
+<link rel="stylesheet" href="./coderay-asciidoctor.css">
+</body>
+</html>

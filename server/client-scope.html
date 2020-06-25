@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.10">
+<title>Client Scope</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="./asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel2">
+<li><a href="#_client_scope">1. Client Scope</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect2">
+<h3 id="_client_scope"><a class="anchor" href="#_client_scope"></a>1. Client Scope</h3>
+<div class="paragraph">
+<p>Rico supports an additional custom Scope called <code>ClientScope</code>.
+This scope is implemented for JakartaEE and Spring and defined as a scope that is a "sub-scope" of the session scope.
+This scope is important if you want to create stateful web applications.
+You can for example let the tabs of a browser share the same session scope, but different client scopes.
+Since they share the same session it’s hard to define data that is only related to one tab in the browser otherwise.
+The lifecycle of a client scope is then bound to a tab in the browser and ends when the tab will be closed. Of course this works only if the client side tells the server side when to create a client session. Rico supports this out of the box through the <code>rico-js</code> module and the java client modules.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="../images/client-scope.png" alt="client scope"></span></p>
+</div>
+<div class="paragraph">
+<p>For both JakartaEE and Spring a <code>dev.rico.server.javaee.ClientScoped</code> annotation is defined that can be used to give any bean the specific scope:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ClientScoped</span>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">MyLocalStoreService</span> {
+
+    <span class="directive">private</span> <span class="predefined-type">List</span>&lt;<span class="predefined-type">String</span>&gt; values = <span class="keyword">new</span> <span class="predefined-type">ArrayList</span>();
+
+    <span class="directive">public</span> <span class="type">void</span> add(<span class="predefined-type">String</span> val) {
+        values.add(val);
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Internally the client scope is defined by a unique identifier that is shared between client and server with each request.
+Based on this the scope only "lives" inside a http request round-trip.</p>
+</div>
+<div class="paragraph">
+<p>Rico provides a <code>dev.rico.server.client.ClientSessionListener</code> interface that behaves similar to the <code>javax.servlet.http.HttpSessionListener</code> listener.
+By using the <code>dev.rico.server.ServerListener</code> annotation client scope listeners will automatically be found and registered at  server bootstrap.
+The following code shows an example for such a listener:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ServerListener</span>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">MyClientSessionListener</span> <span class="directive">implements</span> ClientSessionListener {
+
+    <span class="directive">public</span> <span class="type">void</span> sessionCreated(ClientSession clientSession) {
+        <span class="predefined-type">String</span> clientSessionId = clientSession.getId();
+        <span class="predefined-type">String</span> httpSessionId = clientSession.getHttpSession().getId();
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">Client session '</span><span class="delimiter">&quot;</span></span> + clientSessionId  + <span class="string"><span class="delimiter">&quot;</span><span class="content">' created in http session '</span><span class="delimiter">&quot;</span></span> + httpSessionId + <span class="string"><span class="delimiter">&quot;</span><span class="content">'</span><span class="delimiter">&quot;</span></span>);
+    }
+    <span class="directive">public</span> <span class="type">void</span> sessionDestroyed(ClientSession clientSession) {
+        <span class="directive">final</span> <span class="predefined-type">String</span> clientSessionId = clientSession.getId();
+        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">Client session '</span><span class="delimiter">&quot;</span></span> + clientSessionId  + <span class="string"><span class="delimiter">&quot;</span><span class="content">' destroyed</span><span class="delimiter">&quot;</span></span>);
+    }
+
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 1.0.0-SNAPSHOT<br>
+Last updated 2020-06-25 13:26:58 UTC
+</div>
+</div>
+<link rel="stylesheet" href="./coderay-asciidoctor.css">
+</body>
+</html>

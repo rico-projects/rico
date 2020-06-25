@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.10">
+<title>Server Timing</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="./asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel2">
+<li><a href="#_server_timing">1. Server Timing</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect2">
+<h3 id="_server_timing"><a class="anchor" href="#_server_timing"></a>1. Server Timing</h3>
+<div class="paragraph">
+<p>Server Timing is a new W3C feature that allows you to add some metrics about the request handling to the response.
+The following image shows how such information would be rendered in the developer console of chrome:</p>
+</div>
+<div class="paragraph">
+<div class="title">Server timing view in Google Chrome</div>
+<p><span class="image"><img src="../images/server-timing.png" alt="server timing"></span></p>
+</div>
+<div class="paragraph">
+<p>The feature is very usefully when you develop a client that uses HTTP calls to communicate with the server.
+In this case the client sends a http request to the server and receives a http response after some time.
+While the server execution is a black box for the client, the "server timing" information can be structured into multiple parts like database time and total response handling, talking to third party services and others.
+This can help you to identify time-consuming components on the server side in a production environment.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="../images/timing-request.png" alt="timing request"></span></p>
+</div>
+<div class="sect3">
+<h4 id="_server_timing_api"><a class="anchor" href="#_server_timing_api"></a>1.1. Server Timing API</h4>
+<div class="paragraph">
+<p>Rico provides a managed component that can easily be injected in any Spring or JavaEE bean.
+This component is defined by the <code>dev.rico.server.timing.ServerTiming</code> interface and lives in the request scope.
+By injecting the component you can easily create metrics in your server that will be added automatically to the http response.
+The metric name is defined through the <code>dev.rico.server.timing.ServerTiming</code> interface.
+The following code snippet shows the basic usage of the API:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> ServerTiming timing = ... <span class="comment">// will be injected</span>
+
+final Metric dbMetric = timing.start(<span class="string"><span class="delimiter">&quot;</span><span class="content">DB-Operation</span><span class="delimiter">&quot;</span></span>);
+<span class="comment">//Do some work on the database</span>
+dbMetric.stop();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The given sample creates a metric with the given name “DB-Operation” and will record the duration until the <code>stop()</code> method is called.
+You can see the duration of the “DB-Operation” directly in the developer console of your chrome browser.</p>
+</div>
+<div class="paragraph">
+<p>Let’s have a look how you can use this feature with a simple REST endpoint in JakartaEE:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Path</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">/api/delete</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">MyEndpoint</span> {
+
+    <span class="annotation">@Inject</span>
+    <span class="directive">private</span> ServerTiming timing;
+
+    <span class="annotation">@Inject</span>
+    <span class="directive">private</span> Database dabase;
+
+    <span class="annotation">@GET</span>
+    <span class="directive">public</span> <span class="type">void</span> clearAllData() {
+        <span class="directive">final</span> Metric metric1 = timing.start(<span class="string"><span class="delimiter">&quot;</span><span class="content">delete-users</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Deletes all users in the DB</span><span class="delimiter">&quot;</span></span>);
+        database.deleteAllUsers();
+        metric1.stop();
+
+        <span class="directive">final</span> Metric metric2 = timing.start(<span class="string"><span class="delimiter">&quot;</span><span class="content">delete-items</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Deletes all items in the DB</span><span class="delimiter">&quot;</span></span>);
+        database.deleteAllItems();
+        metric2.stop();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The Rico usage in the Spring version is identical:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@RestController</span>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">MyEndpoint</span> {
+
+  <span class="annotation">@Autowired</span>
+  <span class="directive">private</span> ServerTiming timing;
+
+  <span class="annotation">@Autowired</span>
+  <span class="directive">private</span> Database dabase;
+
+  <span class="annotation">@RequestMapping</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">/api/delete</span><span class="delimiter">&quot;</span></span>)
+  <span class="directive">public</span> <span class="type">void</span> clearAllData() {
+        <span class="directive">final</span> Metric metric1 = timing.start(<span class="string"><span class="delimiter">&quot;</span><span class="content">delete-users</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Deletes all users in the DB</span><span class="delimiter">&quot;</span></span>);
+        database.deleteAllUsers();
+        metric1.stop();
+
+        <span class="directive">final</span> Metric metric2 = timing.start(<span class="string"><span class="delimiter">&quot;</span><span class="content">delete-items</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Deletes all items in the DB</span><span class="delimiter">&quot;</span></span>);
+        database.deleteAllItems();
+        metric2.stop();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the example an endpoint <code>/api/delete</code> is doing 2 calls against a database.
+For both calls a <code>dev.rico.server.timing.Metric</code> instance is created to measure the duration of the calls.
+In accordance with the “server timing” specification Rico supports a description next to a name for a timing entry.
+Once a client calls the endpoint, the http response will automatically contain the timing information for “deleteAllUsers” and “deleteAllItems”.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_additional_jakartaee_integration"><a class="anchor" href="#_additional_jakartaee_integration"></a>1.2. Additional JakartaEE integration</h4>
+<div class="paragraph">
+<p>Instead of injecting a <code>dev.rico.server.timing.ServerTiming</code> instance and creating metrics by hand you can add the <code>dev.rico.server.javaee.timing.Timing</code> annotation to each method of a managed bean to record the method call duration.
+The following code shows how you can easily record the duration of an HTTP endpoint by doing so:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Path</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">/api/delete</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">MyEndpoint</span> {
+
+    <span class="annotation">@GET</span>
+    <span class="annotation">@Timing</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">item-count-metric</span><span class="delimiter">&quot;</span></span>)
+    <span class="directive">public</span> <span class="type">int</span> getItemCount() {
+        <span class="directive">final</span> <span class="type">int</span> count = ... <span class="comment">// do some calculations;</span>
+        return count;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Like the basic API the <code>Timing</code> annotation supports a name and an optional description for the metric.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 1.0.0-SNAPSHOT<br>
+Last updated 2020-06-25 13:26:58 UTC
+</div>
+</div>
+<link rel="stylesheet" href="./coderay-asciidoctor.css">
+</body>
+</html>

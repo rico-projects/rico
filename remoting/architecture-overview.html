@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.10">
+<title>Architecture overview</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="./asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel2">
+<li><a href="#_architecture_overview">1. Architecture overview</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect2">
+<h3 id="_architecture_overview"><a class="anchor" href="#_architecture_overview"></a>1. Architecture overview</h3>
+<div class="paragraph">
+<p>When using remoting as part of a client-server-application all models
+will automatically be synchronized between client and server.
+Thus, you don’t need to think about any specific endpoints or requests.</p>
+</div>
+<div class="paragraph">
+<div class="title">Synchronization of the model</div>
+<p><span class="image"><img src="../images/remoting-architecture-1.svg" alt="remoting architecture 1"></span></p>
+</div>
+<div class="paragraph">
+<p>Based on this, the remoting API defines server side controllers
+that contain all the controller logic for a specific view.
+The lifecycle of these controllers is automatically synchronized with
+the view lifecycle. With this approach you have a MVC group for each
+client view with a synchronized model and a managed controller.</p>
+</div>
+<div class="paragraph">
+<p>The Rico remoting API provides a server and client framework that
+let you easily write applications based on the described pattern.
+To do so the platform contains support for well known sever frameworks
+like JakartaEE or Spring and several implementations to create clients
+by using for example JavaFX or Angular.</p>
+</div>
+<div class="paragraph">
+<div class="title">Supported frameworks and clients</div>
+<p><span class="image"><img src="../images/remoting-supported-framworks.svg" alt="remoting supported framworks"></span></p>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 1.0.0-SNAPSHOT<br>
+Last updated 2020-06-25 13:26:58 UTC
+</div>
+</div>
+</body>
+</html>

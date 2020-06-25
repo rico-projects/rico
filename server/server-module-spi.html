@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.10">
+<title>Server Module SPI</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="./asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel2">
+<li><a href="#_server_module_spi">1. Server Module SPI</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect2">
+<h3 id="_server_module_spi"><a class="anchor" href="#_server_module_spi"></a>1. Server Module SPI</h3>
+<div class="paragraph">
+<p>Server modules are way to provide functionality from Rico to client applications.
+When a module is started it can register services, servlets, filters and much more.</p>
+</div>
+<div class="sect3">
+<h4 id="_defining_your_own_module"><a class="anchor" href="#_defining_your_own_module"></a>1.1. Defining your own Module</h4>
+<div class="paragraph">
+<p>Defining a module is very simple.
+All that is required is a class which implements <code>ServerModule</code> and is annotated with <code>@ModuleDefinition</code>.</p>
+</div>
+<div class="paragraph">
+<p>For most modules we recommend to subclass <code>AbstractBaseModule</code> instead of directly implementing the <code>ServerModule</code> interface.
+The <code>AbstractBaseModule</code> offers the functionality to disable a module with an entry in the configuration.</p>
+</div>
+<div class="paragraph">
+<p>The <code>@ModuleDefinition</code> is required to configure the module.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>name()</code> gives the module a unique name</p>
+</li>
+<li>
+<p><code>order()</code> determines the order in which the modules are started.
+Modules with smaller values are started before modules with larger values.
+Default value is 100.</p>
+</li>
+<li>
+<p><code>moduleDependencies()</code>
+The name of modules on which this module depends.
+Dependant modules must have a smaller order than the current module.
+Default is no dependencies.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The name of the module does not need to be globally unique.
+It is sufficient if the module name is unique amongst the booted modules.
+This allows to have multiple modules which have the same name and then have the runtime config decide which to boot.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_initialization_of_the_modules"><a class="anchor" href="#_initialization_of_the_modules"></a>1.2. Initialization of the modules</h4>
+<div class="paragraph">
+<p>Rico uses a classpath scanner to find all classes with an <code>@ModuleDefinition</code> annotation.
+It will then create an instance for all modules which should be booted (e.g. <code>shouldBoot(Configuration)</code> returns true).
+Finally Rico will call <code>initialize(ServerCoreComponents)</code> of the modules in the order given by the <code>@ModuleDefinition</code> annotation.</p>
+</div>
+<div class="paragraph">
+<p>The <code>ServerCoreComponents</code> offer different methods to help you in initializing the module:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>getConfiguration()</code> returns the Rico configuration.</p>
+</li>
+<li>
+<p><code>getServletContext()</code> return the servlet context.
+The servlet context can be used to register filter and endpoints.</p>
+</li>
+<li>
+<p><code>getClasspathScanner()</code> returns an instance of <code>ClasspathScanner</code> which allows searching for classes annotated with an annotation.</p>
+</li>
+<li>
+<p><code>getManagedBeanFactory()</code> returns an instance of <code>ManagedBeanFactory</code> which allows creating beans.</p>
+</li>
+<li>
+<p><code>provideInstance()</code> registers an instance of a class or interface with the application.
+Other modules, beans, and services can later retrieve this instance either by injection or by calling <code>getInstance()</code>.</p>
+</li>
+<li>
+<p><code>getInstance()</code> allows to retrieve an already registered instance.
+This is where the order of modules is important.
+It allows to ensure that required instances have already been provided.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Here is an example of a module definition:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="comment">// define a module of name SampleModule, which depends on OTHER_MODULE, and will load after all</span>
+<span class="comment">// modules with an order less than 200.</span>
+<span class="annotation">@ModuleDefinition</span>(name = SAMPLE_MODULE, moduleDependencies = OTHER_MODULE, order = <span class="integer">200</span>)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">SampleModule</span> <span class="directive">extends</span> AbstractBaseModule {
+
+    <span class="directive">public</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">String</span> SAMPLE_MODULE = <span class="string"><span class="delimiter">&quot;</span><span class="content">SampleModule</span><span class="delimiter">&quot;</span></span>;
+
+    <span class="annotation">@Override</span>
+    <span class="directive">protected</span> <span class="predefined-type">String</span> getActivePropertyName() {
+        <span class="keyword">return</span> SAMPLE_MODULE;
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="type">void</span> initialize(ServerCoreComponents coreComponents) <span class="directive">throws</span> ModuleInitializationException {
+        <span class="comment">// ServiceFromOtherModule is provided by OTHER_MODULE</span>
+        <span class="comment">// the 'moduleDependencies' in the annotation ensures that OTHER_MODULE is initialized before this.</span>
+        <span class="directive">final</span> ServiceFromOtherModule s = coreComponents.getInstance(ServiceFromOtherModule.class);
+
+        <span class="comment">// provide our own service for others to use</span>
+        coreComponents.provideInstance(SampleModuleService.class, <span class="keyword">new</span> SampleModuleService(s));
+
+        <span class="comment">// register filter, listener and servlet</span>
+        <span class="directive">final</span> ServletContext servletContext = coreComponents.getServletContext();
+
+        servletContext.addFilter(<span class="string"><span class="delimiter">&quot;</span><span class="content">filterName</span><span class="delimiter">&quot;</span></span>, <span class="keyword">new</span> SampleFilter())
+            .addMappingForUrlPatterns(<span class="predefined-type">EnumSet</span>.allOf(DispatcherType.class), <span class="predefined-constant">true</span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">/*</span><span class="delimiter">&quot;</span></span>);
+
+        servletContext.addListener(<span class="keyword">new</span> SampleListener());
+
+        servletContext.addServlet(SAMPLE_MODULE, <span class="keyword">new</span> SampleServlet())
+            .addMapping(<span class="string"><span class="delimiter">&quot;</span><span class="content">/sample</span><span class="delimiter">&quot;</span></span>);
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_making_services_available_for_dependency_injection"><a class="anchor" href="#_making_services_available_for_dependency_injection"></a>1.3. Making Services available for Dependency Injection</h4>
+<div class="paragraph">
+<p>In order to make a service defined in a module injectable into the business logic one must provide bean factory methods for both Jakarta EE and Spring.
+Here is an example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Configuration</span>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">RemotingSpringBeanFactory</span> {
+
+    <span class="annotation">@Bean</span>(name = <span class="string"><span class="delimiter">&quot;</span><span class="content">sampleService</span><span class="delimiter">&quot;</span></span>)
+    <span class="directive">protected</span> SampleService createSampleService() {
+        <span class="directive">final</span> SampleService service = PlatformBootstrap.getServerCoreComponents().getInstance(SampleService.class);
+        Assert.requireNonNull(service, <span class="string"><span class="delimiter">&quot;</span><span class="content">service</span><span class="delimiter">&quot;</span></span>);
+
+        <span class="keyword">return</span> service;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ApplicationScoped</span>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">RemotingCdiBeanFactory</span> {
+
+    <span class="annotation">@Produces</span>
+    <span class="directive">protected</span> SampleService createSampleService() {
+        <span class="directive">final</span> SampleService service = PlatformBootstrap.getServerCoreComponents().getInstance(SampleService.class);
+        Assert.requireNonNull(service, <span class="string"><span class="delimiter">&quot;</span><span class="content">service</span><span class="delimiter">&quot;</span></span>);
+
+        <span class="keyword">return</span> service;
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 1.0.0-SNAPSHOT<br>
+Last updated 2020-06-25 13:26:58 UTC
+</div>
+</div>
+<link rel="stylesheet" href="./coderay-asciidoctor.css">
+</body>
+</html>

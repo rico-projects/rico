@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.10">
+<title>TaskChain API</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="./asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel2">
+<li><a href="#_taskchain_api">1. TaskChain API</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect2">
+<h3 id="_taskchain_api"><a class="anchor" href="#_taskchain_api"></a>1. TaskChain API</h3>
+<div class="paragraph">
+<p>The TaskChain API provides an easy way to create a chain of individual tasks.
+The chain provides functionality to switch between the UI thread and background threads.</p>
+</div>
+<div class="paragraph">
+<p>When creating a client application with UI you normally need to implement long-running tasks like a server call.
+If such a task is executed on the UI thread no user interaction or repaint / layout of the application can happen till the task is not completed.
+This will always end up in a bad behavior, since the application looks like it is frozen and maybe pixel artifacts are rendered on the screen if the application&#8217;s window is resized or moved.
+To avoid these problems long-running tasks should always be executed on a background thread.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="images/ui-thread.svg" alt="ui thread"></span></p>
+</div>
+<div class="paragraph">
+<p>A background thread in Java can easily be created and used by using the factory methods in <code>java.util.concurrent.Executors</code>.
+Much more complex code is needed if we want to react on the result of a background thread in the ui thread.
+This pattern is quite common in a client.
+Let&#8217;s assume you want to trigger a server endpoint and display the result of the call in the client.
+Maybe you even want to show a loading animation in the client while the server call is executed and show an error if an exception happens.
+The following diagram gives an overview of the needed task:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="images/task-chain-base-workflow.svg" alt="task chain base workflow"></span></p>
+</div>
+<div class="paragraph">
+<p>By using only basic API such a use case will result in a lot of code in Swing or JavaFX.
+The following code snippet shows how such a workflow can be created in Swing:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="comment">//We assume that we are already on the ui-Thread</span>
+
+showLoadingAnimation();
+backgroundExecutors.execute(() -&gt; {
+    <span class="keyword">try</span> {
+        <span class="directive">final</span> <span class="predefined-type">String</span> result = callServer();
+        SwingUtilties.invokeAndWait(() -&gt; updateUi(result));
+    } <span class="keyword">catch</span>(<span class="directive">final</span> <span class="exception">Exception</span> e) {
+       SwingUtilties.invokeLater(() -&gt; showErrorDialog(e));
+    } <span class="keyword">finally</span> {
+        SwingUtilties.invokeLater(() -&gt; hideLoadingAnimation(e));
+    }
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As you can see this is really a lot of code for a common default workflow that you might need multiple times per application.</p>
+</div>
+<div class="paragraph">
+<p>The TaskChain API helps you to create better readable and maintainable code for scenarios like the described one.
+The TaskChain provides a fluent API that let you define workflows with multiple switches between background threads and the UI thread.
+Before we have a deeper look at the API let&#8217;s see how the given example would look like by using the TaskChain API:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">UiExecutor.createUiTaskChain() <i class="conum" data-value="1"></i><b>(1)</b>
+    .execute(() -&gt; showLoadingAnimation()) <i class="conum" data-value="2"></i><b>(2)</b>
+    .background() <i class="conum" data-value="3"></i><b>(3)</b>
+    .supply(() -&gt; callServer()) <i class="conum" data-value="4"></i><b>(4)</b>
+    .map(v -&gt; v.getName()) <i class="conum" data-value="5"></i><b>(5)</b>
+    .ui() <i class="conum" data-value="6"></i><b>(6)</b>
+    .consume(v -&gt; updateUi(v)) <i class="conum" data-value="7"></i><b>(7)</b>
+    .onException(e -&gt; showErrorDialog(e)) <i class="conum" data-value="8"></i><b>(8)</b>
+    .thenFinally(() -&gt; hideLoadingAnimation()) <i class="conum" data-value="9"></i><b>(9)</b>
+    .run(); <i class="conum" data-value="10"></i><b>(10)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>a "ui task chain" is will execute the tasks in the UI thread. There is also a "background task chain".</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>the <code>execute()</code> method adds a runnable to the chain.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>by calling <code>background()</code> the execution for the coming tasks is switched to a background thread.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>the <code>supply()</code> method adds a supplier to the chain. The result of the supplier is available to the next task.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>the <code>map()</code> method adds a function to the chain. The result of the function is available to the next task.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>by calling <code>ui()</code> the execution for the coming tasks is switched to the UI thread.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="7"></i><b>7</b></td>
+<td>the <code>consume()</code> method adds a consumer to the chain.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="8"></i><b>8</b></td>
+<td>the <code>onException()</code> method adds an exception handler to the chain.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="9"></i><b>9</b></td>
+<td>the `thenFinally()`method adds a runnable to the chain. The finally task is called in any case.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="10"></i><b>10</b></td>
+<td>the chain is only executed when <code>run()</code> is called. This allows to create a chain and run it later or even run it multiple times.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The <code>run()</code> method returns a <code>CompletableFuture</code> which allows the caller of <code>run()</code> to wait for the completion of all tasks in the chain.
+Also the caller can determine if the tasks chain completed successfully or not by inspecting the <code>CompletableFuture</code>.
+Finally if the output from a task is not consumed by a consumer in the chain than this value can be obtained from the <code>CompletableFuture</code>.</p>
+</div>
+<div class="paragraph">
+<p>The main entry point of the TaskChain API is the <code>dev.rico.client.concurrent.TaskChain</code> interface.
+New instances should always be created by factory methods that are provided by the <code>dev.rico.client.concurrent.UiExecutor</code> interface.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> TaskChain uiChain = UiExecutor.createUiTaskChain();
+<span class="directive">final</span> TaskChain backgroundChain = UiExecutor.createBackgroundTaskChain();</code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_exception_handling_in_the_task_chain"><a class="anchor" href="#_exception_handling_in_the_task_chain"></a>1.1. Exception handling in the task chain</h4>
+<div class="paragraph">
+<p>Every task in a task chain can potentially throw an exception when it is executed.
+This influences which of remaining tasks are executed:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If a task throws an exception then all the upcoming tasks defined with <code>execute()</code>, <code>supply()</code>, <code>map()</code>, and <code>consume()</code> are skipped.
+Switching between UI and background threads is done in any case.
+the next <code>onException()</code> in the chain is invoked.
+If this exception handler terminates normally than the tasks after the exception handler are executed.
+If no exception handler is defined than the CompletableFuture returned by <code>run()</code> method will be completed exceptionally.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>It is possible to define multiple exception handler in a chain.
+Also it is possible to have more tasks after an exception handler.</p>
+</div>
+<div class="paragraph">
+<p>If there is no exception thrown by a task, then the exception handler is skipped.</p>
+</div>
+<div class="paragraph">
+<p>The <code>thenFinally()</code> task is special as it is executed in any case.
+Also it is limited in the sense that it cannot consume a result of a previous task.
+Plus it can only be the last task in the chain.
+the main purpose of such a final task is to close resources or end processes which may habe been started by another task in the chain.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 1.0.0-SNAPSHOT<br>
+Last updated 2020-06-25 13:26:58 UTC
+</div>
+</div>
+<link rel="stylesheet" href="./coderay-asciidoctor.css">
+</body>
+</html>

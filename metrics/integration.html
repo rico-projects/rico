@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.10">
+<title>Server integration and usage</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="./asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel2">
+<li><a href="#_server_integration_and_usage">1. Server integration and usage</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect2">
+<h3 id="_server_integration_and_usage"><a class="anchor" href="#_server_integration_and_usage"></a>1. Server integration and usage</h3>
+<div class="paragraph">
+<p>Rico metrics can be used in Spring Boot and JakartaEE based application.
+While the metrics API is not incompatible with other application frameworks an integration is currently missing.</p>
+</div>
+<div class="sect3">
+<h4 id="_integration_in_jakartaee"><a class="anchor" href="#_integration_in_jakartaee"></a>1.1. Integration in JakartaEE</h4>
+<div class="paragraph">
+<p>Metrics will be automatically active once the <code>dev.rico.metrics.server.javaee</code> java module is on the classpath.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>After the migration to Java 11 and Java modules the metrics functionality was never tested in a JakartaEE based app.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_integration_in_spring"><a class="anchor" href="#_integration_in_spring"></a>1.2. Integration in Spring</h4>
+<div class="paragraph">
+<p>In Spring the configuration of the application must be annotated with the <code>dev.rico.metrics.server.spring.EnableMetrics</code> annotation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@SpringBootApplication</span> <i class="conum" data-value="1"></i><b>(1)</b>
+<span class="annotation">@EnableRico</span> <i class="conum" data-value="2"></i><b>(2)</b>
+<span class="annotation">@EnableMetrics</span> <i class="conum" data-value="3"></i><b>(3)</b>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">ServerApplication</span> {
+
+    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main(<span class="directive">final</span> <span class="predefined-type">String</span><span class="type">[]</span> args) {
+        SpringApplication.run(ServerApplication.class);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Default Spring Boot annotation</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Enable Rico support for Spring</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Enables Rico Metrics support for Spring</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_managed_beans_of_the_metrics_api"><a class="anchor" href="#_managed_beans_of_the_metrics_api"></a>1.3. Managed beans of the Metrics API</h4>
+<div class="paragraph">
+<p>The metrics API of Rico provides a managed bean for the <code>dev.rico.metrics.Metrics</code> interface.
+In both Spring and JakartaEE the bean is provided as a singleton and can be injected in any other managed bean.
+The following sample shows how metrics can be injected and used in a Spring based REST endpoint:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@RestController</span>
+<span class="annotation">@RequestMapping</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">/api/sample</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">SampleEndpoint</span> {
+
+    <span class="directive">private</span> <span class="directive">final</span> Metrics metrics;
+
+    <span class="annotation">@Autowired</span>
+    <span class="directive">public</span> SampleEndpoint(<span class="directive">final</span> Metrics metrics) {
+        <span class="local-variable">this</span>.metrics = metrics;
+    }
+
+    <span class="annotation">@RequestMapping</span>(method = RequestMethod.GET)
+    <span class="directive">public</span> <span class="type">void</span> doMetrics() <span class="directive">throws</span> <span class="exception">Exception</span> {
+        <span class="directive">final</span> Counter counter = metrics.getOrCreateCounter(<span class="string"><span class="delimiter">&quot;</span><span class="content">myCounter</span><span class="delimiter">&quot;</span></span>);
+        counter.increment();
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_metrics_endpoint"><a class="anchor" href="#_metrics_endpoint"></a>1.4. Metrics endpoint</h4>
+<div class="paragraph">
+<p>To provide the metrics to an external tool for monitoring an endpoint is needed.
+Rico metrics provide a http endpoint that implements the protocol that is needed for <a href="https://prometheus.io">prometheus</a>.
+The endpoint is provided by default at <code>/metrics</code> but can be configured by the <code>metrics.endpoint</code> property.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_configuration_properties"><a class="anchor" href="#_configuration_properties"></a>1.5. Configuration properties</h4>
+<div class="paragraph">
+<p>Rico metrics provide the following configuration properties:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Metrics configuration properties</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">property name</th>
+<th class="tableblock halign-left valign-top">default value</th>
+<th class="tableblock halign-left valign-top">description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">metrics.active</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Defines if the metrics should be active (if the metrics module will be bootstrapped)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">metrics.endpoint</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">/metrics</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Defines the endpoint for prometheus</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 1.0.0-SNAPSHOT<br>
+Last updated 2020-06-25 13:26:58 UTC
+</div>
+</div>
+<link rel="stylesheet" href="./coderay-asciidoctor.css">
+</body>
+</html>

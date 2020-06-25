@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.10">
+<title>Best practices for documentation</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="./asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_best_practices_for_documentation">1. Best practices for documentation</a>
+<ul class="sectlevel2">
+<li><a href="#_documentation_structure">1.1. Documentation structure</a></li>
+<li><a href="#_writing_asciidoc_based_documents">1.2. Writing AsciiDoc based documents</a></li>
+<li><a href="#_creating_the_documentation">1.3. Creating the documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_best_practices_for_documentation"><a class="anchor" href="#_best_practices_for_documentation"></a>1. Best practices for documentation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter contains some best practices that Rico commiters should have a look
+at when working on the documentation of Rico.</p>
+</div>
+<div class="sect2">
+<h3 id="_documentation_structure"><a class="anchor" href="#_documentation_structure"></a>1.1. Documentation structure</h3>
+<div class="paragraph">
+<p>The documentation of Rico is placed in the <code>documentation</code> subfolder of the project.
+It is defined as a subproject by gradle and the complete documentation is written
+in <a href="https://asciidoctor.org">AsciiDoc</a>.</p>
+</div>
+<div class="paragraph">
+<p>The documentation can be found in the <code>src/docs/asciidoc</code> folder of the <code>documentation</code>
+subproject. The documentation is splitted in several <code>adoc</code> files. Whenever a new
+chapter is started for the documentation a new <code>adoc</code> file should be created.
+All <code>adoc</code> files are referenced in the <code>index.adoc</code> file. By doing so all
+files will be rendered in one huge documenation. Including adoc files in
+the index.adoc looks like shown in the following code snippet:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>include::project-structure.adoc[]
+
+include::sub-doc/subdoc.adoc[]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As you can see in the snippet, documents can be easily stored in subfolders.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_writing_asciidoc_based_documents"><a class="anchor" href="#_writing_asciidoc_based_documents"></a>1.2. Writing AsciiDoc based documents</h3>
+<div class="paragraph">
+<p>A general documentation of the AsciiDoc syntax can be found
+<a href="https://asciidoctor.org/docs/asciidoc-syntax-quick-reference/">here</a>.
+Additionally to the general syntax rules we introduced some best practices for the
+Rico documentation.</p>
+</div>
+<div class="sect3">
+<h4 id="_the_title_of_a_document"><a class="anchor" href="#_the_title_of_a_document"></a>1.2.1. The title of a document</h4>
+<div class="paragraph">
+<p>Each document should start with a headline (Level 1 Section Title). So not
+use a document title since the document will be included in the <code>index.adoc</code>
+that defines the document title.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_adding_images"><a class="anchor" href="#_adding_images"></a>1.2.2. Adding images</h4>
+<div class="paragraph">
+<p>All images are currently placed in the <code>src/docs/asciidoc/images</code> folder.
+An image can be added to a document just by refering the name of the image
+as if it would be in the same folder as the document. The follwoing snippet
+shows an example:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>/image:example-pic.svg[]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You do not need to define the path to the image dir since each adoc file
+contains a <code>ifndef</code> statement at the beginning that defines the location of
+the image folder if it was not defined before (for example if a document is
+included in another document). The <code>ifndef</code> looks like this:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>/ifndef::imagesdir[:imagesdir: images]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Instead of using pixel based images we try to use vector based images wherever
+possible. Therefore, all technical diagramms should be created by using
+<a href="https://www.diagrams.net">diagrams.net</a> (sucessor of draw.io).</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="images/diagrams-net.png" alt="diagrams net"></span></p>
+</div>
+<div class="paragraph">
+<p>As you can see in the <code>images</code> folder we store a <code>xml</code> file and a <code>svg</code> file for each
+diagramm. While the <code>svg</code> is used in the AsciiDoc documents, the <code>xml</code> file can be reopend
+in diagrams.net. Whenever a new diagramm is created, or an old diagramm is changed, the
+<code>xml</code> file must be updated next to the <code>svg</code> file.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_creating_the_documentation"><a class="anchor" href="#_creating_the_documentation"></a>1.3. Creating the documentation</h3>
+<div class="paragraph">
+<p>The documentation will automatically create a HTML based documentation
+when calling the gradle <code>build</code> task. Therefore whenever you <a href="#build-doc/build-rico.adoc">build</a> the Rico
+project the complete documentation will automatically be build. Next to this you can
+execute the <code>asciidoctor</code> Gradle task if you only want to generate the documentation.
+The generated documentation can be found under the <code>build/docs/asciidoc</code> folder of
+the documentation module.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 1.0.0-SNAPSHOT<br>
+Last updated 2020-06-25 13:26:58 UTC
+</div>
+</div>
+</body>
+</html>

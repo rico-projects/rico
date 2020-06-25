@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.10">
+<title>Metrics</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="./asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_metrics">1. Metrics</a>
+<ul class="sectlevel2">
+<li><a href="#_the_metrics_api">1.1. The Metrics API</a></li>
+<li><a href="#_server_integration_and_usage">1.2. Server integration and usage</a></li>
+<li><a href="#_provide_metrics_for_monitoring">1.3. Provide metrics for monitoring</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_metrics"><a class="anchor" href="#_metrics"></a>1. Metrics</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The metrics part of Rico provides an API to instrument your code with timer, gauge and counter metrics.
+Next to this Rico metrics includes preconfigured endpoints to collect and visualize such metrics.</p>
+</div>
+<div class="sect2">
+<h3 id="_the_metrics_api"><a class="anchor" href="#_the_metrics_api"></a>1.1. The Metrics API</h3>
+<div class="paragraph">
+<p>The <code>rico-metrics</code> module (<code>dev.rico.metrics</code> jigsaw module) provides the basic interfaces of the metrics api.
+The <code>dev.rico.metrics.Metrics</code> interface provides factory methods to create or access metrics.
+Currently 3 different metric types are supported:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>dev.rico.metrics.types.Counter</code></p>
+</li>
+<li>
+<p><code>dev.rico.metrics.types.Gauge</code></p>
+</li>
+<li>
+<p><code>dev.rico.metrics.types.Timer</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>All these metric types extend the common interface <code>dev.rico.metrics.Metric</code> as you can see in the following graph:</p>
+</div>
+<div class="paragraph">
+<div class="title">Metrics interfaces</div>
+<p><span class="image"><img src="../images/metrics-interface.svg" alt="metrics interface"></span></p>
+</div>
+<div class="paragraph">
+<p>As we will see later, you obtain an instance of the <code>dev.rico.metrics.Metrics</code>
+interface depending on your environment (Java client, Spring, Jakarta&#8230;&#8203;).
+You should always use this instance to create or access metrics.</p>
+</div>
+<div class="paragraph">
+<p>The following example shows how a timer is created and used:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> Metric metrics = .... <i class="conum" data-value="1"></i><b>(1)</b>
+
+final <span class="predefined-type">Timer</span> timer = metrics.getOrCreateTimer(<span class="string"><span class="delimiter">&quot;</span><span class="content">server-request-timer</span><span class="delimiter">&quot;</span></span>); <i class="conum" data-value="2"></i><b>(2)</b>
+<span class="directive">final</span> <span class="type">long</span> start = <span class="predefined-type">System</span>.currentTimeMillis(); <i class="conum" data-value="3"></i><b>(3)</b>
+doServerRequest(); <i class="conum" data-value="4"></i><b>(4)</b>
+<span class="directive">final</span> <span class="type">long</span> end = <span class="predefined-type">System</span>.currentTimeMillis(); <i class="conum" data-value="5"></i><b>(5)</b>
+timer.record(end - start, <span class="predefined-type">TimeUnit</span>.MILLISECONDS); <i class="conum" data-value="6"></i><b>(6)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>it depends on your environment how you will get an instance</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>creates the timer metric or returns it if a timer metric with the given name exists</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>the start time</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>here a task is executed.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>the end time</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>the execution time of the task is recorded by the timer</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The timer metric that is measured in the given snippet can be used later to visualize the execution time of the server request in a dashboard or trigger specific alarms for long-running tasks.
+The following image shows how such result might look like in a monitoring dashboard by showing a graph of all the timer recordings over time:</p>
+</div>
+<div class="paragraph">
+<div class="title">sample graph based on metric</div>
+<p><span class="image"><img src="../images/diagram-sample.png" alt="diagram sample"></span></p>
+</div>
+<div class="sect3">
+<h4 id="_metrics_2"><a class="anchor" href="#_metrics_2"></a>1.1.1. Metrics</h4>
+<div class="paragraph">
+<p>As already mentioned all metrics in Rico implement the <code>dev.rico.metrics.Metric</code> interface.
+This provides access to the name and context information of the metric.
+The name of a metric must be unique and cannot be changed.
+All factory methods for metrics in the <code>dev.rico.metrics.Metrics</code> interface will only create a new metric if no metric with the given name already exists.
+Otherwise the existing metric will be returned.
+Using the unique name of the metric you can receive all recorded values of the metric for monitoring and maintenance issues later.</p>
+</div>
+<div class="paragraph">
+<p>Next to the name, a <code>dev.rico.metrics.Metric</code> instance provides a context defined by the Rico context API.
+At the moment only the global context of the Rico context is used for metrics.
+The thread context is never added to the context of a metric.
+Custom values can be added to the context of a metric by passing them to the specific factory methods of the <code>dev.rico.metrics.Metrics</code> interface.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>You might ask yourself why the thread specific context values are not automatically added to the context of a metric.
+This is an issue that should be discussed in future and might change based on discussions.
+The context of a metric is defined once the metric is created.
+A metric can be used any time later to record values in a totally different thread.
+If we would add the thread based context values of Rico at creation time of the metric, we would track only the activity of that thread. If the thread is reused (one thread may later serve a different request), we might end up with confusing information when using the metric for monitoring later.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_counter"><a class="anchor" href="#_counter"></a>1.1.2. Counter</h4>
+<div class="paragraph">
+<p>A counter defines a number based metric that can only be incremented (up to <code>Long.MAX_VALUE</code>).
+A counter is defined by the <code>dev.rico.metrics.types.Counter</code> interface and instances should be created by using the factory methods of the <code>dev.rico.metrics.Metrics</code> interface.
+The <code>dev.rico.metrics.types.Counter</code> interface provides a method to increment the counter by a given number and a convenience method to increment the counter by 1.</p>
+</div>
+<div class="paragraph">
+<p>The following sample shows how a counter can be used:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> Metric metrics = .... <i class="conum" data-value="1"></i><b>(1)</b>
+
+final Counter counter = metrics.getOrCreateCounter(<span class="string"><span class="delimiter">&quot;</span><span class="content">server-request-call-counter</span><span class="delimiter">&quot;</span></span>); <i class="conum" data-value="2"></i><b>(2)</b>
+<span class="keyword">try</span> {
+    doServerRequest();
+} <span class="keyword">finally</span> {
+    counter.increment(); <i class="conum" data-value="3"></i><b>(3)</b>
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>it depends on your environment how you will get an instance</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>creates the counter metric or returns it if a counter metric with the given name exists</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>here the counter is incremented.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Examples where a counter can be used:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>measure how often a specific functionality is called</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_gauge"><a class="anchor" href="#_gauge"></a>1.1.3. Gauge</h4>
+<div class="paragraph">
+<p>A gauge defines a number based metric.
+The value of a gauge can be set to any number between <code>Double.MIN_VALUE</code> and <code>Double.MAX_VALUE</code>.
+A gauge is defined by the <code>dev.rico.metrics.types.Gauge</code> interface and instances should be created by using the factory methods of the <code>dev.rico.metrics.Metrics</code> interface.
+The <code>dev.rico.metrics.types.Gauge</code> interface provides a method to set the value of the gauge.</p>
+</div>
+<div class="paragraph">
+<p>The following sample shows how a gauge can be used:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> Metric metrics = .... <i class="conum" data-value="1"></i><b>(1)</b>
+
+final Gauge gauge = metrics.getOrCreateCounter(<span class="string"><span class="delimiter">&quot;</span><span class="content">user-count</span><span class="delimiter">&quot;</span></span>); <i class="conum" data-value="2"></i><b>(2)</b>
+<span class="directive">final</span> <span class="type">long</span> userCount = getUserCount();
+gauge.setValue(userCount); <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>it depends on your environment how you will get an instance</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>creates the gauge metric or returns it if a gauge metric with the given name exists</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>set the value of the gauge</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Examples where a gauge can be used:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>measure how many users are logged in</p>
+</li>
+<li>
+<p>measure how much memory is used</p>
+</li>
+<li>
+<p>measure the CPU usage</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_timer"><a class="anchor" href="#_timer"></a>1.1.4. Timer</h4>
+<div class="paragraph">
+<p>A timer defines a duration based metric.
+The value of a timer can be set to any duration.
+To define a duration <code>java.util.concurrent.TimeUnit</code> is used.
+A timer is defined by the <code>dev.rico.metrics.types.Timer</code> interface and instances should be created by using the factory methods of the <code>dev.rico.metrics.Metrics</code> interface.
+The <code>dev.rico.metrics.types.Timer</code> interface provides several methods to record the duration of a task.</p>
+</div>
+<div class="paragraph">
+<p>The following sample shows how a timer can be used:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> Metric metrics = .... <i class="conum" data-value="1"></i><b>(1)</b>
+
+final <span class="predefined-type">Timer</span> timer = metrics.getOrCreateTimer(<span class="string"><span class="delimiter">&quot;</span><span class="content">server-request-timer</span><span class="delimiter">&quot;</span></span>); <i class="conum" data-value="2"></i><b>(2)</b>
+<span class="directive">final</span> <span class="type">long</span> start = <span class="predefined-type">System</span>.currentTimeMillis();
+<span class="keyword">try</span> {
+    doServerRequest();
+} <span class="keyword">finally</span> {
+    <span class="directive">final</span> <span class="type">long</span> end = <span class="predefined-type">System</span>.currentTimeMillis();
+    timer.record(end - start, <span class="predefined-type">TimeUnit</span>.MILLISECONDS); <i class="conum" data-value="3"></i><b>(3)</b>
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>it depends on your environment how you will get an instance</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>creates the gauge metric or returns it if a gauge metric with the given name exists</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>records the duration of the task</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The <code>dev.rico.metrics.types.Timer</code> interface provides some methods that make the recording of a duration much easier.
+The following code snippet does exactly the same as the last one:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> Metric metrics = .... <i class="conum" data-value="1"></i><b>(1)</b>
+
+final <span class="predefined-type">Timer</span> timer = metrics.getOrCreateTimer(<span class="string"><span class="delimiter">&quot;</span><span class="content">server-request-timer</span><span class="delimiter">&quot;</span></span>); <i class="conum" data-value="2"></i><b>(2)</b>
+timer.record(() -&gt; doServerRequest()); <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>it depends on your environment how you will get an instance</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>creates the gauge metric or returns it if a gauge metric with the given name exists</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>records the duration of the task</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Examples where a timer can be used:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>measure the duration of a request</p>
+</li>
+<li>
+<p>measure the duration of a DB call</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_server_integration_and_usage"><a class="anchor" href="#_server_integration_and_usage"></a>1.2. Server integration and usage</h3>
+<div class="paragraph">
+<p>Rico metrics can be used in Spring Boot and JakartaEE based application.
+While the metrics API is not incompatible with other application frameworks an integration is currently missing.</p>
+</div>
+<div class="sect3">
+<h4 id="_integration_in_jakartaee"><a class="anchor" href="#_integration_in_jakartaee"></a>1.2.1. Integration in JakartaEE</h4>
+<div class="paragraph">
+<p>Metrics will be automatically active once the <code>dev.rico.metrics.server.javaee</code> java module is on the classpath.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>After the migration to Java 11 and Java modules the metrics functionality was never tested in a JakartaEE based app.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_integration_in_spring"><a class="anchor" href="#_integration_in_spring"></a>1.2.2. Integration in Spring</h4>
+<div class="paragraph">
+<p>In Spring the configuration of the application must be annotated with the <code>dev.rico.metrics.server.spring.EnableMetrics</code> annotation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@SpringBootApplication</span> <i class="conum" data-value="1"></i><b>(1)</b>
+<span class="annotation">@EnableRico</span> <i class="conum" data-value="2"></i><b>(2)</b>
+<span class="annotation">@EnableMetrics</span> <i class="conum" data-value="3"></i><b>(3)</b>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">ServerApplication</span> {
+
+    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> main(<span class="directive">final</span> <span class="predefined-type">String</span><span class="type">[]</span> args) {
+        SpringApplication.run(ServerApplication.class);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Default Spring Boot annotation</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Enable Rico support for Spring</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Enables Rico Metrics support for Spring</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_managed_beans_of_the_metrics_api"><a class="anchor" href="#_managed_beans_of_the_metrics_api"></a>1.2.3. Managed beans of the Metrics API</h4>
+<div class="paragraph">
+<p>The metrics API of Rico provides a managed bean for the <code>dev.rico.metrics.Metrics</code> interface.
+In both Spring and JakartaEE the bean is provided as a singleton and can be injected in any other managed bean.
+The following sample shows how metrics can be injected and used in a Spring based REST endpoint:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@RestController</span>
+<span class="annotation">@RequestMapping</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">/api/sample</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">SampleEndpoint</span> {
+
+    <span class="directive">private</span> <span class="directive">final</span> Metrics metrics;
+
+    <span class="annotation">@Autowired</span>
+    <span class="directive">public</span> SampleEndpoint(<span class="directive">final</span> Metrics metrics) {
+        <span class="local-variable">this</span>.metrics = metrics;
+    }
+
+    <span class="annotation">@RequestMapping</span>(method = RequestMethod.GET)
+    <span class="directive">public</span> <span class="type">void</span> doMetrics() <span class="directive">throws</span> <span class="exception">Exception</span> {
+        <span class="directive">final</span> Counter counter = metrics.getOrCreateCounter(<span class="string"><span class="delimiter">&quot;</span><span class="content">myCounter</span><span class="delimiter">&quot;</span></span>);
+        counter.increment();
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_metrics_endpoint"><a class="anchor" href="#_metrics_endpoint"></a>1.2.4. Metrics endpoint</h4>
+<div class="paragraph">
+<p>To provide the metrics to an external tool for monitoring an endpoint is needed.
+Rico metrics provide a http endpoint that implements the protocol that is needed for <a href="https://prometheus.io">prometheus</a>.
+The endpoint is provided by default at <code>/metrics</code> but can be configured by the <code>metrics.endpoint</code> property.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_configuration_properties"><a class="anchor" href="#_configuration_properties"></a>1.2.5. Configuration properties</h4>
+<div class="paragraph">
+<p>Rico metrics provide the following configuration properties:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Metrics configuration properties</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">property name</th>
+<th class="tableblock halign-left valign-top">default value</th>
+<th class="tableblock halign-left valign-top">description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">metrics.active</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Defines if the metrics should be active (if the metrics module will be bootstrapped)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">metrics.endpoint</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">/metrics</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Defines the endpoint for prometheus</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_provide_metrics_for_monitoring"><a class="anchor" href="#_provide_metrics_for_monitoring"></a>1.3. Provide metrics for monitoring</h3>
+<div class="paragraph">
+<p>An application that uses Rico metrics will provide a <code>/metrics</code> endpoint by default.
+This endpoint provides all metrics information in a format that can be read by <a href="https://prometheus.io">prometheus</a>.
+Based on this a custom monitoring solution can be created.</p>
+</div>
+<div class="sect3">
+<h4 id="_using_prometheus"><a class="anchor" href="#_using_prometheus"></a>1.3.1. Using Prometheus</h4>
+<div class="paragraph">
+<p>Prometheus is an open source monitoring system and time series database.
+A correctly configured Prometheus instance can fetch the metrics of a running application and store them in time-series.</p>
+</div>
+<div class="paragraph">
+<div class="title">Metrics interfaces</div>
+<p><span class="image"><img src="../images/connect-prometheus.svg" alt="connect prometheus"></span></p>
+</div>
+<div class="paragraph">
+<p>The easiest way to use Prometheus is through Docker.
+Prometheus already provides ready-to-use docker containers that fit perfect to Rico metrics.
+Only the endpoint of the application or applications must be configured.
+To do so we can create a custom configuration for Prometheus in a <code>prometheus.yml</code> YAML file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yml"><span class="key">global</span>:
+  <span class="key">scrape_interval</span>:     <span class="string"><span class="content">10s </span></span><i class="conum" data-value="1"></i><b>(1)</b>
+
+<span class="key">scrape_configs</span>:
+  - <span class="string"><span class="content">job_name: 'rico-metrics' </span></span><i class="conum" data-value="2"></i><b>(2)</b>
+
+    <span class="key">metrics_path</span>: <span class="string"><span class="content">'/metrics' </span></span><i class="conum" data-value="3"></i><b>(3)</b>
+    <span class="key">static_configs</span>:
+      - <span class="string"><span class="content">targets: ['app-server:8080'] </span></span><i class="conum" data-value="4"></i><b>(4)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>This defines the interval in that Prometheus will fetch metrics records from the server</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Name of the internal job that will fetch the data</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The endpoint on the server.
+Here we use the default <code>/metrics</code></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>An array of servers.
+Prometheus will try to fetch metrics records from each server in this array.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Next to this we need to create a Docker file that extends the default Docker image from Prometheus and adds our custom configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="docker">FROM prom/prometheus:v2.18.1
+MAINTAINER Hendrik Ebbers, karakun.com
+ADD prometheus.yml /etc/prometheus/</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Prometheus provides a simple web frontend that can be used to visualize metrics.
+Any metric that has been created in a Java application by using the Rico metrics API can be displayed.
+Next to the custom metrics of an application Rico already provides some general metrics.</p>
+</div>
+<div class="paragraph">
+<div class="title">Prometheus frontend</div>
+<p><span class="image"><img src="../images/prometheus-pic.png" alt="prometheus pic"></span></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_predefined_metrics"><a class="anchor" href="#_predefined_metrics"></a>1.3.2. Predefined metrics</h4>
+<div class="paragraph">
+<p>The following table gives an overview about all metrics that rico measures automatically:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Predefined metrics</caption>
+<colgroup>
+<col style="width: 17.647%;">
+<col style="width: 11.7647%;">
+<col style="width: 11.7647%;">
+<col style="width: 58.8236%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">metrics name</th>
+<th class="tableblock halign-center valign-top">type</th>
+<th class="tableblock halign-center valign-top">unit</th>
+<th class="tableblock halign-left valign-top">description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.classes.loaded</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">classes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The number of classes that are currently loaded in the Java virtual machine</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.classes.unloaded</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Counter</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">classes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The total number of classes unloaded since the Java virtual machine has started execution</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.buffer.count</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">buffers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An estimate of the number of buffers in the pool</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.buffer.memory.used</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">bytes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An estimate of the memory that the Java virtual machine is using for this buffer pool</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.buffer.total.capacity</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">bytes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An estimate of the total capacity of the buffers in this pool</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.memory.used</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">bytes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The amount of used memory (available for several memory pools, defined by tag/context "id")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.memory.committed</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">bytes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The amount of memory in bytes that is committed for the Java virtual machine to use (available for several memory pools, defined by tag/context "id")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.memory.max</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">bytes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The maximum amount of memory in bytes that can be used for memory management (available for several memory pools, defined by tag/context "id")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.gc.max.data.size</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">bytes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Max size of old generation memory pool</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.gc.live.data.size</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">bytes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Size of old generation memory pool after a full GC</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.gc.memory.promoted</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Counter</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">bytes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Count of positive increases in the size of the old generation memory pool before GC to after GC</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.gc.memory.allocated</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Counter</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">bytes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Incremented for an increase in the size of the young generation memory pool after one GC to before the next</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.gc.concurrent.phase.time</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Timer</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">milliseconds</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time spent in concurrent phase</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.gc.pause</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Timer</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">milliseconds</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time spent in GC pause</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">system.cpu.count</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The number of processors available to the Java virtual machine</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">system.load.average.1m</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The sum of the number of runnable entities queued to available processors and the number of runnable entities running on the available processors averaged over a period of time</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">system.cpu.usage</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The "recent cpu usage" for the whole system</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">process.cpu.usage</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The "recent cpu usage" for the Java Virtual Machine process</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.threads.peak</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">threads</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The peak live thread count since the Java virtual machine started or peak was reset</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.threads.daemon</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">threads</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The current number of live daemon threads</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.threads.live</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">threads</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The current number of live threads including both daemon and non-daemon threads</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jvm.threads.states</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">threads</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The current number of threads having a specific state. The state is defined by tag/context "state"</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">request</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Timer</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">milliseconds</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time for a HTTP request. The endpoint is defined by tag/context "uri"</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">requestCounter</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Counter</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Counter for all HTTP requests. The endpoint is defined by tag/context "uri"</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">httpSessions</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Gauge</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of active http sessions</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_create_insightful_dashboards_with_grafana"><a class="anchor" href="#_create_insightful_dashboards_with_grafana"></a>1.3.3. Create insightful Dashboards with Grafana</h4>
+<div class="paragraph">
+<p>While Prometheus can be used to visualize a graph of 1 metric or query you normally expect much more functionality for modern application monitoring.
+Since the data storage and query handling is the main task of Prometheus an additional tool should be used to visualize all the metrics.
+Here <a href="https://grafana.com">Grafana</a> is a very good choose.
+The open source tool can be used to create dashboards with several graphs based on data that is available in Prometheus.</p>
+</div>
+<div class="paragraph">
+<div class="title">Grafana and Prometheus</div>
+<p><span class="image"><img src="../images/prometheus-grafana.svg" alt="prometheus grafana"></span></p>
+</div>
+<div class="paragraph">
+<p>The following picture shows a sample dashboard that was created with grafana.
+Next to this a live demo can be found <a href="https://play.grafana.org/">here</a>.</p>
+</div>
+<div class="paragraph">
+<div class="title">Grafana dashboard</div>
+<p><span class="image"><img src="../images/grafana.png" alt="grafana"></span></p>
+</div>
+<div class="paragraph">
+<p>As already described for Prometheus we can start Grafana in a Docker container, too.
+Information about running Grafana in Docker can be found <a href="https://grafana.com/docs/grafana/latest/installation/docker/">here</a>.
+If you want to automate the configuration and provisioning of Grafana <a href="https://grafana.com/docs/grafana/latest/administration/provisioning/">this link</a> will be helpful.
+Next to this we provide a <a href="https://docs.docker.com/compose/">docker-compose</a> based sample in <a href="https://github.com/rico-projects/rico-samples/tree/master/metrics-sample">the Rico samples repository</a>.</p>
+</div>
+<div class="paragraph">
+<p>Grafana is a large tool with many features and functionalities.
+Here is a collection of links to get started:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://grafana.com/docs/grafana/latest/getting-started/what-is-grafana/">What is Grafana</a></p>
+</li>
+<li>
+<p><a href="https://grafana.com/docs/grafana/latest/panels/panels-overview/">Grafana Panels</a></p>
+</li>
+<li>
+<p><a href="https://grafana.com/docs/grafana/latest/features/dashboard/dashboards/">Grafana Dashboards</a></p>
+</li>
+<li>
+<p><a href="https://grafana.com/tutorials/">Grafana Tutorials</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If you want to include a custome dashboard in the docker-compose sample have a look at
+<a href="https://grafana.com/docs/grafana/latest/reference/export_import/">export and import</a>
+to create a XML represenation of the dashboard</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 1.0.0-SNAPSHOT<br>
+Last updated 2020-06-25 13:26:58 UTC
+</div>
+</div>
+<link rel="stylesheet" href="./coderay-asciidoctor.css">
+</body>
+</html>

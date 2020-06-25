@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.10">
+<title>Scheduler API</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="./asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel2">
+<li><a href="#_scheduler_api">1. Scheduler API</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect2">
+<h3 id="_scheduler_api"><a class="anchor" href="#_scheduler_api"></a>1. Scheduler API</h3>
+<div class="paragraph">
+<p>The Scheduler API is a concurrent API that lets you schedule periodic or delayed tasks.
+The central point of the API is the interface <code>dev.rico.core.concurrent.Scheduler</code>.
+Depending on your environment Rico provides different ways to obtain a Scheduler instance.</p>
+</div>
+<div class="paragraph">
+<p>The Scheduler interface only provides one method: <code>schedule(Runnable task, Trigger trigger)</code>.
+This method is used to schedule a task (the given <code>java.lang.Runnable</code>) for later and possibly periodic execution.
+When the task will be executed must be specified by the trigger defined by the interface <code>dev.rico.core.concurrent.Trigger</code>.
+While you can implement this interface yourself, the interface <code>dev.rico.core.concurrent.Trigger</code> provides static methods to create triggers.</p>
+</div>
+<div class="sect3">
+<h4 id="_defining_a_trigger_that_delays_the_execution_of_a_task"><a class="anchor" href="#_defining_a_trigger_that_delays_the_execution_of_a_task"></a>1.1. Defining a trigger that delays the execution of a task</h4>
+<div class="paragraph">
+<p>To delay the execution of a task the static method <code>in(final Duration delay)</code> of the interface <code>dev.rico.core.concurrent.Trigger</code> can be used.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="images/scheduler-delay.svg" alt="scheduler delay"></span></p>
+</div>
+<div class="paragraph">
+<p>The following code shows an example of the usage:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> Scheduler scheduler = ... <i class="conum" data-value="1"></i><b>(1)</b>
+
+final <span class="predefined-type">Duration</span> tenSeconds = <span class="predefined-type">Duration</span>.of(<span class="integer">10</span>, ChronoUnit.SECONDS); <i class="conum" data-value="2"></i><b>(2)</b>
+<span class="directive">final</span> Trigger trigger = Trigger.in(tenSeconds); <i class="conum" data-value="3"></i><b>(3)</b>
+
+scheduler.schedule(() -&gt; <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">ALARM</span><span class="delimiter">&quot;</span></span>), trigger); <i class="conum" data-value="4"></i><b>(4)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>depends on your environment</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>defines a duration of 10 seconds using the java.time API</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>creates our trigger using the duration as the delay</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>schedules the task.
+Because of our trigger the task will be executed 10 seconds later and "ALARM" will be written to the console.</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_defining_a_trigger_that_executes_a_task_periodically"><a class="anchor" href="#_defining_a_trigger_that_executes_a_task_periodically"></a>1.2. Defining a trigger that executes a task periodically</h4>
+<div class="paragraph">
+<p>To execute a task periodically the static method <code>every(final Duration duration)</code> of the interface <code>dev.rico.core.concurrent.Trigger</code> can be used.
+After the task execution is finished the task will be scheduled again for future execution based on the given delay.
+This will repeat until the application stops.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="images/scheduler-every.svg" alt="scheduler every"></span></p>
+</div>
+<div class="paragraph">
+<p>The following code shows an example of the usage:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> Scheduler scheduler = ... <i class="conum" data-value="1"></i><b>(1)</b>
+
+final <span class="predefined-type">Duration</span> tenSeconds = <span class="predefined-type">Duration</span>.of(<span class="integer">10</span>, ChronoUnit.SECONDS); <i class="conum" data-value="2"></i><b>(2)</b>
+<span class="directive">final</span> Trigger trigger = Trigger.every(tenSeconds); <i class="conum" data-value="3"></i><b>(3)</b>
+
+scheduler.schedule(() -&gt; <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">&quot;</span><span class="content">PING</span><span class="delimiter">&quot;</span></span>), trigger); <i class="conum" data-value="4"></i><b>(4)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>depends on your environment</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>defines a duration 10 seconds using the java.time API</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>creates our trigger</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>schedules the task.
+Because of our trigger the task will be executed with a delay of 10 seconds every 10 seconds and "PING" will be written to the console until the application stops.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><code>nowAndEvery(final Duration duration)</code> can be used to ignore the initial delay.
+<code>afterAndEvery(final Duration delay, final Duration duration)</code> can be used to specify a custom initial delay.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="images/scheduler-now-and-every.svg" alt="scheduler now and every"></span></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_using_the_api_on_the_client"><a class="anchor" href="#_using_the_api_on_the_client"></a>1.3. Using the API on the client</h4>
+<div class="paragraph">
+<p>In the Rico client API a <code>dev.rico.core.concurrent.Scheduler</code> instance can be received by using by the following call:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> Scheduler scheduler = Client.getService(Scheduler.class);</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_using_the_api_on_the_server"><a class="anchor" href="#_using_the_api_on_the_server"></a>1.4. Using the API on the server</h4>
+<div class="paragraph">
+<p>On JakartaEE and Spring you can inject a <code>dev.rico.core.concurrent.Scheduler</code> instance in any managed bean.
+The instance is always defined in the singleton / application scope.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 1.0.0-SNAPSHOT<br>
+Last updated 2020-06-25 13:26:58 UTC
+</div>
+</div>
+<link rel="stylesheet" href="./coderay-asciidoctor.css">
+</body>
+</html>
