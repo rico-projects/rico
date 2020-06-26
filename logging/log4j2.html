@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.10">
-<title>Using Log4J2 as logging implementation</title>
+<title>Using Log4j2 as logging implementation</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <link rel="stylesheet" href="./asciidoctor.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -15,23 +15,90 @@
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel2">
-<li><a href="#_using_log4j2_as_logging_implementation">1. Using Log4J2 as logging implementation</a></li>
+<li><a href="#_using_log4j2_as_logging_implementation">1. Using Log4j2 as logging implementation</a></li>
+<li><a href="#_sending_gelf_messages_using_log4j2">2. Sending GELF messages using Log4j2</a></li>
 </ul>
 </div>
 </div>
 <div id="content">
 <div class="sect2">
-<h3 id="_using_log4j2_as_logging_implementation"><a class="anchor" href="#_using_log4j2_as_logging_implementation"></a>1. Using Log4J2 as logging implementation</h3>
+<h3 id="_using_log4j2_as_logging_implementation"><a class="anchor" href="#_using_log4j2_as_logging_implementation"></a>1. Using Log4j2 as logging implementation</h3>
 <div class="paragraph">
-<p>TODO</p>
+<p>Rico offers a wrapping appender for Log4j2.
+The wrapping appender extends the MDC of every log message and enhances it with the Rico context.
+This enhanced log message is then passed on the wrapped appenders.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_sending_gelf_messages_using_log4j2"><a class="anchor" href="#_sending_gelf_messages_using_log4j2"></a>2. Sending GELF messages using Log4j2</h3>
+<div class="paragraph">
+<p>For sending GELF messages to a centralized logging facility we recommend <a href="https://github.com/mp911de/logstash-gelf/">logstash-gelf</a>.
+The name suggests that this is related or tied to logstash.
+This is not the case.
+As the appender communicates with the centralized logging facility over either TCP/SSL or UDP, it is agnostic of the facility vendor.
+You can find an extensive <a href="https://logging.paluch.biz/">documentation with all the configurable details and features online</a>.</p>
+</div>
+<div class="paragraph">
+<p>A sample configuration looks as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="preprocessor">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="tag">&lt;Configuration</span> <span class="attribute-name">status</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">WARN</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">packages</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">dev.rico.log4j.appender, biz.paluch.logging.gelf.log4j2</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span> <i class="conum" data-value="1"></i><b>(1)</b>
+    <span class="tag">&lt;Appenders&gt;</span>
+        <span class="tag">&lt;Gelf</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">Remote</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">host</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">udp:localhost</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">port</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">12201</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">version</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">1.1</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">extractStackTrace</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">true</span><span class="delimiter">&quot;</span></span>
+              <span class="attribute-name">filterStackTrace</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">true</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">mdcProfiling</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">true</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">includeFullMdc</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">true</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">maximumMessageSize</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">8192</span><span class="delimiter">&quot;</span></span>
+              <span class="attribute-name">originHost</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">%host{fqdn}</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+            <span class="tag">&lt;DynamicMdcFields</span> <span class="attribute-name">regex</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">.*</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
+        <span class="tag">&lt;/Gelf&gt;</span>
+        <span class="tag">&lt;Console</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">Local</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">target</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">SYSTEM_OUT</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+            <span class="tag">&lt;PatternLayout</span> <span class="attribute-name">pattern</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+        <span class="tag">&lt;/Console&gt;</span>
+        <span class="tag">&lt;ContextWrappingAppender</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">Rico</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span> <i class="conum" data-value="2"></i><b>(2)</b>
+            <span class="tag">&lt;AppenderRef</span> <span class="attribute-name">ref</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">Remote</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span> <i class="conum" data-value="3"></i><b>(3)</b>
+            <span class="tag">&lt;AppenderRef</span> <span class="attribute-name">ref</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">Local</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span> <i class="conum" data-value="4"></i><b>(4)</b>
+        <span class="tag">&lt;/ContextWrappingAppender&gt;</span>
+    <span class="tag">&lt;/Appenders&gt;</span>
+    <span class="tag">&lt;Loggers&gt;</span>
+        <span class="tag">&lt;Root</span> <span class="attribute-name">level</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">info</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+            <span class="tag">&lt;AppenderRef</span> <span class="attribute-name">ref</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">Rico</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span> <i class="conum" data-value="5"></i><b>(5)</b>
+        <span class="tag">&lt;/Root&gt;</span>
+    <span class="tag">&lt;/Loggers&gt;</span>
+<span class="tag">&lt;/Configuration&gt;</span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>the <code>packages</code> attribute tells Log4j2 in which packages to search for appenders.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>configures the Rico <code>ContextWrappingAppender</code> and gives it the name <code>Rico</code></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>adds the <code>Remote</code> appender to the list of appenders which will receive messages from the Rico appender</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>adds the <code>Local</code> appender to the list of appenders which will receive messages from the Rico appender</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>registers the <code>Rico</code> appender as the main appender for any log message.</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 1.0.0-SNAPSHOT<br>
-Last updated 2020-06-25 14:06:56 UTC
+Last updated 2020-06-26 09:54:08 UTC
 </div>
 </div>
+<link rel="stylesheet" href="./coderay-asciidoctor.css">
 </body>
 </html>

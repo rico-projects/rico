@@ -16,6 +16,7 @@
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel2">
 <li><a href="#_general_usage_and_benefits_of_the_rico_logging_concept">1. General usage and benefits of the Rico logging concept</a></li>
+<li><a href="#_logging_to_a_centralized_location">2. Logging to a centralized location</a></li>
 </ul>
 </div>
 </div>
@@ -23,14 +24,45 @@
 <div class="sect2">
 <h3 id="_general_usage_and_benefits_of_the_rico_logging_concept"><a class="anchor" href="#_general_usage_and_benefits_of_the_rico_logging_concept"></a>1. General usage and benefits of the Rico logging concept</h3>
 <div class="paragraph">
-<p>TODO</p>
+<p>Rico logging integrates the Rico context into multiple logging backends.
+This is done by providing wrapping appenders which extend MDC (Mapped Diagnostics Context) with the Rico context.</p>
+</div>
+<div class="paragraph">
+<p>The extended MDC can be used by any subsequent appender.
+This allows making full use of the available open source libraries and their extensions.</p>
+</div>
+<div class="paragraph">
+<p>Currently appender for <a href="https://logging.apache.org/log4j/2.x/">Log4j2</a> and <a href="https://logback.qos.ch/">Logback</a> are available in Rico.
+There is no appender for "java util logging" and "Apache commons logging" as they do not support MDC or a similar feature.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_logging_to_a_centralized_location"><a class="anchor" href="#_logging_to_a_centralized_location"></a>2. Logging to a centralized location</h3>
+<div class="paragraph">
+<p>Rico highly encourages logging to a centralized logging facility.
+Well known examples of such facilities are
+<a href="https://www.elastic.co/what-is/elk-stack">ELK (Elasticsearch, Logstash, Kibana)</a> and <a href="https://www.graylog.org/">Greylog</a>.</p>
+</div>
+<div class="paragraph">
+<p>Sending logs to these facilities can be done in different ways.
+One way is to create a traditional log file and have a separate process listen to changes in the log file.
+On every change the newly added lines are sent from the application host to the logging facility.</p>
+</div>
+<div class="paragraph">
+<p>Alternatively the application can send the log statements directly using a standardized log format.
+<a href="https://docs.graylog.org/en/3.2/pages/gelf.html">GELF</a> is currently the most widely supported format for such an approach.
+GELF is a json based message format which allows sending not a plain string but a semi-structured message.
+This has the advantage to include additional meta-data such as field types and names.</p>
+</div>
+<div class="paragraph">
+<p>By including the Rico context into MDC, Rico supports the analysis and grouping of log messages from different application host.</p>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 1.0.0-SNAPSHOT<br>
-Last updated 2020-06-25 14:06:56 UTC
+Last updated 2020-06-26 09:54:08 UTC
 </div>
 </div>
 </body>

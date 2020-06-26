@@ -16,6 +16,7 @@
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel2">
 <li><a href="#_using_logback_as_logging_implementation">1. Using Logback as logging implementation</a></li>
+<li><a href="#_sending_gelf_messages_using_logback">2. Sending GELF messages using Logback</a></li>
 </ul>
 </div>
 </div>
@@ -23,15 +24,108 @@
 <div class="sect2">
 <h3 id="_using_logback_as_logging_implementation"><a class="anchor" href="#_using_logback_as_logging_implementation"></a>1. Using Logback as logging implementation</h3>
 <div class="paragraph">
-<p>TODO</p>
+<p>Rico offers a wrapping appender for Logback.
+The wrapping appender extends the MDC of every log message and enhances it with the Rico context.
+This enhanced log message is then passed on the wrapped appenders.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_sending_gelf_messages_using_logback"><a class="anchor" href="#_sending_gelf_messages_using_logback"></a>2. Sending GELF messages using Logback</h3>
+<div class="paragraph">
+<p>For sending GELF messages to a centralized logging facility we recommend either <a href="https://github.com/mp911de/logstash-gelf/">logstas-gelf</a>
+or <a href="https://github.com/osiegmar/logback-gelf">logback-gelf</a>.</p>
+</div>
+<div class="paragraph">
+<p>Logstash-gelf is covered in the chapter about <a href="log4j2.html#Sending_GELF_messages_using_Log4j2">Log4j2</a>. Therefore we will show an example using logback-gelf here.</p>
+</div>
+<div class="paragraph">
+<p>A sample configuration looks as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="preprocessor">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="tag">&lt;configuration&gt;</span>
+    <span class="tag">&lt;appender</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">REMOTE</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">de.siegmar.logbackgelf.GelfUdpAppender</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span> <i class="conum" data-value="1"></i><b>(1)</b>
+        <span class="tag">&lt;graylogHost&gt;</span>localhost<span class="tag">&lt;/graylogHost&gt;</span>
+        <span class="tag">&lt;graylogPort&gt;</span>12201<span class="tag">&lt;/graylogPort&gt;</span>
+        <span class="tag">&lt;maxChunkSize&gt;</span>508<span class="tag">&lt;/maxChunkSize&gt;</span>
+        <span class="tag">&lt;useCompression&gt;</span>true<span class="tag">&lt;/useCompression&gt;</span>
+        <span class="tag">&lt;messageIdSupplier</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">de.siegmar.logbackgelf.MessageIdSupplier</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+        <span class="tag">&lt;encoder</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">de.siegmar.logbackgelf.GelfEncoder</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+            <span class="tag">&lt;originHost&gt;</span>localhost<span class="tag">&lt;/originHost&gt;</span>
+            <span class="tag">&lt;includeRawMessage&gt;</span>false<span class="tag">&lt;/includeRawMessage&gt;</span>
+            <span class="tag">&lt;includeMarker&gt;</span>true<span class="tag">&lt;/includeMarker&gt;</span>
+            <span class="tag">&lt;includeMdcData&gt;</span>true<span class="tag">&lt;/includeMdcData&gt;</span>
+            <span class="tag">&lt;includeCallerData&gt;</span>false<span class="tag">&lt;/includeCallerData&gt;</span>
+            <span class="tag">&lt;includeRootCauseData&gt;</span>false<span class="tag">&lt;/includeRootCauseData&gt;</span>
+            <span class="tag">&lt;includeLevelName&gt;</span>false<span class="tag">&lt;/includeLevelName&gt;</span>
+            <span class="tag">&lt;shortPatternLayout</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ch.qos.logback.classic.PatternLayout</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+                <span class="tag">&lt;pattern&gt;</span>%m%nopex<span class="tag">&lt;/pattern&gt;</span>
+            <span class="tag">&lt;/shortPatternLayout&gt;</span>
+            <span class="tag">&lt;fullPatternLayout</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ch.qos.logback.classic.PatternLayout</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+                <span class="tag">&lt;pattern&gt;</span>%m%n<span class="tag">&lt;/pattern&gt;</span>
+            <span class="tag">&lt;/fullPatternLayout&gt;</span>
+            <span class="tag">&lt;numbersAsString&gt;</span>false<span class="tag">&lt;/numbersAsString&gt;</span>
+            <span class="tag">&lt;staticField&gt;</span>os_arch:${os.arch}<span class="tag">&lt;/staticField&gt;</span>
+            <span class="tag">&lt;staticField&gt;</span>os_name:${os.name}<span class="tag">&lt;/staticField&gt;</span>
+            <span class="tag">&lt;staticField&gt;</span>os_version:${os.version}<span class="tag">&lt;/staticField&gt;</span>
+        <span class="tag">&lt;/encoder&gt;</span>
+    <span class="tag">&lt;/appender&gt;</span>
+
+    <span class="tag">&lt;appender</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">LOCALE</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ch.qos.logback.core.ConsoleAppender</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+        <span class="comment">&lt;!-- deny all events with a level below INFO, that is TRACE and DEBUG --&gt;</span>
+        <span class="tag">&lt;filter</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ch.qos.logback.classic.filter.ThresholdFilter</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+            <span class="tag">&lt;level&gt;</span>INFO<span class="tag">&lt;/level&gt;</span>
+        <span class="tag">&lt;/filter&gt;</span>
+        <span class="tag">&lt;encoder&gt;</span>
+            <span class="tag">&lt;pattern&gt;</span>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n<span class="tag">&lt;/pattern&gt;</span>
+        <span class="tag">&lt;/encoder&gt;</span>
+    <span class="tag">&lt;/appender&gt;</span>
+
+    <span class="tag">&lt;appender</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">RICO</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">dev.rico.logback.appender.ContextWrappingAppender</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span> <i class="conum" data-value="2"></i><b>(2)</b>
+        <span class="tag">&lt;appender-ref</span> <span class="attribute-name">ref</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">REMOTE</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span> <i class="conum" data-value="3"></i><b>(3)</b>
+        <span class="tag">&lt;appender-ref</span> <span class="attribute-name">ref</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">LOCALE</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span> <i class="conum" data-value="4"></i><b>(4)</b>
+    <span class="tag">&lt;/appender&gt;</span>
+
+    <span class="tag">&lt;root</span> <span class="attribute-name">level</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">debug</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+        <span class="tag">&lt;appender-ref</span> <span class="attribute-name">ref</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">RICO</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span> <i class="conum" data-value="5"></i><b>(5)</b>
+    <span class="tag">&lt;/root&gt;</span>
+
+<span class="tag">&lt;/configuration&gt;</span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>configures the logback-gelf appender</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>configures the Rico <code>ContextWrappingAppender</code> and gives it the name <code>Rico</code></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>adds the <code>REMOTE</code> appender to the list of appenders which will receive messages from the Rico appender</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>adds the <code>LOCALE</code> appender to the list of appenders which will receive messages from the Rico appender</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>registers the <code>RICO</code> appender as the main appender for any log message.</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 1.0.0-SNAPSHOT<br>
-Last updated 2020-06-25 14:06:56 UTC
+Last updated 2020-06-26 09:54:08 UTC
 </div>
 </div>
+<link rel="stylesheet" href="./coderay-asciidoctor.css">
 </body>
 </html>

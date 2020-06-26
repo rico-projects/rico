@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.10">
+<title>Centralized logging</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="./asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel2">
+<li><a href="#_centralized_logging">1. Centralized logging</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect2">
+<h3 id="_centralized_logging"><a class="anchor" href="#_centralized_logging"></a>1. Centralized logging</h3>
+<div class="paragraph">
+<p>A centralized logging infrastructure brings many advantages.
+Amongst them are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>seeing logs from all application hosts in a single location</p>
+</li>
+<li>
+<p>configurable UI</p>
+</li>
+<li>
+<p>advanced search tools</p>
+</li>
+<li>
+<p>stored queries</p>
+</li>
+<li>
+<p>alerting on special events</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For Greylog and ELK our samples contain a docker-compose based sample setup which are well-proven for development.
+In production, you will need to think about user management, persistent storage, and backups.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/rico-projects/rico-samples/blob/master/logging-sample/docker-graylog/docker-compose.yml">docker-compose for Greylog</a></p>
+</li>
+<li>
+<p><a href="https://docs.graylog.org/en/latest/">Greylog documentation</a></p>
+</li>
+<li>
+<p><a href="https://github.com/rico-projects/rico-samples/blob/master/logging-sample/docker-elk/docker-compose.yml">docker-composer for ELK stack</a></p>
+</li>
+<li>
+<p><a href="https://www.elastic.co/guide/index.html">ELD documentation</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 1.0.0-SNAPSHOT<br>
+Last updated 2020-06-26 09:54:08 UTC
+</div>
+</div>
+</body>
+</html>
