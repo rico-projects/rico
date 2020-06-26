@@ -1,11 +1,49 @@
 ifndef::imagesdir[:imagesdir: ../images]
 
-=== Using Log4J2 as logging implementation
+=== Using Log4j2 as logging implementation
 
-TODO
+Rico offers a wrapping appender for Log4j2.
+The wrapping appender extends the MDC of every log message and enhances it with the Rico context.
+This enhanced log message is then passed on the wrapped appenders.
 
-////
-todo:   How to configure Log4J2 to support GELF
-        How to configure project to use Log4J2
-        How to configure Log4J2 to add context to log messages
-////
+=== Sending GELF messages using Log4j2
+
+For sending GELF messages to a centralized logging facility we recommend https://github.com/mp911de/logstash-gelf/[logstash-gelf].
+The name suggests that this is related or tied to logstash.
+This is not the case.
+As the appender communicates with the centralized logging facility over either TCP/SSL or UDP, it is agnostic of the facility vendor.
+You can find an extensive https://logging.paluch.biz/[documentation with all the configurable details and features online].
+
+A sample configuration looks as follows:
+
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" packages="dev.rico.log4j.appender, biz.paluch.logging.gelf.log4j2"> <!--1-->
+    <Appenders>
+        <Gelf name="Remote" host="udp:localhost" port="12201" version="1.1" extractStackTrace="true"
+              filterStackTrace="true" mdcProfiling="true" includeFullMdc="true" maximumMessageSize="8192"
+              originHost="%host{fqdn}">
+            <DynamicMdcFields regex=".*" />
+        </Gelf>
+        <Console name="Local" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+        <ContextWrappingAppender name="Rico"> <!--2-->
+            <AppenderRef ref="Remote"/> <!--3-->
+            <AppenderRef ref="Local"/> <!--4-->
+        </ContextWrappingAppender>
+    </Appenders>
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="Rico"/> <!--5-->
+        </Root>
+    </Loggers>
+</Configuration>
+----
+
+<1> the `packages` attribute tells Log4j2 in which packages to search for appenders.
+<2> configures the Rico `ContextWrappingAppender` and gives it the name `Rico`
+<3> adds the `Remote` appender to the list of appenders which will receive messages from the Rico appender
+<4> adds the `Local` appender to the list of appenders which will receive messages from the Rico appender
+<5> registers the `Rico` appender as the main appender for any log message.

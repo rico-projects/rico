@@ -1,0 +1,26 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+=== Centralized logging
+
+A centralized logging infrastructure brings many advantages.
+Amongst them are:
+
+* seeing logs from all application hosts in a single location
+* configurable UI
+* advanced search tools
+* stored queries
+* alerting on special events
+
+For Greylog and ELK our samples contain a docker-compose based sample setup which are well-proven for development.
+In production, you will need to think about user management, persistent storage, and backups.
+
+* https://github.com/rico-projects/rico-samples/blob/master/logging-sample/docker-graylog/docker-compose.yml[docker-compose for Greylog]
+* https://docs.graylog.org/en/latest/[Greylog documentation]
+* https://github.com/rico-projects/rico-samples/blob/master/logging-sample/docker-elk/docker-compose.yml[docker-composer for ELK stack]
+* https://www.elastic.co/guide/index.html[ELD documentation]
+
+////
+todo:   How to setup graylog (docker sample)
+        How to configure graylog (in UI)
+        How to see, filter,... logging in graylog UI
+////

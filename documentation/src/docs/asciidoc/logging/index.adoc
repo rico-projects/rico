@@ -6,12 +6,8 @@ TODO
 
 include::basics.adoc[]
 
-include::gelf.adoc[]
-
 include::log4j2.adoc[]
 
 include::logback.adoc[]
 
-include::graylog.adoc[]
-
-include::elk-stack.adoc[]
+include::centralized-logging.adoc[]

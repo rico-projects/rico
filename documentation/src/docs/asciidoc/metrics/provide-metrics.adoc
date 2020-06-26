@@ -48,7 +48,7 @@ ADD prometheus.yml /etc/prometheus/
 ----
 
 Prometheus provides a simple web frontend that can be used to visualize metrics.
-Any metric that has been created in a Java application by using the Rico metrics API can be displayed.
+Any metric which has been created in a Java application by using the Rico metrics API can be displayed.
 Next to the custom metrics of an application Rico already provides some general metrics.
 
 .Prometheus frontend
