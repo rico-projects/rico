@@ -94,11 +94,6 @@ public class ServerTimingFilter implements Filter {
                         }
 
                         @Override
-                        public Duration getDuration() {
-                            return null;
-                        }
-
-                        @Override
                         public void stop() throws IllegalStateException {
 
                         }
