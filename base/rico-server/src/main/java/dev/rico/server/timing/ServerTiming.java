@@ -16,6 +16,9 @@
  */
 package dev.rico.server.timing;
 
+import dev.rico.core.functional.CheckedRunnable;
+import dev.rico.core.functional.CheckedSupplier;
+
 /**
  * Service to add metrics of the server to a http response.
  */
@@ -23,6 +26,7 @@ public interface ServerTiming {
 
     /**
      * Create a new metric with the current time as start time and the given name
+     *
      * @param name the name of the metric
      * @return the metric
      */
@@ -32,10 +36,71 @@ public interface ServerTiming {
 
     /**
      * Create a new metric with the current time as start time, the given name and description.
-     * @param name the name of the metric
+     *
+     * @param name        the name of the metric
      * @param description the description of the metric
      * @return the metric
      */
     Metric start(String name, String description);
+
+    /**
+     * Records a timing based on the duration of a task with the the given name and description.
+     *
+     * @param name     the name of the timing
+     * @param runnable the task that will be executed and that duration will be recorded
+     * @throws Exception if the tasks throws an exception
+     */
+    default void record(String name, CheckedRunnable runnable) throws Exception {
+        record(name, null, runnable);
+    }
+
+    /**
+     * Records a timing based on the duration of a task with the the given name and description.
+     *
+     * @param name        the name of the timing
+     * @param description the description of the timing
+     * @param runnable    the task that will be executed and that duration will be recorded
+     * @throws Exception if the tasks throws an exception
+     */
+    default void record(String name, String description, CheckedRunnable runnable) throws Exception {
+        final Metric metric = start(name, description);
+        try {
+            runnable.run();
+        } finally {
+            metric.stop();
+        }
+    }
+
+    /**
+     * Records a timing based on the duration of a task with the the given name and description.
+     *
+     * @param name     the name of the timing
+     * @param supplier the task that will be executed and that duration will be recorded
+     * @param <R>      the result type of the task
+     * @return the result of the task
+     * @throws Exception if the tasks throws an exception
+     */
+    default <R> R record(String name, CheckedSupplier<R> supplier) throws Exception {
+        return record(name, null, supplier);
+    }
+
+    /**
+     * Records a timing based on the duration of a task with the the given name and description.
+     *
+     * @param name        the name of the timing
+     * @param description the description of the timing
+     * @param supplier    the task that will be executed and that duration will be recorded
+     * @param <R>         the result type of the task
+     * @return the result of the task
+     * @throws Exception if the tasks throws an exception
+     */
+    default <R> R record(String name, String description, CheckedSupplier<R> supplier) throws Exception {
+        final Metric metric = start(name, description);
+        try {
+            return supplier.get();
+        } finally {
+            metric.stop();
+        }
+    }
 
 }

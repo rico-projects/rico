@@ -32,7 +32,7 @@ import static dev.rico.internal.core.http.HttpHeaderConstants.SERVER_TIMING_HEAD
 
 public class ServerTimingImpl implements ServerTiming {
 
-    private final List<Metric> metrics = new ArrayList<>();
+    private final List<MetricImpl> metrics = new ArrayList<>();
 
     public void clear() {
         metrics.clear();
@@ -43,16 +43,16 @@ public class ServerTimingImpl implements ServerTiming {
         //Sample:   serverTiming: 'A;dur=2521.46147;desc="/users/me",B;dur=102.022688;desc="getUser"',
 
         final String headerName = SERVER_TIMING_HEADER;
-        final String content = metrics.stream().map(m -> convert(m)).reduce("", (a,b) -> a + "," + b);
+        final String content = metrics.stream().map(m -> convert(m)).reduce("", (a, b) -> a + "," + b);
 
-        if(content.length() > 0) {
+        if (content.length() > 0) {
             response.addHeader(headerName, content.substring(1));
         }
 
         clear();
     }
 
-    private String convert(final Metric metric) {
+    private String convert(final MetricImpl metric) {
         Assert.requireNonNull(metric, "metric");
         final Duration duration = metric.getDuration();
         final String description = metric.getDescription();
@@ -69,7 +69,7 @@ public class ServerTimingImpl implements ServerTiming {
 
     @Override
     public Metric start(final String name, final String description) {
-        final Metric metric = new MetricImpl(name, description);
+        final MetricImpl metric = new MetricImpl(name, description);
         metrics.add(metric);
         return metric;
     }

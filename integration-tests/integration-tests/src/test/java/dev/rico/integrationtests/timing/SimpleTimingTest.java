@@ -72,4 +72,25 @@ public class SimpleTimingTest extends AbstractIntegrationTest {
         Assert.assertTrue(content.contains(METRICS_NAME));
         Assert.assertTrue(content.contains(METRICS_DESCRIPTION));
     }
+
+    @Test(dataProvider = ENDPOINTS_DATAPROVIDER)
+    public void testCallEndpoint4(final String containerType, final String endpoint) throws Exception {
+
+        //given
+        final String url = endpoint + "/rest/simple-timing/4";
+
+        //when
+        final HttpClient client = Client.getService(HttpClient.class);
+        final HttpResponse<Void> response = client.get(url).withoutContent().withoutResult().execute().get();
+
+        //then
+        final HttpHeader timingHeader = response.getHeaders().stream()
+                .filter(h -> Objects.equals(h.getName(), "Server-Timing"))
+                .findAny().orElse(null);
+        Assert.assertNotNull(timingHeader);
+        final String content = timingHeader.getContent();
+        Assert.assertNotNull(content);
+        Assert.assertTrue(content.contains(METRICS_NAME));
+        Assert.assertTrue(content.contains(METRICS_DESCRIPTION));
+    }
 }

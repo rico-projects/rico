@@ -47,7 +47,6 @@ public class MetricImpl implements Metric {
         return description;
     }
 
-    @Override
     public Duration getDuration() {
         return duration;
     }
@@ -58,7 +57,7 @@ public class MetricImpl implements Metric {
 
     @Override
     public void stop() {
-        if(duration != null) {
+        if (duration != null) {
             throw new IllegalStateException("Metric '" + name + "' was already stopped!");
         }
         duration = Duration.between(startTime, ZonedDateTime.now());

@@ -44,5 +44,12 @@ public class SimpleTimingEndpoint {
         return RESPONSE_200_OK;
     }
 
+    @GET
+    @Path("/4")
+    public Response testTiming4() throws Exception {
+        timing.record(TimingConstants.METRICS_NAME, TimingConstants.METRICS_DESCRIPTION, () -> Thread.sleep(100));
+        return RESPONSE_200_OK;
+    }
+
 
 }
