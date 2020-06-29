@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.10">
-<title>General information</title>
+<title>Introduction</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <link rel="stylesheet" href="./asciidoctor.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -15,16 +15,38 @@
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_general_information">1. General information</a></li>
+<li><a href="#_introduction">1. Introduction</a>
+<ul class="sectlevel2">
+<li><a href="#_rationale">1.1. Rationale</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_general_information"><a class="anchor" href="#_general_information"></a>1. General information</h2>
+<h2 id="_introduction"><a class="anchor" href="#_introduction"></a>1. Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>TODO</p>
+<p>Rico is an application framework that provides several functionalities and APIs to create enterprise applications. This includes features like tracing or monitoring that are critical in developing applications, especially in modern cloud based and distributed application landscapes. Thus, Rico provides generic APIs with specific implementation for the mostly used frameworks and toolkits in modern application development.</p>
+</div>
+<div class="paragraph">
+<p>Rico originates from the Dolphin Platform which appears to be discontinued. Rico is an (originally) API compatible fork that we continue to develop and improve.</p>
+</div>
+<div class="sect2">
+<h3 id="_rationale"><a class="anchor" href="#_rationale"></a>1.1. Rationale</h3>
+<div class="paragraph">
+<p>The motivation for us to create Rico is to avoid code for standard use-cases to be written over and over again. Thus, we created it as an extension to commonly used frameworks like Spring and Jakarta EE (Java EE) that is easily adoptable.</p>
+</div>
+<div class="paragraph">
+<p>The outcome is a framework that is built on top of well-known frameworks combined with commonly used components and prepared to be used with a very short warmup. Rico helps you to build your applications in a short time while letting you focus on the business requirements. It offers standard solutions for common technical use cases like Data Access, Logging, Monitoring and Security already built in and is well prepared to get integrated in your environment.</p>
+</div>
+<div class="paragraph">
+<p>To achieve this, Rico provides clean APIs to separate complexity coming from the set of technologies required to build your solution from your actual code.</p>
+</div>
+<div class="paragraph">
+<p>Also, Rico provides a remoting layer that helps you to separate UI framework specific code so that is a lot easier to switch UI implementations. It also enables you to choose different technologies for every target platform. As we see a very rapidly changing environment in UI technologies, this separation helps to protect your investment put into the solution built with Rico as it will be less dependent on a concrete UI technology.</p>
+</div>
 </div>
 </div>
 </div>
@@ -32,7 +54,7 @@
 <div id="footer">
 <div id="footer-text">
 Version 1.0.0-SNAPSHOT<br>
-Last updated 2020-06-29 12:54:34 UTC
+Last updated 2020-06-29 13:40:51 UTC
 </div>
 </div>
 </body>
