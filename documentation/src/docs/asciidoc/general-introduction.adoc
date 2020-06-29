@@ -1,5 +1,17 @@
 ifndef::imagesdir[:imagesdir: images]
 
-== General information
+== Introduction
 
-TODO
+Rico is an application framework that provides several functionalities and APIs to create enterprise applications. This includes features like tracing or monitoring that are critical in developing applications, especially in modern cloud based and distributed application landscapes. Thus, Rico provides generic APIs with specific implementation for the mostly used frameworks and toolkits in modern application development.
+
+Rico originates from the Dolphin Platform which appears to be discontinued. Rico is an (originally) API compatible fork that we continue to develop and improve.
+
+=== Rationale
+
+The motivation for us to create Rico is to avoid code for standard use-cases to be written over and over again. Thus, we created it as an extension to commonly used frameworks like Spring and Jakarta EE (Java EE) that is easily adoptable.
+
+The outcome is a framework that is built on top of well-known frameworks combined with commonly used components and prepared to be used with a very short warmup. Rico helps you to build your applications in a short time while letting you focus on the business requirements. It offers standard solutions for common technical use cases like Data Access, Logging, Monitoring and Security already built in and is well prepared to get integrated in your environment.
+
+To achieve this, Rico provides clean APIs to separate complexity coming from the set of technologies required to build your solution from your actual code.
+
+Also, Rico provides a remoting layer that helps you to separate UI framework specific code so that is a lot easier to switch UI implementations. It also enables you to choose different technologies for every target platform. As we see a very rapidly changing environment in UI technologies, this separation helps to protect your investment put into the solution built with Rico as it will be less dependent on a concrete UI technology.
