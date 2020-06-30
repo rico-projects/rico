@@ -17,7 +17,6 @@
 package dev.rico.internal.server.config;
 
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.core.lang.StreamUtils;
 import dev.rico.server.spi.ConfigurationProvider;
 import org.apiguardian.api.API;
 import org.slf4j.Logger;
@@ -28,6 +27,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.ServiceLoader;
 import java.util.function.BiConsumer;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
@@ -69,7 +69,8 @@ public class ConfigurationFileLoader {
         final ServerConfiguration configuration = createConfiguration();
         Assert.requireNonNull(configuration, "configuration");
 
-        StreamUtils.loadServiceAsStream(ConfigurationProvider.class)
+        ServiceLoader.load(ConfigurationProvider.class).stream()
+                .map(ServiceLoader.Provider::get)
                 .forEach(provider -> {
                     setAdditionalProperties(configuration, provider.getStringProperties(), configuration::setProperty);
                     setAdditionalProperties(configuration, provider.getListProperties(), configuration::setListProperty);

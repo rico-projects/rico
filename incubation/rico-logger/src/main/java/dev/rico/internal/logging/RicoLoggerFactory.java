@@ -18,7 +18,6 @@ package dev.rico.internal.logging;
 
 import dev.rico.core.functional.Subscription;
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.core.lang.StreamUtils;
 import dev.rico.internal.logging.spi.LogMessage;
 import dev.rico.internal.logging.spi.LoggerBridge;
 import dev.rico.internal.logging.spi.LoggerBridgeFactory;
@@ -31,6 +30,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -79,7 +79,8 @@ public class RicoLoggerFactory implements ILoggerFactory {
         Assert.requireNonNull(configuration, "configuration");
         bridges.clear();
 
-        StreamUtils.loadServiceAsStream(LoggerBridgeFactory.class)
+        ServiceLoader.load(LoggerBridgeFactory.class).stream()
+                .map(ServiceLoader.Provider::get)
                 .map(factory -> factory.create(configuration))
                 .filter(Objects::nonNull)
                 .forEach(bridges::add);

@@ -25,8 +25,9 @@ import dev.rico.core.http.spi.RequestHandlerProvider;
 import dev.rico.core.http.spi.ResponseHandlerProvider;
 import dev.rico.internal.client.AbstractServiceProvider;
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.core.lang.StreamUtils;
 import org.apiguardian.api.API;
+
+import java.util.ServiceLoader;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
@@ -43,11 +44,13 @@ public class HttpClientProvider extends AbstractServiceProvider<HttpClient> {
         final HttpURLConnectionFactory connectionFactory = configuration.getHttpURLConnectionFactory();
         final HttpClientImpl client = new HttpClientImpl(Client.getService(Gson.class), connectionFactory, configuration);
 
-        StreamUtils.loadServiceAsStream(RequestHandlerProvider.class)
+        ServiceLoader.load(RequestHandlerProvider.class).stream()
+                .map(ServiceLoader.Provider::get)
                 .map(provider -> provider.getHandler(configuration))
                 .forEach(client::addRequestHandler);
 
-        StreamUtils.loadServiceAsStream(ResponseHandlerProvider.class)
+        ServiceLoader.load(ResponseHandlerProvider.class).stream()
+                .map(ServiceLoader.Provider::get)
                 .map(provider -> provider.getHandler(configuration))
                 .forEach(client::addResponseHandler);
 

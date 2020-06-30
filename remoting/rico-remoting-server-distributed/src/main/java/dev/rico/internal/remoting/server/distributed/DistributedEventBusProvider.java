@@ -16,7 +16,6 @@
  */
 package dev.rico.internal.remoting.server.distributed;
 
-import dev.rico.internal.core.lang.StreamUtils;
 import dev.rico.internal.remoting.server.config.RemotingConfiguration;
 import dev.rico.remoting.server.distributed.HazelcastProvider;
 import dev.rico.remoting.server.event.RemotingEventBus;
@@ -26,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.ServiceLoader;
 import java.util.stream.Collectors;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
@@ -45,7 +45,8 @@ public class DistributedEventBusProvider implements EventBusProvider {
     public RemotingEventBus create(final RemotingConfiguration configuration) {
         LOG.debug("creating distributed event bus");
 
-        final List<HazelcastProvider> providers = StreamUtils.loadServiceAsStream(HazelcastProvider.class)
+        final List<HazelcastProvider> providers = ServiceLoader.load(HazelcastProvider.class).stream()
+                .map(ServiceLoader.Provider::get)
                 .collect(Collectors.toList());
 
         if (providers.isEmpty()) {

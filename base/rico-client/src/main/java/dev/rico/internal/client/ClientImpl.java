@@ -26,11 +26,11 @@ import dev.rico.internal.client.config.ConfigurationFileLoader;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.ansi.PlatformLogo;
 import dev.rico.internal.core.context.ContextManagerImpl;
-import dev.rico.internal.core.lang.StreamUtils;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -62,7 +62,8 @@ public class ClientImpl {
 
         ContextManagerImpl.getInstance().setGlobalAttribute(APPLICATION_NAME_CONTEXT, clientConfiguration.getProperty(APPLICATION_NAME_PROPERTY, APPLICATION_NAME_DEFAULT));
 
-        final List<String> failed = StreamUtils.loadServiceAsStream(ServiceProvider.class)
+        final List<String> failed = ServiceLoader.load(ServiceProvider.class).stream()
+                .map(ServiceLoader.Provider::get)
                 .filter(provider -> provider.isActive(clientConfiguration))
                 .map(Result.ofConsumer(this::registerProvider))
                 .filter(ResultWithInput::isFailed)

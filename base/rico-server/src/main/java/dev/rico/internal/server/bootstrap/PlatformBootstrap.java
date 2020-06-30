@@ -19,7 +19,6 @@ package dev.rico.internal.server.bootstrap;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.ansi.PlatformLogo;
 import dev.rico.internal.core.context.ContextManagerImpl;
-import dev.rico.internal.core.lang.StreamUtils;
 import dev.rico.internal.server.config.ServerConfiguration;
 import dev.rico.internal.server.mbean.MBeanRegistry;
 import dev.rico.internal.server.scanner.DefaultClasspathScanner;
@@ -40,6 +39,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -159,7 +159,8 @@ public class PlatformBootstrap {
 
 
     private ManagedBeanFactory getBeanFactory(final ServletContext servletContext) {
-        final List<ManagedBeanFactory> factories = StreamUtils.loadServiceAsStream(ManagedBeanFactory.class)
+        final List<ManagedBeanFactory> factories = ServiceLoader.load(ManagedBeanFactory.class).stream()
+                .map(ServiceLoader.Provider::get)
                 .collect(Collectors.toList());
 
         if (factories.isEmpty()) {

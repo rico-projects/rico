@@ -17,7 +17,6 @@
 package dev.rico.internal.remoting.server;
 
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.core.lang.StreamUtils;
 import dev.rico.internal.remoting.server.config.RemotingConfiguration;
 import dev.rico.internal.remoting.server.context.DefaultRemotingContextFactory;
 import dev.rico.internal.remoting.server.context.RemotingCommunicationHandler;
@@ -45,6 +44,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
 import java.util.List;
+import java.util.ServiceLoader;
 import java.util.stream.Collectors;
 
 import static dev.rico.internal.remoting.server.RemotingModule.REMOTING_MODULE;
@@ -89,7 +89,8 @@ public class RemotingModule extends AbstractBaseModule {
         LOG.debug("Rico remoting endpoint defined as " + configuration.getServletMapping());
 
         final String eventbusType = configuration.getEventbusType();
-        final List<EventBusProvider> providers = StreamUtils.loadServiceAsStream(EventBusProvider.class)
+        final List<EventBusProvider> providers = ServiceLoader.load(EventBusProvider.class).stream()
+                .map(ServiceLoader.Provider::get)
                 .filter(provider -> eventbusType.equals(provider.getType()))
                 .collect(Collectors.toList());
 

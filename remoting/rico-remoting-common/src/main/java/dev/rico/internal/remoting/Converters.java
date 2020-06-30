@@ -19,7 +19,6 @@ package dev.rico.internal.remoting;
 import dev.rico.core.functional.Result;
 import dev.rico.core.functional.ResultWithInput;
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.core.lang.StreamUtils;
 import dev.rico.remoting.converter.Converter;
 import dev.rico.remoting.converter.ConverterFactory;
 import org.apiguardian.api.API;
@@ -30,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -48,7 +48,10 @@ public class Converters {
     public Converters(final BeanRepository beanRepository) {
         converterFactories = new ArrayList<>();
 
-        final List<ResultWithInput<ConverterFactory, Void>> failed = StreamUtils.reloadServiceAsStream(ConverterFactory.class)
+        final ServiceLoader<ConverterFactory> loader = ServiceLoader.load(ConverterFactory.class);
+        loader.reload();
+        final List<ResultWithInput<ConverterFactory, Void>> failed = loader.stream()
+                .map(ServiceLoader.Provider::get)
                 .peek(factory -> LOG.trace("Found converter factory {} with type identifier {}", factory.getClass(), factory.getTypeIdentifier()))
                 .map(Result.ofConsumer(factory -> addFactory(beanRepository, factory)))
                 .filter(ResultWithInput::isFailed)
