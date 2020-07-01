@@ -5,6 +5,8 @@ ifndef::imagesdir[:imagesdir: ../images]
 The metrics part of Rico provides an API to instrument your code with timer, gauge and counter metrics.
 Next to this Rico metrics includes preconfigured endpoints to collect and visualize such metrics.
 
+image:metrics-diagramm.png[]
+
 include::base-api.adoc[]
 
 include::integration.adoc[]
