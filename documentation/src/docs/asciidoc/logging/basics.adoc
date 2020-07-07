@@ -21,6 +21,8 @@ Sending logs to these facilities can be done in different ways.
 One way is to create a traditional log file and have a separate process listen to changes in the log file.
 On every change the newly added lines are sent from the application host to the logging facility.
 
+image:centralized-logging.png[]
+
 Alternatively the application can send the log statements directly using a standardized log format.
 https://docs.graylog.org/en/3.2/pages/gelf.html[GELF] is currently the most widely supported format for such an approach.
 GELF is a json based message format which allows sending not a plain string but a semi-structured message.
