@@ -64,6 +64,9 @@ One way is to create a traditional log file and have a separate process listen t
 On every change the newly added lines are sent from the application host to the logging facility.</p>
 </div>
 <div class="paragraph">
+<p><span class="image"><img src="../images/centralized-logging.png" alt="centralized logging"></span></p>
+</div>
+<div class="paragraph">
 <p>Alternatively the application can send the log statements directly using a standardized log format.
 <a href="https://docs.graylog.org/en/3.2/pages/gelf.html">GELF</a> is currently the most widely supported format for such an approach.
 GELF is a json based message format which allows sending not a plain string but a semi-structured message.
@@ -294,7 +297,7 @@ In production, you will need to think about user management, persistent storage,
 <div id="footer">
 <div id="footer-text">
 Version 1.0.0-SNAPSHOT<br>
-Last updated 2020-06-30 09:58:35 UTC
+Last updated 2020-07-07 14:30:46 UTC
 </div>
 </div>
 <link rel="stylesheet" href="./coderay-asciidoctor.css">
