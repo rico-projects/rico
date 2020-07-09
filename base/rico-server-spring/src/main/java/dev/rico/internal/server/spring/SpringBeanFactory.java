@@ -19,11 +19,11 @@ package dev.rico.internal.server.spring;
 import dev.rico.core.concurrent.Scheduler;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.concurrent.SchedulerImpl;
-import dev.rico.internal.core.context.ContextManagerImpl;
+import dev.rico.internal.core.context.RicoApplicationContextImpl;
 import dev.rico.internal.server.bootstrap.PlatformBootstrap;
 import dev.rico.internal.server.client.ClientSessionProvider;
 import dev.rico.internal.server.servlet.ServerTimingFilter;
-import dev.rico.core.context.ContextManager;
+import dev.rico.core.context.RicoApplicationContext;
 import dev.rico.server.client.ClientSession;
 import dev.rico.server.spring.ClientScope;
 import dev.rico.server.timing.ServerTiming;
@@ -69,10 +69,10 @@ public class SpringBeanFactory {
         return provider.getCurrentClientSession();
     }
 
-    @Bean(name = "contextManager")
+    @Bean(name = "ricoApplicationContext")
     @ApplicationScope
-    protected ContextManager createContextManager() {
-        return ContextManagerImpl.getInstance();
+    protected RicoApplicationContext createApplicationContext() {
+        return RicoApplicationContextImpl.getInstance();
     }
     
     @Bean(name = "customScopeConfigurer")

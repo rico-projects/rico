@@ -18,7 +18,7 @@ package dev.rico.internal.metrics;
 
 import dev.rico.core.lang.StringPair;
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.core.context.ContextManagerImpl;
+import dev.rico.internal.core.context.RicoApplicationContextImpl;
 import dev.rico.metrics.Metrics;
 import dev.rico.metrics.types.Counter;
 import dev.rico.metrics.types.Gauge;
@@ -57,7 +57,7 @@ public class MetricsImpl implements Metrics {
     public Counter getOrCreateCounter(final String name, final StringPair... tags) {
         final List<Tag> tagList = new ArrayList<>();
         tagList.addAll(TagUtil.convertTags(tags));
-        tagList.addAll(TagUtil.convertTags(ContextManagerImpl.getInstance().getGlobalAttributes()));
+        tagList.addAll(TagUtil.convertTags(RicoApplicationContextImpl.getInstance().getGlobalAttributes()));
         final io.micrometer.core.instrument.Counter counter = registry.get()
                 .counter(name, tagList);
         return new Counter() {
@@ -93,7 +93,7 @@ public class MetricsImpl implements Metrics {
     public Timer getOrCreateTimer(final String name, final StringPair... tags) {
         final List<io.micrometer.core.instrument.Tag> tagList = new ArrayList<>();
         tagList.addAll(TagUtil.convertTags(tags));
-        tagList.addAll(TagUtil.convertTags(ContextManagerImpl.getInstance().getGlobalAttributes()));
+        tagList.addAll(TagUtil.convertTags(RicoApplicationContextImpl.getInstance().getGlobalAttributes()));
         io.micrometer.core.instrument.Timer timer = registry.get().timer(name, tagList);
         return new Timer() {
             @Override
@@ -125,7 +125,7 @@ public class MetricsImpl implements Metrics {
     public Gauge getOrCreateGauge(final String name, final StringPair... tags) {
         final List<io.micrometer.core.instrument.Tag> tagList = new ArrayList<>();
         tagList.addAll(TagUtil.convertTags(tags));
-        tagList.addAll(TagUtil.convertTags(ContextManagerImpl.getInstance().getGlobalAttributes()));
+        tagList.addAll(TagUtil.convertTags(RicoApplicationContextImpl.getInstance().getGlobalAttributes()));
         final AtomicReference<Double> internalValue = new AtomicReference<>(0d);
 
         io.micrometer.core.instrument.Gauge gauge = io.micrometer.core.instrument.Gauge

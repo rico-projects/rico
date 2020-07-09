@@ -1,6 +1,6 @@
 package dev.rico.log4j2.appender;
 
-import dev.rico.internal.core.context.ContextManagerImpl;
+import dev.rico.internal.core.context.RicoApplicationContextImpl;
 import org.apache.logging.log4j.core.Appender;
 import org.apache.logging.log4j.core.Core;
 import org.apache.logging.log4j.core.Filter;
@@ -57,8 +57,8 @@ public class ContextWrappingAppender extends AbstractAppender {
 
     @Override
     public void append(LogEvent source) {
-        Map<String, String> contextData = ContextManagerImpl.getInstance().getAttributes();
-        JdkMapAdapterStringMap targetContext = new JdkMapAdapterStringMap(contextData);
+        Map<String, String> ricoContext = RicoApplicationContextImpl.getInstance().getAttributes();
+        JdkMapAdapterStringMap targetContext = new JdkMapAdapterStringMap(ricoContext);
 
         ReadOnlyStringMap sourceContext = source.getContextData();
         targetContext.putAll(sourceContext);

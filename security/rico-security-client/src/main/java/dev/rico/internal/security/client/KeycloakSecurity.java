@@ -20,13 +20,13 @@ import com.google.gson.Gson;
 import dev.rico.client.Client;
 import dev.rico.client.ClientConfiguration;
 import dev.rico.client.concurrent.BackgroundExecutor;
-import dev.rico.security.client.Security;
 import dev.rico.core.Configuration;
-import dev.rico.core.functional.Subscription;
+import dev.rico.core.functional.Assignment;
 import dev.rico.core.http.RequestMethod;
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.core.context.ContextManagerImpl;
+import dev.rico.internal.core.context.RicoApplicationContextImpl;
 import dev.rico.internal.core.http.HttpClientConnection;
+import dev.rico.security.client.Security;
 import org.apiguardian.api.API;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,7 +87,7 @@ public class KeycloakSecurity implements Security {
 
     private final Lock loginLogoutLock = new ReentrantLock();
 
-    private final AtomicReference<Subscription> userContextSubscription;
+    private final AtomicReference<Assignment> userContextAssignment;
 
     public KeycloakSecurity(final ClientConfiguration configuration, final BackgroundExecutor backgroundExecutor) {
         Assert.requireNonNull(configuration, "configuration");
@@ -99,7 +99,7 @@ public class KeycloakSecurity implements Security {
         this.executor = Assert.requireNonNull(backgroundExecutor, "backgroundExecutor");
         this.authorized = new AtomicBoolean(false);
         this.accessToken = new AtomicReference<>(null);
-        userContextSubscription = new AtomicReference<>();
+        userContextAssignment = new AtomicReference<>();
     }
 
     @Override
@@ -130,7 +130,7 @@ public class KeycloakSecurity implements Security {
                     final KeycloakAuthentification auth = new KeycloakAuthentification(accessToken.get(), appName, realmName);
                     KeycloakAuthentificationManager.getInstance().setAuth(auth);
                     authorized.set(true);
-                    userContextSubscription.set(ContextManagerImpl.getInstance().setGlobalAttribute(USER_CONTEXT, user));
+                    userContextAssignment.set(RicoApplicationContextImpl.getInstance().setGlobalAttribute(USER_CONTEXT, user));
                     startTokenRefreshRunner(connectResult, realmName, encodedAppName);
                 } catch (final IOException | URISyntaxException e) {
                     throw new RuntimeException("Can not receive security token!", e);
@@ -146,9 +146,9 @@ public class KeycloakSecurity implements Security {
         return executor.submit(() -> {
             loginLogoutLock.lock();
             try {
-                Subscription userSubscription = userContextSubscription.getAndSet(null);
-                if(userSubscription != null) {
-                    userSubscription.unsubscribe();
+                Assignment userAssignment = userContextAssignment.getAndSet(null);
+                if(userAssignment != null) {
+                    userAssignment.unset();
                 }
                 authorized.set(false);
                 refreshLock.lock();

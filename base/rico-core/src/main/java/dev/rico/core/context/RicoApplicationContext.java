@@ -15,38 +15,42 @@
  */
 package dev.rico.core.context;
 
-import dev.rico.core.functional.Subscription;
+import dev.rico.core.functional.Assignment;
+import org.apiguardian.api.API;
 
 import java.util.Map;
 import java.util.Optional;
+
+import static org.apiguardian.api.API.Status.STABLE;
 
 /**
  * Holder of attributes.
  * An attribute can either be global or thread local.
  */
-public interface ContextManager {
+@API(since = "2.0", status = STABLE)
+public interface RicoApplicationContext {
 
     /**
-     * Sets a global property.
+     * Sets a global attribute.
      * <p>
      * Both name and value must not be {@code null}.
      *
-     * @param name  the name of the property
-     * @param value the value of the property
-     * @return a callable which will remove the property when executed.
+     * @param name  the name of the attribute
+     * @param value the value of the attribute
+     * @return a callable which will remove the attribute when executed.
      */
-    Subscription setGlobalAttribute(String name, String value);
+    Assignment setGlobalAttribute(String name, String value);
 
     /**
-     * Sets a thread local property.
+     * Sets a thread local attribute.
      * <p>
      * Both name and value must not be {@code null}.
      *
-     * @param name  the name of the property
-     * @param value the value of the property
-     * @return a callable which will remove the property when executed.
+     * @param name  the name of the attribute
+     * @param value the value of the attribute
+     * @return a callable which will remove the attribute when executed.
      */
-    Subscription setThreadLocalAttribute(String name, String value);
+    Assignment setThreadLocalAttribute(String name, String value);
 
     /**
      * Gets a single attribute.

@@ -45,10 +45,15 @@ import static org.apiguardian.api.API.Status.MAINTAINED;
  */
 @API(since = "0.x", status = MAINTAINED)
 @FunctionalInterface
-public interface Subscription {
+public interface Subscription extends AutoCloseable {
 
     /**
      * Unsubscribe / unregister the handling that is defined by the {@link Subscription} instance.
      */
     void unsubscribe();
+
+    @Override
+    default void close() {
+        unsubscribe();
+    }
 }

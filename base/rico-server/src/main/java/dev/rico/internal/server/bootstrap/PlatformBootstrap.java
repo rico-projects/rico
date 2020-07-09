@@ -18,7 +18,7 @@ package dev.rico.internal.server.bootstrap;
 
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.ansi.PlatformLogo;
-import dev.rico.internal.core.context.ContextManagerImpl;
+import dev.rico.internal.core.context.RicoApplicationContextImpl;
 import dev.rico.internal.server.config.ServerConfiguration;
 import dev.rico.internal.server.mbean.MBeanRegistry;
 import dev.rico.internal.server.scanner.DefaultClasspathScanner;
@@ -64,7 +64,7 @@ public class PlatformBootstrap {
         Assert.requireNonNull(servletContext, "servletContext");
         Assert.requireNonNull(configuration, "configuration");
 
-        ContextManagerImpl.getInstance().setGlobalAttribute(APPLICATION_NAME_CONTEXT, configuration.getProperty(APPLICATION_NAME_PROPERTY, APPLICATION_NAME_DEFAULT));
+        RicoApplicationContextImpl.getInstance().setGlobalAttribute(APPLICATION_NAME_CONTEXT, configuration.getProperty(APPLICATION_NAME_PROPERTY, APPLICATION_NAME_DEFAULT));
 
         if (configuration.getBooleanProperty(PLATFORM_ACTIVE)) {
             PlatformLogo.printLogo();

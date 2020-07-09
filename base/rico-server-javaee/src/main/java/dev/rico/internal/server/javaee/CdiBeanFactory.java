@@ -17,10 +17,10 @@
 package dev.rico.internal.server.javaee;
 
 import dev.rico.core.concurrent.Scheduler;
-import dev.rico.core.context.ContextManager;
+import dev.rico.core.context.RicoApplicationContext;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.concurrent.SchedulerImpl;
-import dev.rico.internal.core.context.ContextManagerImpl;
+import dev.rico.internal.core.context.RicoApplicationContextImpl;
 import dev.rico.internal.server.bootstrap.PlatformBootstrap;
 import dev.rico.internal.server.client.ClientSessionProvider;
 import dev.rico.internal.server.servlet.ServerTimingFilter;
@@ -65,8 +65,8 @@ public class CdiBeanFactory {
 
     @Produces
     @ApplicationScoped
-    public ContextManager createContextManager() {
-        return ContextManagerImpl.getInstance();
+    public RicoApplicationContext createContextManager() {
+        return RicoApplicationContextImpl.getInstance();
     }
 
     @Produces

@@ -16,8 +16,8 @@
  */
 package dev.rico.internal.core.context;
 
-import dev.rico.core.context.ContextManager;
-import dev.rico.core.functional.Subscription;
+import dev.rico.core.context.RicoApplicationContext;
+import dev.rico.core.functional.Assignment;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -36,7 +36,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
-public class ContextManagerImplTests {
+public class RicoApplicationContextImplTests {
 
     private static final int INITIAL_SIZE = 8;
 
@@ -45,11 +45,11 @@ public class ContextManagerImplTests {
     private static final String value_1 = "VALUE-1";
     private static final String value_2 = "VALUE-2";
 
-    private ContextManager manager;
+    private RicoApplicationContext manager;
 
     @BeforeMethod
     public void setup() {
-        manager = new ContextManagerImpl();
+        manager = new RicoApplicationContextImpl();
     }
 
     @Test
@@ -169,8 +169,8 @@ public class ContextManagerImplTests {
         final int initialMergedSize = manager.getAttributes().size();
 
         // when
-        final Subscription subscription = manager.setGlobalAttribute(key_1, value_1);
-        subscription.unsubscribe();
+        final Assignment assignment = manager.setGlobalAttribute(key_1, value_1);
+        assignment.unset();
 
         // then
         assertFalse(manager.getAttribute(key_1).isPresent());
@@ -268,8 +268,8 @@ public class ContextManagerImplTests {
         final int initialMergedSize = manager.getAttributes().size();
 
         // when
-        final Subscription subscription = manager.setThreadLocalAttribute(key_1, value_1);
-        subscription.unsubscribe();
+        final Assignment assignment = manager.setThreadLocalAttribute(key_1, value_1);
+        assignment.unset();
 
         // then
         assertFalse(manager.getAttribute(key_1).isPresent());

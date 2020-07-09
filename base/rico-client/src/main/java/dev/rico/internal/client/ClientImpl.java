@@ -25,7 +25,7 @@ import dev.rico.core.functional.ResultWithInput;
 import dev.rico.internal.client.config.ConfigurationFileLoader;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.ansi.PlatformLogo;
-import dev.rico.internal.core.context.ContextManagerImpl;
+import dev.rico.internal.core.context.RicoApplicationContextImpl;
 
 import java.util.Collections;
 import java.util.List;
@@ -60,7 +60,7 @@ public class ClientImpl {
         this.clientConfiguration = ConfigurationFileLoader.loadConfiguration(ClientConstants.CONFIG_DEFAULT_LOCATION);
         Assert.requireNonNull(clientConfiguration, "clientConfiguration");
 
-        ContextManagerImpl.getInstance().setGlobalAttribute(APPLICATION_NAME_CONTEXT, clientConfiguration.getProperty(APPLICATION_NAME_PROPERTY, APPLICATION_NAME_DEFAULT));
+        RicoApplicationContextImpl.getInstance().setGlobalAttribute(APPLICATION_NAME_CONTEXT, clientConfiguration.getProperty(APPLICATION_NAME_PROPERTY, APPLICATION_NAME_DEFAULT));
 
         final List<String> failed = ServiceLoader.load(ServiceProvider.class).stream()
                 .map(ServiceLoader.Provider::get)
@@ -100,7 +100,7 @@ public class ClientImpl {
         this.toolkit = Assert.requireNonNull(toolkit, "toolkit");
         services.clear();
         isToolkitSet.set(true);
-        ContextManagerImpl.getInstance().setGlobalAttribute(UI_CONTEXT, toolkit.getName());
+        RicoApplicationContextImpl.getInstance().setGlobalAttribute(UI_CONTEXT, toolkit.getName());
     }
 
     private Set<Class<?>> implGetAllServiceTypes() {

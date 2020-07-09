@@ -8,7 +8,7 @@ import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.AppenderBase;
 import ch.qos.logback.core.spi.AppenderAttachable;
 import ch.qos.logback.core.spi.AppenderAttachableImpl;
-import dev.rico.internal.core.context.ContextManagerImpl;
+import dev.rico.internal.core.context.RicoApplicationContextImpl;
 import org.slf4j.Marker;
 
 import java.util.HashMap;
@@ -32,7 +32,7 @@ public class ContextWrappingAppender<E> extends AppenderBase<E> implements Appen
     private E createEventWithAugmentedMdc(E eventObject) {
         if (eventObject instanceof ILoggingEvent) {
             final ILoggingEvent loggingEvent = (ILoggingEvent) eventObject;
-            final Map<String, String> newMdc = new HashMap<>(ContextManagerImpl.getInstance().getAttributes());
+            final Map<String, String> newMdc = new HashMap<>(RicoApplicationContextImpl.getInstance().getAttributes());
             newMdc.putAll(loggingEvent.getMDCPropertyMap());
             return (E) new RicoLoggingEvent(loggingEvent, newMdc);
         }
