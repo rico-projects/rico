@@ -80,7 +80,7 @@ public class DockerCompose {
 
     private void waitAndDump(final Process process) {
         Assert.requireNonNull(process, "process");
-        while (process.isAlive()) {
+        do {
             final InputStream inputStream = process.getInputStream();
             final InputStreamReader reader = new InputStreamReader(inputStream);
             final BufferedReader bufferedReader = new BufferedReader(reader);
@@ -92,7 +92,7 @@ public class DockerCompose {
             } catch (Exception e) {
                 LOG.error("Error in process watcher", e);
             }
-        }
+        } while (process.isAlive());
     }
 
     public synchronized void kill() {
