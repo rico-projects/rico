@@ -122,13 +122,13 @@ The following code snippet shows the basic usage of the API:</p>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> ServerTiming timing = ... <span class="comment">// will be injected</span>
 
-final Metric dbMetric = timing.start(<span class="string"><span class="delimiter">&quot;</span><span class="content">DB-Operation</span><span class="delimiter">&quot;</span></span>);
+final ServerTimer dbTimer = timing.start(<span class="string"><span class="delimiter">&quot;</span><span class="content">DB-Operation</span><span class="delimiter">&quot;</span></span>);
 <span class="comment">//Do some work on the database</span>
-dbMetric.stop();</code></pre>
+dbTimer.stop();</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The given sample creates a metric with the given name “DB-Operation” and will record the duration until the <code>stop()</code> method is called.
+<p>The given sample creates a timer with the given name “DB-Operation” and will record the duration until the <code>stop()</code> method is called.
 You can see the duration of the “DB-Operation” directly in the developer console of your chrome browser.</p>
 </div>
 <div class="paragraph">
@@ -147,13 +147,13 @@ You can see the duration of the “DB-Operation” directly in the developer con
 
     <span class="annotation">@GET</span>
     <span class="directive">public</span> <span class="type">void</span> clearAllData() {
-        <span class="directive">final</span> Metric metric1 = timing.start(<span class="string"><span class="delimiter">&quot;</span><span class="content">delete-users</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Deletes all users in the DB</span><span class="delimiter">&quot;</span></span>);
+        <span class="directive">final</span> ServerTimer timer1 = timing.start(<span class="string"><span class="delimiter">&quot;</span><span class="content">delete-users</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Deletes all users in the DB</span><span class="delimiter">&quot;</span></span>);
         database.deleteAllUsers();
-        metric1.stop();
+        timer1.stop();
 
-        <span class="directive">final</span> Metric metric2 = timing.start(<span class="string"><span class="delimiter">&quot;</span><span class="content">delete-items</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Deletes all items in the DB</span><span class="delimiter">&quot;</span></span>);
+        <span class="directive">final</span> ServerTimer timer2 = timing.start(<span class="string"><span class="delimiter">&quot;</span><span class="content">delete-items</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Deletes all items in the DB</span><span class="delimiter">&quot;</span></span>);
         database.deleteAllItems();
-        metric2.stop();
+        timer2.stop();
     }
 }</code></pre>
 </div>
@@ -174,20 +174,20 @@ You can see the duration of the “DB-Operation” directly in the developer con
 
   <span class="annotation">@RequestMapping</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">/api/delete</span><span class="delimiter">&quot;</span></span>)
   <span class="directive">public</span> <span class="type">void</span> clearAllData() {
-        <span class="directive">final</span> Metric metric1 = timing.start(<span class="string"><span class="delimiter">&quot;</span><span class="content">delete-users</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Deletes all users in the DB</span><span class="delimiter">&quot;</span></span>);
+        <span class="directive">final</span> ServerTimer timer1 = timing.start(<span class="string"><span class="delimiter">&quot;</span><span class="content">delete-users</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Deletes all users in the DB</span><span class="delimiter">&quot;</span></span>);
         database.deleteAllUsers();
-        metric1.stop();
+        timer1.stop();
 
-        <span class="directive">final</span> Metric metric2 = timing.start(<span class="string"><span class="delimiter">&quot;</span><span class="content">delete-items</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Deletes all items in the DB</span><span class="delimiter">&quot;</span></span>);
+        <span class="directive">final</span> ServerTimer timer2 = timing.start(<span class="string"><span class="delimiter">&quot;</span><span class="content">delete-items</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Deletes all items in the DB</span><span class="delimiter">&quot;</span></span>);
         database.deleteAllItems();
-        metric2.stop();
+        timer2.stop();
     }
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>In the example an endpoint <code>/api/delete</code> is doing 2 calls against a database.
-For both calls a <code>dev.rico.server.timing.Metric</code> instance is created to measure the duration of the calls.
+For both calls a <code>ServerTimer</code> instance is created to measure the duration of the calls.
 In accordance with the “server timing” specification Rico supports a description next to a name for a timing entry.
 Once a client calls the endpoint, the http response will automatically contain the timing information for “deleteAllUsers” and “deleteAllItems”.</p>
 </div>
@@ -392,7 +392,7 @@ Here is an example:</p>
 <div id="footer">
 <div id="footer-text">
 Version 1.0.0-SNAPSHOT<br>
-Last updated 2020-07-09 09:29:10 UTC
+Last updated 2020-07-09 10:25:42 UTC
 </div>
 </div>
 <link rel="stylesheet" href="./coderay-asciidoctor.css">
