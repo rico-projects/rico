@@ -80,6 +80,12 @@ subprojects { proj ->
             //options.compilerArgs << '-Xlint:unchecked'
         }
 
+        testlogger {
+            showStandardStreams true
+//            showPassedStandardStreams false
+//            showSkippedStandardStreams false
+        }
+
         test {
             useTestNG()
             jvmArgs("-Djdk.attach.allowAttachSelf")
