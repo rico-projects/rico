@@ -51,15 +51,10 @@ public class ServerTimerImpl implements ServerTimer {
         return duration;
     }
 
-    public ZonedDateTime getStartTime() {
-        return startTime;
-    }
-
     @Override
     public void stop() {
-        if (duration != null) {
-            throw new IllegalStateException("Metric '" + name + "' was already stopped!");
+        if (duration == null) {
+            duration = Duration.between(startTime, ZonedDateTime.now());
         }
-        duration = Duration.between(startTime, ZonedDateTime.now());
     }
 }

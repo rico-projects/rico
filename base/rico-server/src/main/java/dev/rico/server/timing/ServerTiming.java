@@ -18,10 +18,14 @@ package dev.rico.server.timing;
 
 import dev.rico.core.functional.CheckedRunnable;
 import dev.rico.core.functional.CheckedSupplier;
+import org.apiguardian.api.API;
+
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 /**
  * Service to add metrics of the server to a http response.
  */
+@API(since = "2.0", status = EXPERIMENTAL)
 public interface ServerTiming {
 
     /**
