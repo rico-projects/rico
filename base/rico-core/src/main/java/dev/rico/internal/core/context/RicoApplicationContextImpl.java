@@ -15,8 +15,8 @@
  */
 package dev.rico.internal.core.context;
 
-import dev.rico.core.context.ContextManager;
-import dev.rico.core.functional.Subscription;
+import dev.rico.core.context.RicoApplicationContext;
+import dev.rico.core.functional.Assignment;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.PlatformVersion;
 import dev.rico.internal.core.os.OperationSystem;
@@ -42,17 +42,17 @@ import static dev.rico.internal.core.context.ContextConstants.OS_CONTEXT;
 import static dev.rico.internal.core.context.ContextConstants.PLATFORM_VERSION_CONTEXT;
 import static dev.rico.internal.core.context.ContextConstants.UNNAMED_APPLICATION;
 
-public class ContextManagerImpl implements ContextManager {
+public class RicoApplicationContextImpl implements RicoApplicationContext {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ContextManagerImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RicoApplicationContextImpl.class);
 
-    private static final ContextManagerImpl INSTANCE = new ContextManagerImpl();
+    private static final RicoApplicationContextImpl INSTANCE = new RicoApplicationContextImpl();
 
     private final Map<String, String> globalContexts = new ConcurrentHashMap<>();
 
     private final ThreadLocal<Map<String, String>> threadContexts = ThreadLocal.withInitial(HashMap::new);
 
-    ContextManagerImpl() {
+    RicoApplicationContextImpl() {
         setGlobalAttribute(APPLICATION_NAME_CONTEXT, UNNAMED_APPLICATION);
         setGlobalAttribute(PLATFORM_VERSION_CONTEXT, PlatformVersion.getVersion());
 
@@ -72,7 +72,7 @@ public class ContextManagerImpl implements ContextManager {
     }
 
     @Override
-    public Subscription setGlobalAttribute(final String name, final String value) {
+    public Assignment setGlobalAttribute(final String name, final String value) {
         Assert.requireNonNull(name, "name");
         Assert.requireNonNull(value, "value");
 
@@ -81,7 +81,7 @@ public class ContextManagerImpl implements ContextManager {
     }
 
     @Override
-    public Subscription setThreadLocalAttribute(final String name, String value) {
+    public Assignment setThreadLocalAttribute(final String name, String value) {
         Assert.requireNonNull(name, "name");
         Assert.requireNonNull(value, "value");
 
@@ -119,7 +119,7 @@ public class ContextManagerImpl implements ContextManager {
         return Collections.unmodifiableMap(result);
     }
 
-    public static ContextManagerImpl getInstance() {
+    public static RicoApplicationContextImpl getInstance() {
         return INSTANCE;
     }
 }

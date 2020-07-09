@@ -14,28 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.core.functional;
+package dev.rico.internal.client.context;
 
-import org.apiguardian.api.API;
+import dev.rico.internal.client.AbstractServiceProvider;
+import dev.rico.internal.core.context.RicoApplicationContextImpl;
+import dev.rico.client.ClientConfiguration;
+import dev.rico.core.context.RicoApplicationContext;
 
-import static org.apiguardian.api.API.Status.MAINTAINED;
+public class RicoApplicationContextServiceProvider extends AbstractServiceProvider<RicoApplicationContext> {
 
-/**
- * Defines a function interface that is used to handle an unbind of a binding.
- *
- * @author Hendrik Ebbers
- */
-@API(since = "0.x", status = MAINTAINED)
-@FunctionalInterface
-public interface Binding extends AutoCloseable {
-
-    /**
-     * Unbinds the binding that is defined by this {@link Binding} instance.
-     */
-    void unbind();
+    public RicoApplicationContextServiceProvider() {
+        super(RicoApplicationContext.class);
+    }
 
     @Override
-    default void close() {
-        unbind();
+    protected RicoApplicationContext createService(final ClientConfiguration configuration) {
+        return RicoApplicationContextImpl.getInstance();
     }
 }

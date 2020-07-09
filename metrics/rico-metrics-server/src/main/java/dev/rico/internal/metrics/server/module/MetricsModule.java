@@ -17,7 +17,7 @@
 package dev.rico.internal.metrics.server.module;
 
 import dev.rico.core.Configuration;
-import dev.rico.internal.core.context.ContextManagerImpl;
+import dev.rico.internal.core.context.RicoApplicationContextImpl;
 import dev.rico.internal.metrics.MetricsImpl;
 import dev.rico.internal.metrics.TagUtil;
 import dev.rico.internal.metrics.server.servlet.MetricsHttpSessionListener;
@@ -65,7 +65,7 @@ public class MetricsModule extends AbstractBaseModule {
 
         final PrometheusMeterRegistry prometheusRegistry = new PrometheusMeterRegistry(PrometheusConfig.DEFAULT);
 
-        final List<Tag> tagList = TagUtil.convertTags(ContextManagerImpl.getInstance().getGlobalAttributes());
+        final List<Tag> tagList = TagUtil.convertTags(RicoApplicationContextImpl.getInstance().getGlobalAttributes());
 
         new ClassLoaderMetrics(tagList).bindTo(prometheusRegistry);
         new JvmMemoryMetrics(tagList).bindTo(prometheusRegistry);

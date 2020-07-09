@@ -14,21 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.internal.client.context;
+package dev.rico.core.functional;
 
-import dev.rico.internal.client.AbstractServiceProvider;
-import dev.rico.internal.core.context.ContextManagerImpl;
-import dev.rico.client.ClientConfiguration;
-import dev.rico.core.context.ContextManager;
+import org.apiguardian.api.API;
 
-public class ContextManagerServiceProvider extends AbstractServiceProvider<ContextManager> {
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
-    public ContextManagerServiceProvider() {
-        super(ContextManager.class);
-    }
+/**
+ * Functional interface to unset an assignment.
+ */
+@API(since = "2.0", status = EXPERIMENTAL)
+@FunctionalInterface
+public interface Assignment extends AutoCloseable {
+
+    /**
+     * unset the {@link Assignment} defined by this instance.
+     */
+    void unset();
 
     @Override
-    protected ContextManager createService(final ClientConfiguration configuration) {
-        return ContextManagerImpl.getInstance();
+    default void close() {
+        unset();
     }
 }

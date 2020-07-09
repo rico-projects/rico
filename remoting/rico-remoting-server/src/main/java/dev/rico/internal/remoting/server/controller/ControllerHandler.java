@@ -16,16 +16,16 @@
  */
 package dev.rico.internal.remoting.server.controller;
 
+import dev.rico.core.functional.Assignment;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.ReflectionHelper;
-import dev.rico.internal.core.context.ContextManagerImpl;
+import dev.rico.internal.core.context.RicoApplicationContextImpl;
 import dev.rico.internal.core.lang.StringUtils;
 import dev.rico.internal.remoting.BeanRepository;
 import dev.rico.internal.remoting.Converters;
 import dev.rico.internal.server.beans.PostConstructInterceptor;
 import dev.rico.internal.remoting.server.error.ActionErrorHandler;
 import dev.rico.internal.remoting.server.model.ServerBeanBuilder;
-import dev.rico.core.functional.Subscription;
 import dev.rico.remoting.server.Param;
 import dev.rico.remoting.server.ParentController;
 import dev.rico.remoting.server.PostChildCreated;
@@ -286,11 +286,11 @@ public class ControllerHandler {
         final Object controller = controllers.get(controllerId);
         final Class controllerClass = controllerClassMapping.get(controllerId);
 
-        final Subscription controllerContextSubscription = ContextManagerImpl.getInstance()
+        final Assignment controllerContextAssignment = RicoApplicationContextImpl.getInstance()
                 .setThreadLocalAttribute(CONTROLLER_CONTEXT, Optional.ofNullable(controllerClass).map(c -> c.getSimpleName()).orElse(UNKNOWN_CONTROLLER_CONTEXT));
-        final Subscription controllerActionContextSubscription = ContextManagerImpl.getInstance()
+        final Assignment controllerActionContextAssignment = RicoApplicationContextImpl.getInstance()
                 .setThreadLocalAttribute(CONTROLLER_ACTION_CONTEXT, actionName);
-        try {
+        try (controllerContextAssignment; controllerActionContextAssignment) {
             if (controller == null) {
                 throw new InvokeActionException("No controller for id " + controllerId + " found");
             }
@@ -329,9 +329,6 @@ public class ControllerHandler {
             throw e;
         } catch (final Exception e) {
             throw new InvokeActionException("Can not call action '" + actionName + "'", e);
-        } finally {
-            controllerContextSubscription.unsubscribe();
-            controllerActionContextSubscription.unsubscribe();
         }
     }
 

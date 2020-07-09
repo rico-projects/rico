@@ -16,9 +16,9 @@
  */
 package dev.rico.internal.security.server;
 
+import dev.rico.core.functional.Assignment;
 import dev.rico.internal.core.Assert;
-import dev.rico.internal.core.context.ContextManagerImpl;
-import dev.rico.core.functional.Subscription;
+import dev.rico.internal.core.context.RicoApplicationContextImpl;
 import org.apiguardian.api.API;
 import org.keycloak.KeycloakSecurityContext;
 import org.slf4j.Logger;
@@ -66,11 +66,10 @@ public class KeycloakSecurityContextExtractFilter implements Filter, AccessDenie
         appNameHolder.set(req.getHeader(APPLICATION_NAME_HEADER));
         accessDenied.set(false);
 
-        final Subscription userContextSubscription = Optional.ofNullable(securityContext)
+        final Optional<Assignment> userContextAssignment = Optional.ofNullable(securityContext)
                 .map(c -> c.getToken())
                 .map(t -> t.getPreferredUsername())
-                .map(u -> ContextManagerImpl.getInstance().setThreadLocalAttribute(USER_CONTEXT, u))
-                .orElse(null);
+                .map(u -> RicoApplicationContextImpl.getInstance().setThreadLocalAttribute(USER_CONTEXT, u));
         try {
             chain.doFilter(request, response);
         }catch (Exception e) {
@@ -80,7 +79,7 @@ public class KeycloakSecurityContextExtractFilter implements Filter, AccessDenie
                 LOG.error("SecurityContext error in request", e);
             }
         } finally {
-            Optional.ofNullable(userContextSubscription).ifPresent(s -> s.unsubscribe());
+            userContextAssignment.ifPresent(s -> s.unset());
             contextHolder.set(null);
             boolean sendAccessDenied = accessDenied.get();
             accessDenied.set(false);

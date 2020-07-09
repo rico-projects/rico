@@ -16,7 +16,7 @@
  */
 package dev.rico.internal.core;
 
-import dev.rico.internal.core.context.ContextManagerImpl;
+import dev.rico.internal.core.context.RicoApplicationContextImpl;
 import org.apiguardian.api.API;
 
 import java.security.AccessController;
@@ -71,7 +71,7 @@ public class SimpleThreadFactory implements ThreadFactory {
     private Thread createThread(Runnable task) {
         final String name = THREAD_NAME_PREFIX + threadNumber.getAndIncrement();
         final Thread backgroundThread = new Thread(group, () -> {
-            ContextManagerImpl.getInstance().setThreadLocalAttribute(THREAD_CONTEXT, name);
+            RicoApplicationContextImpl.getInstance().setThreadLocalAttribute(THREAD_CONTEXT, name);
             task.run();
         });
         backgroundThread.setName(name);

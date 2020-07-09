@@ -16,7 +16,7 @@
  */
 package dev.rico.internal.logging;
 
-import dev.rico.internal.core.context.ContextManagerImpl;
+import dev.rico.internal.core.context.RicoApplicationContextImpl;
 import dev.rico.internal.logging.spi.LogMessage;
 import dev.rico.internal.logging.spi.LoggerBridge;
 import org.slf4j.Logger;
@@ -430,7 +430,7 @@ public class RicoLogger implements Logger {
                 logMessage.setTimestamp(ZonedDateTime.now());
                 logMessage.setThreadName(Thread.currentThread().getName());
 
-                logMessage.setContext(ContextManagerImpl.getInstance().getAttributes());
+                logMessage.setContext(RicoApplicationContextImpl.getInstance().getAttributes());
 
                 logMessage.setMarker(currentMarkers);
 

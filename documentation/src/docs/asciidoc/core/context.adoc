@@ -1,25 +1,25 @@
 ifndef::imagesdir[:imagesdir: images]
 
-=== Context API
+=== Application Context API
 
-Rico provides a context manager that can be used to hold attributes in a global and a per-thread context.
+Rico provides an application context that can be used to hold attributes in a global and a per-thread context.
 An attribute is defined as a key-value pair.
 Both key and values are strings.
 These pairs can be stored and read from the global context or the context of the current thread only.
 All attributes describe metadata to help in debugging, maintaining and analysing an application.
 
-The interface `dev.rico.core.context.ContextManager` defines the context manager in Rico and provides several methods to store and receive context based information.
-Depending on your environment Rico provides different ways to obtain a `ContextManager` instance.
+The interface `dev.rico.core.context.RicoApplicationContext` defines the application context in Rico and provides several methods to store and receive context based information.
+Depending on your environment Rico provides different ways to obtain a `RicoApplicationContext` instance.
 
 The following sample shows how values can be stored:
 
 [source,java]
 ----
 
-final ContextManager contextManager = ... // <1>
+final RicoApplicationContext ricoContext = ... // <1>
 
-contextManager.setGlobalAttribute("application.type", "microservice"); // <2>
-contextManager.setThreadLocalAttribute("thread.type", "background thread"); // <3>
+ricoContext.setGlobalAttribute("application.type", "microservice"); // <2>
+ricoContext.setThreadLocalAttribute("thread.type", "background thread"); // <3>
 ----
 <1> depends on your environment.
 <2> here an attribute is stored in the global context.
@@ -33,29 +33,29 @@ To do so the following pattern is quite helpful when defining attributes in the 
 ----
 
 public final Result callDatabase(final String query) {
-    final ContextManager contextManager = ... // <1>
-    final Subscription queryAttributeSubscription = contextManager.setThreadLocalAttribute("db.query", query); // <2>
+    final RicoApplicationContext ricoContext = ... // <1>
+    final Assignment queryAttributeAssignment = ricoContext.setThreadLocalAttribute("db.query", query); // <2>
 
     try {
         return db.call(query); // <3>
     } finally {
-        queryAttributeSubscription.unsubscribe(); // <4>
+        queryAttributeAssignment.unset(); // <4>
     }
 }
 
 ----
 <1> depends on your environment.
 <2> here the attribute "db.query" is stored in the thread context.
-The `Subscription` instance can be used to remove the added attribute from the context.
+The `Assignment` instance can be used to remove the added attribute from the context.
 <3> While we call our database the context attribute "db.query" will remain set.
-<4> Once the database call has been executed we remove the attribute from the thread context by calling the `unsubscribe()` method.
+<4> Once the database call has been executed we remove the attribute from the thread context by calling the `unset()` method.
 This should always be done in a `finally` block since an exception my prevent this otherwise.
 
-==== Benefits of the context manager
+==== Benefits of the application context
 
-The context manager in Rico is integrated in several libraries and features of Rico.
+The application context in Rico is integrated in several libraries and features of Rico.
 The remoting library of Rico automatically adds information to the context that can be helpful.
-The metrics and logging libraries of Rico provide the possibility to enrich metrics and logging with context based attributes through the context manager.
+The metrics and logging libraries of Rico provide the possibility to enrich metrics and logging with context based attributes through the application context.
 This allows you to easily assign all logging messages of a server to specific users and requests or to store the metrics of several microservices in the same Prometheus instance and query for a specific instance later.
 More information can be found in the documentation of the metrics and logging API.
 
@@ -63,28 +63,28 @@ image:context-in-log.svg[]
 
 ==== Using the API on the client
 
-In the Rico client API a `dev.rico.core.context.ContextManager` instance can be obtained by using by the following call:
+In the Rico client API a `dev.rico.core.context.RicoApplicationContext` instance can be obtained by using by the following call:
 
 [source,java]
 ----
 
-final ContextManager contextManager = Client.getService(ContextManager.class);
+final RicoApplicationContext ricoContext = Client.getService(RicoApplicationContext.class);
 ----
 
 ==== Using the API on the server
 
-On JakartaEE and Spring you can inject a `dev.rico.core.context.ContextManager` instance in any managed bean.
+On JakartaEE and Spring you can inject a `dev.rico.core.context.RicoApplicationContext` instance in any managed bean.
 The instance is always defined in the singleton / application scope.
 
 ==== Predefined Context values
 
-Rico already defines some context values by default.
-The following table gives an overview of all the context values that are defined by default when using Rico.
+Rico already defines some context attributes by default.
+The following table gives an overview of all the context attributes that are defined by default when using Rico.
 
-.Predefined context values
+.Predefined context attributes
 [cols="3,^2,^2,^4,10",options="header"]
 |===
-|context name |type |availability |sample |description
+|attribute name |type |availability |sample |description
 
 |application.name
 |global

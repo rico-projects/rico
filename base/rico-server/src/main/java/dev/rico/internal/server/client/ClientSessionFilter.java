@@ -16,10 +16,10 @@
  */
 package dev.rico.internal.server.client;
 
-import dev.rico.core.functional.Subscription;
+import dev.rico.core.functional.Assignment;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.RicoConstants;
-import dev.rico.internal.core.context.ContextManagerImpl;
+import dev.rico.internal.core.context.RicoApplicationContextImpl;
 import org.apiguardian.api.API;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,25 +62,23 @@ public class ClientSessionFilter implements Filter {
         final HttpServletResponse servletResponse = (HttpServletResponse) response;
         final HttpSession httpSession = Assert.requireNonNull(servletRequest.getSession(), "request.getSession()");
 
-        final Subscription sessionContext = ContextManagerImpl.getInstance().setThreadLocalAttribute(HTTP_SESSION_CONTEXT_NAME, httpSession.getId());
-        try {
+        final Assignment sessionAssignment = RicoApplicationContextImpl.getInstance().setThreadLocalAttribute(HTTP_SESSION_CONTEXT_NAME, httpSession.getId());
+        try (sessionAssignment) {
             final String clientId = servletRequest.getHeader(RicoConstants.CLIENT_ID_HTTP_HEADER_NAME);
             if (clientId == null || clientId.trim().isEmpty()) {
                 try {
                     final String createdClientId = clientSessionManager.createClientSession(httpSession);
-                    final Subscription clientSessionContext = ContextManagerImpl.getInstance().setThreadLocalAttribute(CLIENT_SESSION_CONTEXT_NAME, createdClientId);
-                    try {
+                    final Assignment clientSessionAssignment = RicoApplicationContextImpl.getInstance().setThreadLocalAttribute(CLIENT_SESSION_CONTEXT_NAME, createdClientId);
+                    try (clientSessionAssignment) {
                         continueRequest(servletRequest, servletResponse, chain, httpSession, createdClientId);
-                    } finally {
-                        clientSessionContext.unsubscribe();
                     }
                 } catch (final MaxSessionCountReachedException e) {
                     LOG.warn("Maximum size for clients in session {} is reached", servletRequest.getSession().getId());
                     servletResponse.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE, "Maximum size for clients in session is reached");
                 }
             } else {
-                final Subscription clientSessionContext = ContextManagerImpl.getInstance().setThreadLocalAttribute(CLIENT_SESSION_CONTEXT_NAME, clientId);
-                try {
+                final Assignment clientSessionAssignment = RicoApplicationContextImpl.getInstance().setThreadLocalAttribute(CLIENT_SESSION_CONTEXT_NAME, clientId);
+                try (clientSessionAssignment) {
                     LOG.trace("Trying to find client session {} in http session {}", clientId, httpSession.getId());
                     if (!clientSessionManager.checkValidClientSession(httpSession, clientId)) {
                         if (httpSession.getAttribute(INITIALIZED_IN_SESSION) == null) {
@@ -93,16 +91,11 @@ public class ClientSessionFilter implements Filter {
                     } else {
                         continueRequest(servletRequest, servletResponse, chain, httpSession, clientId);
                     }
-                } finally {
-                    clientSessionContext.unsubscribe();
                 }
             }
         } catch (final Exception e) {
             LOG.error("Error while checking requested client in session " + httpSession.getId() + " (unknown error)", e);
             servletResponse.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Can not find requested client (unknown error)!");
-            return;
-        } finally {
-            sessionContext.unsubscribe();
         }
     }
 
