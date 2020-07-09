@@ -17,7 +17,7 @@
 package dev.rico.internal.server.servlet;
 
 import dev.rico.internal.server.timing.ServerTimingImpl;
-import dev.rico.server.timing.Metric;
+import dev.rico.server.timing.ServerTimer;
 import dev.rico.server.timing.ServerTiming;
 import org.apiguardian.api.API;
 
@@ -29,7 +29,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.Duration;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
@@ -56,9 +55,10 @@ public class ServerTimingFilter implements Filter {
         final ServerTimingImpl timing = new ServerTimingImpl();
         timingLocal.set(timing);
         try {
-            final Metric totalMetric = timing.start("total", "total duration of the request");
-            chain.doFilter(request, responseWrapper);
-            totalMetric.stop();
+            final ServerTimer totalServerTimer = timing.start("total", "total duration of the request");
+            try (totalServerTimer) {
+                chain.doFilter(request, responseWrapper);
+            }
         } finally {
             if(addServerTiming) {
                 timing.dump((HttpServletResponse) response);
@@ -81,8 +81,8 @@ public class ServerTimingFilter implements Filter {
         if(timing == null) {
             return new ServerTiming() {
                 @Override
-                public Metric start(final String name, final String description) {
-                    return new Metric() {
+                public ServerTimer start(final String name, final String description) {
+                    return new ServerTimer() {
                         @Override
                         public String getName() {
                             return name;

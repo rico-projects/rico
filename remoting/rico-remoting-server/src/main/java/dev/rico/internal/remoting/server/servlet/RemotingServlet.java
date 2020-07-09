@@ -18,7 +18,7 @@ package dev.rico.internal.remoting.server.servlet;
 
 import dev.rico.internal.remoting.server.context.RemotingCommunicationHandler;
 import dev.rico.internal.server.servlet.ServerTimingFilter;
-import dev.rico.server.timing.Metric;
+import dev.rico.server.timing.ServerTimer;
 import org.apiguardian.api.API;
 
 import javax.servlet.ServletException;
@@ -43,11 +43,9 @@ public class RemotingServlet extends HttpServlet {
 
     @Override
     protected void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
-        final Metric metric = ServerTimingFilter.getCurrentTiming().start("RemotingRequest", "A request for the DP remoting");
-        try {
+        final ServerTimer timer = ServerTimingFilter.getCurrentTiming().start("RemotingRequest", "A request for the DP remoting");
+        try (timer) {
             communicationHandler.handle(req, resp);
-        } finally {
-            metric.stop();
         }
     }
 }

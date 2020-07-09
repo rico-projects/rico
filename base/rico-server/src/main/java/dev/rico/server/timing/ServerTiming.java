@@ -30,7 +30,7 @@ public interface ServerTiming {
      * @param name the name of the metric
      * @return the metric
      */
-    default Metric start(String name) {
+    default ServerTimer start(String name) {
         return start(name, null);
     }
 
@@ -41,7 +41,7 @@ public interface ServerTiming {
      * @param description the description of the metric
      * @return the metric
      */
-    Metric start(String name, String description);
+    ServerTimer start(String name, String description);
 
     /**
      * Records a timing based on the duration of a task with the the given name and description.
@@ -63,11 +63,9 @@ public interface ServerTiming {
      * @throws Exception if the tasks throws an exception
      */
     default void record(String name, String description, CheckedRunnable runnable) throws Exception {
-        final Metric metric = start(name, description);
-        try {
+        final ServerTimer serverTimer = start(name, description);
+        try (serverTimer) {
             runnable.run();
-        } finally {
-            metric.stop();
         }
     }
 
@@ -95,11 +93,9 @@ public interface ServerTiming {
      * @throws Exception if the tasks throws an exception
      */
     default <R> R record(String name, String description, CheckedSupplier<R> supplier) throws Exception {
-        final Metric metric = start(name, description);
-        try {
+        final ServerTimer serverTimer = start(name, description);
+        try (serverTimer) {
             return supplier.get();
-        } finally {
-            metric.stop();
         }
     }
 

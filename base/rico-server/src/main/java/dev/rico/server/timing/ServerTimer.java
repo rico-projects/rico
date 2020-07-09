@@ -19,7 +19,7 @@ package dev.rico.server.timing;
 /**
  * A metric that defines a single task on the server
  */
-public interface Metric {
+public interface ServerTimer extends AutoCloseable {
 
     /**
      * Returns the name of the metric
@@ -38,8 +38,12 @@ public interface Metric {
     /**
      * Stops the metric and calculates the duration. This can only be called ones.
      *
-     * @throws IllegalStateException if {@link #stop()} was already called.
+     * @throws IllegalStateException if {@code stop()} was already called.
      */
     void stop() throws IllegalStateException;
 
+    @Override
+    default void close() {
+        stop();
+    }
 }
