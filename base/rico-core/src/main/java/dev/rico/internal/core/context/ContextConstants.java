@@ -9,8 +9,7 @@ public interface ContextConstants {
     String APPLICATION_START_LOCALE_CONTEXT = "application.startLocale";
 
     String APPLICATION_SYSTEM_TIMEZONE_CONTEXT = "application.systemTimezone";
-
-
+    
     String PLATFORM_VERSION_CONTEXT = "rico.version";
 
     String JAVA_VERSION_CONTEXT = "java.version";
