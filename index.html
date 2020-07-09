@@ -27,7 +27,7 @@
 <li><a href="#_core_api">2. Core API</a>
 <ul class="sectlevel2">
 <li><a href="#_scheduler_api">2.1. Scheduler API</a></li>
-<li><a href="#_context_api">2.2. Context API</a></li>
+<li><a href="#_application_context_api">2.2. Application Context API</a></li>
 <li><a href="#_result_api">2.3. Result API</a></li>
 </ul>
 </li>
@@ -286,27 +286,27 @@ The instance is always defined in the singleton / application scope.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_context_api"><a class="anchor" href="#_context_api"></a>2.2. Context API</h3>
+<h3 id="_application_context_api"><a class="anchor" href="#_application_context_api"></a>2.2. Application Context API</h3>
 <div class="paragraph">
-<p>Rico provides a context manager that can be used to hold attributes in a global and a per-thread context.
+<p>Rico provides an application context that can be used to hold attributes in a global and a per-thread context.
 An attribute is defined as a key-value pair.
 Both key and values are strings.
 These pairs can be stored and read from the global context or the context of the current thread only.
 All attributes describe metadata to help in debugging, maintaining and analysing an application.</p>
 </div>
 <div class="paragraph">
-<p>The interface <code>dev.rico.core.context.ContextManager</code> defines the context manager in Rico and provides several methods to store and receive context based information.
-Depending on your environment Rico provides different ways to obtain a <code>ContextManager</code> instance.</p>
+<p>The interface <code>dev.rico.core.context.RicoApplicationContext</code> defines the application context in Rico and provides several methods to store and receive context based information.
+Depending on your environment Rico provides different ways to obtain a <code>RicoApplicationContext</code> instance.</p>
 </div>
 <div class="paragraph">
 <p>The following sample shows how values can be stored:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> ContextManager contextManager = ... <i class="conum" data-value="1"></i><b>(1)</b>
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> RicoApplicationContext ricoContext = ... <i class="conum" data-value="1"></i><b>(1)</b>
 
-contextManager.setGlobalAttribute(<span class="string"><span class="delimiter">&quot;</span><span class="content">application.type</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">microservice</span><span class="delimiter">&quot;</span></span>); <i class="conum" data-value="2"></i><b>(2)</b>
-contextManager.setThreadLocalAttribute(<span class="string"><span class="delimiter">&quot;</span><span class="content">thread.type</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">background thread</span><span class="delimiter">&quot;</span></span>); <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
+ricoContext.setGlobalAttribute(<span class="string"><span class="delimiter">&quot;</span><span class="content">application.type</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">microservice</span><span class="delimiter">&quot;</span></span>); <i class="conum" data-value="2"></i><b>(2)</b>
+ricoContext.setThreadLocalAttribute(<span class="string"><span class="delimiter">&quot;</span><span class="content">thread.type</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">background thread</span><span class="delimiter">&quot;</span></span>); <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -333,13 +333,13 @@ To do so the following pattern is quite helpful when defining attributes in the 
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="directive">final</span> <span class="predefined-type">Result</span> callDatabase(<span class="directive">final</span> <span class="predefined-type">String</span> query) {
-    <span class="directive">final</span> ContextManager contextManager = ... <i class="conum" data-value="1"></i><b>(1)</b>
-    final Subscription queryAttributeSubscription = contextManager.setThreadLocalAttribute(<span class="string"><span class="delimiter">&quot;</span><span class="content">db.query</span><span class="delimiter">&quot;</span></span>, query); <i class="conum" data-value="2"></i><b>(2)</b>
+    <span class="directive">final</span> RicoApplicationContext ricoContext = ... <i class="conum" data-value="1"></i><b>(1)</b>
+    final Assignment queryAttributeAssignment = ricoContext.setThreadLocalAttribute(<span class="string"><span class="delimiter">&quot;</span><span class="content">db.query</span><span class="delimiter">&quot;</span></span>, query); <i class="conum" data-value="2"></i><b>(2)</b>
 
     <span class="keyword">try</span> {
         <span class="keyword">return</span> db.call(query); <i class="conum" data-value="3"></i><b>(3)</b>
     } <span class="keyword">finally</span> {
-        queryAttributeSubscription.unsubscribe(); <i class="conum" data-value="4"></i><b>(4)</b>
+        queryAttributeAssignment.unset(); <i class="conum" data-value="4"></i><b>(4)</b>
     }
 }</code></pre>
 </div>
@@ -353,7 +353,7 @@ To do so the following pattern is quite helpful when defining attributes in the 
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
 <td>here the attribute "db.query" is stored in the thread context.
-The <code>Subscription</code> instance can be used to remove the added attribute from the context.</td>
+The <code>Assignment</code> instance can be used to remove the added attribute from the context.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
@@ -361,17 +361,17 @@ The <code>Subscription</code> instance can be used to remove the added attribute
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>Once the database call has been executed we remove the attribute from the thread context by calling the <code>unsubscribe()</code> method.
+<td>Once the database call has been executed we remove the attribute from the thread context by calling the <code>unset()</code> method.
 This should always be done in a <code>finally</code> block since an exception my prevent this otherwise.</td>
 </tr>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_benefits_of_the_context_manager"><a class="anchor" href="#_benefits_of_the_context_manager"></a>2.2.1. Benefits of the context manager</h4>
+<h4 id="_benefits_of_the_application_context"><a class="anchor" href="#_benefits_of_the_application_context"></a>2.2.1. Benefits of the application context</h4>
 <div class="paragraph">
-<p>The context manager in Rico is integrated in several libraries and features of Rico.
+<p>The application context in Rico is integrated in several libraries and features of Rico.
 The remoting library of Rico automatically adds information to the context that can be helpful.
-The metrics and logging libraries of Rico provide the possibility to enrich metrics and logging with context based attributes through the context manager.
+The metrics and logging libraries of Rico provide the possibility to enrich metrics and logging with context based attributes through the application context.
 This allows you to easily assign all logging messages of a server to specific users and requests or to store the metrics of several microservices in the same Prometheus instance and query for a specific instance later.
 More information can be found in the documentation of the metrics and logging API.</p>
 </div>
@@ -382,29 +382,29 @@ More information can be found in the documentation of the metrics and logging AP
 <div class="sect3">
 <h4 id="_using_the_api_on_the_client_2"><a class="anchor" href="#_using_the_api_on_the_client_2"></a>2.2.2. Using the API on the client</h4>
 <div class="paragraph">
-<p>In the Rico client API a <code>dev.rico.core.context.ContextManager</code> instance can be obtained by using by the following call:</p>
+<p>In the Rico client API a <code>dev.rico.core.context.RicoApplicationContext</code> instance can be obtained by using by the following call:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> ContextManager contextManager = Client.getService(ContextManager.class);</code></pre>
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> RicoApplicationContext ricoContext = Client.getService(RicoApplicationContext.class);</code></pre>
 </div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_using_the_api_on_the_server_2"><a class="anchor" href="#_using_the_api_on_the_server_2"></a>2.2.3. Using the API on the server</h4>
 <div class="paragraph">
-<p>On JakartaEE and Spring you can inject a <code>dev.rico.core.context.ContextManager</code> instance in any managed bean.
+<p>On JakartaEE and Spring you can inject a <code>dev.rico.core.context.RicoApplicationContext</code> instance in any managed bean.
 The instance is always defined in the singleton / application scope.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_predefined_context_values"><a class="anchor" href="#_predefined_context_values"></a>2.2.4. Predefined Context values</h4>
 <div class="paragraph">
-<p>Rico already defines some context values by default.
-The following table gives an overview of all the context values that are defined by default when using Rico.</p>
+<p>Rico already defines some context attributes by default.
+The following table gives an overview of all the context attributes that are defined by default when using Rico.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Predefined context values</caption>
+<caption class="title">Table 1. Predefined context attributes</caption>
 <colgroup>
 <col style="width: 14.2857%;">
 <col style="width: 9.5238%;">
@@ -414,7 +414,7 @@ The following table gives an overview of all the context values that are defined
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">context name</th>
+<th class="tableblock halign-left valign-top">attribute name</th>
 <th class="tableblock halign-center valign-top">type</th>
 <th class="tableblock halign-center valign-top">availability</th>
 <th class="tableblock halign-center valign-top">sample</th>
@@ -2671,7 +2671,7 @@ the documentation module.</p>
 <div id="footer">
 <div id="footer-text">
 Version 1.0.0-SNAPSHOT<br>
-Last updated 2020-07-07 14:30:46 UTC
+Last updated 2020-07-09 09:29:10 UTC
 </div>
 </div>
 <link rel="stylesheet" href="./coderay-asciidoctor.css">
