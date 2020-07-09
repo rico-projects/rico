@@ -1,7 +1,6 @@
 package dev.rico.internal.server.javaee.timing;
 
-import dev.rico.internal.core.Assert;
-import dev.rico.server.timing.Metric;
+import dev.rico.server.timing.ServerTimer;
 import dev.rico.server.timing.ServerTiming;
 import dev.rico.server.javaee.timing.Timing;
 
@@ -28,11 +27,9 @@ public class TimingInterceptor {
         if(timingAnnotation != null) {
             final String name = Optional.ofNullable(timingAnnotation.value()).orElse(UNKNOWN_NAME);
             final String description = timingAnnotation.description();
-            final Metric metric = serverTiming.start(name, description);
-            try {
+            final ServerTimer serverTimer = serverTiming.start(name, description);
+            try (serverTimer) {
                 return joinPoint.proceed();
-            } finally {
-                metric.stop();
             }
         } else {
             return joinPoint.proceed();

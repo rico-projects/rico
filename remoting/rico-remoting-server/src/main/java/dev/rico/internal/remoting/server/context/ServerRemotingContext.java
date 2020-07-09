@@ -59,7 +59,7 @@ import dev.rico.internal.server.servlet.ServerTimingFilter;
 import dev.rico.remoting.BeanManager;
 import dev.rico.server.client.ClientSession;
 import dev.rico.server.spi.components.ManagedBeanFactory;
-import dev.rico.server.timing.Metric;
+import dev.rico.server.timing.ServerTimer;
 import org.apiguardian.api.API;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -255,15 +255,13 @@ public class ServerRemotingContext {
         if (platformBeanRepository == null) {
             throw new IllegalStateException("An action was called before the init-command was sent.");
         }
-        final Metric metric = ServerTimingFilter.getCurrentTiming().start("RemotingActionCall:"+actionName, "Remote action call");
-        try {
+        final ServerTimer serverTimer = ServerTimingFilter.getCurrentTiming().start("RemotingActionCall:"+actionName, "Remote action call");
+        try (serverTimer) {
             controllerHandler.invokeAction(controllerId, actionName, params);
         } catch (final Exception e) {
             LOG.error("Unexpected exception while invoking action {} on controller {}",
                     actionName, controllerId, e);
             bean.setError(true);
-        } finally {
-            metric.stop();
         }
     }
 
@@ -276,20 +274,16 @@ public class ServerRemotingContext {
             LOG.trace("Handling GarbageCollection for ServerRemotingContext {}", getId());
             onGarbageCollection();
         }
-        final Metric metric = ServerTimingFilter.getCurrentTiming().start("TaskExecution", "Execution of Tasks in Long Poll");
-        try {
+        final ServerTimer serverTimer = ServerTimingFilter.getCurrentTiming().start("TaskExecution", "Execution of Tasks in Long Poll");
+        try (serverTimer) {
             taskQueue.executeTasks();
-        } finally {
-            metric.stop();
         }
     }
 
     private void onGarbageCollection() {
-        final Metric metric = ServerTimingFilter.getCurrentTiming().start("RemotingGc", "Garbage collection for the remoting model");
-        try {
+        final ServerTimer serverTimer = ServerTimingFilter.getCurrentTiming().start("RemotingGc", "Garbage collection for the remoting model");
+        try (serverTimer) {
             garbageCollector.gc();
-        } finally {
-            metric.stop();
         }
     }
 

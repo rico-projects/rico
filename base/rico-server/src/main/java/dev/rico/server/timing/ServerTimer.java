@@ -16,10 +16,15 @@
  */
 package dev.rico.server.timing;
 
+import org.apiguardian.api.API;
+
+import static org.apiguardian.api.API.Status.STABLE;
+
 /**
  * A metric that defines a single task on the server
  */
-public interface Metric {
+@API(since = "2.0", status = STABLE)
+public interface ServerTimer extends AutoCloseable {
 
     /**
      * Returns the name of the metric
@@ -36,10 +41,12 @@ public interface Metric {
     String getDescription();
     
     /**
-     * Stops the metric and calculates the duration. This can only be called ones.
-     *
-     * @throws IllegalStateException if {@link #stop()} was already called.
+     * Stops the metric and calculates the duration. This should only be called ones.
      */
-    void stop() throws IllegalStateException;
+    void stop();
 
+    @Override
+    default void close() {
+        stop();
+    }
 }

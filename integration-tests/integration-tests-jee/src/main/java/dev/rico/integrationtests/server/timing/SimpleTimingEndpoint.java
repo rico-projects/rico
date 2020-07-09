@@ -1,7 +1,7 @@
 package dev.rico.integrationtests.server.timing;
 
 import dev.rico.integrationtests.timing.TimingConstants;
-import dev.rico.server.timing.Metric;
+import dev.rico.server.timing.ServerTimer;
 import dev.rico.server.timing.ServerTiming;
 
 import javax.inject.Inject;
@@ -20,28 +20,29 @@ public class SimpleTimingEndpoint {
     @GET
     @Path("/1")
     public Response testTiming1() throws InterruptedException {
-        final Metric metric = timing.start(null);
-        Thread.sleep(100);
-        metric.stop();
-        return RESPONSE_200_OK;
+        final ServerTimer serverTimer = timing.start(null);
+        return recordAndGetResponse(serverTimer);
     }
 
     @GET
     @Path("/2")
     public Response testTiming2() throws InterruptedException {
-        final Metric metric = timing.start(TimingConstants.METRICS_NAME);
-        Thread.sleep(100);
-        metric.stop();
-        return RESPONSE_200_OK;
+        final ServerTimer serverTimer = timing.start(TimingConstants.METRICS_NAME);
+        return recordAndGetResponse(serverTimer);
     }
 
     @GET
     @Path("/3")
     public Response testTiming3() throws InterruptedException {
-        final Metric metric = timing.start(TimingConstants.METRICS_NAME, TimingConstants.METRICS_DESCRIPTION);
-        Thread.sleep(100);
-        metric.stop();
-        return RESPONSE_200_OK;
+        final ServerTimer serverTimer = timing.start(TimingConstants.METRICS_NAME, TimingConstants.METRICS_DESCRIPTION);
+        return recordAndGetResponse(serverTimer);
+    }
+
+    private Response recordAndGetResponse(ServerTimer serverTimer) throws InterruptedException {
+        try (serverTimer) {
+            Thread.sleep(100);
+            return RESPONSE_200_OK;
+        }
     }
 
     @GET

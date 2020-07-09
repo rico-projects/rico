@@ -16,12 +16,12 @@
  */
 package dev.rico.internal.server.timing;
 
-import dev.rico.server.timing.Metric;
+import dev.rico.server.timing.ServerTimer;
 
 import java.time.Duration;
 import java.time.ZonedDateTime;
 
-public class MetricImpl implements Metric {
+public class ServerTimerImpl implements ServerTimer {
 
     private final String name;
 
@@ -31,7 +31,7 @@ public class MetricImpl implements Metric {
 
     private Duration duration;
 
-    public MetricImpl(final String name, final String description) {
+    public ServerTimerImpl(final String name, final String description) {
         this.name = name;
         this.description = description;
         this.startTime = ZonedDateTime.now();
@@ -51,15 +51,10 @@ public class MetricImpl implements Metric {
         return duration;
     }
 
-    public ZonedDateTime getStartTime() {
-        return startTime;
-    }
-
     @Override
     public void stop() {
-        if (duration != null) {
-            throw new IllegalStateException("Metric '" + name + "' was already stopped!");
+        if (duration == null) {
+            duration = Duration.between(startTime, ZonedDateTime.now());
         }
-        duration = Duration.between(startTime, ZonedDateTime.now());
     }
 }

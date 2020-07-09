@@ -27,12 +27,12 @@ The following code snippet shows the basic usage of the API:
 ----
 final ServerTiming timing = ... // will be injected
 
-final Metric dbMetric = timing.start("DB-Operation");
+final ServerTimer dbTimer = timing.start("DB-Operation");
 //Do some work on the database
-dbMetric.stop();
+dbTimer.stop();
 ----
 
-The given sample creates a metric with the given name “DB-Operation” and will record the duration until the `stop()` method is called.
+The given sample creates a timer with the given name “DB-Operation” and will record the duration until the `stop()` method is called.
 You can see the duration of the “DB-Operation” directly in the developer console of your chrome browser.
 
 Let’s have a look how you can use this feature with a simple REST endpoint in JakartaEE:
@@ -50,13 +50,13 @@ public class MyEndpoint {
 
     @GET
     public void clearAllData() {
-        final Metric metric1 = timing.start("delete-users", "Deletes all users in the DB");
+        final ServerTimer timer1 = timing.start("delete-users", "Deletes all users in the DB");
         database.deleteAllUsers();
-        metric1.stop();
+        timer1.stop();
 
-        final Metric metric2 = timing.start("delete-items", "Deletes all items in the DB");
+        final ServerTimer timer2 = timing.start("delete-items", "Deletes all items in the DB");
         database.deleteAllItems();
-        metric2.stop();
+        timer2.stop();
     }
 }
 ----
@@ -76,19 +76,19 @@ public class MyEndpoint {
 
   @RequestMapping("/api/delete")
   public void clearAllData() {
-        final Metric metric1 = timing.start("delete-users", "Deletes all users in the DB");
+        final ServerTimer timer1 = timing.start("delete-users", "Deletes all users in the DB");
         database.deleteAllUsers();
-        metric1.stop();
+        timer1.stop();
 
-        final Metric metric2 = timing.start("delete-items", "Deletes all items in the DB");
+        final ServerTimer timer2 = timing.start("delete-items", "Deletes all items in the DB");
         database.deleteAllItems();
-        metric2.stop();
+        timer2.stop();
     }
 }
 ----
 
 In the example an endpoint `/api/delete` is doing 2 calls against a database.
-For both calls a `dev.rico.server.timing.Metric` instance is created to measure the duration of the calls.
+For both calls a `ServerTimer` instance is created to measure the duration of the calls.
 In accordance with the “server timing” specification Rico supports a description next to a name for a timing entry.
 Once a client calls the endpoint, the http response will automatically contain the timing information for “deleteAllUsers” and “deleteAllItems”.
 

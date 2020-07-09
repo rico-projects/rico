@@ -17,7 +17,7 @@
 package dev.rico.internal.server.timing;
 
 import dev.rico.internal.core.Assert;
-import dev.rico.server.timing.Metric;
+import dev.rico.server.timing.ServerTimer;
 import dev.rico.server.timing.ServerTiming;
 
 import javax.servlet.http.HttpServletResponse;
@@ -32,10 +32,10 @@ import static dev.rico.internal.core.http.HttpHeaderConstants.SERVER_TIMING_HEAD
 
 public class ServerTimingImpl implements ServerTiming {
 
-    private final List<MetricImpl> metrics = new ArrayList<>();
+    private final List<ServerTimerImpl> timers = new ArrayList<>();
 
     public void clear() {
-        metrics.clear();
+        timers.clear();
     }
 
     public void dump(final HttpServletResponse response) {
@@ -43,7 +43,7 @@ public class ServerTimingImpl implements ServerTiming {
         //Sample:   serverTiming: 'A;dur=2521.46147;desc="/users/me",B;dur=102.022688;desc="getUser"',
 
         final String headerName = SERVER_TIMING_HEADER;
-        final String content = metrics.stream().map(m -> convert(m)).reduce("", (a, b) -> a + "," + b);
+        final String content = timers.stream().map(m -> convert(m)).reduce("", (a, b) -> a + "," + b);
 
         if (content.length() > 0) {
             response.addHeader(headerName, content.substring(1));
@@ -52,10 +52,10 @@ public class ServerTimingImpl implements ServerTiming {
         clear();
     }
 
-    private String convert(final MetricImpl metric) {
-        Assert.requireNonNull(metric, "metric");
-        final Duration duration = metric.getDuration();
-        final String description = metric.getDescription();
+    private String convert(final ServerTimerImpl timer) {
+        Assert.requireNonNull(timer, "timer");
+        final Duration duration = timer.getDuration();
+        final String description = timer.getDescription();
 
         final String durPart = Optional.ofNullable(duration)
                 .map(d -> ";" + SERVER_TIMING_HEADER_DUR + (Math.max(1.0, d.toNanos()) / 1000000.0))
@@ -64,13 +64,13 @@ public class ServerTimingImpl implements ServerTiming {
                 .map(d -> ";" + SERVER_TIMING_HEADER_DESC + "\"" + d + "\"")
                 .orElse("");
 
-        return metric.getName() + durPart + descPart;
+        return timer.getName() + durPart + descPart;
     }
 
     @Override
-    public Metric start(final String name, final String description) {
-        final MetricImpl metric = new MetricImpl(name, description);
-        metrics.add(metric);
-        return metric;
+    public ServerTimer start(final String name, final String description) {
+        final ServerTimerImpl timer = new ServerTimerImpl(name, description);
+        timers.add(timer);
+        return timer;
     }
 }
