@@ -52,10 +52,10 @@ public class RequestMetricsFilter implements Filter {
             final StringPair contextPathTag = ContextServerUtil.createContextPathTag((HttpServletRequest) request);
             final StringPair portTag = ContextServerUtil.createPortTag((HttpServletRequest) request);
             MetricsImpl.getInstance()
-                    .getOrCreateTimer(HTTP_REQUESTS_METRIC_NAME, contextPathTag, uriTag, methodTag, portTag)
+                    .getOrCreateTimer(HTTP_REQUEST_TIME_METRIC_NAME, contextPathTag, uriTag, methodTag, portTag)
                     .record(timeInMs, TimeUnit.MILLISECONDS);
             MetricsImpl.getInstance()
-                    .getOrCreateCounter(HTTP_REQUEST_TIME_METRIC_NAME, contextPathTag, uriTag, methodTag, portTag)
+                    .getOrCreateCounter(HTTP_REQUESTS_METRIC_NAME, contextPathTag, uriTag, methodTag, portTag)
                     .increment();
         }
     }

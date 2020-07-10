@@ -24,13 +24,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.InetAddress;
+import java.time.ZoneId;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static dev.rico.internal.core.context.ContextConstants.APPLICATION_NAME_CONTEXT;
+import static dev.rico.internal.core.context.ContextConstants.APPLICATION_START_LOCALE_CONTEXT;
+import static dev.rico.internal.core.context.ContextConstants.APPLICATION_START_TIME_CONTEXT;
+import static dev.rico.internal.core.context.ContextConstants.APPLICATION_SYSTEM_TIMEZONE_CONTEXT;
 import static dev.rico.internal.core.context.ContextConstants.CANONICAL_HOST_NAME_CONTEXT;
 import static dev.rico.internal.core.context.ContextConstants.HOST_ADDRESS_CONTEXT;
 import static dev.rico.internal.core.context.ContextConstants.HOST_NAME_CONTEXT;
@@ -55,9 +60,10 @@ public class RicoApplicationContextImpl implements RicoApplicationContext {
     RicoApplicationContextImpl() {
         setGlobalAttribute(APPLICATION_NAME_CONTEXT, UNNAMED_APPLICATION);
         setGlobalAttribute(PLATFORM_VERSION_CONTEXT, PlatformVersion.getVersion());
-
+        setGlobalAttribute(APPLICATION_START_TIME_CONTEXT, System.currentTimeMillis() + "");
+        setGlobalAttribute(APPLICATION_START_LOCALE_CONTEXT, Locale.getDefault() + "");
+        setGlobalAttribute(APPLICATION_SYSTEM_TIMEZONE_CONTEXT, ZoneId.systemDefault().getId());
         setGlobalAttribute(OS_CONTEXT, OperationSystem.getLocalSystem().getShortName());
-
         setGlobalAttribute(JAVA_VERSION_CONTEXT, System.getProperty(JAVA_VERSION_SYSTEM_PROPERTY));
         setGlobalAttribute(JAVA_VENDOR_CONTEXT, System.getProperty(JAVA_VENDOR_SYSTEM_PROPERTY));
 

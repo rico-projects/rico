@@ -23,8 +23,12 @@ import org.testng.annotations.Test;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static dev.rico.internal.core.context.ContextConstants.APPLICATION_NAME_CONTEXT;
+import static dev.rico.internal.core.context.ContextConstants.APPLICATION_START_LOCALE_CONTEXT;
+import static dev.rico.internal.core.context.ContextConstants.APPLICATION_START_TIME_CONTEXT;
+import static dev.rico.internal.core.context.ContextConstants.APPLICATION_SYSTEM_TIMEZONE_CONTEXT;
 import static dev.rico.internal.core.context.ContextConstants.CANONICAL_HOST_NAME_CONTEXT;
 import static dev.rico.internal.core.context.ContextConstants.HOST_ADDRESS_CONTEXT;
 import static dev.rico.internal.core.context.ContextConstants.HOST_NAME_CONTEXT;
@@ -38,7 +42,9 @@ import static org.testng.Assert.assertTrue;
 
 public class RicoApplicationContextImplTests {
 
-    private static final int INITIAL_SIZE = 8;
+    private static final String[] INITIAL_GLOBAL_ATTRIBUTES = {HOST_NAME_CONTEXT, PLATFORM_VERSION_CONTEXT, CANONICAL_HOST_NAME_CONTEXT,
+            HOST_ADDRESS_CONTEXT, APPLICATION_NAME_CONTEXT, JAVA_VERSION_CONTEXT, JAVA_VENDOR_CONTEXT,
+            OS_CONTEXT, APPLICATION_START_TIME_CONTEXT, APPLICATION_START_LOCALE_CONTEXT, APPLICATION_SYSTEM_TIMEZONE_CONTEXT};
 
     private static final String key_1 = "KEY-1";
     private static final String key_2 = "KEY-2";
@@ -56,34 +62,12 @@ public class RicoApplicationContextImplTests {
     public void testInitialState() {
         assertEquals(manager.getThreadLocalAttributes().size(), 0);
 
-        assertEquals(manager.getGlobalAttributes().size(), INITIAL_SIZE);
-        assertNameExists(manager.getGlobalAttributes(), HOST_NAME_CONTEXT);
-        assertNameExists(manager.getGlobalAttributes(), PLATFORM_VERSION_CONTEXT);
-        assertNameExists(manager.getGlobalAttributes(), CANONICAL_HOST_NAME_CONTEXT);
-        assertNameExists(manager.getGlobalAttributes(), HOST_ADDRESS_CONTEXT);
-        assertNameExists(manager.getGlobalAttributes(), APPLICATION_NAME_CONTEXT);
-        assertNameExists(manager.getGlobalAttributes(), JAVA_VERSION_CONTEXT);
-        assertNameExists(manager.getGlobalAttributes(), JAVA_VENDOR_CONTEXT);
-        assertNameExists(manager.getGlobalAttributes(), OS_CONTEXT);
+        assertEquals(manager.getGlobalAttributes().size(), INITIAL_GLOBAL_ATTRIBUTES.length);
+        assertEquals(manager.getAttributes().size(), INITIAL_GLOBAL_ATTRIBUTES.length);
 
-        assertEquals(manager.getAttributes().size(), INITIAL_SIZE);
-        assertNameExists(manager.getAttributes(), HOST_NAME_CONTEXT);
-        assertNameExists(manager.getAttributes(), PLATFORM_VERSION_CONTEXT);
-        assertNameExists(manager.getAttributes(), CANONICAL_HOST_NAME_CONTEXT);
-        assertNameExists(manager.getAttributes(), HOST_ADDRESS_CONTEXT);
-        assertNameExists(manager.getAttributes(), APPLICATION_NAME_CONTEXT);
-        assertNameExists(manager.getAttributes(), JAVA_VERSION_CONTEXT);
-        assertNameExists(manager.getAttributes(), JAVA_VENDOR_CONTEXT);
-        assertNameExists(manager.getAttributes(), OS_CONTEXT);
-
-        assertTrue(manager.getAttribute(HOST_NAME_CONTEXT).isPresent());
-        assertTrue(manager.getAttribute(PLATFORM_VERSION_CONTEXT).isPresent());
-        assertTrue(manager.getAttribute(CANONICAL_HOST_NAME_CONTEXT).isPresent());
-        assertTrue(manager.getAttribute(HOST_ADDRESS_CONTEXT).isPresent());
-        assertTrue(manager.getAttribute(APPLICATION_NAME_CONTEXT).isPresent());
-        assertTrue(manager.getAttribute(JAVA_VERSION_CONTEXT).isPresent());
-        assertTrue(manager.getAttribute(JAVA_VENDOR_CONTEXT).isPresent());
-        assertTrue(manager.getAttribute(OS_CONTEXT).isPresent());
+        Stream.of(INITIAL_GLOBAL_ATTRIBUTES).forEach(n -> assertNameExists(manager.getGlobalAttributes(), n));
+        Stream.of(INITIAL_GLOBAL_ATTRIBUTES).forEach(n -> assertNameExists(manager.getAttributes(), n));
+        Stream.of(INITIAL_GLOBAL_ATTRIBUTES).forEach(n -> assertTrue(manager.getAttribute(n).isPresent()));
     }
 
     @Test
