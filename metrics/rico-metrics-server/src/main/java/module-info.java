@@ -5,6 +5,8 @@ module dev.rico.metrics.server {
 
     requires transitive dev.rico.metrics;
     requires transitive dev.rico.server;
+    requires transitive java.management;
+
 
     provides ConfigurationProvider with MetricsConfigurationProvider;
 

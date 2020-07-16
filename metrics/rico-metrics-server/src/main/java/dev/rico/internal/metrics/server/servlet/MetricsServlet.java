@@ -17,6 +17,8 @@
 package dev.rico.internal.metrics.server.servlet;
 
 import dev.rico.internal.core.Assert;
+import dev.rico.internal.metrics.MetricsImpl;
+import dev.rico.metrics.types.Gauge;
 import io.micrometer.prometheus.PrometheusMeterRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +27,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
 
 public class MetricsServlet extends HttpServlet {
 
@@ -39,6 +42,10 @@ public class MetricsServlet extends HttpServlet {
     @Override
     protected void service(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
         LOG.debug("Metrics servlet called");
+
+        final Gauge upTimeGauge = MetricsImpl.getInstance().getOrCreateGauge("process_uptime_seconds");
+        upTimeGauge.setValue(ManagementFactory.getRuntimeMXBean().getUptime() / 1000);
+
         final String response = prometheusRegistry.scrape();
         resp.getOutputStream().write(response.getBytes());
     }

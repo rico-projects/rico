@@ -24,6 +24,7 @@ import dev.rico.internal.metrics.server.servlet.MetricsHttpSessionListener;
 import dev.rico.internal.metrics.server.servlet.MetricsServlet;
 import dev.rico.internal.metrics.server.servlet.RequestMetricsFilter;
 import dev.rico.internal.server.bootstrap.AbstractBaseModule;
+import dev.rico.metrics.types.Gauge;
 import dev.rico.server.spi.ModuleDefinition;
 import dev.rico.server.spi.ServerCoreComponents;
 import io.micrometer.core.instrument.Tag;
@@ -38,6 +39,7 @@ import org.apiguardian.api.API;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.ServletContext;
+import java.lang.management.ManagementFactory;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -67,6 +69,7 @@ public class MetricsModule extends AbstractBaseModule {
 
         final List<Tag> tagList = TagUtil.convertTags(RicoApplicationContextImpl.getInstance().getGlobalAttributes());
 
+
         new ClassLoaderMetrics(tagList).bindTo(prometheusRegistry);
         new JvmMemoryMetrics(tagList).bindTo(prometheusRegistry);
         new JvmGcMetrics(tagList).bindTo(prometheusRegistry);
@@ -82,5 +85,8 @@ public class MetricsModule extends AbstractBaseModule {
                 .addMapping(configuration.getProperty(METRICS_ENDPOINT_PROPERTY));
 
         MetricsImpl.getInstance().init(prometheusRegistry);
+
+        final Gauge startTimeGauge = MetricsImpl.getInstance().getOrCreateGauge("process_start_time_seconds");
+        startTimeGauge.setValue(ManagementFactory.getRuntimeMXBean().getStartTime() / 1000);
     }
 }
