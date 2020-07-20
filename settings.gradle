@@ -43,6 +43,7 @@ include 'metrics/rico-metrics-binding-tomcat'
 include 'metrics/rico-metrics-binding-log4j2'
 include 'metrics/rico-metrics-binding-logback'
 include 'metrics/rico-metrics-binding-hibernate'
+include 'metrics/rico-metrics-binding-hazelcast'
 
 include 'logging/rico-logback-appender'
 include 'logging/rico-log4j2-appender'
