@@ -28,7 +28,7 @@ module dev.rico.core {
             dev.rico.remoting.server.spring.test,
             dev.rico.security.client,
             dev.rico.security.server,
-            dev.rico.security.server.spring;
+            dev.rico.security.server.spring, dev.rico.metrics.binding.tomcat, dev.rico.metrics.binding.hazelcast;
     exports dev.rico.internal.core.ansi to
             dev.rico.client,
             dev.rico.server;
@@ -43,7 +43,7 @@ module dev.rico.core {
             dev.rico.security.client,
             dev.rico.security.server,
             dev.rico.logback.appender,
-            dev.rico.log4j2.appender;
+            dev.rico.log4j2.appender, dev.rico.metrics.binding.hazelcast;
     exports dev.rico.internal.core.http to
             dev.rico.client,
             dev.rico.server,

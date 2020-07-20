@@ -16,11 +16,11 @@
  */
 package dev.rico.internal.remoting.server.distributed;
 
-import dev.rico.internal.remoting.server.event.MessageEventImpl;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.config.SerializerConfig;
 import com.hazelcast.core.HazelcastInstance;
+import dev.rico.internal.remoting.server.event.MessageEventImpl;
 import dev.rico.remoting.server.distributed.HazelcastConfig;
 import dev.rico.remoting.server.distributed.HazelcastProvider;
 import org.apiguardian.api.API;
@@ -67,6 +67,7 @@ public class DefaultHazelcastProvider implements HazelcastProvider {
 
             hazelcastInstance = HazelcastClient.newHazelcastClient(clientConfig);
         }
+
         return hazelcastInstance;
     }
 }

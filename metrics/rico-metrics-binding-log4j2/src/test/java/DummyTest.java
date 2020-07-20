@@ -14,24 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.rico.internal.metrics.server.spring;
+import org.testng.annotations.Test;
 
-import dev.rico.internal.metrics.MetricsImpl;
-import dev.rico.metrics.Metrics;
-import org.apiguardian.api.API;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.context.annotation.ApplicationScope;
+public class DummyTest {
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-@API(since = "1.0.0", status = INTERNAL)
-@Configuration
-public class MetricsBeanFactory {
-    
-    @Bean("metrics")
-    @ApplicationScope
-    public Metrics createMetrics() {
-        return MetricsImpl.getInstance();
+    @Test
+    public void test() {
+        
     }
+
 }

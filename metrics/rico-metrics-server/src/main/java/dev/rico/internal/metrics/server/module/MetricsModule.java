@@ -17,21 +17,14 @@
 package dev.rico.internal.metrics.server.module;
 
 import dev.rico.core.Configuration;
-import dev.rico.internal.core.context.RicoApplicationContextImpl;
 import dev.rico.internal.metrics.MetricsImpl;
-import dev.rico.internal.metrics.TagUtil;
 import dev.rico.internal.metrics.server.servlet.MetricsHttpSessionListener;
 import dev.rico.internal.metrics.server.servlet.MetricsServlet;
 import dev.rico.internal.metrics.server.servlet.RequestMetricsFilter;
 import dev.rico.internal.server.bootstrap.AbstractBaseModule;
+import dev.rico.metrics.spi.MetricsBinderProvider;
 import dev.rico.server.spi.ModuleDefinition;
 import dev.rico.server.spi.ServerCoreComponents;
-import io.micrometer.core.instrument.Tag;
-import io.micrometer.core.instrument.binder.jvm.ClassLoaderMetrics;
-import io.micrometer.core.instrument.binder.jvm.JvmGcMetrics;
-import io.micrometer.core.instrument.binder.jvm.JvmMemoryMetrics;
-import io.micrometer.core.instrument.binder.jvm.JvmThreadMetrics;
-import io.micrometer.core.instrument.binder.system.ProcessorMetrics;
 import io.micrometer.prometheus.PrometheusConfig;
 import io.micrometer.prometheus.PrometheusMeterRegistry;
 import org.apiguardian.api.API;
@@ -39,7 +32,7 @@ import org.apiguardian.api.API;
 import javax.servlet.DispatcherType;
 import javax.servlet.ServletContext;
 import java.util.EnumSet;
-import java.util.List;
+import java.util.ServiceLoader;
 
 import static dev.rico.internal.metrics.server.module.MetricsConfigConstants.METRICS_ACTIVE_PROPERTY;
 import static dev.rico.internal.metrics.server.module.MetricsConfigConstants.METRICS_ENDPOINT_PROPERTY;
@@ -64,15 +57,7 @@ public class MetricsModule extends AbstractBaseModule {
         final ServletContext servletContext = coreComponents.getServletContext();
 
         final PrometheusMeterRegistry prometheusRegistry = new PrometheusMeterRegistry(PrometheusConfig.DEFAULT);
-
-        final List<Tag> tagList = TagUtil.convertTags(RicoApplicationContextImpl.getInstance().getGlobalAttributes());
-
-        new ClassLoaderMetrics(tagList).bindTo(prometheusRegistry);
-        new JvmMemoryMetrics(tagList).bindTo(prometheusRegistry);
-        new JvmGcMetrics(tagList).bindTo(prometheusRegistry);
-        new ProcessorMetrics(tagList).bindTo(prometheusRegistry);
-        new JvmThreadMetrics(tagList).bindTo(prometheusRegistry);
-
+        
         servletContext.addFilter(METRICS_SERVLET_FILTER_NAME, new RequestMetricsFilter())
                 .addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, ALL_URL_MAPPING);
 
@@ -82,5 +67,12 @@ public class MetricsModule extends AbstractBaseModule {
                 .addMapping(configuration.getProperty(METRICS_ENDPOINT_PROPERTY));
 
         MetricsImpl.getInstance().init(prometheusRegistry);
+
+        ServiceLoader.load(MetricsBinderProvider.class)
+                .stream()
+                .map(provider -> provider.get())
+                .filter(provider -> provider.isActive(configuration))
+                .map(provider -> provider.createBinder(configuration))
+                .forEach(binder -> MetricsImpl.getInstance().initializeBinder(binder));
     }
 }
