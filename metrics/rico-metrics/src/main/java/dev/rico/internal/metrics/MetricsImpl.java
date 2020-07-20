@@ -20,6 +20,7 @@ import dev.rico.core.lang.StringPair;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.context.RicoApplicationContextImpl;
 import dev.rico.metrics.Metrics;
+import dev.rico.metrics.spi.MetricsBinder;
 import dev.rico.metrics.types.Counter;
 import dev.rico.metrics.types.Gauge;
 import dev.rico.metrics.types.Timer;
@@ -33,6 +34,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 
@@ -42,23 +45,41 @@ public class MetricsImpl implements Metrics {
 
     private static final MetricsImpl INSTANCE = new MetricsImpl();
 
-    private final AtomicReference<MeterRegistry> registry;
+    private MeterRegistry registry;
+
+    private final Lock registryLock = new ReentrantLock();
+
+    private final List<MetricsBinder> binders = new ArrayList<>();
 
     private MetricsImpl() {
-        registry = new AtomicReference<>(new NoopMeterRegistry());
+        init(new NoopMeterRegistry());
     }
 
     public void init(final MeterRegistry registry) {
         Assert.requireNonNull(registry, "registry");
-        this.registry.set(registry);
+        registryLock.lock();
+        try {
+            binders.forEach(b -> b.unregister(this.registry));
+            this.registry = registry;
+            binders.forEach(b -> b.init(this.registry, getTags()));
+        } finally {
+            registryLock.unlock();
+        }
+    }
+
+    private MeterRegistry getRegistry() {
+        registryLock.lock();
+        try {
+            return this.registry;
+        } finally {
+            registryLock.unlock();
+        }
     }
 
     @Override
     public Counter getOrCreateCounter(final String name, final StringPair... tags) {
-        final List<Tag> tagList = new ArrayList<>();
-        tagList.addAll(TagUtil.convertTags(tags));
-        tagList.addAll(TagUtil.convertTags(RicoApplicationContextImpl.getInstance().getGlobalAttributes()));
-        final io.micrometer.core.instrument.Counter counter = registry.get()
+        final List<Tag> tagList = getTags(tags);
+        final io.micrometer.core.instrument.Counter counter = getRegistry()
                 .counter(name, tagList);
         return new Counter() {
             @Override
@@ -91,10 +112,8 @@ public class MetricsImpl implements Metrics {
 
     @Override
     public Timer getOrCreateTimer(final String name, final StringPair... tags) {
-        final List<io.micrometer.core.instrument.Tag> tagList = new ArrayList<>();
-        tagList.addAll(TagUtil.convertTags(tags));
-        tagList.addAll(TagUtil.convertTags(RicoApplicationContextImpl.getInstance().getGlobalAttributes()));
-        io.micrometer.core.instrument.Timer timer = registry.get().timer(name, tagList);
+        final List<Tag> tagList = getTags(tags);
+        io.micrometer.core.instrument.Timer timer = getRegistry().timer(name, tagList);
         return new Timer() {
             @Override
             public void record(final long amount, final TimeUnit unit) {
@@ -121,17 +140,22 @@ public class MetricsImpl implements Metrics {
         };
     }
 
-    @Override
-    public Gauge getOrCreateGauge(final String name, final StringPair... tags) {
-        final List<io.micrometer.core.instrument.Tag> tagList = new ArrayList<>();
+    public List<Tag> getTags(final StringPair... tags) {
+        final List<Tag> tagList = new ArrayList<>();
         tagList.addAll(TagUtil.convertTags(tags));
         tagList.addAll(TagUtil.convertTags(RicoApplicationContextImpl.getInstance().getGlobalAttributes()));
+        return tagList;
+    }
+
+    @Override
+    public Gauge getOrCreateGauge(final String name, final StringPair... tags) {
+        final List<Tag> tagList = getTags(tags);
         final AtomicReference<Double> internalValue = new AtomicReference<>(0d);
 
         io.micrometer.core.instrument.Gauge gauge = io.micrometer.core.instrument.Gauge
                 .builder("name", internalValue, r -> Optional.ofNullable(r.get()).orElse(0d))
                 .tags(tagList)
-                .register(registry.get());
+                .register(getRegistry());
 
         return new Gauge() {
             @Override
@@ -161,5 +185,16 @@ public class MetricsImpl implements Metrics {
 
     public static MetricsImpl getInstance() {
         return INSTANCE;
+    }
+
+    public void initializeBinder(final MetricsBinder binder) {
+        Assert.requireNonNull(binder, "binder");
+        registryLock.lock();
+        try {
+            binder.init(getRegistry(), getTags());
+            binders.add(binder);
+        } finally {
+            registryLock.unlock();
+        }
     }
 }

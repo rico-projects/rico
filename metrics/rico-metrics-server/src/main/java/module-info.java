@@ -1,4 +1,5 @@
 import dev.rico.internal.metrics.server.module.MetricsConfigurationProvider;
+import dev.rico.metrics.spi.MetricsBinderProvider;
 import dev.rico.server.spi.ConfigurationProvider;
 
 module dev.rico.metrics.server {
@@ -7,6 +8,8 @@ module dev.rico.metrics.server {
     requires transitive dev.rico.server;
 
     provides ConfigurationProvider with MetricsConfigurationProvider;
+
+    uses MetricsBinderProvider;
 
     exports dev.rico.internal.metrics.server.module to dev.rico.server;
     exports dev.rico.internal.metrics.server.servlet to spring.beans;
