@@ -9,7 +9,6 @@ module dev.rico.remoting.client.javafx {
     requires transitive dev.rico.client.javafx;
 
     requires static org.apiguardian.api;
-    requires org.slf4j;
     requires javafx.graphics;
     requires javafx.fxml;
 }

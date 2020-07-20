@@ -1,14 +1,14 @@
 package dev.rico.integrationtests.remoting;
 
 import dev.rico.client.Client;
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.integrationtests.AbstractIntegrationTest;
 import dev.rico.integrationtests.IntegrationTestToolkit;
 import dev.rico.remoting.client.ClientContext;
 import dev.rico.remoting.client.ClientContextFactory;
 import dev.rico.remoting.client.ControllerProxy;
 import dev.rico.remoting.client.Param;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 

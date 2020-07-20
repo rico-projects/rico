@@ -16,8 +16,9 @@
  */
 package dev.rico.internal.core;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;

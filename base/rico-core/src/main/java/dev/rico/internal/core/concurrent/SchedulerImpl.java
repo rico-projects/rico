@@ -18,9 +18,9 @@ package dev.rico.internal.core.concurrent;
 
 import dev.rico.core.concurrent.Scheduler;
 import dev.rico.core.concurrent.Trigger;
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.internal.core.Assert;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

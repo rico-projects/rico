@@ -16,13 +16,13 @@
  */
 package dev.rico.internal.remoting.server.error;
 
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.ReflectionHelper;
 import dev.rico.internal.core.lang.TypeUtils;
 import dev.rico.remoting.server.error.ActionExceptionEvent;
 import dev.rico.remoting.server.error.ActionExceptionHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -85,9 +85,9 @@ public class ActionErrorHandler {
     private boolean filterGenericExceptionType(final Type genericType, final Class<? extends Throwable> throwableClass) {
         Assert.requireNonNull(genericType, "genericType");
         Assert.requireNonNull(throwableClass, "throwableClass");
-        if(isParameterizedType(genericType)) {
+        if (isParameterizedType(genericType)) {
             final ParameterizedType parameterizedType = ReflectionHelper.toParameterizedType(genericType);
-            if(ReflectionHelper.hasGenericTypeCount(parameterizedType, 1)) {
+            if (ReflectionHelper.hasGenericTypeCount(parameterizedType, 1)) {
                 final Type genericTypeDef = ReflectionHelper.getGenericType(parameterizedType, 0);
                 return TypeUtils.isAssignable(throwableClass, genericTypeDef);
             }

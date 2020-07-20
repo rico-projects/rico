@@ -16,11 +16,13 @@
  */
 package dev.rico.internal.remoting.client;
 
-import dev.rico.internal.remoting.client.legacy.communication.AbstractClientConnector;
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.remoting.Converters;
 import dev.rico.internal.remoting.InternalAttributesBean;
 import dev.rico.internal.remoting.MappingException;
+import dev.rico.internal.remoting.client.legacy.communication.AbstractClientConnector;
 import dev.rico.internal.remoting.commands.CallActionCommand;
 import dev.rico.internal.remoting.commands.DestroyControllerCommand;
 import dev.rico.remoting.client.ControllerActionException;
@@ -29,8 +31,6 @@ import dev.rico.remoting.client.ControllerProxy;
 import dev.rico.remoting.client.Param;
 import dev.rico.remoting.converter.ValueConverterException;
 import org.apiguardian.api.API;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.List;
@@ -92,10 +92,10 @@ public class ControllerProxyImpl<T> implements ControllerProxy<T> {
         final CallActionCommand callActionCommand = new CallActionCommand();
         callActionCommand.setControllerId(controllerId);
         callActionCommand.setActionName(actionName);
-        if(params != null) {
+        if (params != null) {
             for (Param param : params) {
                 Object value = param.getValue();
-                if(value == null) {
+                if (value == null) {
                     callActionCommand.addParam(param.getName(), null);
                 } else {
                     try {
@@ -110,12 +110,12 @@ public class ControllerProxyImpl<T> implements ControllerProxy<T> {
         final CompletableFuture<Void> result = new CompletableFuture<>();
         clientConnector.send(callActionCommand, () -> {
 
-                if (bean.isError()) {
-                    result.completeExceptionally(new ControllerActionException("Error on calling action on the server. Please check the server log."));
-                } else {
-                    result.complete(null);
-                }
-                bean.unregister();
+            if (bean.isError()) {
+                result.completeExceptionally(new ControllerActionException("Error on calling action on the server. Please check the server log."));
+            } else {
+                result.complete(null);
+            }
+            bean.unregister();
         });
         return result;
     }

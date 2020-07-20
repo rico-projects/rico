@@ -16,23 +16,23 @@
  */
 package dev.rico.internal.remoting.collections;
 
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.internal.remoting.BeanRepository;
 import dev.rico.internal.remoting.ClassRepository;
-import dev.rico.internal.remoting.RemotingEventHandler;
 import dev.rico.internal.remoting.EventDispatcher;
-import dev.rico.internal.remoting.PresentationModelBuilder;
-import dev.rico.remoting.ListChangeEvent;
-import dev.rico.internal.remoting.RemotingConstants;
-import dev.rico.internal.remoting.PresentationModelBuilderFactory;
 import dev.rico.internal.remoting.ListMapper;
+import dev.rico.internal.remoting.MappingException;
+import dev.rico.internal.remoting.PresentationModelBuilder;
+import dev.rico.internal.remoting.PresentationModelBuilderFactory;
+import dev.rico.internal.remoting.RemotingConstants;
+import dev.rico.internal.remoting.RemotingEventHandler;
 import dev.rico.internal.remoting.info.ClassInfo;
 import dev.rico.internal.remoting.info.PropertyInfo;
-import dev.rico.internal.remoting.MappingException;
 import dev.rico.internal.remoting.legacy.core.ModelStore;
 import dev.rico.internal.remoting.legacy.core.PresentationModel;
+import dev.rico.remoting.ListChangeEvent;
 import org.apiguardian.api.API;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,7 +115,7 @@ public class ListMapperImpl implements ListMapper {
             for (final Object current : newElements) {
                 try {
                     builder.withAttribute(Integer.toString(i++), observableListInfo.convertToRemoting(current));
-                }catch (final Exception e) {
+                } catch (final Exception e) {
                     throw new MappingException("Error in event processing!", e);
                 }
             }

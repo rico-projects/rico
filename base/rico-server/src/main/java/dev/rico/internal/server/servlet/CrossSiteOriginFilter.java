@@ -16,14 +16,19 @@
  */
 package dev.rico.internal.server.servlet;
 
+import dev.rico.core.Configuration;
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.RicoConstants;
-import dev.rico.core.Configuration;
 import org.apiguardian.api.API;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import javax.servlet.*;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -46,7 +51,7 @@ public class CrossSiteOriginFilter implements Filter {
 
     private final Configuration configuration;
 
-    public CrossSiteOriginFilter(final Configuration configuration){
+    public CrossSiteOriginFilter(final Configuration configuration) {
         this.configuration = Assert.requireNonNull(configuration, "configuration");
     }
 
@@ -60,14 +65,14 @@ public class CrossSiteOriginFilter implements Filter {
         final HttpServletRequest req = (HttpServletRequest) request;
         final HttpServletResponse resp = (HttpServletResponse) response;
 
-        if(LOG.isTraceEnabled()) {
+        if (LOG.isTraceEnabled()) {
             LOG.trace("Received Request for {} of type {} with headers {}", req.getRequestURL(), req.getMethod(), req.getHeaderNames());
         }
 
         //Access-Control-Allow-Headers
         String accessControlAllowHeaders = RicoConstants.CLIENT_ID_HTTP_HEADER_NAME;
         final String headerValues = getAsCommaSeparatedList(configuration.getListProperty(ACCESS_CONTROL_ALLOW_HEADERS, ACCESS_CONTROL_ALLOW_HEADERS_DEFAULT_VALUE));
-        if(!headerValues.isEmpty()){
+        if (!headerValues.isEmpty()) {
             accessControlAllowHeaders = accessControlAllowHeaders + ", " + headerValues;
         }
 
@@ -77,7 +82,7 @@ public class CrossSiteOriginFilter implements Filter {
 
         final String clientOrigin = req.getHeader("origin");
         resp.setHeader("Access-Control-Allow-Origin", clientOrigin);
-        if(!allowedMethods.isEmpty()){
+        if (!allowedMethods.isEmpty()) {
             resp.setHeader("Access-Control-Allow-Methods", allowedMethods);
         }
         resp.setHeader("Access-Control-Allow-Headers", accessControlAllowHeaders);

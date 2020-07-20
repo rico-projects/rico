@@ -16,11 +16,13 @@
  */
 package dev.rico.remoting.client.javafx;
 
+import dev.rico.client.Client;
 import dev.rico.client.concurrent.BackgroundExecutor;
 import dev.rico.client.concurrent.UiExecutor;
-import dev.rico.internal.core.Assert;
-import dev.rico.client.Client;
 import dev.rico.client.javafx.FxToolkit;
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
+import dev.rico.internal.core.Assert;
 import dev.rico.remoting.client.ClientContext;
 import dev.rico.remoting.client.ClientContextFactory;
 import dev.rico.remoting.client.ClientInitializationException;
@@ -28,8 +30,6 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 import org.apiguardian.api.API;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -89,7 +89,6 @@ public abstract class AbstractRemotingApplication extends Application {
 //            throw new ClientInitializationException("Client configuration cannot be created", e);
 //        }
 //    }
-
     private ClientContext createClientContext() throws Exception {
         return Client.getService(ClientContextFactory.class).create(Client.getClientConfiguration(), getServerEndpoint().toURI());
     }

@@ -16,9 +16,9 @@
  */
 package dev.rico.internal.remoting.legacy.core;
 
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import org.apiguardian.api.API;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static org.apiguardian.api.API.Status.DEPRECATED;
 
@@ -34,7 +34,7 @@ import static org.apiguardian.api.API.Status.DEPRECATED;
 @API(since = "0.x", status = DEPRECATED)
 public class ModelStoreConfig {
 
-    private static final Logger LOG  = LoggerFactory.getLogger(ModelStoreConfig.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ModelStoreConfig.class);
 
     private int pmCapacity;
     private int typeCapacity;

@@ -17,6 +17,8 @@
 package dev.rico.internal.metrics;
 
 import dev.rico.core.lang.StringPair;
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.context.RicoApplicationContextImpl;
 import dev.rico.metrics.Metrics;
@@ -25,8 +27,6 @@ import dev.rico.metrics.types.Gauge;
 import dev.rico.metrics.types.Timer;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tag;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;

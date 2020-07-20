@@ -16,13 +16,13 @@
  */
 package dev.rico.internal.client.session;
 
+import dev.rico.client.session.ClientSessionStore;
+import dev.rico.core.http.HttpURLConnectionHandler;
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.RicoConstants;
-import dev.rico.core.http.HttpURLConnectionHandler;
-import dev.rico.client.session.ClientSessionStore;
 import org.apiguardian.api.API;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
@@ -41,10 +41,10 @@ public class ClientSessionRequestHandler implements HttpURLConnectionHandler {
     }
 
     @Override
-    public void handle(final HttpURLConnection request){
+    public void handle(final HttpURLConnection request) {
         Assert.requireNonNull(request, "request");
         try {
-            final String  clientId = clientSessionStore.getClientIdentifierForUrl(request.getURL().toURI());
+            final String clientId = clientSessionStore.getClientIdentifierForUrl(request.getURL().toURI());
             if (clientId != null) {
                 LOG.debug("Adding client id {} to http request at {}", clientId, request.getURL());
                 request.setRequestProperty(RicoConstants.CLIENT_ID_HTTP_HEADER_NAME, clientId);
@@ -53,7 +53,7 @@ public class ClientSessionRequestHandler implements HttpURLConnectionHandler {
             }
         } catch (URISyntaxException e) {
             LOG.error("Exception while converting to request URL {} to URI", request.getURL());
-            throw new RuntimeException("Exception while converting URL "+request.getURL() +"to URI", e);
+            throw new RuntimeException("Exception while converting URL " + request.getURL() + "to URI", e);
         }
 
     }

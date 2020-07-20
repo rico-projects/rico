@@ -16,14 +16,14 @@
  */
 package dev.rico.server.remoting.util;
 
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.internal.remoting.client.legacy.ClientModelStore;
 import dev.rico.internal.remoting.client.legacy.communication.AbstractClientConnector;
 import dev.rico.internal.remoting.client.legacy.communication.ICommandBatcher;
 import dev.rico.internal.remoting.client.legacy.communication.SimpleExceptionHandler;
 import dev.rico.internal.remoting.legacy.communication.Command;
 import dev.rico.internal.remoting.server.legacy.ServerConnector;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.LinkedList;

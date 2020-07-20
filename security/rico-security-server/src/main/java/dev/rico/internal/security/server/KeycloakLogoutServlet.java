@@ -16,11 +16,11 @@
  */
 package dev.rico.internal.security.server;
 
+import dev.rico.core.http.RequestMethod;
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.http.HttpClientConnection;
-import dev.rico.core.http.RequestMethod;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -56,7 +56,7 @@ public class KeycloakLogoutServlet extends HttpServlet {
             final HttpClientConnection clientConnection = new HttpClientConnection(url, RequestMethod.GET);
             clientConnection.addRequestHeader(AUTHORIZATION_HEADER, req.getHeader(AUTHORIZATION_HEADER));
             final int responseCode = clientConnection.readResponseCode();
-            if(responseCode != HTTP_OK) {
+            if (responseCode != HTTP_OK) {
                 LOG.debug("Error in logout!");
                 throw new RuntimeException("Error in logout!");
             }

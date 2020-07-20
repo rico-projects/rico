@@ -16,11 +16,11 @@
  */
 package dev.rico.internal.security.server;
 
-import dev.rico.internal.core.Assert;
 import dev.rico.core.Configuration;
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
+import dev.rico.internal.core.Assert;
 import org.apiguardian.api.API;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -31,7 +31,25 @@ import static dev.rico.internal.security.SecurityConstants.APPLICATION_PROPERTY_
 import static dev.rico.internal.security.SecurityConstants.AUTH_ENDPOINT_PROPERTY_DEFAULT_VALUE;
 import static dev.rico.internal.security.SecurityConstants.AUTH_ENDPOINT_PROPERTY_NAME;
 import static dev.rico.internal.security.SecurityConstants.REALM_PROPERTY_NAME;
-import static dev.rico.internal.security.server.SecurityServerConstants.*;
+import static dev.rico.internal.security.server.SecurityServerConstants.APPLICATION_PROPERTY_DEFAULT_VALUE;
+import static dev.rico.internal.security.server.SecurityServerConstants.CORS_PROPERTY_DEFAULT_VALUE;
+import static dev.rico.internal.security.server.SecurityServerConstants.CORS_PROPERTY_NAME;
+import static dev.rico.internal.security.server.SecurityServerConstants.LOGIN_ENDPOINTS_ACTIVE_PROPERTY_DEFAULT_VALUE;
+import static dev.rico.internal.security.server.SecurityServerConstants.LOGIN_ENDPOINTS_ACTIVE_PROPERTY_NAME;
+import static dev.rico.internal.security.server.SecurityServerConstants.LOGIN_ENDPOINTS_PROPERTY_DEFAULT_VALUE;
+import static dev.rico.internal.security.server.SecurityServerConstants.LOGIN_ENDPOINTS_PROPERTY_NAME;
+import static dev.rico.internal.security.server.SecurityServerConstants.LOGOUT_ENDPOINTS_PROPERTY_DEFAULT_VALUE;
+import static dev.rico.internal.security.server.SecurityServerConstants.LOGOUT_ENDPOINTS_PROPERTY_NAME;
+import static dev.rico.internal.security.server.SecurityServerConstants.REALMS_PROPERTY_DEFAULT_VALUE;
+import static dev.rico.internal.security.server.SecurityServerConstants.REALMS_PROPERTY_NAME;
+import static dev.rico.internal.security.server.SecurityServerConstants.REALM_CHECK_ACTIVE_PROPERTY_DEFAULT_VALUE;
+import static dev.rico.internal.security.server.SecurityServerConstants.REALM_CHECK_ACTIVE_PROPERTY_NAME;
+import static dev.rico.internal.security.server.SecurityServerConstants.REALM_PROPERTY_DEFAULT_VALUE;
+import static dev.rico.internal.security.server.SecurityServerConstants.SECURE_ENDPOINTS_PROPERTY_DEFAULT_VALUE;
+import static dev.rico.internal.security.server.SecurityServerConstants.SECURE_ENDPOINTS_PROPERTY_NAME;
+import static dev.rico.internal.security.server.SecurityServerConstants.SECURITY_ENDPOINT_SUFFIX;
+import static dev.rico.internal.security.server.SecurityServerConstants.SECURITY_MODULE_ACTIVE_PROPERTY;
+import static dev.rico.internal.security.server.SecurityServerConstants.SECURITY_MODULE_ACTIVE_PROPERTY_DEFAULT_VALUE;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.19.0", status = INTERNAL)
@@ -78,7 +96,7 @@ public class KeycloakConfiguration implements Serializable {
 
         this.loginEndpoint = platformConfiguration.getProperty(LOGIN_ENDPOINTS_PROPERTY_NAME, LOGIN_ENDPOINTS_PROPERTY_DEFAULT_VALUE);
         this.logoutEndpoint = platformConfiguration.getProperty(LOGOUT_ENDPOINTS_PROPERTY_NAME, LOGOUT_ENDPOINTS_PROPERTY_DEFAULT_VALUE);
-        this.cors  = platformConfiguration.getBooleanProperty(CORS_PROPERTY_NAME, CORS_PROPERTY_DEFAULT_VALUE);
+        this.cors = platformConfiguration.getBooleanProperty(CORS_PROPERTY_NAME, CORS_PROPERTY_DEFAULT_VALUE);
 
     }
 
@@ -136,9 +154,9 @@ public class KeycloakConfiguration implements Serializable {
         return realmCheckEnabled;
     }
 
-    public boolean isRealmAllowed(final String realmName){
+    public boolean isRealmAllowed(final String realmName) {
         Assert.requireNonNull(realmName, "realmName");
-        if(isRealmCheckEnabled()) {
+        if (isRealmCheckEnabled()) {
             return getRealmNames().contains(realmName);
         }
         LOG.trace("Any realm is allowed");

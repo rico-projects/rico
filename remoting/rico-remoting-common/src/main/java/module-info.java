@@ -78,7 +78,6 @@ module dev.rico.remoting.common {
     requires transitive dev.rico.core;
 
     requires static org.apiguardian.api;
-    requires org.slf4j;
     requires java.desktop;
     requires com.google.gson;
 }

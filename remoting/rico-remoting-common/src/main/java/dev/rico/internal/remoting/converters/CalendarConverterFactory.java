@@ -16,12 +16,12 @@
  */
 package dev.rico.internal.remoting.converters;
 
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.internal.core.RicoConstants;
 import dev.rico.remoting.converter.Converter;
 import dev.rico.remoting.converter.ValueConverterException;
 import org.apiguardian.api.API;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.Calendar;

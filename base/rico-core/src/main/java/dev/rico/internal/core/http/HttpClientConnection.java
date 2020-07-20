@@ -19,9 +19,9 @@ package dev.rico.internal.core.http;
 import dev.rico.core.http.HttpHeader;
 import dev.rico.core.http.HttpURLConnectionFactory;
 import dev.rico.core.http.RequestMethod;
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.internal.core.Assert;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -93,7 +93,7 @@ public class HttpClientConnection {
 
     public void writeRequestContent(final InputStream inputStream) throws IOException {
         Assert.requireNonNull(inputStream, "inputStream");
-        if(inputStream.available() > 0) {
+        if (inputStream.available() > 0) {
             setDoOutput(true);
             final OutputStream outputStream = connection.getOutputStream();
             final long length = ConnectionUtils.copy(inputStream, outputStream);

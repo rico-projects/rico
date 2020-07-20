@@ -1,9 +1,9 @@
 package dev.rico.internal.core.http;
 
 import dev.rico.core.functional.Subscription;
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.internal.core.Assert;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -101,7 +101,7 @@ public class UploadOutputStreamImpl extends OutputStream {
                 uploadPercentageListeners.forEach(l -> l.accept(percentageDone));
             });
         }
-        if(currentSize == size) {
+        if (currentSize == size) {
             onDone();
         }
     }

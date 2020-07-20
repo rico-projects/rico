@@ -16,11 +16,11 @@
  */
 package dev.rico.internal.client.config;
 
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.internal.client.DefaultClientConfiguration;
 import dev.rico.internal.core.Assert;
 import org.apiguardian.api.API;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,8 +47,8 @@ public class ConfigurationFileLoader {
         Assert.requireNonNull(configuration, "configuration");
 
         LOG.debug("Configuration created with {} properties", configuration.getPropertyKeys().size());
-        if(LOG.isTraceEnabled()) {
-            for(String key : configuration.getPropertyKeys()) {
+        if (LOG.isTraceEnabled()) {
+            for (String key : configuration.getPropertyKeys()) {
                 LOG.debug("Configured with '{}'='{}'", key, configuration.getProperty(key, null));
             }
         }
@@ -59,8 +59,8 @@ public class ConfigurationFileLoader {
         try {
             final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
-            if(additionalLocations != null) {
-                for(final String location : additionalLocations) {
+            if (additionalLocations != null) {
+                for (final String location : additionalLocations) {
                     LOG.trace("Trying to load configuration at '" + location + "'");
                     try (final InputStream inputStream = classLoader.getResourceAsStream(location)) {
                         if (inputStream != null) {

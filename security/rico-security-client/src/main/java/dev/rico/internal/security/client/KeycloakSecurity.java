@@ -23,13 +23,13 @@ import dev.rico.client.concurrent.BackgroundExecutor;
 import dev.rico.core.Configuration;
 import dev.rico.core.functional.Assignment;
 import dev.rico.core.http.RequestMethod;
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.context.RicoApplicationContextImpl;
 import dev.rico.internal.core.http.HttpClientConnection;
 import dev.rico.security.client.Security;
 import org.apiguardian.api.API;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -147,7 +147,7 @@ public class KeycloakSecurity implements Security {
             loginLogoutLock.lock();
             try {
                 Assignment userAssignment = userContextAssignment.getAndSet(null);
-                if(userAssignment != null) {
+                if (userAssignment != null) {
                     userAssignment.unset();
                 }
                 authorized.set(false);

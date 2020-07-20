@@ -19,7 +19,6 @@ module dev.rico.security.server {
     requires keycloak.servlet.adapter.spi;
 
     requires static org.apiguardian.api;
-    requires org.slf4j;
     requires static java.servlet;
     requires java.logging;
 }

@@ -17,11 +17,10 @@
 package dev.rico.internal.server.servlet;
 
 import dev.rico.core.Configuration;
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.internal.core.Assert;
-
 import org.apiguardian.api.API;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
@@ -52,5 +51,6 @@ public class HttpSessionTimeoutListener implements HttpSessionListener {
     }
 
     @Override
-    public void sessionDestroyed(final HttpSessionEvent se) {}
+    public void sessionDestroyed(final HttpSessionEvent se) {
+    }
 }

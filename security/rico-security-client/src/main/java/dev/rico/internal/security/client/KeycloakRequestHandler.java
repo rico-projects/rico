@@ -16,11 +16,11 @@
  */
 package dev.rico.internal.security.client;
 
-import dev.rico.internal.core.Assert;
 import dev.rico.core.http.HttpURLConnectionHandler;
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
+import dev.rico.internal.core.Assert;
 import org.apiguardian.api.API;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.HttpURLConnection;
 
@@ -45,19 +45,19 @@ public class KeycloakRequestHandler implements HttpURLConnectionHandler {
             connection.setRequestProperty(BEARER_ONLY_HEADER, "true");
 
             final String accessToken = auth.getAccessToken();
-            if(accessToken != null && !accessToken.isEmpty()) {
+            if (accessToken != null && !accessToken.isEmpty()) {
                 LOG.debug("Adding security access token to request");
                 connection.setRequestProperty(AUTHORIZATION_HEADER, BEARER + accessToken);
             }
 
             final String realm = auth.getRealm();
-            if(realm != null && !realm.isEmpty()) {
+            if (realm != null && !realm.isEmpty()) {
                 LOG.debug("Adding realm to request");
                 connection.setRequestProperty(REALM_NAME_HEADER, realm);
             }
 
             final String appName = auth.getAppName();
-            if(appName != null && !appName.isEmpty()) {
+            if (appName != null && !appName.isEmpty()) {
                 LOG.debug("Adding appName to request");
                 connection.setRequestProperty(APPLICATION_NAME_HEADER, appName);
             }

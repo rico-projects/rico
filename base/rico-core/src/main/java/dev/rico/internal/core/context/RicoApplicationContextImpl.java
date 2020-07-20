@@ -17,11 +17,11 @@ package dev.rico.internal.core.context;
 
 import dev.rico.core.context.RicoApplicationContext;
 import dev.rico.core.functional.Assignment;
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.PlatformVersion;
 import dev.rico.internal.core.os.OperationSystem;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.InetAddress;
 import java.time.ZoneId;

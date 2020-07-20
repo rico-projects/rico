@@ -16,9 +16,9 @@
  */
 package dev.rico.internal.core;
 
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import org.apiguardian.api.API;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -105,21 +105,22 @@ public class ReflectionHelper {
     /**
      * Checks if the given field is annotated with the given annonation or if an annotation of the field is annotated
      * with the given annotation.
-     * @param field the field
+     *
+     * @param field           the field
      * @param annotationClass the annotation class
-     * @param <A> the annotation type
+     * @param <A>             the annotation type
      * @return the annotation instance that annotates the field or an annotation fo the field.
      */
     public static <A extends Annotation> Optional<A> getAnnotationOrMetaAnnotation(final Field field, final Class<A> annotationClass) {
         Assert.requireNonNull(field, "field");
         Assert.requireNonNull(annotationClass, "annotationClass");
 
-        if(field.isAnnotationPresent(annotationClass)) {
+        if (field.isAnnotationPresent(annotationClass)) {
             return Optional.of(field.getAnnotation(annotationClass));
         }
-        for(Annotation annotation : field.getAnnotations()) {
+        for (Annotation annotation : field.getAnnotations()) {
             final Annotation metaAnnotation = annotation.getClass().getAnnotation(annotationClass);
-            if(metaAnnotation != null) {
+            if (metaAnnotation != null) {
                 return Optional.of((A) metaAnnotation);
             }
         }
@@ -229,7 +230,7 @@ public class ReflectionHelper {
                 return (Class) pType.getActualTypeArguments()[0];
             }
         } catch (ClassCastException ex) {
-            LOG.warn("can not extract parameterized type for field: " +field.getName() + ", bean: "+ field.getDeclaringClass().getName());
+            LOG.warn("can not extract parameterized type for field: " + field.getName() + ", bean: " + field.getDeclaringClass().getName());
         }
         return null;
     }
@@ -317,8 +318,9 @@ public class ReflectionHelper {
 
     /**
      * Returns a list that contains all values of a given enum class
+     *
      * @param enumClass the enum class
-     * @param <E> the enum type
+     * @param <E>       the enum type
      * @return all enum values
      */
     public static <E extends Enum> List<E> getAllValues(final Class<E> enumClass) {

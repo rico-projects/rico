@@ -44,7 +44,6 @@ module dev.rico.server {
     provides ConfigurationProvider with BasicConfigurationProvider;
 
     requires transitive dev.rico.core;
-    requires org.slf4j;
     requires static org.apiguardian.api;
     requires io.github.classgraph;
     requires java.management;

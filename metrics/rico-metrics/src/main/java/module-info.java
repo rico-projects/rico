@@ -9,5 +9,4 @@ module dev.rico.metrics {
     requires transitive dev.rico.core;
     requires static org.apiguardian.api;
     requires micrometer.core;
-    requires org.slf4j;
 }

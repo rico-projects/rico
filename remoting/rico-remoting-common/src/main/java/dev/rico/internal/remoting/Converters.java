@@ -18,12 +18,12 @@ package dev.rico.internal.remoting;
 
 import dev.rico.core.functional.Result;
 import dev.rico.core.functional.ResultWithInput;
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.internal.core.Assert;
 import dev.rico.remoting.converter.Converter;
 import dev.rico.remoting.converter.ConverterFactory;
 import org.apiguardian.api.API;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;

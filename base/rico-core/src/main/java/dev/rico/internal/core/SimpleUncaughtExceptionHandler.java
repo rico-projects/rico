@@ -16,9 +16,9 @@
  */
 package dev.rico.internal.core;
 
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import org.apiguardian.api.API;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 

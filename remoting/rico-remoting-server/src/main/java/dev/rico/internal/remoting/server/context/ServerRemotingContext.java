@@ -16,6 +16,8 @@
  */
 package dev.rico.internal.remoting.server.context;
 
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.remoting.BeanManagerImpl;
 import dev.rico.internal.remoting.ClassRepository;
@@ -35,7 +37,6 @@ import dev.rico.internal.remoting.commands.DestroyControllerCommand;
 import dev.rico.internal.remoting.legacy.commands.InterruptLongPollCommand;
 import dev.rico.internal.remoting.legacy.commands.StartLongPollCommand;
 import dev.rico.internal.remoting.legacy.communication.Command;
-import dev.rico.internal.server.client.ClientSessionProvider;
 import dev.rico.internal.remoting.server.config.RemotingConfiguration;
 import dev.rico.internal.remoting.server.controller.ControllerHandler;
 import dev.rico.internal.remoting.server.controller.ControllerRepository;
@@ -55,14 +56,13 @@ import dev.rico.internal.remoting.server.model.ServerControllerActionCallBean;
 import dev.rico.internal.remoting.server.model.ServerEventDispatcher;
 import dev.rico.internal.remoting.server.model.ServerPlatformBeanRepository;
 import dev.rico.internal.remoting.server.model.ServerPresentationModelBuilderFactory;
+import dev.rico.internal.server.client.ClientSessionProvider;
 import dev.rico.internal.server.servlet.ServerTimingFilter;
 import dev.rico.remoting.BeanManager;
 import dev.rico.server.client.ClientSession;
 import dev.rico.server.spi.components.ManagedBeanFactory;
 import dev.rico.server.timing.ServerTimer;
 import org.apiguardian.api.API;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.LinkedList;
@@ -255,7 +255,7 @@ public class ServerRemotingContext {
         if (platformBeanRepository == null) {
             throw new IllegalStateException("An action was called before the init-command was sent.");
         }
-        final ServerTimer serverTimer = ServerTimingFilter.getCurrentTiming().start("RemotingActionCall:"+actionName, "Remote action call");
+        final ServerTimer serverTimer = ServerTimingFilter.getCurrentTiming().start("RemotingActionCall:" + actionName, "Remote action call");
         try (serverTimer) {
             controllerHandler.invokeAction(controllerId, actionName, params);
         } catch (final Exception e) {
@@ -306,7 +306,7 @@ public class ServerRemotingContext {
     public List<Command> handle(final List<Command> commands) {
         active = true;
         try {
-        final List<Command> results = new LinkedList<>();
+            final List<Command> results = new LinkedList<>();
             for (final Command command : commands) {
                 results.addAll(serverConnector.receive(command));
                 hasResponseCommands = !results.isEmpty();

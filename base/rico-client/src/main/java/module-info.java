@@ -46,7 +46,6 @@ module dev.rico.client {
             ClientSessionResponseHandlerProvider;
 
     requires transitive dev.rico.core;
-    requires org.slf4j;
     requires static org.apiguardian.api;
     requires com.google.gson;
 }

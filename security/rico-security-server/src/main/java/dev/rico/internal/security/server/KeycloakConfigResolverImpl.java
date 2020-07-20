@@ -16,6 +16,8 @@
  */
 package dev.rico.internal.security.server;
 
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.internal.core.Assert;
 import dev.rico.security.server.SecurityException;
 import org.apiguardian.api.API;
@@ -24,8 +26,6 @@ import org.keycloak.adapters.KeycloakDeployment;
 import org.keycloak.adapters.KeycloakDeploymentBuilder;
 import org.keycloak.adapters.spi.HttpFacade;
 import org.keycloak.representations.adapters.config.AdapterConfig;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
@@ -56,17 +56,17 @@ public class KeycloakConfigResolverImpl implements KeycloakConfigResolver {
         Optional.ofNullable(applicationName).orElseThrow(() -> new SecurityException("Application name for security check is not configured!"));
         Optional.ofNullable(authEndPoint).orElseThrow(() -> new SecurityException("Auth endpoint for security check is not configured!"));
 
-        LOG.debug("Defined Keycloak AdapterConfig for request against realm '" +realmName + "' and app '" + applicationName + "'");
+        LOG.debug("Defined Keycloak AdapterConfig for request against realm '" + realmName + "' and app '" + applicationName + "'");
 
         final AdapterConfig adapterConfig = new AdapterConfig();
-        LOG.debug("Checking if realm '" +realmName + "' is allowed");
-        if(configuration.isRealmAllowed(realmName)){
-            if(LOG.isTraceEnabled()) {
+        LOG.debug("Checking if realm '" + realmName + "' is allowed");
+        if (configuration.isRealmAllowed(realmName)) {
+            if (LOG.isTraceEnabled()) {
                 LOG.trace("Realm '" + realmName + "' is allowed");
             }
             adapterConfig.setRealm(realmName);
-        }else{
-            if(LOG.isDebugEnabled()) {
+        } else {
+            if (LOG.isDebugEnabled()) {
                 final String allowedRealms = configuration.getRealmNames().stream().reduce("", (a, b) -> a + "," + b);
                 LOG.debug("Realm '" + realmName + "' is not allowed! Allowed realms are {}", allowedRealms);
             }
@@ -88,8 +88,8 @@ public class KeycloakConfigResolverImpl implements KeycloakConfigResolver {
         KeycloakConfigResolverImpl.configuration = configuration;
 
         LOG.debug("Configuration for keycloak resolver defined");
-        if(LOG.isTraceEnabled()) {
-            if(configuration.isRealmCheckEnabled()) {
+        if (LOG.isTraceEnabled()) {
+            if (configuration.isRealmCheckEnabled()) {
                 final String allowedRealms = configuration.getRealmNames().stream().reduce("", (a, b) -> a + "," + b);
                 LOG.trace("Allowed keycloak realms: {}", allowedRealms);
             } else {

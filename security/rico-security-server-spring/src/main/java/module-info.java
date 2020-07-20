@@ -9,7 +9,6 @@ module dev.rico.security.server.spring {
     requires transitive dev.rico.server.spring;
 
     requires static org.apiguardian.api;
-    requires org.slf4j;
     requires spring.web;
     requires spring.context;
     requires org.apache.httpcomponents.httpclient;

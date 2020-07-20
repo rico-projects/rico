@@ -16,11 +16,11 @@
  */
 package dev.rico.internal.client.session;
 
-import dev.rico.internal.core.Assert;
 import dev.rico.client.session.ClientSessionStore;
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
+import dev.rico.internal.core.Assert;
 import org.apiguardian.api.API;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -32,7 +32,7 @@ import java.util.function.Function;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
-public class ClientSessionStoreImpl implements ClientSessionStore{
+public class ClientSessionStoreImpl implements ClientSessionStore {
 
     private static final Logger LOG = LoggerFactory.getLogger(ClientSessionStoreImpl.class);
 
@@ -46,7 +46,7 @@ public class ClientSessionStoreImpl implements ClientSessionStore{
     public String getClientIdentifierForUrl(final URI url) {
         Assert.requireNonNull(url, "url");
         final String applicationDomain = domainToAppConverter.apply(url);
-        if(applicationDomain == null) {
+        if (applicationDomain == null) {
             throw new IllegalStateException("Can not define application domain for url " + url);
         }
         LOG.debug("searching for client id application domain: {}", applicationDomain);
@@ -64,7 +64,7 @@ public class ClientSessionStoreImpl implements ClientSessionStore{
     public void setClientIdentifierForUrl(final URI url, final String clientId) {
         Assert.requireNonNull(url, "url");
         final String applicationDomain = domainToAppConverter.apply(url);
-        if(applicationDomain == null) {
+        if (applicationDomain == null) {
             throw new IllegalStateException("Can not define application domain for url " + url);
         }
         LOG.debug("updating client id for application domain: {}", applicationDomain);
@@ -78,7 +78,7 @@ public class ClientSessionStoreImpl implements ClientSessionStore{
                 }
             } else {
                 LOG.debug("Defining client id '{}' for application domain {}", clientId, applicationDomain);
-                if(clientId == null) {
+                if (clientId == null) {
                     LOG.debug("Since client id for application domain {} is defined as 'null' it will be removed", applicationDomain);
                     domainToId.remove(applicationDomain);
                 } else {

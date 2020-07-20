@@ -16,11 +16,11 @@
  */
 package dev.rico.internal.remoting.converters;
 
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.remoting.converter.Converter;
 import dev.rico.remoting.converter.ValueConverterException;
 import org.apiguardian.api.API;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.Date;
@@ -55,7 +55,7 @@ public class DateConverterFactory extends AbstractConverterFactory {
         private static final Logger LOG = LoggerFactory.getLogger(DateConverter.class);
 
         @Override
-        public Date convertFromRemoting(final String value) throws ValueConverterException{
+        public Date convertFromRemoting(final String value) throws ValueConverterException {
             if (value == null) {
                 return null;
             }
@@ -67,7 +67,7 @@ public class DateConverterFactory extends AbstractConverterFactory {
         }
 
         @Override
-        public String convertToRemoting(final Date value) throws ValueConverterException{
+        public String convertToRemoting(final Date value) throws ValueConverterException {
             if (value == null) {
                 return null;
             }

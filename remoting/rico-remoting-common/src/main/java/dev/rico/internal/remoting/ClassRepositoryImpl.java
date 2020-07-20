@@ -16,19 +16,17 @@
  */
 package dev.rico.internal.remoting;
 
-import dev.rico.remoting.ObservableList;
-import dev.rico.remoting.converter.Converter;
-import dev.rico.internal.remoting.info.ClassInfo;
-import dev.rico.internal.remoting.info.PropertyInfo;
-import dev.rico.remoting.Property;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.ReflectionHelper;
+import dev.rico.internal.remoting.info.ClassInfo;
+import dev.rico.internal.remoting.info.PropertyInfo;
 import dev.rico.internal.remoting.legacy.core.ModelStore;
 import dev.rico.internal.remoting.legacy.core.ModelStoreEvent;
 import dev.rico.internal.remoting.legacy.core.ModelStoreListener;
+import dev.rico.remoting.ObservableList;
+import dev.rico.remoting.Property;
+import dev.rico.remoting.converter.Converter;
 import org.apiguardian.api.API;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -44,8 +42,6 @@ import static org.apiguardian.api.API.Status.INTERNAL;
  */
 @API(since = "0.x", status = INTERNAL)
 public class ClassRepositoryImpl implements ClassRepository {
-
- private static final Logger LOG = LoggerFactory.getLogger(ClassRepositoryImpl.class);
 
     private final PresentationModelBuilderFactory builderFactory;
     private final Converters converters;
@@ -104,7 +100,7 @@ public class ClassRepositoryImpl implements ClassRepository {
             if (Property.class.isAssignableFrom(field.getType()) || ObservableList.class.isAssignableFrom(field.getType())) {
                 final String attributeName = RemotingUtils.getAttributePropertyNameForField(field);
                 final Class<?> clazz = ReflectionHelper.getTypeParameter(field);
-                if(clazz == null) {
+                if (clazz == null) {
                     throw new MappingException("Can't define generic type for field " + attributeName + " in bean " + beanClass);
                 }
                 final int type = converters.getFieldType(clazz);

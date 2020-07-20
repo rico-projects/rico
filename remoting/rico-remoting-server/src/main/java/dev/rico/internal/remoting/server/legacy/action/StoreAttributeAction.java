@@ -16,14 +16,14 @@
  */
 package dev.rico.internal.remoting.server.legacy.action;
 
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.internal.remoting.legacy.communication.ChangeAttributeMetadataCommand;
 import dev.rico.internal.remoting.legacy.core.Attribute;
 import dev.rico.internal.remoting.server.legacy.ServerAttribute;
 import dev.rico.internal.remoting.server.legacy.communication.ActionRegistry;
 import dev.rico.internal.remoting.server.legacy.communication.CommandHandler;
 import org.apiguardian.api.API;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -48,10 +48,10 @@ public class StoreAttributeAction extends AbstractServerAction {
                 ((ServerAttribute) attribute).silently(new Runnable() {
                     @Override
                     public void run() {
-                        if(command.getMetadataName().equals(Attribute.VALUE_NAME)) {
+                        if (command.getMetadataName().equals(Attribute.VALUE_NAME)) {
                             attribute.setValue(command.getValue());
-                        } else if(command.getMetadataName().equals(Attribute.QUALIFIER_NAME)) {
-                            if(command.getValue() == null) {
+                        } else if (command.getMetadataName().equals(Attribute.QUALIFIER_NAME)) {
+                            if (command.getValue() == null) {
                                 ((ServerAttribute) attribute).setQualifier(null);
                             } else {
                                 ((ServerAttribute) attribute).setQualifier(command.getValue().toString());

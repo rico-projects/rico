@@ -16,13 +16,13 @@
  */
 package dev.rico.internal.client.session;
 
+import dev.rico.client.session.ClientSessionStore;
+import dev.rico.core.http.HttpURLConnectionHandler;
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.RicoConstants;
-import dev.rico.core.http.HttpURLConnectionHandler;
-import dev.rico.client.session.ClientSessionStore;
 import org.apiguardian.api.API;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
@@ -33,6 +33,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 public class ClientSessionResponseHandler implements HttpURLConnectionHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(ClientSessionResponseHandler.class);
+
     private final ClientSessionStore clientSessionStore;
 
     public ClientSessionResponseHandler(final ClientSessionStore clientSessionStore) {
@@ -47,7 +48,7 @@ public class ClientSessionResponseHandler implements HttpURLConnectionHandler {
             clientSessionStore.setClientIdentifierForUrl(response.getURL().toURI(), clientIdInHeader);
         } catch (URISyntaxException e) {
             LOG.error("Exception while converting to response URL {} to URI", response.getURL());
-            throw new RuntimeException("Exception while converting URL "+response.getURL() +"to URI", e);
+            throw new RuntimeException("Exception while converting URL " + response.getURL() + "to URI", e);
         }
     }
 }

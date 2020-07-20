@@ -16,10 +16,10 @@
  */
 package dev.rico.internal.metrics.server.servlet;
 
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.internal.core.Assert;
 import io.micrometer.prometheus.PrometheusMeterRegistry;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
