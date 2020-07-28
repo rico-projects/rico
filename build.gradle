@@ -60,7 +60,7 @@ subprojects { proj ->
     if (proj.javaProject.toBoolean()) {
         apply plugin: 'idea'
         apply plugin: 'java-library'
-        apply plugin: 'com.adarshr.test-logger'
+        // apply plugin: 'com.adarshr.test-logger'
 
         if (proj.publishJars.toBoolean()) {
             java {
@@ -80,13 +80,13 @@ subprojects { proj ->
             //options.compilerArgs << '-Xlint:unchecked'
         }
 
-        testlogger {
-            theme 'standard-parallel'
-            showStandardStreams true
-            showFullStackTraces true
-//            showPassedStandardStreams false
-//            showSkippedStandardStreams false
-        }
+//        testlogger {
+//            theme 'standard-parallel'
+//            showStandardStreams true
+//            showFullStackTraces true
+////            showPassedStandardStreams false
+////            showSkippedStandardStreams false
+//        }
 
         test {
             useTestNG()
