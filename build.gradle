@@ -27,7 +27,7 @@ buildscript {
 
     dependencies {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.5'
-        classpath 'com.adarshr:gradle-test-logger-plugin:2.0.0'
+        classpath 'com.adarshr:gradle-test-logger-plugin:2.1.0'
         classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:4.15.1'
         classpath 'org.asciidoctor:asciidoctor-gradle-jvm:3.2.0'
     }
@@ -81,7 +81,9 @@ subprojects { proj ->
         }
 
         testlogger {
+            theme 'standard-parallel'
             showStandardStreams true
+            showFullStackTraces true
 //            showPassedStandardStreams false
 //            showSkippedStandardStreams false
         }
