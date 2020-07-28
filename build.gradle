@@ -91,6 +91,7 @@ subprojects { proj ->
         test {
             useTestNG()
             jvmArgs("-Djdk.attach.allowAttachSelf")
+            testLogging.showStandardStreams = true
         }
 
         javadoc {
