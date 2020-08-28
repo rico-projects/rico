@@ -50,6 +50,14 @@ APIs for the following functionalities:
 
 An introduction of Rico can be found in the [Karakun DevHub](https://dev.karakun.com/rico/).
 
+## Issues
+
+Please note that this repository is the main repository for all rico modules. Currently, we maintain some modules (especially the JavaScript libraries) in separate repos. To keep it easer to get an overview of the issues, we track all of them [in this repository](https://github.com/rico-projects/rico/issues).
+
+## Development
+To get an overview about the project structure, please look at the [repective chapter in our documentation]( https://rico-projects.github.io/rico/#_project_structure ).
+
+Also, please refer to the [CODE_OF_CONDUCT.md]( CODE_OF_CONDUCT.md ), [CONTIBUTING.md]( CONTIBUTING.md ) and  [JAVA_STYLE_GUIDE.md]( JAVA_STYLE_GUIDE.md ) .
 
 ## Development origin
 The Rico framework is the successor of the [Dolphin Platform](https://github.com/canoo/dolphin-platform) that provided 
