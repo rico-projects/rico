@@ -27,7 +27,7 @@ jobs:
   include:
     - stage: "Build"
       name: "Build & Test"
-      script: ./gradlew clean build --info
+      script: ./gradlew --version && ./gradlew clean build --info
     - stage: "Deploy"
       if: branch = master AND type != pull_request
       name: "Deploy to JFrog OSS"
