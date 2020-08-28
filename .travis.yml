@@ -11,6 +11,7 @@ before_install:
   - echo sdkman_auto_answer=true > $HOME/.sdkman/etc/config
   - echo sdkman_auto_selfupdate=true >> $HOME/.sdkman/etc/config
   - source "/home/travis/.sdkman/bin/sdkman-init.sh"
+  - sdk install java 11.0.8.hs-adpt || true
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
