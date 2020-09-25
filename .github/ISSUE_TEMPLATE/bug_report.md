@@ -7,11 +7,11 @@ assignees: ''
 
 ---
 
-**Describe the bug or feature request**
-A clear and concise description of what the bug or feature request is about.
+**Describe the bug**
+A clear and concise description of the bug.
 
 **To Reproduce**
-Steps to reproduce the behavior:
+Steps to reproduce the behavior.
 
 **Expected behavior**
 A clear and concise description of what you expected to happen.
@@ -22,4 +22,4 @@ Please give us some information about the server and client you are using.
 
 **Additional context**
 Please provide the version of Rico you are using.
-If you have any Logs please attach them to your issue
+If you have any Logs please attach them to your issue.
