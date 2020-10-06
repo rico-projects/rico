@@ -8,10 +8,10 @@ This repository contains all Java related sources of Rico. Clients for other lan
 
 ![Rico Logo](readme/rico_logo.png)
 
-image::https://hacktoberfest.digitalocean.com/assets/HF-full-logo-b05d5eb32b3f3ecc9b2240526104cf4da3187b8b61963dd9042fdc2536e4a76c.svg[float=left,width=200]
+![Hacktoberfest Logo](https://hacktoberfest.digitalocean.com/assets/HF-full-logo-b05d5eb32b3f3ecc9b2240526104cf4da3187b8b61963dd9042fdc2536e4a76c.svg)
 
-*This project joined https://hacktoberfest.digitalocean.com/[Hacktoberfest]!
-Issues that can give you a good start are https://github.com/docToolchain/docToolchain/issues?q=is%3Aissue+is%3Aopen+label%3AHacktoberfest[have the label "Hacktoberfest"] and maintainers are willing to help.*
+*This project joined [Hacktoberfest](https://hacktoberfest.digitalocean.com/)!
+Issues that can give you a good start are [have the label "Hacktoberfest"](https://github.com/rico-projects/rico/issues?q=is%3Aissue+is%3Aopen+label%3A%22Hacktoberfest%22) and maintainers are willing to help.*
 
 ## About Rico
 Rico is a client-server-framework that provides several functionalities and APIs to create enterprise applications. This
