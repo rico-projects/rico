@@ -69,6 +69,8 @@ task setVersionAndDateTimeForBuild() {
             entry(key: "buildTime", value: buildTime)
 
         }
+
+        // Removes the auto generated timestamp comment line(1st line only) that `ant.propertyfile` generates
         ant.replaceregexp(file: ricoCoreProperties, match: "^#.*\n", replace: "")
     }
 }
