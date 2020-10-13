@@ -16,9 +16,11 @@
  */
 package dev.rico.server.remoting.test;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.Assert.*;
+//change the asserts to junit5 assertions
+//import static org.junit.Assert.*;
 
 public class JUnitDemoTest extends SpringJUnitControllerTest {
 

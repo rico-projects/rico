@@ -40,8 +40,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-//What does this do?
-//import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+
 
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
@@ -65,26 +64,26 @@ public abstract class SpringJUnitControllerTest  implements ControllerTest {
     private TestClientContext clientContext;
 
     //Turn this to junit5
-//    @Rule
-//    public ExternalResource clientConnector = new ExternalResource() {
-//        @Override
-//        protected void before() throws Throwable {
-//            super.before();
-//            clientContext.connect().get();
-//        }
-//
-//        @Override
-//        protected void after() {
-//            super.after();
-//            try {
-//                clientContext.disconnect().get();
-//            } catch (Exception e) {
-//                throw new ControllerTestException("Can not disconnect client context!", e);
-//            }
-//        }
-//    };
+    @Rule
+    public ExternalResource clientConnector = new ExternalResource() {
+        @Override
+        protected void before() throws Throwable {
+            super.before();
+            clientContext.connect().get();
+        }
 
-    public static class clientConnector implements BeforeAllCallback, AfterAllCallback{
+        @Override
+        protected void after() {
+            super.after();
+            try {
+                clientContext.disconnect().get();
+            } catch (Exception e) {
+                throw new ControllerTestException("Can not disconnect client context!", e);
+            }
+        }
+    };
+
+/*    public static class clientConnector implements BeforeAllCallback, AfterAllCallback{
 
         private TestClientContext testClientContext;
 
@@ -115,7 +114,7 @@ public abstract class SpringJUnitControllerTest  implements ControllerTest {
         Assertions.assertTrue(true);
     }
 
-
+*/
 
 
 
