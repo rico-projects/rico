@@ -21,13 +21,27 @@ import dev.rico.internal.server.remoting.test.ClientTestFactory;
 import dev.rico.internal.server.remoting.test.SpringTestBootstrap;
 import dev.rico.internal.server.remoting.test.TestClientContext;
 import org.apiguardian.api.API;
+
+//change this into junit5
 import org.junit.Rule;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.AfterAllCallback;
+import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.ExtendWith;
+//change to junit5
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.rules.ExternalResource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+//What does this do?
+//import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
@@ -35,38 +49,77 @@ import static org.apiguardian.api.API.Status.MAINTAINED;
  * Base class for JUnit based controller tests in Spring. This class can be extended to write custom controller tests.
  *
  * @see ControllerTest
- * @see AbstractJUnit4SpringContextTests
+ * @see //AbstractJUnit4SpringContextTests
  * @see ControllerUnderTest
  *
  * @author Hendrik Ebbers
  */
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ContextConfiguration(classes = SpringTestBootstrap.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @API(since = "0.x", status = MAINTAINED)
-public abstract class SpringJUnitControllerTest extends AbstractJUnit4SpringContextTests implements ControllerTest {
+public abstract class SpringJUnitControllerTest  implements ControllerTest {
 
     @Autowired
     private TestClientContext clientContext;
 
-    @Rule
-    public ExternalResource clientConnector = new ExternalResource() {
-        @Override
-        protected void before() throws Throwable {
-            super.before();
-            clientContext.connect().get();
+    //Turn this to junit5
+//    @Rule
+//    public ExternalResource clientConnector = new ExternalResource() {
+//        @Override
+//        protected void before() throws Throwable {
+//            super.before();
+//            clientContext.connect().get();
+//        }
+//
+//        @Override
+//        protected void after() {
+//            super.after();
+//            try {
+//                clientContext.disconnect().get();
+//            } catch (Exception e) {
+//                throw new ControllerTestException("Can not disconnect client context!", e);
+//            }
+//        }
+//    };
+
+    public static class clientConnector implements BeforeAllCallback, AfterAllCallback{
+
+        private TestClientContext testClientContext;
+
+        public TestClientContext getTestClientContext(){
+            return testClientContext;
         }
 
         @Override
-        protected void after() {
-            super.after();
+        public void afterAll(final ExtensionContext context) throws Exception {
             try {
-                clientContext.disconnect().get();
+                testClientContext.disconnect().get();
             } catch (Exception e) {
                 throw new ControllerTestException("Can not disconnect client context!", e);
             }
         }
-    };
+
+        @Override
+        public void beforeAll(final ExtensionContext context) throws Exception {
+            testClientContext.connect().get();
+        }
+    }
+
+    @RegisterExtension
+    static clientConnector connector = new clientConnector();
+
+    @Test
+    void clientRunning(){
+        Assertions.assertTrue(true);
+    }
+
+
+
+
+
+
 
     public <T> ControllerUnderTest<T> createController(final String controllerName) {
         Assert.requireNonBlank(controllerName, "controllerName");
