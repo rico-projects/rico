@@ -16,11 +16,9 @@
  */
 package dev.rico.server.remoting.test;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-
-//change the asserts to junit5 assertions
-//import static org.junit.Assert.*;
 
 public class JUnitDemoTest extends SpringJUnitControllerTest {
 
@@ -70,4 +68,10 @@ public class JUnitDemoTest extends SpringJUnitControllerTest {
             fail("Calling an action after destroy should throw an exception!");
         } catch (ControllerTestException e) {}
     }
+
+    @Test
+    void clientRunningDummy(){
+        Assertions.assertTrue(true);
+    }
+
 }

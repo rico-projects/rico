@@ -23,15 +23,18 @@ import dev.rico.internal.server.remoting.test.TestClientContext;
 import org.apiguardian.api.API;
 
 //change this into junit5
-import org.junit.Rule;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.AfterAllCallback;
+import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtendWith;
 //change to junit5
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.Rule;
 import org.junit.rules.ExternalResource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +42,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import dev.rico.server.remoting.test.clientConnectorExtension;
 
 
 
@@ -53,77 +57,98 @@ import static org.apiguardian.api.API.Status.MAINTAINED;
  *
  * @author Hendrik Ebbers
  */
-@ExtendWith(SpringExtension.class)
+@ExtendWith({SpringExtension.class})
 @SpringBootTest
 @ContextConfiguration(classes = SpringTestBootstrap.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @API(since = "0.x", status = MAINTAINED)
-public abstract class SpringJUnitControllerTest  implements ControllerTest {
-
+public abstract class SpringJUnitControllerTest  implements ControllerTest{
+//
     @Autowired
-    private TestClientContext clientContext;
+    private static TestClientContext clientContext;
 
-    //Turn this to junit5
-    @Rule
-    public ExternalResource clientConnector = new ExternalResource() {
-        @Override
-        protected void before() throws Throwable {
-            super.before();
-            clientContext.connect().get();
-        }
 
-        @Override
-        protected void after() {
-            super.after();
-            try {
-                clientContext.disconnect().get();
-            } catch (Exception e) {
-                throw new ControllerTestException("Can not disconnect client context!", e);
-            }
-        }
-    };
+//
+//    @RegisterExtension
+//    static clientConnectorExtension connectorExtension;
 
-/*    public static class clientConnector implements BeforeAllCallback, AfterAllCallback{
+//
+//    @Rule
+//    public ExternalResource clientConnector = new ExternalResource() {
+//        @Override
+//        protected void before() throws Throwable {
+//            super.before();
+//            clientContext.connect().get();
+//        }
+//
+//        @Override
+//        protected void after() {
+//            super.after();
+//            try {
+//                clientContext.disconnect().get();
+//            } catch (Exception e) {
+//                throw new ControllerTestException("Can not disconnect client context!", e);
+//            }
+//        }
+//    };
+////
+//    public static class clientConnector implements BeforeEachCallback, AfterEachCallback{
+//
+//        @Override
+//        public void afterEach(final ExtensionContext context) throws Exception {
+//            try {
+//                clientContext.disconnect().get();
+//            } catch (Exception e) {
+//                throw new ControllerTestException("Can not disconnect client context!", e);
+//            }
+//            System.out.println("This is after");
+//        }
+//
+//        //This keeps getting null- how is clientContext set in the other one?
+//
+//        @Override
+//        public void beforeEach(final ExtensionContext context) throws Exception {
+//            System.out.println("This is before");
+//            clientContext.connect().get();
+//        }
+//    }
+////
 
-        private TestClientContext testClientContext;
+    //I need to have an extension here to replace the rule
 
-        public TestClientContext getTestClientContext(){
-            return testClientContext;
-        }
-
-        @Override
-        public void afterAll(final ExtensionContext context) throws Exception {
-            try {
-                testClientContext.disconnect().get();
-            } catch (Exception e) {
-                throw new ControllerTestException("Can not disconnect client context!", e);
-            }
-        }
-
-        @Override
-        public void beforeAll(final ExtensionContext context) throws Exception {
-            testClientContext.connect().get();
-        }
-    }
-
-    @RegisterExtension
-    static clientConnector connector = new clientConnector();
-
+//
+//    @Override
+//    public void afterEach(final ExtensionContext context) throws Exception {
+//        try {
+//            clientContext.disconnect().get();
+//        } catch (Exception e) {
+//            throw new ControllerTestException("Can not disconnect client context!", e);
+//        }
+//        System.out.println("This is after");
+//    }
+//
+//    //This is getting null
+//    @Override
+//    public void beforeEach(final ExtensionContext context) throws Exception {
+//        System.out.println("This is before");
+//        clientContext.connect().get();
+//    }
+//
     @Test
     void clientRunning(){
         Assertions.assertTrue(true);
     }
 
-*/
-
-
-
+//
+//    @RegisterExtension
+//    static clientConnector connectorExtension = new clientConnector();
+//
 
 
     public <T> ControllerUnderTest<T> createController(final String controllerName) {
         Assert.requireNonBlank(controllerName, "controllerName");
         try {
-            return ClientTestFactory.createController(clientContext, controllerName);
+            return ClientTestFactory.createController(clientContext,  controllerName);
         } catch (Exception e) {
             throw new ControllerTestException("Can't create controller proxy", e);
         }
