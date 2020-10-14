@@ -5,14 +5,17 @@ import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import dev.rico.internal.server.remoting.test.TestClientContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @SpringBootTest
+@ExtendWith({SpringExtension.class})
 @ContextConfiguration(classes = SpringTestBootstrap.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class clientConnectorExtension implements BeforeEachCallback, AfterEachCallback {
@@ -28,7 +31,7 @@ public class clientConnectorExtension implements BeforeEachCallback, AfterEachCa
     @Override
     public void afterEach(final ExtensionContext context) throws Exception {
         try {
-   //         clientContext.disconnect().get();
+            clientContext.disconnect().get();
         } catch (Exception e) {
             throw new ControllerTestException("Can not disconnect client context!", e);
         }
@@ -39,6 +42,6 @@ public class clientConnectorExtension implements BeforeEachCallback, AfterEachCa
     @Override
     public void beforeEach(final ExtensionContext context) throws Exception {
         System.out.println("This is before");
-     //   clientContext.connect().get();
+       clientContext.connect().get();
     }
 }

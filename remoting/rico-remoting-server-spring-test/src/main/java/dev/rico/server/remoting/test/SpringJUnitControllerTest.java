@@ -57,6 +57,7 @@ import static org.apiguardian.api.API.Status.MAINTAINED;
  *
  * @author Hendrik Ebbers
  */
+@ExtendWith(clientConnectorExtension.class)
 @ExtendWith({SpringExtension.class})
 @SpringBootTest
 @ContextConfiguration(classes = SpringTestBootstrap.class)
@@ -65,14 +66,14 @@ import static org.apiguardian.api.API.Status.MAINTAINED;
 public abstract class SpringJUnitControllerTest  implements ControllerTest{
 //
     @Autowired
-    private static TestClientContext clientContext;
+    private TestClientContext clientContext;
 
 
 //
 //    @RegisterExtension
-//    static clientConnectorExtension connectorExtension;
+//    clientConnectorExtension connectorExtension;
 
-//
+////
 //    @Rule
 //    public ExternalResource clientConnector = new ExternalResource() {
 //        @Override
