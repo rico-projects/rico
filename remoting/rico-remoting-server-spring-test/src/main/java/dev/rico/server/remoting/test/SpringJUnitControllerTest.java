@@ -24,7 +24,9 @@ import org.apiguardian.api.API;
 
 //change this into junit5
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.AfterEachCallback;
@@ -57,13 +59,13 @@ import static org.apiguardian.api.API.Status.MAINTAINED;
  *
  * @author Hendrik Ebbers
  */
-@ExtendWith(clientConnectorExtension.class)
+
 @ExtendWith({SpringExtension.class})
 @SpringBootTest
 @ContextConfiguration(classes = SpringTestBootstrap.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @API(since = "0.x", status = MAINTAINED)
-public abstract class SpringJUnitControllerTest  implements ControllerTest{
+public abstract class SpringJUnitControllerTest  implements ControllerTest {
 //
     @Autowired
     private TestClientContext clientContext;
@@ -140,11 +142,24 @@ public abstract class SpringJUnitControllerTest  implements ControllerTest{
         Assertions.assertTrue(true);
     }
 
-//
-//    @RegisterExtension
-//    static clientConnector connectorExtension = new clientConnector();
-//
 
+
+    //@Override
+    @AfterEach
+    public void closeClient() throws Exception {
+        try {
+            clientContext.disconnect().get();
+        } catch (Exception e) {
+            throw new ControllerTestException("Can not disconnect client context!", e);
+        }
+        System.out.println("This is after");
+    }
+
+    @BeforeEach
+    public void connectClient() throws Exception {
+        System.out.println("This is before");
+        clientContext.connect().get();
+    }
 
     public <T> ControllerUnderTest<T> createController(final String controllerName) {
         Assert.requireNonBlank(controllerName, "controllerName");
