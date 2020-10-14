@@ -16,7 +16,6 @@
  */
 package dev.rico.server.remoting.test;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -69,9 +68,6 @@ public class JUnitDemoTest extends SpringJUnitControllerTest {
         } catch (ControllerTestException e) {}
     }
 
-    @Test
-    void clientRunningDummy(){
-        Assertions.assertTrue(true);
-    }
+
 
 }

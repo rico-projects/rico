@@ -28,23 +28,16 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.AfterAllCallback;
-import org.junit.jupiter.api.extension.AfterEachCallback;
-import org.junit.jupiter.api.extension.BeforeAllCallback;
-import org.junit.jupiter.api.extension.BeforeEachCallback;
+
 import org.junit.jupiter.api.extension.ExtendWith;
-//change to junit5
-import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.RegisterExtension;
-import org.junit.Rule;
-import org.junit.rules.ExternalResource;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import dev.rico.server.remoting.test.clientConnectorExtension;
+
 
 
 
@@ -66,85 +59,11 @@ import static org.apiguardian.api.API.Status.MAINTAINED;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @API(since = "0.x", status = MAINTAINED)
 public abstract class SpringJUnitControllerTest  implements ControllerTest {
-//
+
     @Autowired
     private TestClientContext clientContext;
 
 
-//
-//    @RegisterExtension
-//    clientConnectorExtension connectorExtension;
-
-////
-//    @Rule
-//    public ExternalResource clientConnector = new ExternalResource() {
-//        @Override
-//        protected void before() throws Throwable {
-//            super.before();
-//            clientContext.connect().get();
-//        }
-//
-//        @Override
-//        protected void after() {
-//            super.after();
-//            try {
-//                clientContext.disconnect().get();
-//            } catch (Exception e) {
-//                throw new ControllerTestException("Can not disconnect client context!", e);
-//            }
-//        }
-//    };
-////
-//    public static class clientConnector implements BeforeEachCallback, AfterEachCallback{
-//
-//        @Override
-//        public void afterEach(final ExtensionContext context) throws Exception {
-//            try {
-//                clientContext.disconnect().get();
-//            } catch (Exception e) {
-//                throw new ControllerTestException("Can not disconnect client context!", e);
-//            }
-//            System.out.println("This is after");
-//        }
-//
-//        //This keeps getting null- how is clientContext set in the other one?
-//
-//        @Override
-//        public void beforeEach(final ExtensionContext context) throws Exception {
-//            System.out.println("This is before");
-//            clientContext.connect().get();
-//        }
-//    }
-////
-
-    //I need to have an extension here to replace the rule
-
-//
-//    @Override
-//    public void afterEach(final ExtensionContext context) throws Exception {
-//        try {
-//            clientContext.disconnect().get();
-//        } catch (Exception e) {
-//            throw new ControllerTestException("Can not disconnect client context!", e);
-//        }
-//        System.out.println("This is after");
-//    }
-//
-//    //This is getting null
-//    @Override
-//    public void beforeEach(final ExtensionContext context) throws Exception {
-//        System.out.println("This is before");
-//        clientContext.connect().get();
-//    }
-//
-    @Test
-    void clientRunning(){
-        Assertions.assertTrue(true);
-    }
-
-
-
-    //@Override
     @AfterEach
     public void closeClient() throws Exception {
         try {
@@ -152,12 +71,12 @@ public abstract class SpringJUnitControllerTest  implements ControllerTest {
         } catch (Exception e) {
             throw new ControllerTestException("Can not disconnect client context!", e);
         }
-        System.out.println("This is after");
+
     }
 
     @BeforeEach
     public void connectClient() throws Exception {
-        System.out.println("This is before");
+
         clientContext.connect().get();
     }
 
