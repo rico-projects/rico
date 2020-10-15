@@ -54,6 +54,29 @@ ext {
     }()
 }
 
+task setVersionAndDateTimeForBuild() {
+    def rootPropertiesFile = new Properties()
+    file("gradle.properties").withInputStream { rootPropertiesFile.load(it) }
+    Date date = new Date()
+    String ricoVersion = rootPropertiesFile.getProperty("version")
+    String buildDate = new java.text.SimpleDateFormat("yyyy-MM-dd").format(date)
+    String buildTime = new java.text.SimpleDateFormat("HH:mm:ss").format(date)
+    String ricoCoreProperties = "base/rico-core/src/main/resources/build.properties"
+    doLast {
+        ant.propertyfile(file: ricoCoreProperties) {
+            entry(key: "version", value: ricoVersion)
+            entry(key: "buildDate", value: buildDate)
+            entry(key: "buildTime", value: buildTime)
+
+        }
+
+        // Removes the auto generated timestamp comment line(1st line only) that `ant.propertyfile` generates
+        ant.replaceregexp(file: ricoCoreProperties, match: "^#.*\n", replace: "")
+    }
+}
+
+gradle.startParameter.taskNames = [":setVersionAndDateTimeForBuild"] + gradle.startParameter.taskNames
+
 //noinspection GroovyAssignabilityCheck
 subprojects { proj ->
 
@@ -161,7 +184,7 @@ subprojects { proj ->
                     from components.java
                     pom.withXml {
                         asNode().dependencies.'*'.findAll() {
-                            it.scope.text() == 'runtime'  && it.groupId.text() == 'org.openjfx'
+                            it.scope.text() == 'runtime' && it.groupId.text() == 'org.openjfx'
                         }.each() {
                             it.scope*.value = 'provided'
                         }
