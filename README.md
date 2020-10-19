@@ -31,10 +31,10 @@ Next to tis Rico provides implementations for the following ui toolkits and lang
 
 * Plain Java client
 * JavaFX
-* JavaScript client ([external repo](https://github.com/rico-project/rico-js))
-* Polymer 2 client ([external repo](https://github.com/rico-project/rico-polymer))
-* AngularJS (1.x) client ([external repo](https://github.com/rico-project/rico-angularjs))
-* Angular (>2.x) client  ([external repo](https://github.com/rico-project/rico-angular))
+* JavaScript client ([external repo](https://github.com/rico-projects/rico-js))
+* Polymer 2 client ([external repo](https://github.com/rico-projects/rico-polymer))
+* AngularJS (1.x) client ([external repo](https://github.com/rico-projects/rico-angularjs))
+* Angular (>2.x) client  ([external repo](https://github.com/rico-projects/rico-angular))
 
 ## Features of Rico
 As already mentioned Rico provides a list of general features that are usefull in mostly all enterprise applications. A
