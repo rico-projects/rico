@@ -55,7 +55,7 @@ import static org.apiguardian.api.API.Status.MAINTAINED;
 @ContextConfiguration(classes = SpringTestBootstrap.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @API(since = "0.x", status = MAINTAINED)
-public abstract class SpringJUnitControllerTest  implements ControllerTest {
+public abstract class SpringJUnitControllerTest implements ControllerTest {
 
     @Autowired
     private TestClientContext clientContext;
@@ -80,7 +80,7 @@ public abstract class SpringJUnitControllerTest  implements ControllerTest {
     public <T> ControllerUnderTest<T> createController(final String controllerName) {
         Assert.requireNonBlank(controllerName, "controllerName");
         try {
-            return ClientTestFactory.createController(clientContext,  controllerName);
+            return ClientTestFactory.createController(clientContext, controllerName);
         } catch (Exception e) {
             throw new ControllerTestException("Can't create controller proxy", e);
         }

@@ -19,13 +19,10 @@ dependencies {
     api project(':rico-remoting-server-spring')
     api project(':rico-remoting-client')
     implementation "org.testng:testng:$testngVersion"
-    implementation "junit:junit:$junitVersion"
-
-    testCompile("org.junit.jupiter:junit-jupiter-api:5.7.0")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.7.0")
-
-    compile 'org.junit.jupiter:junit-jupiter:5.7.0'
-    compile("org.junit.jupiter:junit-jupiter-engine:5.7.0")
+    testCompile "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
+    testRuntimeOnly"org.junit.platform:junit-platform-launcher:$junitJupiterLauncherVersion"
+    compile "org.junit.jupiter:junit-jupiter:$junitJupiterVersion"
+    compile "org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion"
 
     implementation "org.springframework:spring-web:$springVersion"
     implementation "org.springframework:spring-context:$springVersion"
