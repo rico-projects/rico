@@ -13,5 +13,6 @@ module dev.rico.remoting.server.spring.test {
     requires spring.boot.test;
     requires static java.servlet;
     requires testng;
-    requires junit;
+    requires org.junit.jupiter;
+
 }

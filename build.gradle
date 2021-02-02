@@ -112,7 +112,7 @@ subprojects { proj ->
 //        }
 
         test {
-            useTestNG()
+            useJUnitPlatform()
             jvmArgs("-Djdk.attach.allowAttachSelf")
             testLogging.showStandardStreams = true
         }
