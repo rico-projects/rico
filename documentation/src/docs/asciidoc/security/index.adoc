@@ -2,7 +2,7 @@ ifndef::imagesdir[:imagesdir: ../images]
 
 == Security
 
-TODO
+Rico provides security functionalities that let you use Rico applications in combination with an IAM (identity and access management) service.
 
 include::centralized-security.adoc[]
 

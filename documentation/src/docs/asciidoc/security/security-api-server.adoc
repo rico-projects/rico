@@ -3,3 +3,58 @@ ifndef::imagesdir[:imagesdir: ../images]
 === Security API on the server
 
 TODO
+
+[source,java]
+----
+final SecurityContext securityContext = ... // injected
+
+final String userName = Optional.ofNullable(securityContext.getUser())
+            .map(u -> u.getName())
+            .orElse("UNKNOWN");
+----
+
+TODO
+
+[source,java]
+----
+final SecurityContext securityContext = ... // injected
+
+if(securityContext.hasRole("ADMIN")) {
+    addAdminOptions();
+}
+----
+
+TODO
+
+[source,java]
+----
+
+final SecurityContext securityContext = ... // injected
+
+final InternalUserService userService = ... // injected
+
+public void onDeleteUserRequest(String userName) {
+    securityContext.requireAnyRole("ADMIN", "OWNER");
+    userService.deleteUser(userName);
+}
+----
+
+==== RestTemplate support in Spring
+
+For Spring Rico adds security token support to the Spring `RestTemplate` API.
+Rico provides a managed `RestTemplate` that can be injected in any managed bean.
+The `RestTemplate` instance automatically forwards the appName, the realm, and the security token with each request.
+By doing so authentification and identitiy informations can easily be forwarded to services in a microservice based application landscape.
+
+The following snippet shows a simple sample how the `RestTemplate` can be used:
+
+[source,java]
+----
+
+final RestTemplate restTemplate = ... // injected
+
+public Result onDeleteUserRequest(String userName) {
+    final String url = "http://server:8080/api/secure/deleteUser";
+    return restTemplate.postForEntity(url, userName, Result.class)
+}
+----

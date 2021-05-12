@@ -2,9 +2,35 @@ ifndef::imagesdir[:imagesdir: ../images]
 
 === Keycloak
 
-TODO
+[Keycloak](https://www.keycloak.org) is an open source IAM service from RedHat.
+To use the security features of Rico you need setup a Keycloak instance as IAM service.
+Keycloak provides different ways how it can be installed.
+You can find a good overview in [the official documentation of Keycloak](https://www.keycloak.org/getting-started).
+Next to this you can find a Docker based setup in the [samples repository](https://github.com/rico-projects/rico-samples) of Rico.
+
+=== Keycloak configuration
+
+One of the core concepts in Keycloak is the Realm support.
+A realm secures and manages security metadata for a set of users, applications, and registered oauth clients.
+Users and roles are managed within a specific realm.
+Based on this a Keycloak instance can be used to manage identity and access configuration for multiple applications.
+When using Keycloak with Rico security a realm must be defined in Keycloak that is used for one or many applications.
+A realm can be managed in Keycloak by the administration console (web frontend) and Rest API.
+The Docker based setup of Keycloak in the [Rico samples repository](https://github.com/rico-projects/rico-samples) already contains a configured realm that can be used with Rico.
+The configuration of this realm is defined in a JSON file that is part of the sample repo.
+
+How a realm can be used and accessed is defined by a client configuration.
+Such configuration can be created by the web frontend or REST API.
+A ready to use client configuration can be found in the JSON config of the [samples repository](https://github.com/rico-projects/rico-samples).
+The following points need to be done
+
+
+
+Since a Keycloak instance can
 
 ////
 todo:   How to setup Keycloak (docker sample)
         How to configure Keycloak (in UI)
 ////
+
+

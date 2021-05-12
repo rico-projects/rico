@@ -4,3 +4,24 @@ ifndef::imagesdir[:imagesdir: ../images]
 
 TODO
 
+[source,java]
+----
+final Security security = Client.getService(Security.class);
+security.login("user", "password").get();
+
+final HttpClient client = Client.getService(HttpClient.class);
+client.get("http://localhost:8080/api/secure")
+            .withoutContent()
+            .readString()
+            .execute()
+            .get()
+            .getContent();
+
+----
+
+TODO
+
+[source,properties]
+----
+security.keycloak.endpoint=http://localhost:8080/openid-connect
+----
