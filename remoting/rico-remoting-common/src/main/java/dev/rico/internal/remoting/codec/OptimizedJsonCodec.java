@@ -16,6 +16,16 @@
  */
 package dev.rico.internal.remoting.codec;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.remoting.codec.encoders.AttributeMetadataChangedCommandEncoder;
 import dev.rico.internal.remoting.codec.encoders.CallActionCommandEncoder;
@@ -32,26 +42,29 @@ import dev.rico.internal.remoting.codec.encoders.InterruptLongPollCommandEncoder
 import dev.rico.internal.remoting.codec.encoders.PresentationModelDeletedCommandEncoder;
 import dev.rico.internal.remoting.codec.encoders.StartLongPollCommandEncoder;
 import dev.rico.internal.remoting.codec.encoders.ValueChangedCommandEncoder;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
 import dev.rico.internal.remoting.legacy.communication.Codec;
 import dev.rico.internal.remoting.legacy.communication.Command;
 import org.apiguardian.api.API;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static dev.rico.internal.remoting.legacy.communication.CommandConstants.*;
+import static dev.rico.internal.remoting.legacy.communication.CommandConstants.ATTRIBUTE_METADATA_CHANGED_COMMAND_ID;
+import static dev.rico.internal.remoting.legacy.communication.CommandConstants.CALL_ACTION_COMMAND_ID;
+import static dev.rico.internal.remoting.legacy.communication.CommandConstants.CHANGE_ATTRIBUTE_METADATA_COMMAND_ID;
+import static dev.rico.internal.remoting.legacy.communication.CommandConstants.CREATE_CONTEXT_COMMAND_ID;
+import static dev.rico.internal.remoting.legacy.communication.CommandConstants.CREATE_CONTROLLER_COMMAND_ID;
+import static dev.rico.internal.remoting.legacy.communication.CommandConstants.CREATE_PRESENTATION_MODEL_COMMAND_ID;
+import static dev.rico.internal.remoting.legacy.communication.CommandConstants.DELETE_PRESENTATION_MODEL_COMMAND_ID;
+import static dev.rico.internal.remoting.legacy.communication.CommandConstants.DESTROY_CONTEXT_COMMAND_ID;
+import static dev.rico.internal.remoting.legacy.communication.CommandConstants.DESTROY_CONTROLLER_COMMAND_ID;
+import static dev.rico.internal.remoting.legacy.communication.CommandConstants.EMPTY_COMMAND_ID;
+import static dev.rico.internal.remoting.legacy.communication.CommandConstants.INTERRUPT_LONG_POLL_COMMAND_ID;
+import static dev.rico.internal.remoting.legacy.communication.CommandConstants.PRESENTATION_MODEL_DELETED_COMMAND_ID;
+import static dev.rico.internal.remoting.legacy.communication.CommandConstants.START_LONG_POLL_COMMAND_ID;
+import static dev.rico.internal.remoting.legacy.communication.CommandConstants.VALUE_CHANGED_COMMAND_ID;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(since = "0.x", status = INTERNAL)
@@ -89,7 +102,7 @@ public final class OptimizedJsonCodec implements Codec {
         Assert.requireNonNull(transcoder, "transcoder");
         Assert.requireNonNull(commandId, "commandId");
 
-        if(transcoders.containsKey(commandId)) {
+        if (transcoders.containsKey(commandId)) {
             throw new IllegalStateException("Transcoder for " + commandId + " already defined!");
         }
         transcoders.put(commandId, transcoder);

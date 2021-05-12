@@ -38,6 +38,5 @@ module dev.rico.remoting.server {
     requires transitive dev.rico.server;
 
     requires static org.apiguardian.api;
-    requires org.slf4j;
     requires static java.servlet;
 }

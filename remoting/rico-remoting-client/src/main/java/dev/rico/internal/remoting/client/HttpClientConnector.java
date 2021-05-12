@@ -18,22 +18,22 @@ package dev.rico.internal.remoting.client;
 
 import dev.rico.client.concurrent.BackgroundExecutor;
 import dev.rico.client.concurrent.UiExecutor;
-import dev.rico.internal.remoting.commands.CreateContextCommand;
-import dev.rico.remoting.client.RemotingExceptionHandler;
 import dev.rico.core.http.HttpClient;
 import dev.rico.core.http.RequestMethod;
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
+import dev.rico.internal.core.Assert;
+import dev.rico.internal.core.http.HttpHeaderConstants;
 import dev.rico.internal.remoting.client.legacy.ClientModelStore;
 import dev.rico.internal.remoting.client.legacy.communication.AbstractClientConnector;
 import dev.rico.internal.remoting.client.legacy.communication.BlindCommandBatcher;
-import dev.rico.internal.core.Assert;
-import dev.rico.internal.core.http.HttpHeaderConstants;
+import dev.rico.internal.remoting.commands.CreateContextCommand;
 import dev.rico.internal.remoting.commands.DestroyContextCommand;
 import dev.rico.internal.remoting.legacy.communication.Codec;
 import dev.rico.internal.remoting.legacy.communication.Command;
 import dev.rico.remoting.RemotingException;
+import dev.rico.remoting.client.RemotingExceptionHandler;
 import org.apiguardian.api.API;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -97,8 +97,7 @@ public class HttpClientConnector extends AbstractClientConnector {
 
                 final String receivedContent = client.request(servletUrl, RequestMethod.POST).withContent(data, HttpHeaderConstants.JSON_MIME_TYPE).readString().execute().get().getContent();
                 return codec.decode(receivedContent);
-            }
-            finally {
+            } finally {
                 connectedFlagLock.unlock();
             }
         } catch (final Exception e) {

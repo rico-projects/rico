@@ -16,12 +16,12 @@
  */
 package dev.rico.internal.server.spring;
 
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.internal.server.bootstrap.PlatformBootstrap;
 import dev.rico.internal.server.config.ConfigurationFileLoader;
 import dev.rico.internal.server.config.ServerConfiguration;
 import org.apiguardian.api.API;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
@@ -32,7 +32,6 @@ import org.springframework.core.env.Environment;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-
 import java.util.Optional;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
@@ -66,9 +65,9 @@ public class SpringBootstrap implements ServletContextInitializer, ApplicationCo
     }
 
     private void updateConfigurationBySpring(final ServerConfiguration configuration) {
-        for(final String key : configuration.getPropertyKeys()) {
+        for (final String key : configuration.getPropertyKeys()) {
             final String valInSpringConfig = environment.getProperty(PREFIX + key);
-            if(valInSpringConfig != null) {
+            if (valInSpringConfig != null) {
                 LOG.debug("Rico property '{}' found in spring configuration", key);
                 configuration.setProperty(key, valInSpringConfig);
             }

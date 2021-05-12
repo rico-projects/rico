@@ -16,10 +16,10 @@
  */
 package dev.rico.internal.client.http.cookie;
 
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.internal.core.Assert;
 import org.apiguardian.api.API;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.CookieStore;
 import java.net.HttpCookie;

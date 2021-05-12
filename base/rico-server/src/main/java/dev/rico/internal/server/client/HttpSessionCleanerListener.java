@@ -16,10 +16,10 @@
  */
 package dev.rico.internal.server.client;
 
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.internal.core.Assert;
 import org.apiguardian.api.API;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
@@ -41,7 +41,8 @@ public class HttpSessionCleanerListener implements HttpSessionListener {
     }
 
     @Override
-    public void sessionCreated(final HttpSessionEvent sessionEvent) {}
+    public void sessionCreated(final HttpSessionEvent sessionEvent) {
+    }
 
     @Override
     public void sessionDestroyed(final HttpSessionEvent sessionEvent) {

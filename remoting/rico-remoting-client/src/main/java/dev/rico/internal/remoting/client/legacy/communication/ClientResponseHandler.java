@@ -16,6 +16,8 @@
  */
 package dev.rico.internal.remoting.client.legacy.communication;
 
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.internal.remoting.client.legacy.ClientAttribute;
 import dev.rico.internal.remoting.client.legacy.ClientModelStore;
 import dev.rico.internal.remoting.client.legacy.ClientPresentationModel;
@@ -26,8 +28,6 @@ import dev.rico.internal.remoting.legacy.communication.DeletePresentationModelCo
 import dev.rico.internal.remoting.legacy.communication.ValueChangedCommand;
 import dev.rico.internal.remoting.legacy.core.Attribute;
 import org.apiguardian.api.API;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +57,7 @@ public class ClientResponseHandler {
         } else if (command instanceof AttributeMetadataChangedCommand) {
             handleAttributeMetadataChangedCommand((AttributeMetadataChangedCommand) command);
         } else {
-            LOG.error("C: cannot withoutResult unknown command '{}'", command );
+            LOG.error("C: cannot withoutResult unknown command '{}'", command);
         }
 
     }
@@ -104,7 +104,7 @@ public class ClientResponseHandler {
     private void handleValueChangedCommand(final ValueChangedCommand serverCommand) {
         final ClientAttribute attribute = clientModelStore.findAttributeById(serverCommand.getAttributeId());
         if (attribute == null) {
-            LOG.warn("C: attribute with id '{}' not found, cannot update to new value '{}'", serverCommand.getAttributeId() , serverCommand.getNewValue() );
+            LOG.warn("C: attribute with id '{}' not found, cannot update to new value '{}'", serverCommand.getAttributeId(), serverCommand.getNewValue());
             return;
         }
 

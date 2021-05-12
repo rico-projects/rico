@@ -16,15 +16,28 @@
  */
 package dev.rico.internal.remoting.legacy.communication;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import org.apiguardian.api.API;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.apiguardian.api.API.Status.DEPRECATED;
 
@@ -76,7 +89,6 @@ public class JsonCodec implements Codec {
     }
 
 
-
     @Override
     public String encode(final List<? extends Command> commands) {
         final JsonArray ret = new JsonArray();
@@ -107,9 +119,9 @@ public class JsonCodec implements Codec {
                 final String className = commandElement.getAsJsonPrimitive("className").getAsString();
                 LOG.trace("Decoding command type: {}", className);
                 Class<? extends Command> commandClass = (Class<? extends Command>) Class.forName(className);
-                if(commandClass.equals(ValueChangedCommand.class)) {
+                if (commandClass.equals(ValueChangedCommand.class)) {
                     commands.add(createValueChangedCommand(commandElement));
-                } else if(commandClass.equals(CreatePresentationModelCommand.class)) {
+                } else if (commandClass.equals(CreatePresentationModelCommand.class)) {
                     commands.add(createCreatePresentationModelCommand(commandElement));
                 } else {
                     commands.add(GSON.fromJson(commandElement, commandClass));
@@ -128,11 +140,11 @@ public class JsonCodec implements Codec {
         command.setPmType(stringOrNull(commandElement.get("pmType")));
         command.setClientSideOnly(booleanOrFalse(commandElement.get("clientSideOnly")));
 
-        if(commandElement.has("attributes")) {
-            for(final JsonElement attributeElement : commandElement.getAsJsonArray("attributes")) {
+        if (commandElement.has("attributes")) {
+            for (final JsonElement attributeElement : commandElement.getAsJsonArray("attributes")) {
                 final JsonObject attributeObject = attributeElement.getAsJsonObject();
                 final Map<String, Object> attributeMap = new HashMap<>();
-                for(Map.Entry<String, JsonElement> entry : attributeObject.entrySet()) {
+                for (Map.Entry<String, JsonElement> entry : attributeObject.entrySet()) {
                     attributeMap.put(entry.getKey(), toValidValue(entry.getValue()));
                 }
                 command.getAttributes().add(attributeMap);
@@ -150,52 +162,52 @@ public class JsonCodec implements Codec {
     }
 
     private boolean booleanOrFalse(final JsonElement element) {
-        if(element.isJsonNull()) {
+        if (element.isJsonNull()) {
             return false;
         }
         return element.getAsBoolean();
     }
 
     private String stringOrNull(final JsonElement element) {
-        if(element.isJsonNull()) {
+        if (element.isJsonNull()) {
             return null;
         }
         return element.getAsString();
     }
 
     private Object toValidValue(final JsonElement jsonElement) {
-        if(jsonElement.isJsonNull()) {
+        if (jsonElement.isJsonNull()) {
             return null;
-        } else if(jsonElement.isJsonPrimitive()) {
+        } else if (jsonElement.isJsonPrimitive()) {
             final JsonPrimitive primitive = jsonElement.getAsJsonPrimitive();
-             if(primitive.isBoolean()) {
+            if (primitive.isBoolean()) {
                 return primitive.getAsBoolean();
-            } else if(primitive.isString()) {
+            } else if (primitive.isString()) {
                 return primitive.getAsString();
             } else {
                 return primitive.getAsNumber();
             }
         } else if (jsonElement.isJsonObject()) {
             final JsonObject jsonObject = jsonElement.getAsJsonObject();
-            if(jsonObject.has(Date.class.toString())) {
+            if (jsonObject.has(Date.class.toString())) {
                 try {
                     return new SimpleDateFormat(ISO8601_FORMAT).parse(jsonObject.getAsJsonPrimitive(Date.class.toString()).getAsString());
                 } catch (final Exception e) {
                     throw new RuntimeException("Can not converte!", e);
                 }
-            } else if(jsonObject.has(BigDecimal.class.toString())) {
+            } else if (jsonObject.has(BigDecimal.class.toString())) {
                 try {
                     return new BigDecimal(jsonObject.getAsJsonPrimitive(BigDecimal.class.toString()).getAsString());
                 } catch (final Exception e) {
                     throw new RuntimeException("Can not converte!", e);
                 }
-            } else if(jsonObject.has(Float.class.toString())) {
+            } else if (jsonObject.has(Float.class.toString())) {
                 try {
                     return Float.valueOf(jsonObject.getAsJsonPrimitive(Float.class.toString()).getAsString());
                 } catch (final Exception e) {
                     throw new RuntimeException("Can not converte!", e);
                 }
-            } else if(jsonObject.has(Double.class.toString())) {
+            } else if (jsonObject.has(Double.class.toString())) {
                 try {
                     return Double.valueOf(jsonObject.getAsJsonPrimitive(Double.class.toString()).getAsString());
                 } catch (final Exception e) {

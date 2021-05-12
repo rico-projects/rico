@@ -40,6 +40,7 @@ include 'metrics/rico-metrics-server'
 include 'metrics/rico-metrics-server-spring'
 include 'metrics/rico-metrics-server-javaee'
 
+include 'logging/rico-system-logger-to-slf4j'
 include 'logging/rico-logback-appender'
 include 'logging/rico-log4j2-appender'
 
@@ -49,10 +50,6 @@ include 'security/rico-security-server'
 include 'security/rico-security-server-javaee'
 include 'security/rico-security-server-spring'
 
-include 'incubation/rico-logger'
-include 'incubation/rico-logger-widget-common'
-include 'incubation/rico-logger-widget-client-javafx'
-include 'incubation/rico-logger-widget-server'
 include 'incubation/rico-bean-validation-rest'
 include 'incubation/rico-data'
 include 'incubation/rico-data-jpa'

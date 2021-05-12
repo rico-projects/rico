@@ -13,7 +13,6 @@ module dev.rico.metrics.server {
     exports dev.rico.internal.metrics.server.module to dev.rico.server;
     exports dev.rico.internal.metrics.server.servlet to spring.beans;
 
-    requires org.slf4j;
     requires static java.servlet;
     requires static org.apiguardian.api;
     requires micrometer.core;

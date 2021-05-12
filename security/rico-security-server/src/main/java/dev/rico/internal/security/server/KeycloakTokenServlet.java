@@ -16,13 +16,13 @@
  */
 package dev.rico.internal.security.server;
 
+import dev.rico.core.http.RequestMethod;
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.http.ConnectionUtils;
 import dev.rico.internal.core.http.HttpClientConnection;
-import dev.rico.core.http.RequestMethod;
 import dev.rico.security.server.SecurityException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -60,7 +60,7 @@ public class KeycloakTokenServlet extends HttpServlet {
             final String content = ConnectionUtils.readUTF8Content(req.getInputStream()) + "&client_id=" + appName;
 
 
-            if(configuration.isRealmAllowed(realmName)){
+            if (configuration.isRealmAllowed(realmName)) {
                 LOG.debug("Calling Keycloak");
                 final URI url = new URI(authEndPoint + "/realms/" + realmName + "/protocol/openid-connect/token");
                 final HttpClientConnection clientConnection = new HttpClientConnection(url, RequestMethod.POST);
@@ -68,15 +68,15 @@ public class KeycloakTokenServlet extends HttpServlet {
                 clientConnection.addRequestHeader(CHARSET_HEADER, CHARSET);
                 clientConnection.writeRequestContent(content);
                 final int responseCode = clientConnection.readResponseCode();
-                if(responseCode == SC_HTTP_UNAUTHORIZED) {
+                if (responseCode == SC_HTTP_UNAUTHORIZED) {
                     LOG.debug("Invalid login!");
                     throw new RuntimeException("Invalid login!");
                 }
                 LOG.debug("sending auth token to client");
                 final byte[] responseContent = clientConnection.readResponseContent();
                 ConnectionUtils.writeContent(resp.getOutputStream(), responseContent);
-            }else{
-                if(LOG.isDebugEnabled()) {
+            } else {
+                if (LOG.isDebugEnabled()) {
                     final String allowedRealms = configuration.getRealmNames().stream().reduce("", (a, b) -> a + "," + b);
                     LOG.debug("Realm '" + realmName + "' is not allowed! Allowed realms are {}", allowedRealms);
                 }

@@ -16,10 +16,10 @@
  */
 package dev.rico.internal.remoting.client.legacy.communication;
 
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.internal.remoting.legacy.communication.ValueChangedCommand;
 import org.apiguardian.api.API;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -77,7 +77,7 @@ public class BlindCommandBatcher extends CommandBatcher {
 
     @Override
     public void batch(final CommandAndHandler commandWithHandler) {
-        LOG.trace("batching {} with {} handler",  commandWithHandler.getCommand(), (commandWithHandler.getHandler() != null ? "" : "out"));
+        LOG.trace("batching {} with {} handler", commandWithHandler.getCommand(), (commandWithHandler.getHandler() != null ? "" : "out"));
 
         if (canBeDropped(commandWithHandler)) {
             LOG.trace("dropping duplicate GetPresentationModelCommand");
@@ -177,7 +177,7 @@ public class BlindCommandBatcher extends CommandBatcher {
             val = counter != 0 ? take(queue) : null;
         }
 
-        LOG.trace("batching {} blinds" , blindCommands.size());
+        LOG.trace("batching {} blinds", blindCommands.size());
         if (!blindCommands.isEmpty()) {
             getWaitingBatches().add(blindCommands);
         }
@@ -221,9 +221,9 @@ public class BlindCommandBatcher extends CommandBatcher {
         shallWeEvenTryToMerge = true;
 
 
-        if(blindCommands.get(blindCommands.size() -1).getCommand() instanceof ValueChangedCommand) {
-            final ValueChangedCommand valueChangedCommand = (ValueChangedCommand) blindCommands.get(blindCommands.size() -1).getCommand();
-            if(valCmd.getAttributeId().equals(valueChangedCommand.getAttributeId())) {
+        if (blindCommands.get(blindCommands.size() - 1).getCommand() instanceof ValueChangedCommand) {
+            final ValueChangedCommand valueChangedCommand = (ValueChangedCommand) blindCommands.get(blindCommands.size() - 1).getCommand();
+            if (valCmd.getAttributeId().equals(valueChangedCommand.getAttributeId())) {
                 LOG.trace("merging value changed command for attribute {} with new values {}  -> {}", valueChangedCommand.getAttributeId(), valueChangedCommand.getNewValue(), valCmd.getNewValue());
                 valueChangedCommand.setNewValue(valCmd.getNewValue());
                 return true;

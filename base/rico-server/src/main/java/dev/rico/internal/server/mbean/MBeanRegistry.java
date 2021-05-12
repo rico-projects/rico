@@ -16,11 +16,11 @@
  */
 package dev.rico.internal.server.mbean;
 
-import dev.rico.internal.core.Assert;
 import dev.rico.core.functional.Subscription;
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
+import dev.rico.internal.core.Assert;
 import org.apiguardian.api.API;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.management.JMException;
 import javax.management.MBeanServer;
@@ -49,7 +49,8 @@ public class MBeanRegistry {
 
     /**
      * Register the given MBean based on the given description
-     * @param mBean the bean
+     *
+     * @param mBean       the bean
      * @param description the description
      * @return the subscription that can be used to unregister the bean
      */
@@ -60,11 +61,12 @@ public class MBeanRegistry {
 
     /**
      * Register the given MBean based on the given name
+     *
      * @param mBean the bean
-     * @param name the name
+     * @param name  the name
      * @return the subscription that can be used to unregister the bean
      */
-    public Subscription register(final Object mBean, final String name){
+    public Subscription register(final Object mBean, final String name) {
         try {
             if (mbeanSupport.get()) {
                 final ObjectName objectName = new ObjectName(name);
@@ -93,6 +95,7 @@ public class MBeanRegistry {
 
     /**
      * Returns true if MBean registry is supported / active
+     *
      * @return true if MBean registry is supported / active
      */
     public boolean isMbeanSupport() {
@@ -101,6 +104,7 @@ public class MBeanRegistry {
 
     /**
      * setter for the MBean support
+     *
      * @param mbeanSupport new state of MBean support
      */
     public void setMbeanSupport(final boolean mbeanSupport) {
@@ -108,11 +112,12 @@ public class MBeanRegistry {
     }
 
     private String getNextId() {
-        return  Long.toString(idGenerator.getAndIncrement());
+        return Long.toString(idGenerator.getAndIncrement());
     }
 
     /**
      * Returns the single instance
+     *
      * @return the single instance
      */
     public static MBeanRegistry getInstance() {

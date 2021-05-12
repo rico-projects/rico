@@ -16,14 +16,14 @@
  */
 package dev.rico.internal.security.server;
 
-import dev.rico.internal.core.Assert;
 import dev.rico.core.Configuration;
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
+import dev.rico.internal.core.Assert;
 import dev.rico.internal.security.server.keycloak.adapters.servlet.KeycloakOIDCFilter;
 import dev.rico.security.server.SecurityContext;
 import dev.rico.security.server.User;
 import org.apiguardian.api.API;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
@@ -47,7 +47,7 @@ public class KeycloakSecurityBootstrap {
         Assert.requireNonNull(configuration, "configuration");
 
         final KeycloakConfiguration keycloakConfiguration = new KeycloakConfiguration(configuration);
-        if(keycloakConfiguration.isSecurityActive()) {
+        if (keycloakConfiguration.isSecurityActive()) {
             if (LOG.isInfoEnabled()) {
                 for (String e : keycloakConfiguration.getSecureEndpoints()) {
                     LOG.info("Adding security to the following endpoint: {}", e);

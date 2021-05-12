@@ -16,11 +16,11 @@
  */
 package dev.rico.internal.security.server.spring;
 
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.internal.core.Assert;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.HttpClients;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 
@@ -54,19 +54,19 @@ public class SecurityClientRequestFactory extends HttpComponentsClientHttpReques
     @Override
     protected void postProcessHttpRequest(HttpUriRequest request) {
         final String token = securityTokenSupplier.get();
-        if(token != null && !token.isEmpty() && !request.containsHeader(AUTHORIZATION_HEADER)) {
+        if (token != null && !token.isEmpty() && !request.containsHeader(AUTHORIZATION_HEADER)) {
             LOG.debug("adding auth header");
             request.setHeader(AUTHORIZATION_HEADER, BEARER + token);
         }
 
         final String realm = realmSupplier.get();
-        if(realm != null && !realm.isEmpty() && !request.containsHeader(REALM_NAME_HEADER)) {
+        if (realm != null && !realm.isEmpty() && !request.containsHeader(REALM_NAME_HEADER)) {
             LOG.debug("adding realm header");
             request.setHeader(REALM_NAME_HEADER, realm);
         }
 
         final String appName = appNameSupplier.get();
-        if(appName != null && !appName.isEmpty() && !request.containsHeader(APPLICATION_NAME_HEADER)) {
+        if (appName != null && !appName.isEmpty() && !request.containsHeader(APPLICATION_NAME_HEADER)) {
             LOG.debug("adding app name header");
             request.setHeader(APPLICATION_NAME_HEADER, appName);
         }

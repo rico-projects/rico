@@ -16,13 +16,16 @@
  */
 package dev.rico.internal.remoting.converters;
 
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.remoting.converter.Converter;
 import dev.rico.remoting.converter.ValueConverterException;
 import org.apiguardian.api.API;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
@@ -70,7 +73,7 @@ public class EnumConverterFactory extends AbstractConverterFactory {
         }
 
         @Override
-        public Enum convertFromRemoting(final String value) throws ValueConverterException{
+        public Enum convertFromRemoting(final String value) throws ValueConverterException {
             if (value == null) {
                 return null;
             }
@@ -82,7 +85,7 @@ public class EnumConverterFactory extends AbstractConverterFactory {
         }
 
         @Override
-        public String convertToRemoting(final Enum value) throws ValueConverterException{
+        public String convertToRemoting(final Enum value) throws ValueConverterException {
             if (value == null) {
                 return null;
             }

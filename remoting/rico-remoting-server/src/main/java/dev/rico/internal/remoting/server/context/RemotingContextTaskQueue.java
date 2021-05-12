@@ -16,12 +16,12 @@
  */
 package dev.rico.internal.remoting.server.context;
 
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.server.client.ClientSessionProvider;
 import dev.rico.server.client.ClientSession;
 import org.apiguardian.api.API;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
@@ -139,9 +139,9 @@ public class RemotingContextTaskQueue {
                     }
                 } catch (InterruptedException e) {
                     String exceptionMessage =
-                        String.format(
-                            "Concurrency error in task executor for client session %s",
-                                clientSessionId);
+                            String.format(
+                                    "Concurrency error in task executor for client session %s",
+                                    clientSessionId);
                     LOG.error(exceptionMessage, e);
                     throw new IllegalStateException(exceptionMessage, e);
                 }
@@ -151,9 +151,9 @@ public class RemotingContextTaskQueue {
                     LOG.trace("Task executor executed task in client session {}", clientSessionId);
                 } catch (Exception e) {
                     String exceptionMessage =
-                        String.format(
-                            "Error in running task in client session %s",
-                                clientSessionId);
+                            String.format(
+                                    "Error in running task in client session %s",
+                                    clientSessionId);
                     LOG.error(exceptionMessage, e);
                     throw new TaskException(exceptionMessage, e);
                 }

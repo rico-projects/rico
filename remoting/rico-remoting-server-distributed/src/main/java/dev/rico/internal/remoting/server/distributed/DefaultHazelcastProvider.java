@@ -16,16 +16,16 @@
  */
 package dev.rico.internal.remoting.server.distributed;
 
-import dev.rico.internal.remoting.server.event.MessageEventImpl;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.config.SerializerConfig;
 import com.hazelcast.core.HazelcastInstance;
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
+import dev.rico.internal.remoting.server.event.MessageEventImpl;
 import dev.rico.remoting.server.distributed.HazelcastConfig;
 import dev.rico.remoting.server.distributed.HazelcastProvider;
 import org.apiguardian.api.API;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 

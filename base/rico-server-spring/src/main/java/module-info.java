@@ -12,7 +12,6 @@ module dev.rico.server.spring {
     provides ManagedBeanFactory with SpringManagedBeanFactory;
 
     requires transitive dev.rico.server;
-    requires org.slf4j;
     requires static org.apiguardian.api;
     requires static java.servlet;
 

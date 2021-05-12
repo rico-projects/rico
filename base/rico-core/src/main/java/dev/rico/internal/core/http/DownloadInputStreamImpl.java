@@ -4,16 +4,15 @@ import dev.rico.core.functional.Subscription;
 import dev.rico.core.http.DownloadInputStream;
 import dev.rico.core.http.DownloadType;
 import dev.rico.core.http.HttpResponse;
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.internal.core.Assert;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.DigestInputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -76,7 +75,7 @@ public class DownloadInputStreamImpl extends DownloadInputStream {
     }
 
     public void setUpdateChunkSize(final long updateChunkSize) {
-        if(updateChunkSize <= 0) {
+        if (updateChunkSize <= 0) {
             throw new IllegalArgumentException("chunk size must be > 0");
         }
         this.updateChunkSize.set(updateChunkSize);
@@ -199,7 +198,7 @@ public class DownloadInputStreamImpl extends DownloadInputStream {
             LOG.trace("Downloaded {} bytes of {}", currentSize, dataSize);
             lastUpdateSize.set(currentSize);
             updateExecutor.execute(() -> {
-                if(downloadType == DownloadType.NORMAL) {
+                if (downloadType == DownloadType.NORMAL) {
                     final double percentageDone = (((double) currentSize) / ((double) dataSize / 100.0)) / 100.0;
                     LOG.trace("Downloaded {} %", percentageDone);
                     downloadPercentageListeners.forEach(l -> l.accept(percentageDone));

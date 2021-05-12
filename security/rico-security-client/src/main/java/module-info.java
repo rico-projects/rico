@@ -17,6 +17,5 @@ module dev.rico.security.client {
     requires transitive dev.rico.client;
 
     requires static org.apiguardian.api;
-    requires org.slf4j;
     requires com.google.gson;
 }

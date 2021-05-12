@@ -16,12 +16,12 @@
  */
 package dev.rico.integrationtests;
 
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.docker.DockerCompose;
 import dev.rico.docker.Wait;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.core.SimpleThreadFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.testng.ITest;
 import org.testng.ITestContext;
 import org.testng.annotations.AfterGroups;
@@ -99,7 +99,7 @@ public class AbstractIntegrationTest implements ITest {
     }
 
     @AfterMethod
-    public void afterMethod(){
+    public void afterMethod() {
         final String name = testName.get();
         LOG.info("DONE test " + name);
     }

@@ -17,6 +17,8 @@
 
 package dev.rico.internal.security.server.keycloak.adapters.servlet;
 
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import org.keycloak.adapters.AdapterDeploymentContext;
 import org.keycloak.adapters.AuthenticatedActionsHandler;
 import org.keycloak.adapters.KeycloakConfigResolver;
@@ -29,8 +31,6 @@ import org.keycloak.adapters.spi.AuthOutcome;
 import org.keycloak.adapters.spi.InMemorySessionIdMapper;
 import org.keycloak.adapters.spi.SessionIdMapper;
 import org.keycloak.adapters.spi.UserSessionManagement;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -77,6 +77,7 @@ public class KeycloakOIDCFilter implements Filter {
     /**
      * Constructor that can be used to define a {@code KeycloakConfigResolver} that will be used at initialization to
      * provide the {@code KeycloakDeployment}.
+     *
      * @param definedconfigResolver the resolver
      */
     public KeycloakOIDCFilter(KeycloakConfigResolver definedconfigResolver) {

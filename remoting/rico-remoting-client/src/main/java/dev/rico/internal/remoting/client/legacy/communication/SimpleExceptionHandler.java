@@ -17,11 +17,11 @@
 package dev.rico.internal.remoting.client.legacy.communication;
 
 
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.remoting.RemotingException;
 import dev.rico.remoting.client.RemotingExceptionHandler;
 import org.apiguardian.api.API;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static org.apiguardian.api.API.Status.DEPRECATED;
 

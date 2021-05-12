@@ -7,6 +7,7 @@ module dev.rico.core {
     exports dev.rico.core.http;
     exports dev.rico.core.http.spi;
     exports dev.rico.core.lang;
+    exports dev.rico.core.logging;
 
     exports dev.rico.internal.core to
             dev.rico.client,
@@ -61,6 +62,5 @@ module dev.rico.core {
             dev.rico.server.spring,
             dev.rico.server.javaee;
 
-    requires org.slf4j;
     requires static org.apiguardian.api;
 }

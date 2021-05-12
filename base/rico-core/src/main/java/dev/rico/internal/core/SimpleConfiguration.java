@@ -17,8 +17,8 @@
 package dev.rico.internal.core;
 
 import dev.rico.core.Configuration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -132,7 +132,7 @@ public class SimpleConfiguration implements Configuration {
     }
 
     public void log() {
-        if(LOG.isDebugEnabled()) {
+        if (LOG.isDebugEnabled()) {
             final Set<Map.Entry<Object, Object>> properties = internalProperties.entrySet();
             for (final Map.Entry property : properties) {
                 LOG.debug("Configuration property: '" + property.getKey() + "' = '" + property.getValue() + "'");

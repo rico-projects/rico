@@ -16,6 +16,8 @@
  */
 package dev.rico.internal.remoting.server.legacy;
 
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.internal.core.Assert;
 import dev.rico.internal.remoting.legacy.communication.Command;
 import dev.rico.internal.remoting.legacy.communication.CreatePresentationModelCommand;
@@ -24,8 +26,6 @@ import dev.rico.internal.remoting.legacy.communication.ValueChangedCommand;
 import dev.rico.internal.remoting.legacy.core.ModelStore;
 import dev.rico.internal.remoting.legacy.core.ModelStoreConfig;
 import org.apiguardian.api.API;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -78,7 +78,7 @@ public class ServerModelStore extends ModelStore<ServerAttribute, ServerPresenta
     }
 
     public boolean hasResponseCommands() {
-        if(currentResponse != null && !currentResponse.isEmpty()) {
+        if (currentResponse != null && !currentResponse.isEmpty()) {
             return true;
         }
         return false;
@@ -107,8 +107,8 @@ public class ServerModelStore extends ModelStore<ServerAttribute, ServerPresenta
         //FIXME: Currently the client has the same event for a add answer and a add trigger
 
 //        if (!added) {
-  //          throw new IllegalStateException("Model " + model + " already defined on server!");
-    //    }
+        //          throw new IllegalStateException("Model " + model + " already defined on server!");
+        //    }
         model.setModelStore(this);
         return true;
     }
@@ -133,9 +133,9 @@ public class ServerModelStore extends ModelStore<ServerAttribute, ServerPresenta
         boolean deleted = super.remove(pm);
 
         //FIXME: Currently the client has the same event for a remove answer and a remove trigger
-      //  if (!deleted) {
-      //      throw new IllegalStateException("Model " + pm + " not found on the server!");
-      //  }
+        //  if (!deleted) {
+        //      throw new IllegalStateException("Model " + pm + " not found on the server!");
+        //  }
         return deleted;
     }
 

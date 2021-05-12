@@ -16,11 +16,11 @@
  */
 package dev.rico.internal.remoting.server.legacy;
 
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.internal.remoting.legacy.LegacyConstants;
 import dev.rico.internal.remoting.legacy.core.BasePresentationModel;
 import org.apiguardian.api.API;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 

@@ -16,12 +16,12 @@
  */
 package dev.rico.internal.server.client;
 
+import dev.rico.core.Configuration;
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.internal.core.Assert;
 import dev.rico.server.client.ClientSession;
-import dev.rico.core.Configuration;
 import org.apiguardian.api.API;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
@@ -82,7 +82,7 @@ public class ClientSessionManager {
         lock.lock();
         try {
             final Map<String, ClientSession> map = getOrCreateClientSessionMapInHttpSession(httpSession);
-            for(ClientSession session : map.values()) {
+            for (ClientSession session : map.values()) {
                 setClientSessionForThread(httpSession, session.getId());
                 try {
                     lifecycleHandler.onSessionDestroyed(session);

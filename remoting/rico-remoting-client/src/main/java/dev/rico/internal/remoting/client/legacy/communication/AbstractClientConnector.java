@@ -16,7 +16,8 @@
  */
 package dev.rico.internal.remoting.client.legacy.communication;
 
-import dev.rico.client.concurrent.BackgroundExecutor;
+import dev.rico.core.logging.Logger;
+import dev.rico.core.logging.LoggerFactory;
 import dev.rico.internal.remoting.client.legacy.ClientModelStore;
 import dev.rico.internal.remoting.legacy.commands.InterruptLongPollCommand;
 import dev.rico.internal.remoting.legacy.commands.StartLongPollCommand;
@@ -24,8 +25,6 @@ import dev.rico.internal.remoting.legacy.communication.Command;
 import dev.rico.remoting.RemotingException;
 import dev.rico.remoting.client.RemotingExceptionHandler;
 import org.apiguardian.api.API;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
