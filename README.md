@@ -1,3 +1,7 @@
+<p>
+  ⚠️ <b>IMPORTANT:</b> ⚠️ Rico has been put <b>"on hold"</b>. To learn what is meant by that please <a href="https://dev.karakun.com/rico/2021/07/02/rico-on-hold.html">read the blog post</a>  and feel free to contact us via rico@karakun.com to clarify upon questions.<br />
+</p>
+
 <p align="right">
 <a href="https://dev.karakun.com" target="_blank"><img src="readme/supported_by_karakun.png?raw=true" alt="Supported by Karakun"/></a>
 </p>
