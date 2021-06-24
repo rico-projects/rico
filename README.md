@@ -1,5 +1,5 @@
 <p>
-  ⚠️ <b>IMPORTANT:</b> ⚠️ Rico has been put <b>"on hold"</b>. To learn what is meant by that please <a href="https://dev.karakun.com/rico/2021/07/02/rico-on-hold.html">read the blog post</a>  and feel free to contact us via rico@karakun.com to clarify open questions.<br />
+  ⚠️ <b>IMPORTANT:</b> ⚠️ Rico has been put <b>"on hold"</b>. To learn what is meant by that please <a href="https://dev.karakun.com/rico/2021/06/25/rico-on-hold.html">read the blog post</a>  and feel free to contact us via rico@karakun.com to clarify open questions.<br />
 </p>
 
 <p align="right">
